@@ -1,0 +1,33 @@
+﻿<UserControl x:Class="Goldpoint_Inventory_System.Stock.InventCheck"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Goldpoint_Inventory_System"
+             xmlns:syncfusion="http://schemas.syncfusion.com/wpf" 
+             mc:Ignorable="d"
+             xmlns:syncfusionskin ="clr-namespace:Syncfusion.SfSkinManager;assembly=Syncfusion.SfSkinManager.WPF"
+             d:DesignHeight="600" d:DesignWidth="1350"
+             Background="White">
+    <Grid syncfusionskin:SfSkinManager.VisualStyle="Office2016Colorful">
+        <Label Content="Item Code:" HorizontalAlignment="Left" Margin="30,22,0,0" VerticalAlignment="Top"/>
+        <syncfusion:SfTextBoxExt HorizontalAlignment="Left" Height="26" Margin="345,22,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <Label Content="Item Name:" HorizontalAlignment="Left" Margin="269,22,0,0" VerticalAlignment="Top"/>
+        <syncfusion:SfTextBoxExt HorizontalAlignment="Left" Height="26" Margin="103,22,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <Label Content="Type:" HorizontalAlignment="Left" Margin="538,22,0,0" VerticalAlignment="Top"/>
+        <syncfusion:ComboBoxAdv HorizontalAlignment="Left" Height="25" Margin="580,23,0,0" VerticalAlignment="Top" Width="120"/>
+        <syncfusion:SfDataGrid HorizontalAlignment="Center" Height="500" Margin="25,60,10,5" VerticalAlignment="Center" Width="1315" ItemsSource="{Binding}" AutoGenerateColumns="False">
+            <syncfusion:SfDataGrid.Columns>
+                <syncfusion:GridTextColumn MappingName="Item Code" Width="100"/>
+                <syncfusion:GridTextColumn MappingName="Item Name" Width="200"/>
+                <syncfusion:GridTextColumn MappingName="Type" Width="100"/>
+                <syncfusion:GridTextColumn MappingName="Brand" Width="150"/>
+                <syncfusion:GridTextColumn MappingName="Size" Width="100"/>
+                <syncfusion:GridTextColumn MappingName="Qty" Width="100"/>
+                <syncfusion:GridTextColumn MappingName="MSRP" Width="120"/>
+                <syncfusion:GridTextColumn MappingName="Dealers Price" Width="120"/>
+                <syncfusion:GridTextColumn MappingName="Remarks" Width="200"/>
+            </syncfusion:SfDataGrid.Columns>
+        </syncfusion:SfDataGrid>
+    </Grid>
+</UserControl>

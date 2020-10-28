@@ -1,8 +1,10 @@
 ﻿<Application x:Class="Goldpoint_Inventory_System.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:syncfusion="http://schemas.syncfusion.com/wpf" xmlns:self="clr-namespace:Goldpoint_Inventory_System"
-    StartupUri="DockingManagerWindow.xaml">
+    xmlns:syncfusion="http://schemas.syncfusion.com/wpf" 
+    xmlns:self="clr-namespace:Goldpoint_Inventory_System"
+    xmlns:syncfusionskin ="clr-namespace:Syncfusion.SfSkinManager;assembly=Syncfusion.SfSkinManager.WPF"
+    StartupUri="MainWindow.xaml">
 	<Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

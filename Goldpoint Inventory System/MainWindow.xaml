@@ -1,12 +1,167 @@
 ﻿<Window x:Class="Goldpoint_Inventory_System.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Goldpoint_Inventory_System"
+        xmlns:stock="clr-namespace:Goldpoint_Inventory_System.Stock"
+        xmlns:transact="clr-namespace:Goldpoint_Inventory_System.Transactions"
+        xmlns:logs="clr-namespace:Goldpoint_Inventory_System.Log"
+        xmlns:syncfusionskin ="clr-namespace:Syncfusion.SfSkinManager;assembly=Syncfusion.SfSkinManager.WPF"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        WindowStartupLocation="CenterScreen"
+        WindowState="Maximized"
+        Style="{StaticResource windowStyle}"
+        Title="Goldpoint Inventory System">
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="8.9*"/>
+        </Grid.RowDefinitions>
+        <Grid x:Name="GridMenu" VerticalAlignment="Top" HorizontalAlignment="Stretch" Grid.Row="0">
+            <Menu SnapsToDevicePixels="True" VerticalAlignment="Top" HorizontalContentAlignment="Stretch" Height="25" >
+                <MenuItem Header="File">
+                    <MenuItem x:Name="btnStartPage" Tag="StartPage" Header="Start Page" Click="ActivateWindow" />
+                    <MenuItem x:Name="btnLogout" Header="Log Out" Click="BtnLogout_Click" />
+                    <MenuItem x:Name="btnExit"  Header="Exit" Click="BtnExit_Click"  />
+
+                </MenuItem>
+                <MenuItem Header="Stock">
+                    <MenuItem x:Name="btnStockIn" Tag="StockIn" Header="Stock In" Click="ActivateWindow" />
+                    <MenuItem x:Name="btnModifyInvent" Tag="ModifyInvent" Header="Modify Inventory" Click="ActivateWindow" />
+                    <MenuItem x:Name="btnInventCheck" Tag="InventCheck" Header="Inventory Check" Click="ActivateWindow" />
+                </MenuItem>
+                <MenuItem Header="Transactions">
+                    <MenuItem x:Name="btnStockOut" Tag="StockOut" Header="Stock Out" Click="ActivateWindow" />
+                    <MenuItem x:Name="btnPhotocopy" Tag="Photocopy" Header="Photocopy" Click="ActivateWindow" />
+                </MenuItem>
+                <MenuItem Header="Log">
+                    <MenuItem x:Name="btnDailyReport" Tag="DailyReport" Header="Daily Report" Click="ActivateWindow" />
+                    <MenuItem x:Name="btnTransactLog" Tag="TransactionLog" Header="Transaction Log" Click="ActivateWindow" />
+                    <MenuItem x:Name="btnTransactDetails" Tag="TransactionDetails" Header="Transaction Details" Click="ActivateWindow" />
+
+                </MenuItem>
+            </Menu>
+            <StackPanel HorizontalAlignment="Right" VerticalAlignment="Bottom"  Orientation="Horizontal" FocusManager.IsFocusScope="True" 
+                                DockPanel.Dock="Right" Margin="4,0,0,0">
+                <!--Minimize Button-->
+                <Button Name="minimize"  Visibility="{Binding Path=IsEnabled,
+                            RelativeSource={RelativeSource Self}, Converter={StaticResource BooleanToVisibility}}"  
+							Command="{x:Static syncfusion:DocumentContainer.MinimizeDocumentCommand}" 
+                                CommandTarget="{Binding Path=ActiveDocument, ElementName=DocContainer}">
+                    <Image Source="{StaticResource minimizeBlue}" Height="16" Width="16"></Image>
+                </Button>
+
+                <!--Restore Button-->
+                <Button Name="Restore" BorderThickness="1" BorderBrush="Black" 
+                                Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, 
+                            Converter={StaticResource BooleanToVisibility}}" 
+                                Command="{x:Static syncfusion:DocumentContainer.RestoreDocumentCommand}" 
+                                CommandTarget="{Binding Path=ActiveDocument, ElementName=DocContainer}">
+                    <Image Source="{StaticResource restoreBlue}" Height="16" Width="16"></Image>
+                </Button>
+
+                <!--Close Button-->
+                <Button Name="Close1"  Visibility="{Binding Path=IsEnabled, 
+                            RelativeSource={RelativeSource Self}, Converter={StaticResource BooleanToVisibility}}"
+							Command="{x:Static syncfusion:DocumentContainer.HideDocumentCommand}"
+                            CommandTarget="{Binding Path=ActiveDocument, ElementName=DocContainer}">
+                    <Image Source="{StaticResource closeBlue}" Height="16" Width="16"></Image>
+                </Button>
+            </StackPanel>
+        </Grid>
+        <syncfusion:DockingManager Grid.Row="1" x:Name="DockingManager" PersistState="False" EnableMouseHoverBackground="False"  UseDocumentContainer="True" 
+                                   LayoutUpdated="DockingManager_LayoutUpdated"
+                                    CloseAllTabs="DockingManager_CloseAllTabs"
+                                    CloseOtherTabs="DockingManager_CloseOtherTabs"
+                                    ShowTabItemContextMenu="{Binding ElementName=showtabitemcontextmenu, Path=IsChecked}"
+                                    ShowTabListContextMenu="{Binding ElementName=showtablistcontextmenu, Path=IsChecked}" 
+                                   IsSelectedDocument="DockingManager_IsSelectedDocument"
+                                   syncfusionskin:SfSkinManager.VisualStyle="Office2016Colorful">
+            <ContentControl x:Name="StartPage" 
+                    syncfusion:DockingManager.Header="Start Page"
+                    syncfusion:DockingManager.State="Document"
+                    syncfusion:DockingManager.CanDock="False"
+                    syncfusion:DockingManager.CanFloat="False"
+                    syncfusion:DockingManager.CanDragTab="False"
+                    >
+                <local:StartPage/>
+            </ContentControl>
+            <ContentControl x:Name="StockIn" 
+                    syncfusion:DockingManager.Header="Stock In"
+                    syncfusion:DockingManager.State="Document"
+                    syncfusion:DockingManager.CanDock="False"
+                    syncfusion:DockingManager.CanFloat="False"
+                    syncfusion:DockingManager.CanDragTab="False"
+                    >
+                <stock:StockIn />
+
+            </ContentControl>
+            <ContentControl x:Name="ModifyInvent" 
+                    syncfusion:DockingManager.Header="Modify Inventory"
+                    syncfusion:DockingManager.State="Document"
+                    syncfusion:DockingManager.CanDock="False"
+                    syncfusion:DockingManager.CanFloat="False"
+                    syncfusion:DockingManager.CanDragTab="False"
+                    >
+                <stock:ModifyInvent />
+            </ContentControl>
+            <ContentControl x:Name="StockOut" 
+                    syncfusion:DockingManager.Header="Stock Out"
+                    syncfusion:DockingManager.State="Document"
+                    syncfusion:DockingManager.CanDock="False"
+                    syncfusion:DockingManager.CanFloat="False"
+                    syncfusion:DockingManager.CanDragTab="False"
+                    >
+                <transact:StockOut />
+
+            </ContentControl>
+            <ContentControl x:Name="InventCheck" 
+                    syncfusion:DockingManager.Header="Inventory Check"
+                    syncfusion:DockingManager.State="Document"
+                    syncfusion:DockingManager.CanDock="False"
+                    syncfusion:DockingManager.CanFloat="False"
+                    syncfusion:DockingManager.CanDragTab="False"
+                    >
+                <stock:InventCheck />
+            </ContentControl>
+            <ContentControl x:Name="Photocopy" 
+                    syncfusion:DockingManager.Header="Photocopy"
+                    syncfusion:DockingManager.State="Document"
+                    syncfusion:DockingManager.CanDock="False"
+                    syncfusion:DockingManager.CanFloat="False"
+                    syncfusion:DockingManager.CanDragTab="False"
+                    >
+                <stock:InventCheck />
+            </ContentControl>
+            <ContentControl x:Name="DailyReport" 
+                    syncfusion:DockingManager.Header="Daily Report"
+                    syncfusion:DockingManager.State="Document"
+                    syncfusion:DockingManager.CanDock="False"
+                    syncfusion:DockingManager.CanFloat="False"
+                    syncfusion:DockingManager.CanDragTab="False"
+                    >
+                <logs:DailyReport />
+            </ContentControl>
+            <ContentControl x:Name="TransactionLog" 
+                    syncfusion:DockingManager.Header="Transaction Log"
+                    syncfusion:DockingManager.State="Document"
+                    syncfusion:DockingManager.CanDock="False"
+                    syncfusion:DockingManager.CanFloat="False"
+                    syncfusion:DockingManager.CanDragTab="False"
+                    >
+                <logs:TransactLog />
+            </ContentControl>
+            <ContentControl x:Name="TransactionDetails" 
+                    syncfusion:DockingManager.Header="Transaction Details"
+                    syncfusion:DockingManager.State="Document"
+                    syncfusion:DockingManager.CanDock="False"
+                    syncfusion:DockingManager.CanFloat="False"
+                    syncfusion:DockingManager.CanDragTab="False"
+                    >
+                <logs:TransactDetails />
+            </ContentControl>
+        </syncfusion:DockingManager>
     </Grid>
 </Window>
