@@ -7,19 +7,21 @@
              xmlns:syncfusion="http://schemas.syncfusion.com/wpf" 
              mc:Ignorable="d"
              xmlns:syncfusionskin ="clr-namespace:Syncfusion.SfSkinManager;assembly=Syncfusion.SfSkinManager.WPF"
-             d:DesignHeight="600" d:DesignWidth="1350"
+             d:DesignHeight="600" d:DesignWidth="1350"             
+             FontSize="16"
+
              Background="White">
     <Grid syncfusionskin:SfSkinManager.VisualStyle="Office2016Colorful">
-        <Label Content="Item Code:" HorizontalAlignment="Left" Margin="30,22,0,0" VerticalAlignment="Top"/>
-        <syncfusion:SfTextBoxExt HorizontalAlignment="Left" Height="26" Margin="345,22,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
-        <Label Content="Item Name:" HorizontalAlignment="Left" Margin="269,22,0,0" VerticalAlignment="Top"/>
-        <syncfusion:SfTextBoxExt HorizontalAlignment="Left" Height="26" Margin="103,22,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
-        <Label Content="Type:" HorizontalAlignment="Left" Margin="538,22,0,0" VerticalAlignment="Top"/>
-        <syncfusion:ComboBoxAdv HorizontalAlignment="Left" Height="25" Margin="580,23,0,0" VerticalAlignment="Top" Width="120"/>
-        <syncfusion:SfDataGrid HorizontalAlignment="Center" Height="500" Margin="25,60,10,5" VerticalAlignment="Center" Width="1315" ItemsSource="{Binding}" AutoGenerateColumns="False">
+        <Label Content="Item Code:" HorizontalAlignment="Left" Margin="85,24,0,0" VerticalAlignment="Top"/>
+        <syncfusion:SfTextBoxExt HorizontalAlignment="Left" Height="31" Margin="450,24,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="150"/>
+        <Label Content="Description:" HorizontalAlignment="Left" Margin="344,24,0,0" VerticalAlignment="Top"/>
+        <syncfusion:SfTextBoxExt HorizontalAlignment="Left" Height="31" Margin="190,24,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <Label Content="Type:" HorizontalAlignment="Left" Margin="685,24,0,0" VerticalAlignment="Top"/>
+        <syncfusion:ComboBoxAdv HorizontalAlignment="Left" Height="31" Margin="751,24,0,0" VerticalAlignment="Top" Width="135"/>
+        <syncfusion:SfDataGrid HorizontalAlignment="Center" Height="500" Margin="25,60,10,5" VerticalAlignment="Center" Width="1200" ItemsSource="{Binding}" AutoGenerateColumns="False">
             <syncfusion:SfDataGrid.Columns>
                 <syncfusion:GridTextColumn MappingName="Item Code" Width="100"/>
-                <syncfusion:GridTextColumn MappingName="Item Name" Width="200"/>
+                <syncfusion:GridTextColumn MappingName="Description" Width="200"/>
                 <syncfusion:GridTextColumn MappingName="Type" Width="100"/>
                 <syncfusion:GridTextColumn MappingName="Brand" Width="150"/>
                 <syncfusion:GridTextColumn MappingName="Size" Width="100"/>

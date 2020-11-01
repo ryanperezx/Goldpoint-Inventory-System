@@ -1,0 +1,16 @@
+﻿<UserControl x:Class="Goldpoint_Inventory_System.Transactions.JobOrder"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Goldpoint_Inventory_System"
+             xmlns:syncfusion="http://schemas.syncfusion.com/wpf" 
+             mc:Ignorable="d"
+             xmlns:syncfusionskin ="clr-namespace:Syncfusion.SfSkinManager;assembly=Syncfusion.SfSkinManager.WPF"
+             d:DesignHeight="600" d:DesignWidth="1350"             
+             FontSize="16"
+             Background="White">
+    <Grid syncfusionskin:SfSkinManager.VisualStyle="Office2016Colorful">
+            
+    </Grid>
+</UserControl>

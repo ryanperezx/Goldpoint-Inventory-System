@@ -8,6 +8,7 @@
         xmlns:stock="clr-namespace:Goldpoint_Inventory_System.Stock"
         xmlns:transact="clr-namespace:Goldpoint_Inventory_System.Transactions"
         xmlns:logs="clr-namespace:Goldpoint_Inventory_System.Log"
+        xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
         xmlns:syncfusionskin ="clr-namespace:Syncfusion.SfSkinManager;assembly=Syncfusion.SfSkinManager.WPF"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
@@ -22,25 +23,66 @@
         <Grid x:Name="GridMenu" VerticalAlignment="Top" HorizontalAlignment="Stretch" Grid.Row="0">
             <Menu SnapsToDevicePixels="True" VerticalAlignment="Top" HorizontalContentAlignment="Stretch" Height="25" >
                 <MenuItem Header="File">
-                    <MenuItem x:Name="btnStartPage" Tag="StartPage" Header="Start Page" Click="ActivateWindow" />
-                    <MenuItem x:Name="btnLogout" Header="Log Out" Click="BtnLogout_Click" />
-                    <MenuItem x:Name="btnExit"  Header="Exit" Click="BtnExit_Click"  />
+                    <MenuItem x:Name="btnStartPage" Tag="StartPage" Header="Start Page" Click="ActivateWindow">
+                        <MenuItem.Icon>
+                            <iconPacks:PackIconMaterialDesign Kind="Home"  Height="15" Width="22" Foreground="DimGray" Margin="0,0,-15,0"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem x:Name="btnLogout" Header="Log Out" Click="BtnLogout_Click"/>
+                    <MenuItem x:Name="btnExit"  Header="Exit" Click="BtnExit_Click"/>
+
 
                 </MenuItem>
                 <MenuItem Header="Stock">
-                    <MenuItem x:Name="btnStockIn" Tag="StockIn" Header="Stock In" Click="ActivateWindow" />
-                    <MenuItem x:Name="btnModifyInvent" Tag="ModifyInvent" Header="Modify Inventory" Click="ActivateWindow" />
-                    <MenuItem x:Name="btnInventCheck" Tag="InventCheck" Header="Inventory Check" Click="ActivateWindow" />
+                    <MenuItem x:Name="btnStockIn" Tag="StockIn" Header="Stock In" Click="ActivateWindow">
+                        <MenuItem.Icon>
+                            <iconPacks:PackIconMaterialDesign Kind="Autorenew"  Height="15" Width="22" Foreground="DimGray" Margin="0,0,-15,0"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem x:Name="btnModifyInvent" Tag="ModifyInvent" Header="Modify Inventory" Click="ActivateWindow">
+                        <MenuItem.Icon>
+                            <iconPacks:PackIconMaterialDesign Kind="Add"  Height="15" Width="22" Foreground="DimGray" Margin="0,0,-15,0"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem x:Name="btnInventCheck" Tag="InventCheck" Header="Inventory Check" Click="ActivateWindow">
+                        <MenuItem.Icon>
+                            <iconPacks:PackIconBootstrapIcons Kind="ZoomIn"  Height="15" Width="22" Foreground="DimGray" Margin="0,0,-15,0"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
                 </MenuItem>
                 <MenuItem Header="Transactions">
-                    <MenuItem x:Name="btnStockOut" Tag="StockOut" Header="Stock Out" Click="ActivateWindow" />
-                    <MenuItem x:Name="btnPhotocopy" Tag="Photocopy" Header="Photocopy" Click="ActivateWindow" />
+                    <MenuItem x:Name="btnStockOut" Tag="StockOut" Header="Stock Out" Click="ActivateWindow">
+                        <MenuItem.Icon>
+                            <iconPacks:PackIconMaterialDesign Kind="AddShoppingCart"  Height="15" Width="22" Foreground="DimGray" Margin="0,0,-15,0"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem x:Name="btnPhotocopy" Tag="Photocopy" Header="Photocopy" Click="ActivateWindow">
+                        <MenuItem.Icon>
+                            <iconPacks:PackIconMaterialDesign Kind="Print"  Height="15" Width="22" Foreground="DimGray" Margin="0,0,-15,0"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem x:Name="btnJohOrder" Tag="JobOrder" Header="Job Order" Click="ActivateWindow">
+                        <MenuItem.Icon>
+                            <iconPacks:PackIconMaterialDesign Kind="Bookmark"  Height="15" Width="22" Foreground="DimGray" Margin="0,0,-15,0"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
                 </MenuItem>
-                <MenuItem Header="Log">
-                    <MenuItem x:Name="btnDailyReport" Tag="DailyReport" Header="Daily Report" Click="ActivateWindow" />
-                    <MenuItem x:Name="btnTransactLog" Tag="TransactionLog" Header="Transaction Log" Click="ActivateWindow" />
-                    <MenuItem x:Name="btnTransactDetails" Tag="TransactionDetails" Header="Transaction Details" Click="ActivateWindow" />
-
+                <MenuItem Header="Logs">
+                    <MenuItem x:Name="btnDailyReport" Tag="DailyReport" Header="Daily Report" Click="ActivateWindow">
+                        <MenuItem.Icon>
+                            <iconPacks:PackIconBootstrapIcons Kind="Newspaper"  Height="15" Width="22" Foreground="DimGray" Margin="0,0,-15,0"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem x:Name="btnTransactLog" Tag="TransactionLog" Header="Transaction Log" Click="ActivateWindow">
+                        <MenuItem.Icon>
+                            <iconPacks:PackIconPixelartIcons Kind="Analytics"  Height="15" Width="22" Foreground="DimGray" Margin="0,0,-15,0"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem x:Name="btnTransactDetails" Tag="TransactionDetails" Header="Transaction Details" Click="ActivateWindow">
+                        <MenuItem.Icon>
+                            <iconPacks:PackIconMaterialDesign Kind="ShoppingBasket"  Height="15" Width="22" Foreground="DimGray" Margin="0,0,-15,0"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
                 </MenuItem>
             </Menu>
             <StackPanel HorizontalAlignment="Right" VerticalAlignment="Bottom"  Orientation="Horizontal" FocusManager.IsFocusScope="True" 
@@ -133,7 +175,16 @@
                     syncfusion:DockingManager.CanFloat="False"
                     syncfusion:DockingManager.CanDragTab="False"
                     >
-                <stock:InventCheck />
+                <transact:Photocopy />
+            </ContentControl>
+            <ContentControl x:Name="JobOrder" 
+                    syncfusion:DockingManager.Header="Job Order"
+                    syncfusion:DockingManager.State="Document"
+                    syncfusion:DockingManager.CanDock="False"
+                    syncfusion:DockingManager.CanFloat="False"
+                    syncfusion:DockingManager.CanDragTab="False"
+                    >
+                <transact:JobOrder />
             </ContentControl>
             <ContentControl x:Name="DailyReport" 
                     syncfusion:DockingManager.Header="Daily Report"

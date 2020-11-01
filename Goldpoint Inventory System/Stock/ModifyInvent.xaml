@@ -6,7 +6,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Goldpoint_Inventory_System"
              xmlns:syncfusion="http://schemas.syncfusion.com/wpf" 
-             mc:Ignorable="d"
+             mc:Ignorable="d"             
+             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
              xmlns:syncfusionskin ="clr-namespace:Syncfusion.SfSkinManager;assembly=Syncfusion.SfSkinManager.WPF"
              d:DesignHeight="600" d:DesignWidth="1350">
     <Grid syncfusionskin:SfSkinManager.VisualStyle="Office2016Colorful">
@@ -15,48 +16,64 @@
             <ColumnDefinition Width="4*"/>
             <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
+        <Label Grid.Column="2" VerticalAlignment="Top" HorizontalAlignment="Right" Height="40" Width="40" ToolTip="Reset">
+            <iconPacks:PackIconMaterialLight Kind="Refresh" Height="30" Width="30" Foreground="RoyalBlue"/>
+        </Label>
         <StackPanel x:Name="stack" Grid.Column="1">
             <StackPanel.Resources>
                 <local:ExpanderToBooleanConverter x:Key="ExpanderToBooleanConverter" />
             </StackPanel.Resources>
-            <Expander Header="Modify Item" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Top" Width="900" IsExpanded="{Binding SelectedExpander, ConverterParameter=1, Converter={StaticResource ExpanderToBooleanConverter}, Mode=TwoWay}">
-                <Grid Background="#FFE5E5E5" Height="400">
+            <Expander Header="Modify Item" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Top" Width="900" IsExpanded="{Binding SelectedExpander, ConverterParameter=1, Converter={StaticResource ExpanderToBooleanConverter}, Mode=TwoWay}" >
+                <Grid Background="AliceBlue" Height="400">
                     <Label Content="Item Code:" HorizontalAlignment="Left" Margin="100,40,0,0" VerticalAlignment="Top"/>
-                    <TextBox HorizontalAlignment="Left" Height="31" Margin="209,40,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
-                    <Label Content="Item Name:" HorizontalAlignment="Left" Margin="100,76,0,0" VerticalAlignment="Top"/>
-                    <TextBox HorizontalAlignment="Left" Height="31" Margin="209,76,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+                    <syncfusion:SfTextBoxExt HorizontalAlignment="Left" Height="31" Margin="209,40,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+                    <Label Content="Description:" HorizontalAlignment="Left" Margin="100,76,0,0" VerticalAlignment="Top"/>
+                    <syncfusion:SfTextBoxExt HorizontalAlignment="Left" Height="31" Margin="209,76,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
                     <Label Content="Type:" HorizontalAlignment="Left" Margin="100,112,0,0" VerticalAlignment="Top"/>
                     <syncfusion:ComboBoxAdv HorizontalAlignment="Left" Height="31" Margin="209,112,0,0" VerticalAlignment="Top" Width="120"/>
-
                     <Label Content="Brand:" HorizontalAlignment="Left" Margin="100,148,0,0" VerticalAlignment="Top"/>
-                    <syncfusion:ComboBoxAdv HorizontalAlignment="Left" Height="31" Margin="209,148,0,0" VerticalAlignment="Top" Width="120"/>
+                    <syncfusion:ComboBoxAdv HorizontalAlignment="Left" Height="31" Margin="209,148,0,0" VerticalAlignment="Top" Width="120">
+                        <syncfusion:ComboBoxItemAdv>Generic</syncfusion:ComboBoxItemAdv>
+                        <syncfusion:ComboBoxItemAdv>N/A</syncfusion:ComboBoxItemAdv>
+                    </syncfusion:ComboBoxAdv>
                     <Label Content="Size:" HorizontalAlignment="Left" Margin="100,184,0,0" VerticalAlignment="Top"/>
-                    <syncfusion:ComboBoxAdv HorizontalAlignment="Left" Height="31" Margin="209,184,0,0" VerticalAlignment="Top" Width="120"/>
+                    <syncfusion:ComboBoxAdv HorizontalAlignment="Left" Height="31" Margin="209,184,0,0" VerticalAlignment="Top" Width="120">
+                        <syncfusion:ComboBoxItemAdv>N/A</syncfusion:ComboBoxItemAdv>
+                    </syncfusion:ComboBoxAdv>
                     <Label Content="Qty:" HorizontalAlignment="Left" Margin="100,220,0,0" VerticalAlignment="Top"/>
                     <syncfusion:IntegerTextBox HorizontalAlignment="Left" Height="31" Margin="209,220,0,0" MinWidth="100" NumberGroupSeparator="," TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="120"/>
-                    <Label Content="Remarks:" HorizontalAlignment="Left" Margin="100,256,0,0" VerticalAlignment="Top"/>
-                    <TextBox HorizontalAlignment="Left" Height="31" Margin="209,256,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
-                    <Label Content="MSRP:" HorizontalAlignment="Left" Margin="559,61,0,0" VerticalAlignment="Top"/>
-                    <syncfusion:SfTextBoxExt HorizontalAlignment="Left" Height="31" Margin="668,61,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="120"/>
-                    <Label Content="Dealers Price:" HorizontalAlignment="Left" Margin="559,121,0,0" VerticalAlignment="Top"/>
-                    <syncfusion:SfTextBoxExt HorizontalAlignment="Left" Height="31" Margin="668,121,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
-                    <Button Content="Add" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="524,211,0,0"/>
-                    <Button Content="Save" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="618,211,0,0"/>
-                    <Button Content="Delete" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="804,211,0,0"/>
-                    <Button Content="Update" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="709,211,0,0"/>
+                    <Label Content="Critical level:" HorizontalAlignment="Left" Margin="100,256,0,0" VerticalAlignment="Top"/>
+                    <syncfusion:IntegerTextBox HorizontalAlignment="Left" Height="31" Margin="209,256,0,0" MinWidth="100" NumberGroupSeparator="," TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="120"/>
+                    <Label Content="Remarks:" HorizontalAlignment="Left" Margin="559,40,0,0" VerticalAlignment="Top"/>
+                    <syncfusion:SfTextBoxExt HorizontalAlignment="Left" Height="31" Margin="668,40,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+                    <Label Content="Price:" HorizontalAlignment="Left" Margin="559,76,0,0" VerticalAlignment="Top"/>
+                    <syncfusion:IntegerTextBox HorizontalAlignment="Left" Height="31" Margin="668,112,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="120"/>
+                    <Label Content="MSRP:" HorizontalAlignment="Left" Margin="559,112,0,0" VerticalAlignment="Top"/>
+                    <syncfusion:IntegerTextBox HorizontalAlignment="Left" Height="31" Margin="668,76,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="120"/>
+                    <Label Content="Dealers Price:" HorizontalAlignment="Left" Margin="559,148,0,0" VerticalAlignment="Top"/>
+                    <syncfusion:IntegerTextBox HorizontalAlignment="Left" Height="31" Margin="668,148,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+                    <Button Content="Add" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="225,336,0,0"/>
+                    <Button Content="Save" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="355,336,0,0"/>
+                    <Button Content="Update" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="490,336,0,0"/>
+                    <Button Content="Delete" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="600,336,0,0"/>
 
                 </Grid>
             </Expander>
             <Expander Header="Modify Brand and Type"  HorizontalAlignment="Left" VerticalAlignment="Top" Width="900" IsExpanded="{Binding SelectedExpander, ConverterParameter=2, Converter={StaticResource ExpanderToBooleanConverter}, Mode=TwoWay}" FontSize="16">
-                <Grid Background="#FFE5E5E5" Height="375">
-                    <Label Content="Brand:" HorizontalAlignment="Left" Margin="104,90,0,0" VerticalAlignment="Top"/>
-                    <syncfusion:ComboBoxAdv IsEditable="true" HorizontalAlignment="Left" Height="31" Margin="164,90,0,0" VerticalAlignment="Top" Width="120"/>
-                    <Button Content="Add" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="84,236,0,0"/>
-                    <Button Content="Delete" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="244,236,0,0"/>
-                    <Label Content="Type:" HorizontalAlignment="Left" Margin="598,90,0,0" VerticalAlignment="Top"/>
-                    <syncfusion:ComboBoxAdv IsEditable="true" HorizontalAlignment="Left" Height="31" Margin="649,90,0,0" VerticalAlignment="Top" Width="120"/>
-                    <Button Content="Add" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="569,236,0,0"/>
-                    <Button Content="Delete" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="734,236,0,0"/>
+                <Grid Background="AliceBlue" Height="375">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Content="Brand:" HorizontalAlignment="Left" Margin="105,90,0,0" VerticalAlignment="Top" Grid.Column="0" />
+                    <syncfusion:ComboBoxAdv IsEditable="true" HorizontalAlignment="Left" Height="31" Margin="165,90,0,0" VerticalAlignment="Top" Width="120" Grid.Column="0" />
+                    <Button Content="Add" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="85,236,0,0" Grid.Column="0" />
+                    <Button Content="Delete" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="245,236,0,0" Grid.Column="0" />
+
+                    <Label Content="Type:" HorizontalAlignment="Left" Margin="105,90,0,0" VerticalAlignment="Top" Grid.Column="1"/>
+                    <syncfusion:ComboBoxAdv IsEditable="true" HorizontalAlignment="Left" Height="31" Margin="165,90,0,0" VerticalAlignment="Top" Width="120" Grid.Column="1"/>
+                    <Button Content="Add" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="85,236,0,0" Grid.Column="1"/>
+                    <Button Content="Delete" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="243,236,0,0" Grid.Column="1"/>
                 </Grid>
             </Expander>
         </StackPanel>

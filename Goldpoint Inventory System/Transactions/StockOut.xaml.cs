@@ -23,6 +23,8 @@ namespace Goldpoint_Inventory_System.Transactions
         public StockOut()
         {
             InitializeComponent();
+            stack.DataContext = new ExpanderListViewModel();
+
         }
     }
 }

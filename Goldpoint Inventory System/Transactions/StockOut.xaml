@@ -3,10 +3,97 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Goldpoint_Inventory_System.Transactions"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-            
+             xmlns:local="clr-namespace:Goldpoint_Inventory_System"
+             xmlns:syncfusion="http://schemas.syncfusion.com/wpf" 
+             mc:Ignorable="d"        
+             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             xmlns:syncfusionskin ="clr-namespace:Syncfusion.SfSkinManager;assembly=Syncfusion.SfSkinManager.WPF"
+             d:DesignHeight="600" d:DesignWidth="1350"
+             FontSize="16"
+             Background="White">
+
+    <UserControl.DataContext>
+        <local:TransactionViewModel/>
+    </UserControl.DataContext>
+
+    <Grid syncfusionskin:SfSkinManager.VisualStyle="Office2016Colorful">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+        <Label Grid.Column="3" VerticalAlignment="Top" HorizontalAlignment="Right" Height="40" Width="40" ToolTip="Reset">
+            <iconPacks:PackIconMaterialLight Kind="Refresh" Height="30" Width="30" Foreground="RoyalBlue"/>
+        </Label>
+        <StackPanel x:Name="stack" Grid.Column="0" Grid.ColumnSpan="2" Margin="100,105,100,0" VerticalAlignment="Top" HorizontalAlignment="Left">
+            <StackPanel.Resources>
+                <local:ExpanderToBooleanConverter x:Key="ExpanderToBooleanConverter" />
+            </StackPanel.Resources>
+            <Expander Header="Add Item" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Top" Width="400" IsExpanded="{Binding SelectedExpander, ConverterParameter=2, Converter={StaticResource ExpanderToBooleanConverter}, Mode=TwoWay}">
+                <Grid Height="400" Background="AliceBlue">
+                    <Label Content="Item Code:" HorizontalAlignment="Left" Margin="73,30,0,0" VerticalAlignment="Top"/>
+                    <syncfusion:SfTextBoxExt HorizontalAlignment="Left" Height="31" Margin="189,30,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+                    <Label Content="Description:" HorizontalAlignment="Left" Margin="73,66,0,0" VerticalAlignment="Top"/>
+                    <syncfusion:SfTextBoxExt HorizontalAlignment="Left" Height="31" Margin="189,66,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+                    <Label Content="Type:" HorizontalAlignment="Left" Margin="73,102,0,0" VerticalAlignment="Top"/>
+                    <Label Content="Brand:" HorizontalAlignment="Left" Margin="73,141,0,0" VerticalAlignment="Top"/>
+
+                    <Label Content="Remarks:" HorizontalAlignment="Left" Margin="73,177,0,0" VerticalAlignment="Top"/>
+                    <syncfusion:SfTextBoxExt HorizontalAlignment="Left" Height="31" Margin="189,177,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+                    <Label Content="Qty:" HorizontalAlignment="Left" Margin="73,213,0,0" VerticalAlignment="Top"/>
+                    <syncfusion:IntegerTextBox HorizontalAlignment="Left" Height="31" Margin="189,213,0,0" MinWidth="100" NumberGroupSeparator="," TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="120"/>
+                    <Label Content="Item Price:" HorizontalAlignment="Left" Margin="73,249,0,0" VerticalAlignment="Top"/>
+                    <syncfusion:IntegerTextBox HorizontalAlignment="Left" Height="31" Margin="189,249,0,0" MinWidth="100" NumberGroupSeparator="," TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="120"/>
+                    <Label Content="Total per Item:" HorizontalAlignment="Left" Margin="73,285,0,0" VerticalAlignment="Top"/>
+                    <syncfusion:IntegerTextBox HorizontalAlignment="Left" Height="31" Margin="189,285,0,0" MinWidth="100" NumberGroupSeparator="," TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="120"/>
+                    <syncfusion:ButtonAdv SmallIcon="{x:Null}"   HorizontalAlignment="Left" Height="29" Label="Add to list" Margin="124,337,0,0" VerticalAlignment="Top" Width="140"/>
+                    <syncfusion:SfTextBoxExt HorizontalAlignment="Left" Height="31" Margin="189,102,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+                    <syncfusion:SfTextBoxExt HorizontalAlignment="Left" Height="31" Margin="189,141,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+                </Grid>
+            </Expander>
+            <Expander Header="Check Out" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Top" Width="400" IsExpanded="{Binding SelectedExpander, ConverterParameter=2, Converter={StaticResource ExpanderToBooleanConverter}, Mode=TwoWay}">
+                <Grid Height="400" Background="AliceBlue">
+                    <Label Content="Service:" HorizontalAlignment="Left" Margin="29,64,0,0" VerticalAlignment="Top"/>
+                    <RadioButton Content="Delivery Receipt" GroupName="Service" HorizontalAlignment="Left" Margin="129,47,0,0" VerticalAlignment="Top"/>
+                    <RadioButton Content="Invoice" GroupName="Service" HorizontalAlignment="Left" Margin="129,68,0,0" VerticalAlignment="Top"/>
+                    <RadioButton Content="Original Receipt" GroupName="Service" HorizontalAlignment="Left" Margin="129,90,0,0" VerticalAlignment="Top"/>
+
+                    <Label Content="O.R/Invoice:" HorizontalAlignment="Left" Margin="29,166,0,0" VerticalAlignment="Top"/>
+                    <syncfusion:SfTextBoxExt HorizontalAlignment="Left" Height="31" Margin="129,166,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="135"/>
+                    <Label Content="D.R No:" HorizontalAlignment="Left" Margin="29,126,0,0" VerticalAlignment="Top" Width="89"/>
+                    <syncfusion:SfTextBoxExt HorizontalAlignment="Left" Height="31" Margin="129,126,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="135"/>
+
+                    <Label Content="Payment:" HorizontalAlignment="Left" Margin="29,230,0,0" VerticalAlignment="Top"/>
+                    <RadioButton Content="Paid" GroupName="Payment" HorizontalAlignment="Left" Margin="129,214,0,0" VerticalAlignment="Top"/>
+                    <RadioButton Content="Unpaid" GroupName="Payment" HorizontalAlignment="Left" Margin="129,235,0,0" VerticalAlignment="Top"/>
+                    <RadioButton Content="Downpayment" GroupName="Payment" HorizontalAlignment="Left" Margin="129,256,0,0" VerticalAlignment="Top"/>
+                    <Label Content="Discount:" HorizontalAlignment="Left" Margin="29,290,0,0" VerticalAlignment="Top"/>
+                    <syncfusion:IntegerTextBox HorizontalAlignment="Left" Height="31" Margin="129,290,0,0" MinWidth="100" NumberGroupSeparator="," TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="140"/>
+
+                    <Label Content="Total:" HorizontalAlignment="Left" Margin="29,326,0,0" VerticalAlignment="Top"/>
+                    <syncfusion:IntegerTextBox HorizontalAlignment="Left" Height="31" Margin="129,326,0,0" MinWidth="100" NumberGroupSeparator="," TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="140"/>
+
+
+                </Grid>
+            </Expander>
+            <Expander Header="Customer Information" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Top" Width="400" IsExpanded="{Binding SelectedExpander, ConverterParameter=2, Converter={StaticResource ExpanderToBooleanConverter}, Mode=TwoWay}">
+                <Grid Height="400" Background="AliceBlue">
+                    <Label Content="Date:" HorizontalAlignment="Left" Margin="31,36,0,0" VerticalAlignment="Top"/>
+                    <syncfusion:DateTimeEdit HorizontalAlignment="Left" Height="31" Margin="164,36,0,0" TextWrapping="Wrap" Text="DateTimeEdit" VerticalAlignment="Top" Width="135"/>
+                    <Label Content="Customer Name:" HorizontalAlignment="Left" Margin="31,85,0,0" VerticalAlignment="Top"/>
+                    <syncfusion:SfTextBoxExt HorizontalAlignment="Left" Height="31" Margin="164,85,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="165"/>
+                    <Label Content="Address:" HorizontalAlignment="Left" Margin="31,136,0,0" VerticalAlignment="Top"/>
+                    <RichTextBox HorizontalAlignment="Left" Height="100" Margin="164,136,0,0" VerticalAlignment="Top" Width="165"/>
+                    <Label Content="Contact No:" HorizontalAlignment="Left" Margin="31,255,0,0" VerticalAlignment="Top"/>
+                    <syncfusion:SfTextBoxExt HorizontalAlignment="Left" Height="31" Margin="164,255,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="165"/>
+                    <syncfusion:ButtonAdv HorizontalAlignment="Left" Height="29" SmallIcon="{x:Null}" Label="Check out" Margin="164,316,0,0" VerticalAlignment="Top" Width="165"/>
+
+                </Grid>
+            </Expander>
+        </StackPanel>
+        <syncfusion:SfDataGrid x:Name="dgStockOut"  HorizontalAlignment="Left" Height="451" Margin="215,80,0,0" VerticalAlignment="Top" Width="770" Grid.ColumnSpan="3" Grid.Column="1" ItemsSource="{Binding Transact}">
+        </syncfusion:SfDataGrid>
+
     </Grid>
 </UserControl>

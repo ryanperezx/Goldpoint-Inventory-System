@@ -13,17 +13,16 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Goldpoint_Inventory_System.Stock
+namespace Goldpoint_Inventory_System
 {
     /// <summary>
-    /// Interaction logic for StockIn.xaml
+    /// Interaction logic for Account.xaml
     /// </summary>
-    public partial class StockIn : UserControl
+    public partial class Account : UserControl
     {
-        public StockIn()
+        public Account()
         {
             InitializeComponent();
         }
-
     }
 }
