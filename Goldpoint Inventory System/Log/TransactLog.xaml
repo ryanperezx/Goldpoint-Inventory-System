@@ -1,0 +1,27 @@
+﻿<UserControl x:Class="Goldpoint_Inventory_System.Log.TransactLog"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Goldpoint_Inventory_System"
+             xmlns:syncfusion="http://schemas.syncfusion.com/wpf" 
+             mc:Ignorable="d"
+             xmlns:syncfusionskin ="clr-namespace:Syncfusion.SfSkinManager;assembly=Syncfusion.SfSkinManager.WPF"
+             d:DesignHeight="600" d:DesignWidth="1350"             
+             FontSize="16"
+             Background="White">
+    <Grid syncfusionskin:SfSkinManager.VisualStyle="Office2016Colorful">
+        <Label Content="Date From:" HorizontalAlignment="Left" Margin="30,22,0,0" VerticalAlignment="Top"/>
+        <syncfusion:DateTimeEdit HorizontalAlignment="Left" Height="31" Margin="123,22,0,0" TextWrapping="Wrap" Text="DateTimeEdit" VerticalAlignment="Top" Width="120"/>
+        <Label Content="Date To:" HorizontalAlignment="Left" Margin="353,22,0,0" VerticalAlignment="Top"/>
+        <syncfusion:DateTimeEdit HorizontalAlignment="Left" Height="31" Margin="425,22,0,0" TextWrapping="Wrap" Text="DateTimeEdit" VerticalAlignment="Top" Width="120"/>
+        <syncfusion:SfDataGrid HorizontalAlignment="Center" Height="500" Margin="25,60,10,5" VerticalAlignment="Center" Width="1200" ItemsSource="{Binding}" AutoGenerateColumns="False">
+            <syncfusion:SfDataGrid.Columns>
+                <syncfusion:GridTextColumn MappingName="Date" Width="100"/>
+                <syncfusion:GridTextColumn MappingName="Transaction" Width="870"/>
+                <syncfusion:GridTextColumn MappingName="Remarks" Width="228"/>
+
+            </syncfusion:SfDataGrid.Columns>
+        </syncfusion:SfDataGrid>
+    </Grid>
+</UserControl>
