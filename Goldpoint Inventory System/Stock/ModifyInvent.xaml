@@ -10,25 +10,28 @@
              xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
              xmlns:syncfusionskin ="clr-namespace:Syncfusion.SfSkinManager;assembly=Syncfusion.SfSkinManager.WPF"
              d:DesignHeight="600" d:DesignWidth="1350">
-    <Grid syncfusionskin:SfSkinManager.VisualStyle="Office2016Colorful">
+    <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*"/>
             <ColumnDefinition Width="4*"/>
             <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
         <Label Grid.Column="2" VerticalAlignment="Top" HorizontalAlignment="Right" Height="40" Width="40" ToolTip="Reset">
-            <iconPacks:PackIconMaterialLight Kind="Refresh" Height="30" Width="30" Foreground="RoyalBlue"/>
+            <iconPacks:PackIconMaterialLight Kind="Refresh" Height="30" Width="30" Foreground="DarkGoldenrod"/>
         </Label>
         <StackPanel x:Name="stack" Grid.Column="1">
             <StackPanel.Resources>
                 <local:ExpanderToBooleanConverter x:Key="ExpanderToBooleanConverter" />
             </StackPanel.Resources>
             <Expander Header="Modify Item" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Top" Width="900" IsExpanded="{Binding SelectedExpander, ConverterParameter=1, Converter={StaticResource ExpanderToBooleanConverter}, Mode=TwoWay}" >
-                <Grid Background="AliceBlue" Height="400">
+                <Grid Height="400">
                     <Label Content="Item Code:" HorizontalAlignment="Left" Margin="100,40,0,0" VerticalAlignment="Top"/>
                     <syncfusion:SfTextBoxExt HorizontalAlignment="Left" Height="31" Margin="209,40,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+                    <Label VerticalAlignment="Top" HorizontalAlignment="Left" Height="30" Width="30" ToolTip="Search Item" Margin="334,40,0,0" Cursor="Hand">
+                        <iconPacks:PackIconMaterialLight Kind="Magnify" Height="20" Width="20" Foreground="DarkGoldenrod" />
+                    </Label>
                     <Label Content="Description:" HorizontalAlignment="Left" Margin="100,76,0,0" VerticalAlignment="Top"/>
-                    <syncfusion:SfTextBoxExt HorizontalAlignment="Left" Height="31" Margin="209,76,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+                    <syncfusion:SfTextBoxExt HorizontalAlignment="Left" Margin="209,76,0,293" TextWrapping="Wrap" Width="155"/>
                     <Label Content="Type:" HorizontalAlignment="Left" Margin="100,112,0,0" VerticalAlignment="Top"/>
                     <syncfusion:ComboBoxAdv HorizontalAlignment="Left" Height="31" Margin="209,112,0,0" VerticalAlignment="Top" Width="120"/>
                     <Label Content="Brand:" HorizontalAlignment="Left" Margin="100,148,0,0" VerticalAlignment="Top"/>
@@ -47,11 +50,11 @@
                     <Label Content="Remarks:" HorizontalAlignment="Left" Margin="559,40,0,0" VerticalAlignment="Top"/>
                     <syncfusion:SfTextBoxExt HorizontalAlignment="Left" Height="31" Margin="668,40,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
                     <Label Content="Price:" HorizontalAlignment="Left" Margin="559,76,0,0" VerticalAlignment="Top"/>
-                    <syncfusion:IntegerTextBox HorizontalAlignment="Left" Height="31" Margin="668,112,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="120"/>
+                    <syncfusion:DoubleTextBox HorizontalAlignment="Left" Height="31" Margin="668,112,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="120"/>
                     <Label Content="MSRP:" HorizontalAlignment="Left" Margin="559,112,0,0" VerticalAlignment="Top"/>
-                    <syncfusion:IntegerTextBox HorizontalAlignment="Left" Height="31" Margin="668,76,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="120"/>
+                    <syncfusion:DoubleTextBox HorizontalAlignment="Left" Height="31" Margin="668,76,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="120"/>
                     <Label Content="Dealers Price:" HorizontalAlignment="Left" Margin="559,148,0,0" VerticalAlignment="Top"/>
-                    <syncfusion:IntegerTextBox HorizontalAlignment="Left" Height="31" Margin="668,148,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+                    <syncfusion:DoubleTextBox HorizontalAlignment="Left" Height="31" Margin="668,148,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
                     <Button Content="Add" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="225,336,0,0"/>
                     <Button Content="Save" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="355,336,0,0"/>
                     <Button Content="Update" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="490,336,0,0"/>
@@ -60,7 +63,7 @@
                 </Grid>
             </Expander>
             <Expander Header="Modify Brand and Type"  HorizontalAlignment="Left" VerticalAlignment="Top" Width="900" IsExpanded="{Binding SelectedExpander, ConverterParameter=2, Converter={StaticResource ExpanderToBooleanConverter}, Mode=TwoWay}" FontSize="16">
-                <Grid Background="AliceBlue" Height="375">
+                <Grid Height="375">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="1*"/>
                         <ColumnDefinition Width="1*"/>

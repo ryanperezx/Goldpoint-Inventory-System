@@ -10,6 +10,26 @@
              VerticalAlignment="Stretch"
              d:DesignHeight="700" d:DesignWidth="1366">
     <Grid>
-        <TextBlock FontSize="64" HorizontalAlignment="Left" Margin="37,45,0,-1903" TextWrapping="Wrap" Text="Start Page" VerticalAlignment="Top"/>
+        <TextBlock FontSize="64" HorizontalAlignment="Left" Margin="37,45,0,0" TextWrapping="Wrap" Text="Start Page" VerticalAlignment="Top"/>
+        <TextBlock FontSize="32" HorizontalAlignment="Left" Margin="37,147,0,0" TextWrapping="Wrap" Text="Recent Transactions" VerticalAlignment="Top"/>
+        <syncfusion:SfDataGrid x:Name="dgRecentTransact"  HorizontalAlignment="Left" Height="451" Margin="37,195,0,0" VerticalAlignment="Top" Width="770" ItemsSource="{Binding}" AutoGenerateColumns="False">
+            <syncfusion:SfDataGrid.Columns>
+                <syncfusion:GridTextColumn MappingName="Date" DisplayBinding="{Binding date}" Width="120"/>
+                <syncfusion:GridTextColumn MappingName="Transaction" DisplayBinding="{Binding transaction}"  Width="230"/>
+                <syncfusion:GridTextColumn MappingName="Service" DisplayBinding="{Binding service}" Width="120"/>
+                <syncfusion:GridTextColumn MappingName="Service No" DisplayBinding="{Binding serviceNo}"/>
+                <syncfusion:GridTextColumn MappingName="Customer Name" DisplayBinding="{Binding customerName}" Width="150"/>
+            </syncfusion:SfDataGrid.Columns>
+        </syncfusion:SfDataGrid>
+        <syncfusion:SfDataGrid x:Name="dgCritical"  HorizontalAlignment="Left" Height="451" Margin="910,195,0,0" VerticalAlignment="Top" Width="415" ItemsSource="{Binding}" AutoGenerateColumns="False">
+            <syncfusion:SfDataGrid.Columns>
+                <syncfusion:GridTextColumn MappingName="Item Code" DisplayBinding="{Binding itemCode}" Width="120"/>
+                <syncfusion:GridTextColumn MappingName="Description" DisplayBinding="{Binding description}"/>
+                <syncfusion:GridTextColumn MappingName="Qty" DisplayBinding="{Binding qty}"/>
+                <syncfusion:GridTextColumn MappingName="Critical Level" DisplayBinding="{Binding criticalLvl}"/>
+                <syncfusion:GridTextColumn MappingName="Fast moving" DisplayBinding="{Binding fastMoving}"/>
+            </syncfusion:SfDataGrid.Columns>
+        </syncfusion:SfDataGrid>
+        <TextBlock FontSize="32" HorizontalAlignment="Left" Margin="910,147,0,0" TextWrapping="Wrap" Text="Critical level items" VerticalAlignment="Top"/>
     </Grid>
 </UserControl>

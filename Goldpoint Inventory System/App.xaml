@@ -3,7 +3,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:syncfusion="http://schemas.syncfusion.com/wpf" 
     xmlns:self="clr-namespace:Goldpoint_Inventory_System"
-    xmlns:syncfusionskin ="clr-namespace:Syncfusion.SfSkinManager;assembly=Syncfusion.SfSkinManager.WPF"
     StartupUri="MainWindow.xaml">
 	<Application.Resources>
         <ResourceDictionary>
@@ -42,6 +41,11 @@
                     <Trigger Property="syncfusion:SkinStorage.VisualStyle" Value="Office2003">
                         <Setter Property="Background" Value="#FFEAF2FB"></Setter>
                         <Setter Property="Foreground" Value="Black"></Setter>
+                    </Trigger>
+
+                    <Trigger Property="syncfusion:SkinStorage.VisualStyle" Value="Office2019Colorful">
+                        <Setter Property="Background" Value="White"></Setter>
+                        <Setter Property="Foreground" Value="DarkGoldenrod"></Setter>
                     </Trigger>
 
                     <!--Window Background if Visual Style is Office2007Black-->

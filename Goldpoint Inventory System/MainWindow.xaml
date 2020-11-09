@@ -13,11 +13,10 @@
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
         WindowState="Maximized"
-        Style="{StaticResource windowStyle}"
         Title="Goldpoint Inventory System">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="20"/>
+            <RowDefinition Height="25"/>
             <RowDefinition Height="8.9*"/>
         </Grid.RowDefinitions>
         <Grid x:Name="GridMenu" VerticalAlignment="Top" HorizontalAlignment="Stretch" Grid.Row="0">
@@ -28,10 +27,13 @@
                             <iconPacks:PackIconMaterialDesign Kind="Home"  Height="15" Width="22" Foreground="DimGray" Margin="0,0,-15,0"/>
                         </MenuItem.Icon>
                     </MenuItem>
+                    <MenuItem x:Name="btnAccount" Tag="Account" Header="Account" Click="ActivateWindow">
+                        <MenuItem.Icon>
+                            <iconPacks:PackIconMaterialDesign Kind="AccountCircle"  Height="15" Width="21" Foreground="DimGray" Margin="0,0,-15,0"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
                     <MenuItem x:Name="btnLogout" Header="Log Out" Click="BtnLogout_Click"/>
                     <MenuItem x:Name="btnExit"  Header="Exit" Click="BtnExit_Click"/>
-
-
                 </MenuItem>
                 <MenuItem Header="Stock">
                     <MenuItem x:Name="btnStockIn" Tag="StockIn" Header="Stock In" Click="ActivateWindow">
@@ -68,9 +70,9 @@
                     </MenuItem>
                 </MenuItem>
                 <MenuItem Header="Logs">
-                    <MenuItem x:Name="btnDailyReport" Tag="DailyReport" Header="Daily Report" Click="ActivateWindow">
+                    <MenuItem x:Name="btnSales" Tag="Sales" Header="Sales" Click="ActivateWindow">
                         <MenuItem.Icon>
-                            <iconPacks:PackIconBootstrapIcons Kind="Newspaper"  Height="15" Width="22" Foreground="DimGray" Margin="0,0,-15,0"/>
+                            <iconPacks:PackIconBootstrapIcons Kind="BarChart"  Height="15" Width="22" Foreground="DimGray" Margin="0,0,-15,0"/>
                         </MenuItem.Icon>
                     </MenuItem>
                     <MenuItem x:Name="btnTransactLog" Tag="TransactionLog" Header="Transaction Log" Click="ActivateWindow">
@@ -120,7 +122,7 @@
                                     ShowTabItemContextMenu="{Binding ElementName=showtabitemcontextmenu, Path=IsChecked}"
                                     ShowTabListContextMenu="{Binding ElementName=showtablistcontextmenu, Path=IsChecked}" 
                                    IsSelectedDocument="DockingManager_IsSelectedDocument"
-                                   syncfusionskin:SfSkinManager.VisualStyle="Office2016Colorful">
+                                   >
             <ContentControl x:Name="StartPage" 
                     syncfusion:DockingManager.Header="Start Page"
                     syncfusion:DockingManager.State="Document"
@@ -129,6 +131,15 @@
                     syncfusion:DockingManager.CanDragTab="False"
                     >
                 <local:StartPage/>
+            </ContentControl>
+            <ContentControl x:Name="Account" 
+                    syncfusion:DockingManager.Header="Account"
+                    syncfusion:DockingManager.State="Document"
+                    syncfusion:DockingManager.CanDock="False"
+                    syncfusion:DockingManager.CanFloat="False"
+                    syncfusion:DockingManager.CanDragTab="False"
+                    >
+                <local:Account/>
             </ContentControl>
             <ContentControl x:Name="StockIn" 
                     syncfusion:DockingManager.Header="Stock In"
@@ -186,14 +197,14 @@
                     >
                 <transact:JobOrder />
             </ContentControl>
-            <ContentControl x:Name="DailyReport" 
-                    syncfusion:DockingManager.Header="Daily Report"
+            <ContentControl x:Name="Sales" 
+                    syncfusion:DockingManager.Header="Sales"
                     syncfusion:DockingManager.State="Document"
                     syncfusion:DockingManager.CanDock="False"
                     syncfusion:DockingManager.CanFloat="False"
                     syncfusion:DockingManager.CanDragTab="False"
                     >
-                <logs:DailyReport />
+                <logs:Sales />
             </ContentControl>
             <ContentControl x:Name="TransactionLog" 
                     syncfusion:DockingManager.Header="Transaction Log"

@@ -21,7 +21,6 @@ using Syncfusion.Windows.Shared;
 using Syncfusion.Windows.Tools.Controls;
 using Syncfusion.SfSkinManager;
 using Syncfusion.Windows.Tools;
-using Syncfusion.SfSkinManager;
 
 using WinForms = System.Windows.Forms;
 

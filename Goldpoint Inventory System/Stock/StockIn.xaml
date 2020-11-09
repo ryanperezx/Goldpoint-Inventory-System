@@ -10,15 +10,17 @@
              FontSize="16"
              xmlns:syncfusionskin ="clr-namespace:Syncfusion.SfSkinManager;assembly=Syncfusion.SfSkinManager.WPF"
              d:DesignHeight="600" d:DesignWidth="1350">
-    <Grid syncfusionskin:SfSkinManager.VisualStyle="Office2016Colorful" Background="White">
+    <Grid Background="White">
         <Label Grid.Column="2" VerticalAlignment="Top" HorizontalAlignment="Right" Height="40" Width="40" ToolTip="Reset">
-            <iconPacks:PackIconMaterialLight Kind="Refresh" Height="30" Width="30" Foreground="RoyalBlue"/>
+            <iconPacks:PackIconMaterialLight Kind="Refresh" Height="30" Width="30" Foreground="DarkGoldenrod"/>
         </Label>
         <Label Content="Date:" HorizontalAlignment="Left" Margin="159,58,0,0" VerticalAlignment="Top"/>
         <syncfusion:DateTimeEdit HorizontalAlignment="Left" Height="31" Margin="258,58,0,0" TextWrapping="Wrap" Text="DateTimeEdit" VerticalAlignment="Top" Width="120"/>
-
         <Label Content="Item Code:" HorizontalAlignment="Left" Margin="159,104,0,0" VerticalAlignment="Top"/>
         <syncfusion:SfTextBoxExt HorizontalAlignment="Left" Height="31" Margin="258,104,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <Label VerticalAlignment="Top" HorizontalAlignment="Left" Height="30" Width="30" Cursor="Hand" Margin="383,104,0,0">
+            <iconPacks:PackIconMaterialLight Kind="Magnify" Height="20" Width="20" Foreground="DarkGoldenrod" />
+        </Label>
         <Label Content="Description:" HorizontalAlignment="Left" Margin="159,143,0,0" VerticalAlignment="Top"/>
         <syncfusion:SfTextBoxExt HorizontalAlignment="Left" Height="31" Margin="258,143,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
         <Label Content="Type:" HorizontalAlignment="Left" Margin="159,180,0,0" VerticalAlignment="Top"/>
@@ -32,23 +34,30 @@
         <Label Content="Remarks:" HorizontalAlignment="Left" Margin="159,330,0,0" VerticalAlignment="Top"/>
         <syncfusion:SfTextBoxExt HorizontalAlignment="Left" Height="31" Margin="258,330,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
         <Label Content="Replacement?" HorizontalAlignment="Left" Margin="222,366,0,0" VerticalAlignment="Top"/>
-
         <RadioButton GroupName="Replacement" Content="Yes" HorizontalAlignment="Left" Margin="170,402,0,0" VerticalAlignment="Top"/>
         <RadioButton GroupName="Replacement" IsChecked="True" Content="No" HorizontalAlignment="Left" Margin="320,402,0,0" VerticalAlignment="Top"/>
-        <syncfusion:ButtonAdv SmallIcon="{x:Null}"  Content="Add to list" HorizontalAlignment="Left" Height="29" Label="Add to list" Margin="121,460,0,0" VerticalAlignment="Top" Width="120"/>
-        <syncfusion:ButtonAdv SmallIcon="{x:Null}"  Content="Save" HorizontalAlignment="Left" Height="29" Label="Save" Margin="328,460,0,0" VerticalAlignment="Top" Width="97"/>
-        <syncfusion:SfDataGrid HorizontalAlignment="Right" Height="451" Margin="0,80,72,0" VerticalAlignment="Top" Width="770" ItemsSource="{Binding}" AutoGenerateColumns="False">
+        <Label Content="Fast moving:" HorizontalAlignment="Left" Margin="133,445,0,0" VerticalAlignment="Top"/>
+
+
+        <syncfusion:ButtonAdv SmallIcon="{x:Null}"  Content="Add to list" HorizontalAlignment="Left" Height="29" Label="Add to list" Margin="123,525,0,0" VerticalAlignment="Top" Width="120"/>
+        <syncfusion:ButtonAdv SmallIcon="{x:Null}"  Content="Save" HorizontalAlignment="Left" Height="29" Label="Save" Margin="330,525,0,0" VerticalAlignment="Top" Width="97"/>
+        <syncfusion:SfDataGrid x:Name="dgStockIn" HorizontalAlignment="Right" Height="451" Margin="0,80,72,0" VerticalAlignment="Top" Width="770" ItemsSource="{Binding}" AutoGenerateColumns="False">
             <syncfusion:SfDataGrid.Columns>
-                <syncfusion:GridTextColumn MappingName="No" Width="60"/>
-                <syncfusion:GridTextColumn MappingName="Item Code" Width="100"/>
-                <syncfusion:GridTextColumn MappingName="Description" Width="150"/>
-                <syncfusion:GridTextColumn MappingName="Type" Width="100"/>
-                <syncfusion:GridTextColumn MappingName="Brand" Width="100"/>
-                <syncfusion:GridTextColumn MappingName="Size" Width="80"/>
-                <syncfusion:GridTextColumn MappingName="Qty" Width="70"/>
-                <syncfusion:GridTextColumn MappingName="Remarks" Width="170"/>
+                <syncfusion:GridTextColumn MappingName="Item Code" DisplayBinding="{Binding itemCode}" Width="100"/>
+                <syncfusion:GridTextColumn MappingName="Description" DisplayBinding="{Binding description}" Width="150"/>
+                <syncfusion:GridTextColumn MappingName="Type" DisplayBinding="{Binding type}" Width="100"/>
+                <syncfusion:GridTextColumn MappingName="Brand" DisplayBinding="{Binding brand}" Width="100"/>
+                <syncfusion:GridTextColumn MappingName="Size" DisplayBinding="{Binding size}" Width="80"/>
+                <syncfusion:GridTextColumn MappingName="Qty" DisplayBinding="{Binding qty}" Width="70"/>
+                <syncfusion:GridTextColumn MappingName="Remarks" DisplayBinding="{Binding remarks}" Width="170"/>
             </syncfusion:SfDataGrid.Columns>
         </syncfusion:SfDataGrid>
+        <syncfusion:ComboBoxAdv HorizontalAlignment="Left" Height="31" Margin="250,445,0,0" VerticalAlignment="Top" Width="128">
+            <syncfusion:ComboBoxItemAdv>Every 30 days</syncfusion:ComboBoxItemAdv>
+            <syncfusion:ComboBoxItemAdv>Every 15 days</syncfusion:ComboBoxItemAdv>
+            <syncfusion:ComboBoxItemAdv>Every 7 days</syncfusion:ComboBoxItemAdv>
+            <syncfusion:ComboBoxItemAdv>Not applicable</syncfusion:ComboBoxItemAdv>
+        </syncfusion:ComboBoxAdv>
 
     </Grid>
 </UserControl>

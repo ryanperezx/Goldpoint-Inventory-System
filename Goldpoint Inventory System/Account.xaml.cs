@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Syncfusion.SfSkinManager;
+using Syncfusion.Themes.Office2019Colorful.WPF;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +25,18 @@ namespace Goldpoint_Inventory_System
         public Account()
         {
             InitializeComponent();
+
+            Office2019ColorfulThemeSettings themeSettings = new Office2019ColorfulThemeSettings();
+            themeSettings.PrimaryBackground = new SolidColorBrush(Colors.DarkGoldenrod);
+            themeSettings.PrimaryForeground = new SolidColorBrush(Colors.White);
+            themeSettings.BodyFontSize = 16;
+            themeSettings.HeaderFontSize = 14;
+            themeSettings.SubHeaderFontSize = 14;
+            themeSettings.TitleFontSize = 14;
+            themeSettings.SubTitleFontSize = 14;
+            themeSettings.FontFamily = new FontFamily("Calibri");
+            SfSkinManager.RegisterThemeSettings("Office2019Colorful", themeSettings);
+            SfSkinManager.SetTheme(this, new Theme("Office2019Colorful"));
         }
     }
 }

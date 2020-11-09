@@ -24,7 +24,7 @@ using Syncfusion.Windows.Shared;
 using Syncfusion.Windows.Tools.Controls;
 using Syncfusion.SfSkinManager;
 using Syncfusion.Windows.Tools;
-
+using Syncfusion.Themes.Office2019Colorful.WPF;
 using WinForms = System.Windows.Forms;
 
 namespace Goldpoint_Inventory_System
@@ -40,13 +40,28 @@ namespace Goldpoint_Inventory_System
             SfSkinManager.ApplyStylesOnApplication = true;
             InitializeComponent();
             DockingManager.SetState(StockIn, DockState.Hidden);
+            DockingManager.SetState(Account, DockState.Hidden);
             DockingManager.SetState(ModifyInvent, DockState.Hidden);
             DockingManager.SetState(InventCheck, DockState.Hidden);
             DockingManager.SetState(Photocopy, DockState.Hidden);
             DockingManager.SetState(StockOut, DockState.Hidden);
-            DockingManager.SetState(DailyReport, DockState.Hidden);
+            DockingManager.SetState(Sales, DockState.Hidden);
             DockingManager.SetState(TransactionLog, DockState.Hidden);
             DockingManager.SetState(TransactionDetails, DockState.Hidden);
+            DockingManager.SetState(JobOrder, DockState.Hidden);
+
+            Office2019ColorfulThemeSettings themeSettings = new Office2019ColorfulThemeSettings();
+            themeSettings.PrimaryBackground = new SolidColorBrush(Colors.DarkGoldenrod);
+            themeSettings.PrimaryForeground = new SolidColorBrush(Colors.White);
+            themeSettings.BodyFontSize = 14;
+            themeSettings.HeaderFontSize = 14;
+            themeSettings.SubHeaderFontSize = 14;
+            themeSettings.TitleFontSize = 14;
+            themeSettings.SubTitleFontSize = 14;
+            themeSettings.FontFamily = new FontFamily("Calibri");
+            SfSkinManager.RegisterThemeSettings("Office2019Colorful", themeSettings);
+            SfSkinManager.SetTheme(this, new Theme("Office2019Colorful"));
+
 
         }
 

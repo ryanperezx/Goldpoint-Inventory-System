@@ -6,20 +6,24 @@
              xmlns:local="clr-namespace:Goldpoint_Inventory_System"
              xmlns:syncfusion="http://schemas.syncfusion.com/wpf" 
              mc:Ignorable="d"
+             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
              xmlns:syncfusionskin ="clr-namespace:Syncfusion.SfSkinManager;assembly=Syncfusion.SfSkinManager.WPF"
              d:DesignHeight="600" d:DesignWidth="1350"             
              FontSize="16"
              Background="White">
-    <Grid syncfusionskin:SfSkinManager.VisualStyle="Office2016Colorful">
-        <Label Content="Date From:" HorizontalAlignment="Left" Margin="30,22,0,0" VerticalAlignment="Top"/>
-        <syncfusion:DateTimeEdit HorizontalAlignment="Left" Height="31" Margin="123,22,0,0" TextWrapping="Wrap" Text="DateTimeEdit" VerticalAlignment="Top" Width="120"/>
-        <Label Content="Date To:" HorizontalAlignment="Left" Margin="353,22,0,0" VerticalAlignment="Top"/>
-        <syncfusion:DateTimeEdit HorizontalAlignment="Left" Height="31" Margin="425,22,0,0" TextWrapping="Wrap" Text="DateTimeEdit" VerticalAlignment="Top" Width="120"/>
-        <syncfusion:SfDataGrid HorizontalAlignment="Center" Height="500" Margin="25,60,10,5" VerticalAlignment="Center" Width="1200" ItemsSource="{Binding}" AutoGenerateColumns="False">
+    <Grid>
+        <Label Content="Date From:" HorizontalAlignment="Left" Margin="80,25,0,0" VerticalAlignment="Top"/>
+        <syncfusion:DateTimeEdit HorizontalAlignment="Left" Height="31" Margin="173,25,0,0" TextWrapping="Wrap" Text="DateTimeEdit" VerticalAlignment="Top" Width="120"/>
+        <Label Content="Date To:" HorizontalAlignment="Left" Margin="403,25,0,0" VerticalAlignment="Top"/>
+        <syncfusion:DateTimeEdit HorizontalAlignment="Left" Height="31" Margin="475,25,0,0" TextWrapping="Wrap" Text="DateTimeEdit" VerticalAlignment="Top" Width="120"/>
+        <Label VerticalAlignment="Top" HorizontalAlignment="Left" Height="30" Width="30" ToolTip="Search Transaction" Cursor="Hand" Margin="600,25,0,0">
+            <iconPacks:PackIconMaterialLight Kind="Magnify" Height="20" Width="20" Foreground="DarkGoldenrod" />
+        </Label>
+        <syncfusion:SfDataGrid x:Name="dgTransaction" HorizontalAlignment="Left"  Height="500" Margin="80,25,0,20" VerticalAlignment="Center" Width="1200" ItemsSource="{Binding}" AutoGenerateColumns="False">
             <syncfusion:SfDataGrid.Columns>
-                <syncfusion:GridTextColumn MappingName="Date" Width="100"/>
-                <syncfusion:GridTextColumn MappingName="Transaction" Width="870"/>
-                <syncfusion:GridTextColumn MappingName="Remarks" Width="228"/>
+                <syncfusion:GridTextColumn MappingName="Date" Width="100" DisplayBinding="{Binding date}"/>
+                <syncfusion:GridTextColumn MappingName="Transaction" Width="870" DisplayBinding="{Binding transaction}"/>
+                <syncfusion:GridTextColumn MappingName="Remarks" Width="228" DisplayBinding="{Binding remarks}"/>
 
             </syncfusion:SfDataGrid.Columns>
         </syncfusion:SfDataGrid>
