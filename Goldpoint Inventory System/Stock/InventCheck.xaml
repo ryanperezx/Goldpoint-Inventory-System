@@ -29,12 +29,12 @@
             <iconPacks:PackIconMaterialLight Kind="Magnify" Height="20" Width="20" Foreground="DarkGoldenrod" />
         </Label>
         <Label Content="Item Code:" HorizontalAlignment="Left" Margin="85,24,0,0" VerticalAlignment="Top"/>
-        <syncfusion:SfTextBoxExt HorizontalAlignment="Left" Height="31" Margin="485,24,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="150"/>
+        <syncfusion:SfTextBoxExt x:Name="txtItemCode" HorizontalAlignment="Left" Height="31" Margin="190,24,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
         <Label Content="Description:" HorizontalAlignment="Left" Margin="379,24,0,0" VerticalAlignment="Top"/>
-        <syncfusion:SfTextBoxExt HorizontalAlignment="Left" Height="31" Margin="190,24,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <syncfusion:SfTextBoxExt x:Name="txtDesc" HorizontalAlignment="Left" Height="31" Margin="485,24,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="150"/>
         <Label Content="Type:" HorizontalAlignment="Left" Margin="684,24,0,0" VerticalAlignment="Top"/>
-        <syncfusion:ComboBoxAdv HorizontalAlignment="Left" Height="31" Margin="750,24,0,0" VerticalAlignment="Top" Width="135"/>
-        <CheckBox Content="Only show critical level items" HorizontalAlignment="Right" Margin="0,30,260,0" VerticalAlignment="Top"/>
+        <syncfusion:ComboBoxAdv x:Name="cmbType" HorizontalAlignment="Left" Height="31" Margin="750,24,0,0" VerticalAlignment="Top" Width="135"/>
+        <CheckBox x:Name="chkCritical" Content="Only show critical level items" HorizontalAlignment="Right" Margin="0,30,260,0" VerticalAlignment="Top"/>
         <syncfusion:SfDataGrid x:Name="dgInventory" HorizontalAlignment="Left" Height="500" Margin="85,25,10,5" VerticalAlignment="Center" Width="1200" ItemsSource="{Binding}" AutoGenerateColumns="False" HeaderRowHeight="30">
             <syncfusion:SfDataGrid.Columns>
                 <syncfusion:GridTextColumn MappingName="Item Code" Width="100" DisplayBinding="{Binding itemCode}"/>

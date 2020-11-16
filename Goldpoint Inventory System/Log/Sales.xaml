@@ -19,11 +19,11 @@
             <iconPacks:PackIconMaterialLight Kind="Magnify" Height="20" Width="20" Foreground="DarkGoldenrod" />
         </Label>
         <Label Content="Date:" HorizontalAlignment="Left" Margin="63,78,0,0" VerticalAlignment="Top"/>
-        <syncfusion:DateTimeEdit HorizontalAlignment="Left" Height="31" Margin="129,78,0,0" TextWrapping="Wrap" Text="DateTimeEdit" VerticalAlignment="Top" Width="120"/>
+        <syncfusion:DateTimeEdit x:Name="txtDate"  HorizontalAlignment="Left" Height="31" Margin="129,78,0,0" TextWrapping="Wrap" Text="DateTimeEdit" VerticalAlignment="Top" Width="120"/>
         <Label Content="Others:" HorizontalAlignment="Left" Margin="63,125,0,0" VerticalAlignment="Top"/>
-        <syncfusion:SfTextBoxExt HorizontalAlignment="Left" Height="31" Margin="129,125,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="155"/>
+        <syncfusion:SfTextBoxExt x:Name="txtContent" HorizontalAlignment="Left" Height="31" Margin="129,125,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="155"/>
         <Label Content="Total:" HorizontalAlignment="Left" Margin="63,170,0,0" VerticalAlignment="Top"/>
-        <syncfusion:DoubleTextBox HorizontalAlignment="Left" Height="31" Margin="129,170,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="155"/>
+        <syncfusion:DoubleTextBox x:Name="txtTotal" HorizontalAlignment="Left" Height="31" Margin="129,170,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="155"/>
 
         <StackPanel x:Name="stack" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,78,60,0">
             <StackPanel.Resources>
@@ -79,8 +79,8 @@
                 </Grid>
             </Expander>
         </StackPanel>
-        <syncfusion:ButtonAdv  SmallIcon="{x:Null}" HorizontalAlignment="Left" Height="29" Label="Add to list" Margin="129,240,0,0" VerticalAlignment="Top" Width="155"/>
-        <syncfusion:ButtonAdv  SmallIcon="{x:Null}"  HorizontalAlignment="Left" Height="29" Label="Save" Margin="129,290,0,0" VerticalAlignment="Top" Width="155"/>
+        <syncfusion:ButtonAdv x:Name="btnAddtoList"  SmallIcon="{x:Null}" HorizontalAlignment="Left" Height="29" Label="Add to list" Margin="129,240,0,0" VerticalAlignment="Top" Width="155"/>
+        <syncfusion:ButtonAdv x:Name="btnSave" SmallIcon="{x:Null}"  HorizontalAlignment="Left" Height="29" Label="Save" Margin="129,290,0,0" VerticalAlignment="Top" Width="155"/>
 
     </Grid>
 </UserControl>

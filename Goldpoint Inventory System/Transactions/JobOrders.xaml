@@ -28,12 +28,13 @@
         <syncfusion:SfDataGrid x:Name="dgJobOrders" HorizontalAlignment="Center" Height="485" Margin="78,75,64,7" VerticalAlignment="Center" Width="1200" ItemsSource="{Binding}" AutoGenerateColumns="False">
             <syncfusion:SfDataGrid.Columns>
                 <syncfusion:GridTextColumn MappingName="Date" Width="100" DisplayBinding="{Binding date}"/>
-                <syncfusion:GridTextColumn MappingName="Deadline" Width="150" DisplayBinding="{Binding service}"/>
-                <syncfusion:GridTextColumn MappingName="Job Order No" Width="228" DisplayBinding="{Binding jobOrder}"/>
+                <syncfusion:GridTextColumn MappingName="Deadline" Width="150" DisplayBinding="{Binding deadline}"/>
+                <syncfusion:GridTextColumn MappingName="Job Order No" Width="150" DisplayBinding="{Binding jobOrder}"/>
                 <syncfusion:GridTextColumn MappingName="Service" Width="150" DisplayBinding="{Binding service}"/>
                 <syncfusion:GridTextColumn MappingName="Customer Name" Width="228" DisplayBinding="{Binding customerName}"/>
                 <syncfusion:GridTextColumn MappingName="Contact No" Width="150" DisplayBinding="{Binding service}"/>
                 <syncfusion:GridTextColumn MappingName="Status" Width="150" DisplayBinding="{Binding service}"/>
+                <syncfusion:GridTextColumn MappingName="Claimed" Width="120" DisplayBinding="{Binding service}"/>
 
             </syncfusion:SfDataGrid.Columns>
         </syncfusion:SfDataGrid>

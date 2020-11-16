@@ -27,9 +27,7 @@
         <Label x:Name= "lblUserLvl" Content ="User Level :" HorizontalAlignment="Left" Margin="184,300,0,0" VerticalAlignment="Top"/>
         <ComboBox x:Name="cmbUserLevel" HorizontalAlignment="Left" Margin="304,304,0,0" VerticalAlignment="Top" Width="320">
             <ComboBoxItem Content="Administrator"/>
-            <ComboBoxItem Content="Receptionist"/>
-            <ComboBoxItem Content="Cashier"/>
-
+            <ComboBoxItem Content="Staff"/>
         </ComboBox>
         <Label Content="Password :" HorizontalAlignment="Left" Margin="184,412,0,0" VerticalAlignment="Top"/>
         <PasswordBox x:Name="txtPass" HorizontalAlignment="Left" VerticalAlignment="Top" Width="210" Margin="304,412,0,0"  MaxLength="15" Height="31"/>

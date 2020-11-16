@@ -1,20 +1,7 @@
-﻿using Syncfusion.SfSkinManager;
-using Syncfusion.Themes.Office2019Colorful.WPF;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Goldpoint_Inventory_System.Transactions
 {
@@ -46,6 +33,58 @@ namespace Goldpoint_Inventory_System.Transactions
         {
             JobOrders jo = new JobOrders();
             jo.Show();
+        }
+
+        private void CmbJobOrder_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            Syncfusion.Windows.Tools.Controls.ComboBoxItemAdv comboBox = (Syncfusion.Windows.Tools.Controls.ComboBoxItemAdv)cmbJobOrder.SelectedItem;
+
+            if (comboBox != null)
+            {
+                string value = comboBox.Content.ToString();
+                if (value == "Printing, Services, etc.")
+                {
+                    expServ.IsEnabled = true;
+                    expTarp.IsEnabled = false;
+                }
+                else if (value == "Tarpaulin")
+                {
+
+                    expServ.IsEnabled = false;
+                    expTarp.IsEnabled = true;
+                }
+                else
+                {
+                    expServ.IsEnabled = false;
+                    expTarp.IsEnabled = false;
+                }
+            }
+        }
+
+        private void radiobuttonPayment(object sender, System.Windows.RoutedEventArgs e)
+        {
+            RadioButton radiobtn = (RadioButton)sender;
+            string value = radiobtn.Content.ToString();
+            switch (value)
+            {
+                case "Unpaid":
+                    txtDownpayment.Text = null;
+                    txtDownpayment.IsEnabled = false;
+                    break;
+                case "Down payment":
+                    txtDownpayment.Text = null;
+                    txtDownpayment.IsEnabled = true;
+                    break;
+                case "Paid":
+                    txtDownpayment.Text = null;
+                    txtDownpayment.IsEnabled = false;
+                    break;
+            }
+        }
+
+        private void TxtAddTarp_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

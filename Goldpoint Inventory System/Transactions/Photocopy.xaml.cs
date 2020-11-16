@@ -53,8 +53,43 @@ namespace Goldpoint_Inventory_System.Transactions
             });
 
 
+
         }
 
+        private void BtnReset_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
 
+        }
+
+        private void chkServ_Checked(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void chkServ_Unchecked(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void radiobuttonPayment(object sender, System.Windows.RoutedEventArgs e)
+        {
+            RadioButton radiobtn = (RadioButton)sender;
+            string value = radiobtn.Content.ToString();
+            switch (value)
+            {
+                case "Unpaid":
+                    txtDownpayment.Text = null;
+                    txtDownpayment.IsEnabled = false;
+                    break;
+                case "Down payment":
+                    txtDownpayment.Text = null;
+                    txtDownpayment.IsEnabled = true;
+                    break;
+                case "Paid":
+                    txtDownpayment.Text = null;
+                    txtDownpayment.IsEnabled = false;
+                    break;
+            }
+        }
     }
 }

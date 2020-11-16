@@ -64,5 +64,19 @@ namespace Goldpoint_Inventory_System.Stock
 
         }
 
+        private void BtnAddToList_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void BtnSave_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void BtnSearchItem_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+
+        }
     }
 }

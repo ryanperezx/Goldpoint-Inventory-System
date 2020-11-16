@@ -73,22 +73,5 @@ namespace Goldpoint_Inventory_System.Log
                 sales = 85,
             });
         }
-
-        /*
-        private void CmbService_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            Syncfusion.Windows.Tools.Controls.ComboBoxItemAdv typeItem = (Syncfusion.Windows.Tools.Controls.ComboBoxItemAdv)cmbService.SelectedItem;
-            switch (typeItem.Content.ToString())
-            {
-                case "Original Receipt":
-                    break;
-                case "Delivery Receipt":
-                    break;
-                case "Invoice":
-                    break;
-                    
-            }
-        }
-        */
     }
 }
