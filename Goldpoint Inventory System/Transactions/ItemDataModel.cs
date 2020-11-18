@@ -75,6 +75,12 @@ namespace Goldpoint_Inventory_System
             set;
         }
 
+        public double dealersPrice
+        {
+            get;
+            set;
+        }
+
         public string fastMoving
         {
             get;

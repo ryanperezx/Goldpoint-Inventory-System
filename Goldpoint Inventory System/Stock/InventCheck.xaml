@@ -24,17 +24,19 @@
     </UserControl.Resources>
     
     <Grid>
-
-        <Label VerticalAlignment="Top" HorizontalAlignment="Left" Height="30" Width="30" ToolTip="Search Item" Cursor="Hand" Margin="315,24,0,0">
+        <Label x:Name="btnRefresh" MouseLeftButtonDown="BtnRefresh_MouseLeftButtonDown" VerticalAlignment="Top" HorizontalAlignment="Right" Cursor="Hand" Height="40" Width="40" ToolTip="Refresh">
+            <iconPacks:PackIconMaterialLight Kind="Refresh" Height="30" Width="30" Foreground="DarkGoldenrod"/>
+        </Label>
+        <Label x:Name="btnSearchItem" MouseLeftButtonDown="BtnSearchItem_MouseLeftButtonDown" VerticalAlignment="Top" HorizontalAlignment="Left" Height="30" Width="30" ToolTip="Search Item" Cursor="Hand" Margin="315,24,0,0">
             <iconPacks:PackIconMaterialLight Kind="Magnify" Height="20" Width="20" Foreground="DarkGoldenrod" />
         </Label>
         <Label Content="Item Code:" HorizontalAlignment="Left" Margin="85,24,0,0" VerticalAlignment="Top"/>
         <syncfusion:SfTextBoxExt x:Name="txtItemCode" HorizontalAlignment="Left" Height="31" Margin="190,24,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
         <Label Content="Description:" HorizontalAlignment="Left" Margin="379,24,0,0" VerticalAlignment="Top"/>
-        <syncfusion:SfTextBoxExt x:Name="txtDesc" HorizontalAlignment="Left" Height="31" Margin="485,24,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="150"/>
+        <syncfusion:SfTextBoxExt x:Name="txtDesc" TextChanged="TxtDesc_TextChanged" HorizontalAlignment="Left" Height="31" Margin="485,24,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="150"/>
         <Label Content="Type:" HorizontalAlignment="Left" Margin="684,24,0,0" VerticalAlignment="Top"/>
-        <syncfusion:ComboBoxAdv x:Name="cmbType" HorizontalAlignment="Left" Height="31" Margin="750,24,0,0" VerticalAlignment="Top" Width="135"/>
-        <CheckBox x:Name="chkCritical" Content="Only show critical level items" HorizontalAlignment="Right" Margin="0,30,260,0" VerticalAlignment="Top"/>
+        <syncfusion:ComboBoxAdv x:Name="cmbType" HorizontalAlignment="Left" Height="31" Margin="750,24,0,0" VerticalAlignment="Top" Width="135" SelectionChanged="CmbType_SelectionChanged"/>
+        <CheckBox x:Name="chkCritical" Checked="ChkCritical_Checked" Unchecked="ChkCritical_Unchecked" Content="Only show critical level items" HorizontalAlignment="Right" Margin="0,30,260,0" VerticalAlignment="Top"/>
         <syncfusion:SfDataGrid x:Name="dgInventory" HorizontalAlignment="Left" Height="500" Margin="85,25,10,5" VerticalAlignment="Center" Width="1200" ItemsSource="{Binding}" AutoGenerateColumns="False" HeaderRowHeight="30">
             <syncfusion:SfDataGrid.Columns>
                 <syncfusion:GridTextColumn MappingName="Item Code" Width="100" DisplayBinding="{Binding itemCode}"/>
@@ -45,7 +47,8 @@
                 <syncfusion:GridTextColumn MappingName="Qty" Width="100"  DisplayBinding="{Binding qty}"/>
                 <syncfusion:GridTextColumn MappingName="Critical Level" Width="100"  DisplayBinding="{Binding criticalLvl}"/>
                 <syncfusion:GridTextColumn MappingName="MSRP" Width="120"  DisplayBinding="{Binding msrp}"/>
-                <syncfusion:GridTextColumn MappingName="Dealers Price" Width="120"  DisplayBinding="{Binding price}"/>
+                <syncfusion:GridTextColumn MappingName="Price" Width="120"  DisplayBinding="{Binding price}"/>
+                <syncfusion:GridTextColumn MappingName="Dealers Price" Width="120"  DisplayBinding="{Binding dealersPrice}"/>
                 <syncfusion:GridTextColumn MappingName="Fast Moving" Width="120"  DisplayBinding="{Binding fastMoving}"/>
                 <syncfusion:GridTextColumn MappingName="Remarks" Width="200"  DisplayBinding="{Binding remarks}"/>
             </syncfusion:SfDataGrid.Columns>

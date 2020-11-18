@@ -17,7 +17,7 @@
             <ColumnDefinition Width="4*"/>
             <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
-        <Label Grid.Column="2" VerticalAlignment="Top" HorizontalAlignment="Right" Height="40" Width="40" ToolTip="Reset">
+        <Label x:Name="btnRefresh" MouseLeftButtonDown="BtnRefresh_MouseLeftButtonDown" Grid.Column="2" VerticalAlignment="Top" HorizontalAlignment="Right" Cursor="Hand" Height="40" Width="40" ToolTip="Refresh">
             <iconPacks:PackIconMaterialLight Kind="Refresh" Height="30" Width="30" Foreground="DarkGoldenrod"/>
         </Label>
         <StackPanel x:Name="stack" Grid.Column="1">
@@ -28,7 +28,7 @@
                 <Grid Height="400">
                     <Label Content="Item Code:" HorizontalAlignment="Left" Margin="100,40,0,0" VerticalAlignment="Top"/>
                     <syncfusion:SfTextBoxExt x:Name="txtItemCode" HorizontalAlignment="Left" Height="31" Margin="209,40,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
-                    <Label x:Name="lblSearchItem" VerticalAlignment="Top" HorizontalAlignment="Left" Height="30" Width="30" ToolTip="Search Item" Margin="334,40,0,0" Cursor="Hand" MouseDoubleClick="LblSearchItem_MouseDoubleClick">
+                    <Label x:Name="lblSearchItem" VerticalAlignment="Top" HorizontalAlignment="Left" Height="30" Width="30" ToolTip="Search Item" Margin="334,40,0,0" Cursor="Hand" MouseLeftButtonDown="LblSearchItem_MouseLeftButtonDown">
                         <iconPacks:PackIconMaterialLight Kind="Magnify" Height="20" Width="20" Foreground="DarkGoldenrod" />
                     </Label>
                     <Label Content="Description:" HorizontalAlignment="Left" Margin="100,76,0,0" VerticalAlignment="Top"/>
@@ -46,7 +46,7 @@
                     <Label Content="Remarks:" HorizontalAlignment="Left" Margin="559,40,0,0" VerticalAlignment="Top"/>
                     <syncfusion:SfTextBoxExt x:Name="txtRemarks" HorizontalAlignment="Left" Height="31" Margin="668,40,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"  IsEnabled="False"/>
                     <Label Content="Price:" HorizontalAlignment="Left" Margin="559,76,0,0" VerticalAlignment="Top"/>
-                    <syncfusion:DoubleTextBox x:Name="txtPrice" HorizontalAlignment="Left" Height="31" Margin="668,76,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="120"  IsEnabled="False"/>
+                    <syncfusion:DoubleTextBox x:Name="txtPrice" HorizontalAlignment="Left" Height="31" Margin="668,76,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="120"  IsEnabled="False" NumberGroupSeparator="N"/>
                     <Label Content="MSRP:" HorizontalAlignment="Left" Margin="559,112,0,0" VerticalAlignment="Top"/>
                     <syncfusion:DoubleTextBox x:Name="txtMSRP" HorizontalAlignment="Left" Height="31" Margin="668,112,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="120"  IsEnabled="False"/>
                     <Label Content="Dealers Price:" HorizontalAlignment="Left" Margin="559,148,0,0" VerticalAlignment="Top"/>

@@ -15,9 +15,11 @@ namespace Goldpoint_Inventory_System.Stock
         {
             InitializeComponent();
             stack.DataContext = new ExpanderListViewModel();
+            fillUpType();
+
         }
 
-        private void LblSearchItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        private void LblSearchItem_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (string.IsNullOrEmpty(txtItemCode.Text))
             {
@@ -40,14 +42,15 @@ namespace Goldpoint_Inventory_System.Stock
                             {
                                 int descriptionIndex = reader.GetOrdinal("description");
                                 txtDesc.Text = Convert.ToString(reader.GetValue(descriptionIndex));
+
                                 int typeIndex = reader.GetOrdinal("type");
-                                cmbType.Text = Convert.ToString(reader.GetValue(typeIndex));
+                                cmbType.SelectedValue = Convert.ToString(reader.GetValue(typeIndex));
 
                                 int brandIndex = reader.GetOrdinal("brand");
                                 txtBrand.Text = Convert.ToString(reader.GetValue(brandIndex));
 
                                 int sizeIndex = reader.GetOrdinal("size");
-                                txtSize.Text = Convert.ToString(reader.GetValue(brandIndex));
+                                txtSize.Text = Convert.ToString(reader.GetValue(sizeIndex));
 
                                 int qtyIndex = reader.GetOrdinal("qty");
                                 txtQty.Text = Convert.ToString(reader.GetValue(qtyIndex));
@@ -87,7 +90,6 @@ namespace Goldpoint_Inventory_System.Stock
                 }
 
             }
-
         }
 
         private void BtnAddItem_Click(object sender, RoutedEventArgs e)
@@ -118,19 +120,19 @@ namespace Goldpoint_Inventory_System.Stock
                     case MessageBoxResult.Yes:
                         SqlConnection conn = DBUtils.GetDBConnection();
                         conn.Open();
-                        using (SqlCommand cmd = new SqlCommand("INSERT into InventoryItems VALUES (@itemCode, @desc, @type, @brand, @size, @qty, @criticalLvl, @remarks, @price, @msrp, @dealersPrice, '')", conn))
+                        using (SqlCommand cmd = new SqlCommand("INSERT into InventoryItems VALUES (@itemCode, @desc, @type, @brand, @size, @qty, @criticalLevel, @remarks, @price, @msrp, @dealersPrice, '')", conn))
                         {
                             cmd.Parameters.AddWithValue("@itemCode", txtItemCode.Text);
                             cmd.Parameters.AddWithValue("@desc", txtDesc.Text);
                             cmd.Parameters.AddWithValue("@type", cmbType.Text);
                             cmd.Parameters.AddWithValue("@brand", txtBrand.Text);
                             cmd.Parameters.AddWithValue("@size", txtSize.Text);
-                            cmd.Parameters.AddWithValue("@qty", txtQty.Text);
-                            cmd.Parameters.AddWithValue("@criticalLevel", txtCriticalLvl.Text);
+                            cmd.Parameters.AddWithValue("@qty", txtQty.Text.Replace(",", ""));
+                            cmd.Parameters.AddWithValue("@criticalLevel", txtCriticalLvl.Text.Replace(",", ""));
                             cmd.Parameters.AddWithValue("@remarks", txtRemarks.Text);
-                            cmd.Parameters.AddWithValue("@price", txtPrice.Text);
-                            cmd.Parameters.AddWithValue("@msrp", txtMSRP.Text);
-                            cmd.Parameters.AddWithValue("@dealersPrice", txtDealersPrice.Text);
+                            cmd.Parameters.AddWithValue("@price", txtPrice.Text.Replace(",", ""));
+                            cmd.Parameters.AddWithValue("@msrp", txtMSRP.Text.Replace(",", ""));
+                            cmd.Parameters.AddWithValue("@dealersPrice", txtDealersPrice.Text.Replace(",", ""));
 
                             try
                             {
@@ -139,6 +141,7 @@ namespace Goldpoint_Inventory_System.Stock
                                 disableFields();
                                 emptyFields();
 
+                                txtItemCode.IsEnabled = true;
                                 btnSaveItem.IsEnabled = false;
                                 btnAddItem.IsEnabled = true;
                                 btnUpdateItem.IsEnabled = false;
@@ -146,7 +149,7 @@ namespace Goldpoint_Inventory_System.Stock
                             }
                             catch (SqlException ex)
                             {
-                                MessageBox.Show("Error has been encountered");
+                                MessageBox.Show("Error has been encountered" + ex);
                             }
 
                         }
@@ -179,7 +182,7 @@ namespace Goldpoint_Inventory_System.Stock
                     case MessageBoxResult.Yes:
                         SqlConnection conn = DBUtils.GetDBConnection();
                         conn.Open();
-                        using (SqlCommand cmd = new SqlCommand("UPDATE InventoryItems SET desc = @desc, type = @type, brand = @brand, size = @size, criticalLevel = @criticalLevel, remarks = @remarks, price = @price, msrp = @msrp, dealersPrice = @dealersPrice) where itemCode = @itemCode", conn))
+                        using (SqlCommand cmd = new SqlCommand("UPDATE InventoryItems SET description = @desc, type = @type, brand = @brand, size = @size, criticalLevel = @criticalLevel, remarks = @remarks, price = @price, msrp = @msrp, dealersPrice = @dealersPrice where itemCode = @itemCode", conn))
                         {
                             cmd.Parameters.AddWithValue("@itemCode", txtItemCode.Text);
                             cmd.Parameters.AddWithValue("@desc", txtDesc.Text);
@@ -188,9 +191,9 @@ namespace Goldpoint_Inventory_System.Stock
                             cmd.Parameters.AddWithValue("@size", txtSize.Text);
                             cmd.Parameters.AddWithValue("@criticalLevel", txtCriticalLvl.Text);
                             cmd.Parameters.AddWithValue("@remarks", txtRemarks.Text);
-                            cmd.Parameters.AddWithValue("@price", txtPrice.Text);
-                            cmd.Parameters.AddWithValue("@msrp", txtMSRP.Text);
-                            cmd.Parameters.AddWithValue("@dealersPrice", txtDealersPrice.Text);
+                            cmd.Parameters.AddWithValue("@price", txtPrice.Text.Replace(",", ""));
+                            cmd.Parameters.AddWithValue("@msrp", txtMSRP.Text.Replace(",", ""));
+                            cmd.Parameters.AddWithValue("@dealersPrice", txtDealersPrice.Text.Replace(",", ""));
 
                             try
                             {
@@ -199,6 +202,7 @@ namespace Goldpoint_Inventory_System.Stock
                                 disableFields();
                                 emptyFields();
 
+                                txtItemCode.IsEnabled = true;
                                 btnSaveItem.IsEnabled = false;
                                 btnAddItem.IsEnabled = true;
                                 btnUpdateItem.IsEnabled = false;
@@ -206,7 +210,7 @@ namespace Goldpoint_Inventory_System.Stock
                             }
                             catch (SqlException ex)
                             {
-                                MessageBox.Show("Error has been encountered");
+                                MessageBox.Show("Error has been encountered" + ex);
                             }
                         }
                         break;
@@ -242,6 +246,7 @@ namespace Goldpoint_Inventory_System.Stock
                         conn.Open();
                         using (SqlCommand cmd = new SqlCommand("DELETE from InventoryItems where itemCode = @itemCode", conn))
                         {
+                            cmd.Parameters.AddWithValue("@itemCode", txtItemCode.Text);
                             try
                             {
                                 cmd.ExecuteNonQuery();
@@ -290,7 +295,21 @@ namespace Goldpoint_Inventory_System.Stock
                     case MessageBoxResult.Yes:
                         SqlConnection conn = DBUtils.GetDBConnection();
                         conn.Open();
-
+                        using (SqlCommand cmd = new SqlCommand("INSERT into Type (type) VALUES (@type)", conn))
+                        {
+                            cmd.Parameters.AddWithValue("@type", cmbTypeAdd.Text);
+                            try
+                            {
+                                cmd.ExecuteNonQuery();
+                                MessageBox.Show("Type record has been added!");
+                                cmbTypeAdd.Text = null;
+                                fillUpType();
+                            }
+                            catch (SqlException ex)
+                            {
+                                MessageBox.Show("Error has been encountered");
+                            }
+                        }
                         break;
                     case MessageBoxResult.No:
                         return;
@@ -320,7 +339,21 @@ namespace Goldpoint_Inventory_System.Stock
                     case MessageBoxResult.Yes:
                         SqlConnection conn = DBUtils.GetDBConnection();
                         conn.Open();
-
+                        using (SqlCommand cmd = new SqlCommand("DELETE from Type where type = @type", conn))
+                        {
+                            cmd.Parameters.AddWithValue("@type", cmbTypeAdd.Text);
+                            try
+                            {
+                                cmd.ExecuteNonQuery();
+                                MessageBox.Show("Type record has been deleted!");
+                                cmbTypeAdd.Text = null;
+                                fillUpType();
+                            }
+                            catch (SqlException ex)
+                            {
+                                MessageBox.Show("Error has been encountered");
+                            }
+                        }
                         break;
                     case MessageBoxResult.No:
                         return;
@@ -370,6 +403,43 @@ namespace Goldpoint_Inventory_System.Stock
             txtDealersPrice.Text = null;
             txtPrice.Text = null;
             txtMSRP.Text = null;
+        }
+
+        private void BtnRefresh_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            emptyFields();
+            disableFields();
+            fillUpType();
+
+            txtItemCode.IsEnabled = true;
+            btnSaveItem.IsEnabled = false;
+            btnAddItem.IsEnabled = true;
+            btnUpdateItem.IsEnabled = false;
+            btnDeleteItem.IsEnabled = false;
+        }
+
+        private void fillUpType()
+        {
+            SqlConnection conn = DBUtils.GetDBConnection();
+            conn.Open();
+            using (SqlCommand cmd = new SqlCommand("SELECT * from Type", conn))
+            {
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        cmbType.Items.Clear();
+                        cmbTypeAdd.Items.Clear();
+                        while (reader.Read())
+                        {
+                            int typeIndex = reader.GetOrdinal("type");
+                            cmbType.Items.Add(Convert.ToString(reader.GetValue(typeIndex)));
+                            cmbTypeAdd.Items.Add(Convert.ToString(reader.GetValue(typeIndex)));
+
+                        }
+                    }
+                }
+            }
         }
     }
 }

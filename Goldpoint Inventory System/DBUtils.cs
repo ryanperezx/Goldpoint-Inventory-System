@@ -13,8 +13,8 @@ namespace Goldpoint_Inventory_System
         {
             string datasource = @"DESKTOP-QRTQRNN\SQLEXPRESS";
             string database = "GoldpointManagementSystem;" +
-                "User ID=admin;" +
-                "Password=Deaths123";
+                "User ID=sa;" +
+                "Password=g0UViHqHq8Ac";
 
             return DBSQLServerUtils.GetDBConnection(datasource, database);
         }
