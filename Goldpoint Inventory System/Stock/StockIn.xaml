@@ -11,7 +11,7 @@
              xmlns:syncfusionskin ="clr-namespace:Syncfusion.SfSkinManager;assembly=Syncfusion.SfSkinManager.WPF"
              d:DesignHeight="600" d:DesignWidth="1350">
     <Grid Background="White">
-        <Label Grid.Column="2" VerticalAlignment="Top" HorizontalAlignment="Right" Height="40" Width="40" ToolTip="Reset">
+        <Label x:Name="btnRefresh" MouseLeftButtonDown="BtnRefresh_MouseLeftButtonDown" VerticalAlignment="Top" HorizontalAlignment="Right" Height="40" Width="40" Cursor="Hand" ToolTip="Refresh">
             <iconPacks:PackIconMaterialLight Kind="Refresh" Height="30" Width="30" Foreground="DarkGoldenrod"/>
         </Label>
         <Label Content="Date:" HorizontalAlignment="Left" Margin="159,58,0,0" VerticalAlignment="Top"/>
@@ -32,16 +32,21 @@
         <Label Content="Qty:" HorizontalAlignment="Left" Margin="159,294,0,0" VerticalAlignment="Top"/>
         <syncfusion:IntegerTextBox x:Name="txtQty" HorizontalAlignment="Left" Height="31" Margin="258,294,0,0" MinWidth="100" NumberGroupSeparator="," TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="120"/>
         <Label Content="Remarks:" HorizontalAlignment="Left" Margin="159,330,0,0" VerticalAlignment="Top"/>
-        <syncfusion:SfTextBoxExt x:Name="txtRemarkks" HorizontalAlignment="Left" Height="31" Margin="258,330,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <syncfusion:SfTextBoxExt x:Name="txtRemarks" HorizontalAlignment="Left" Height="31" Margin="258,330,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
         <Label Content="Replacement?" HorizontalAlignment="Left" Margin="222,366,0,0" VerticalAlignment="Top"/>
-        <RadioButton GroupName="Replacement" Content="Yes" HorizontalAlignment="Left" Margin="170,402,0,0" VerticalAlignment="Top"/>
-        <RadioButton GroupName="Replacement" IsChecked="True" Content="No" HorizontalAlignment="Left" Margin="320,402,0,0" VerticalAlignment="Top"/>
+        <RadioButton x:Name="rdReplacementYes" GroupName="Replacement" Content="Yes" HorizontalAlignment="Left" Margin="170,402,0,0" VerticalAlignment="Top"/>
+        <RadioButton x:Name="rdReplacementNo" GroupName="Replacement" IsChecked="True" Content="No" HorizontalAlignment="Left" Margin="320,402,0,0" VerticalAlignment="Top"/>
         <Label Content="Fast moving:" HorizontalAlignment="Left" Margin="133,445,0,0" VerticalAlignment="Top"/>
-
+        <syncfusion:ComboBoxAdv x:Name="cmbFastMoving" HorizontalAlignment="Left" Height="31" Margin="250,445,0,0" VerticalAlignment="Top" Width="128" SelectedIndex="3">
+            <syncfusion:ComboBoxItemAdv>Every 30 days</syncfusion:ComboBoxItemAdv>
+            <syncfusion:ComboBoxItemAdv>Every 15 days</syncfusion:ComboBoxItemAdv>
+            <syncfusion:ComboBoxItemAdv>Every 7 days</syncfusion:ComboBoxItemAdv>
+            <syncfusion:ComboBoxItemAdv>Not applicable</syncfusion:ComboBoxItemAdv>
+        </syncfusion:ComboBoxAdv>
 
         <syncfusion:ButtonAdv SmallIcon="{x:Null}" x:Name="btnAddToList" Click="BtnAddToList_Click" Content="Add to list" HorizontalAlignment="Left" Height="29" Label="Add to list" Margin="123,525,0,0" VerticalAlignment="Top" Width="120"/>
         <syncfusion:ButtonAdv SmallIcon="{x:Null}" x:Name="btnSave" Click="BtnSave_Click" Content="Save" HorizontalAlignment="Left" Height="29" Label="Save" Margin="330,525,0,0" VerticalAlignment="Top" Width="97"/>
-        <syncfusion:SfDataGrid x:Name="dgStockIn" HorizontalAlignment="Right" Height="451" Margin="0,80,72,0" VerticalAlignment="Top" Width="770" ItemsSource="{Binding}" AutoGenerateColumns="False">
+        <syncfusion:SfDataGrid x:Name="dgStockIn" HorizontalAlignment="Right" Height="451" Margin="0,80,72,0" VerticalAlignment="Top" Width="770" AutoGenerateColumns="False" >
             <syncfusion:SfDataGrid.Columns>
                 <syncfusion:GridTextColumn MappingName="Item Code" DisplayBinding="{Binding itemCode}" Width="100"/>
                 <syncfusion:GridTextColumn MappingName="Description" DisplayBinding="{Binding description}" Width="150"/>
@@ -49,15 +54,12 @@
                 <syncfusion:GridTextColumn MappingName="Brand" DisplayBinding="{Binding brand}" Width="100"/>
                 <syncfusion:GridTextColumn MappingName="Size" DisplayBinding="{Binding size}" Width="80"/>
                 <syncfusion:GridTextColumn MappingName="Qty" DisplayBinding="{Binding qty}" Width="70"/>
+                <syncfusion:GridTextColumn MappingName="Replacement" DisplayBinding="{Binding replacement}" Width="170"/>
+                <syncfusion:GridTextColumn MappingName="Feplacement" DisplayBinding="{Binding fastMoving}" Width="150"/>
                 <syncfusion:GridTextColumn MappingName="Remarks" DisplayBinding="{Binding remarks}" Width="170"/>
             </syncfusion:SfDataGrid.Columns>
         </syncfusion:SfDataGrid>
-        <syncfusion:ComboBoxAdv x:Name="cmbFastMoving" HorizontalAlignment="Left" Height="31" Margin="250,445,0,0" VerticalAlignment="Top" Width="128">
-            <syncfusion:ComboBoxItemAdv>Every 30 days</syncfusion:ComboBoxItemAdv>
-            <syncfusion:ComboBoxItemAdv>Every 15 days</syncfusion:ComboBoxItemAdv>
-            <syncfusion:ComboBoxItemAdv>Every 7 days</syncfusion:ComboBoxItemAdv>
-            <syncfusion:ComboBoxItemAdv>Not applicable</syncfusion:ComboBoxItemAdv>
-        </syncfusion:ComboBoxAdv>
+
 
     </Grid>
 </UserControl>

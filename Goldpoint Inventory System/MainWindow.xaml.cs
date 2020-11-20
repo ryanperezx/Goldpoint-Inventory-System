@@ -49,6 +49,7 @@ namespace Goldpoint_Inventory_System
             DockingManager.SetState(TransactionLog, DockState.Hidden);
             DockingManager.SetState(TransactionDetails, DockState.Hidden);
             DockingManager.SetState(JobOrder, DockState.Hidden);
+            DockingManager.SetState(ImportDetails, DockState.Hidden);
 
             Office2019ColorfulThemeSettings themeSettings = new Office2019ColorfulThemeSettings();
             themeSettings.PrimaryBackground = new SolidColorBrush(Colors.DarkGoldenrod);

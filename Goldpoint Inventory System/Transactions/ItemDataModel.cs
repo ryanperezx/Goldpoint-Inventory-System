@@ -99,5 +99,11 @@ namespace Goldpoint_Inventory_System
             set;
         }
 
+        public string replacement
+        {
+            get;
+            set;
+        }
+
     }
 }

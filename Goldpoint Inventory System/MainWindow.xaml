@@ -85,6 +85,11 @@
                             <iconPacks:PackIconMaterialDesign Kind="ShoppingBasket"  Height="15" Width="22" Foreground="DimGray" Margin="0,0,-15,0"/>
                         </MenuItem.Icon>
                     </MenuItem>
+                    <MenuItem x:Name="btnImportDetails" Tag="ImportDetails" Header="Import Details" Click="ActivateWindow">
+                        <MenuItem.Icon>
+                            <iconPacks:PackIconMaterialDesign Kind="ImportExport"  Height="15" Width="22" Foreground="DimGray" Margin="0,0,-15,0"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
                 </MenuItem>
             </Menu>
             <StackPanel HorizontalAlignment="Right" VerticalAlignment="Bottom"  Orientation="Horizontal" FocusManager.IsFocusScope="True" 
@@ -223,6 +228,15 @@
                     syncfusion:DockingManager.CanDragTab="False"
                     >
                 <logs:TransactDetails />
+            </ContentControl>
+            <ContentControl x:Name="ImportDetails" 
+                    syncfusion:DockingManager.Header="Import Details"
+                    syncfusion:DockingManager.State="Document"
+                    syncfusion:DockingManager.CanDock="False"
+                    syncfusion:DockingManager.CanFloat="False"
+                    syncfusion:DockingManager.CanDragTab="False"
+                    >
+                <logs:ImportDetails />
             </ContentControl>
         </syncfusion:DockingManager>
     </Grid>

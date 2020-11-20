@@ -273,6 +273,9 @@
     <Compile Include="Login.xaml.cs">
       <DependentUpon>Login.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Log\ImportDetails.xaml.cs">
+      <DependentUpon>ImportDetails.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Log\SalesDataModel.cs" />
     <Compile Include="Log\Sales.xaml.cs">
       <DependentUpon>Sales.xaml</DependentUpon>
@@ -333,6 +336,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Login.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Log\ImportDetails.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

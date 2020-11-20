@@ -1,20 +1,10 @@
-﻿using Syncfusion.SfSkinManager;
-using Syncfusion.Themes.Office2019Colorful.WPF;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Collections.ObjectModel;
+using System.Data.SqlClient;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Goldpoint_Inventory_System.Stock
 {
@@ -27,56 +17,237 @@ namespace Goldpoint_Inventory_System.Stock
             InitializeComponent();
 
             dgStockIn.ItemsSource = items;
-
-            items.Add(new ItemDataModel
-            {
-                itemCode = "2020-1100001",
-                description = "Black Ballpen",
-                type = "Ballpen",
-                brand = "HBW",
-                size = "N\\A",
-                qty = 10,
-                remarks = "",
-
-            });
-
-            items.Add(new ItemDataModel
-            {
-                itemCode = "2020-2100001",
-                description = "Short Ream",
-                type = "Bondpaper",
-                brand = "Hard Copy",
-                size = "N\\A",
-                qty = 1,
-                remarks = "",
-            });
-
-            items.Add(new ItemDataModel
-            {
-                itemCode = "2020-3100001",
-                description = "Short Envelope",
-                type = "Envelope",
-                brand = "Generic",
-                size = "N\\A",
-                qty = 5,
-                remarks = "",
-            });
-
         }
 
         private void BtnAddToList_Click(object sender, RoutedEventArgs e)
         {
+            if (string.IsNullOrEmpty(txtItemCode.Text) && string.IsNullOrEmpty(txtQty.Text) && string.IsNullOrEmpty(txtDesc.Text))
+            {
+                MessageBox.Show("One or more fields is empty!");
+            }
+            else
+            {
+                var found = items.FirstOrDefault(x => txtItemCode.Text == x.itemCode);
 
+                if (found != null)
+                {
+                    if (rdReplacementYes.IsChecked == true)
+                        found.replacement = "Yes";
+                    else
+                        found.replacement = "No";
+
+                    items.Add(new ItemDataModel
+                    {
+                        itemCode = found.itemCode,
+                        description = found.description,
+                        type = found.type,
+                        brand = found.brand,
+                        size = found.size,
+                        qty = Convert.ToInt32(txtQty.Text.Replace(",", "")),
+                        remarks = txtRemarks.Text,
+                        replacement = found.replacement,
+                        fastMoving = cmbFastMoving.Text
+                    });
+                    //there is no refresh for syncfusion datagrid soo have to work it out somew
+                    foreach (var item in items.Where(x => txtItemCode.Text == x.itemCode).ToList())
+                    {
+                        items.Remove(item);
+                        break;
+                    }
+                }
+                else
+                {
+                    string replacement = "No";
+                    if (rdReplacementYes.IsChecked == true)
+                        replacement = "Yes";
+                    items.Add(new ItemDataModel
+                    {
+                        itemCode = txtItemCode.Text,
+                        description = txtDesc.Text,
+                        type = txtType.Text,
+                        brand = txtBrand.Text,
+                        size = txtSize.Text,
+                        qty = Convert.ToInt32(txtQty.Text.Replace(",", "")),
+                        remarks = txtRemarks.Text,
+                        replacement = replacement,
+                        fastMoving = cmbFastMoving.Text
+                    });
+                }
+                emptyFields();
+
+
+            }
         }
 
         private void BtnSave_Click(object sender, RoutedEventArgs e)
         {
+            if (string.IsNullOrEmpty(txtItemCode.Text) && string.IsNullOrEmpty(txtQty.Text) && string.IsNullOrEmpty(txtDesc.Text) && string.IsNullOrEmpty(txtDate.Text))
+            {
+                MessageBox.Show("One or more fields is empty!");
+            }
+            else if (items.Count == 0)
+            {
+                MessageBox.Show("Item list is empty!");
+            }
+            else
+            {
+                string sMessageBoxText = "Confirming replenishment of Inventory";
+                string sCaption = "Replenish Inventory?";
+                MessageBoxButton btnMessageBox = MessageBoxButton.YesNoCancel;
+                MessageBoxImage icnMessageBox = MessageBoxImage.Warning;
 
+                MessageBoxResult dr = MessageBox.Show(sMessageBoxText, sCaption, btnMessageBox, icnMessageBox);
+                switch (dr)
+                {
+                    case MessageBoxResult.Yes:
+                        SqlConnection conn = DBUtils.GetDBConnection();
+                        conn.Open();
+                        bool success = false;
+                        foreach (var item in items)
+                        {
+                            if (item.replacement == "Yes")
+                            {
+                                using (SqlCommand cmd = new SqlCommand("UPDATE InventoryItems set remarks = @remarks, fastMoving = @fastMoving where itemCode = @itemCode", conn))
+                                {
+                                    cmd.Parameters.AddWithValue("@remarks", item.remarks);
+                                    cmd.Parameters.AddWithValue("@fastMoving", item.fastMoving);
+                                    cmd.Parameters.AddWithValue("@itemCode", item.itemCode);
+                                    try
+                                    {
+                                        cmd.ExecuteNonQuery();
+                                        success = true;
+                                    }
+                                    catch (SqlException ex)
+                                    {
+                                        MessageBox.Show("Error has been encountered!" + ex);
+                                        return;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                using (SqlCommand cmd = new SqlCommand("UPDATE InventoryItems set qty = qty + @qty, remarks = @remarks, fastMoving = @fastMoving where itemCode = @itemCode", conn))
+                                {
+                                    cmd.Parameters.AddWithValue("@qty", item.qty);
+                                    cmd.Parameters.AddWithValue("@remarks", item.remarks);
+                                    cmd.Parameters.AddWithValue("@fastMoving", item.fastMoving);
+                                    cmd.Parameters.AddWithValue("@itemCode", item.itemCode);
+                                    try
+                                    {
+                                        cmd.ExecuteNonQuery();
+                                        success = true;
+                                    }
+                                    catch (SqlException ex)
+                                    {
+                                        MessageBox.Show("Error has been encountered!" + ex);
+                                        return;
+
+                                    }
+                                }
+                            }
+
+                            using (SqlCommand cmd = new SqlCommand("INSERT into ImportDetails (date, itemCode, qty, remarks, fastMoving, replacement) VALUES (@date, @itemCode, @qty, @remarks, @fastMoving, @replacement)", conn))
+                            {
+                                cmd.Parameters.AddWithValue("@qty", item.qty);
+                                cmd.Parameters.AddWithValue("@remarks", item.remarks);
+                                cmd.Parameters.AddWithValue("@fastMoving", item.fastMoving);
+                                cmd.Parameters.AddWithValue("@itemCode", item.itemCode);
+                                cmd.Parameters.AddWithValue("@date", txtDate.Text);
+                                cmd.Parameters.AddWithValue("@replacement", item.replacement);
+                                try
+                                {
+                                    cmd.ExecuteNonQuery();
+                                }
+                                catch (SqlException ex)
+                                {
+                                    MessageBox.Show("Error has been encountered!" + ex);
+                                    return;
+                                }
+
+
+                            }
+                        }
+                        if (success)
+                        {
+                            MessageBox.Show("Item(s) has been replenished!");
+                            emptyFields();
+                            items.Clear();
+                        }
+                        break;
+                    case MessageBoxResult.No:
+                        return;
+                    case MessageBoxResult.Cancel:
+                        return;
+                }
+            }
         }
 
         private void BtnSearchItem_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
+            if (string.IsNullOrEmpty(txtItemCode.Text))
+            {
+                MessageBox.Show("Item code field is empty!");
+                txtItemCode.Focus();
+            }
+            else
+            {
+                SqlConnection conn = DBUtils.GetDBConnection();
+                conn.Open();
+                using (SqlCommand cmd = new SqlCommand("SELECT * from InventoryItems where itemCode = @itemCode", conn))
+                {
+                    cmd.Parameters.AddWithValue("@itemCode", txtItemCode.Text);
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
 
+                            while (reader.Read())
+                            {
+                                int descriptionIndex = reader.GetOrdinal("description");
+                                txtDesc.Text = Convert.ToString(reader.GetValue(descriptionIndex));
+
+                                int typeIndex = reader.GetOrdinal("type");
+                                txtType.Text = Convert.ToString(reader.GetValue(typeIndex));
+
+                                int brandIndex = reader.GetOrdinal("brand");
+                                txtBrand.Text = Convert.ToString(reader.GetValue(brandIndex));
+
+                                int sizeIndex = reader.GetOrdinal("size");
+                                txtSize.Text = Convert.ToString(reader.GetValue(sizeIndex));
+
+                                int remarksIndex = reader.GetOrdinal("remarks");
+                                txtRemarks.Text = Convert.ToString(reader.GetValue(remarksIndex));
+
+                            }
+                        }
+                        else
+                        {
+                            MessageBox.Show("Item does not exist in the inventory");
+                        }
+                    }
+
+                }
+
+            }
+        }
+
+        private void BtnRefresh_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            emptyFields();
+            items.Clear();
+        }
+
+        private void emptyFields()
+        {
+            txtItemCode.Text = null;
+            txtDesc.Text = null;
+            txtQty.Text = null;
+            txtSize.Text = null;
+            txtType.Text = null;
+            txtBrand.Text = null;
+            txtRemarks.Text = null;
+            rdReplacementNo.IsChecked = true;
+            cmbFastMoving.SelectedIndex = 3;
         }
     }
 }
