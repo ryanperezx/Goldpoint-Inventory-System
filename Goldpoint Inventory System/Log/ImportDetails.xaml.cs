@@ -46,16 +46,18 @@ namespace Goldpoint_Inventory_System.Log
                 {
                     if (!string.IsNullOrEmpty(txtDateTo.Text))
                     {
-                        using (SqlCommand cmd = new SqlCommand("SELECT id.date, ii.description, id.qty, id.replacement, id.fastMoving, id.remarks from ImportDetails id LEFT JOIN InventoryItems ii on id.itemCode = ii.itemCode where CAST(id.date AS datetime) between @dateFrom and @dateTo", conn))
+
+
+                        using (SqlCommand cmd = new SqlCommand("SELECT id.itemCode, id.date, ii.description, id.qty, id.replacement, id.fastMoving, id.remarks from ImportDetails id LEFT JOIN InventoryItems ii on id.itemCode = ii.itemCode where CAST(id.date AS date) between @dateFrom and @dateTo", conn))
                         {
                             cmd.Parameters.AddWithValue("@dateFrom", txtDateFrom.Text);
                             cmd.Parameters.AddWithValue("@dateTo", txtDateTo.Text);
 
                             using (SqlDataReader reader = cmd.ExecuteReader())
                             {
+                                details.Clear();
                                 if (reader.HasRows)
                                 {
-                                    details.Clear();
                                     while (reader.Read())
                                     {
                                         int itemCodeIndex = reader.GetOrdinal("itemCode");
@@ -77,49 +79,6 @@ namespace Goldpoint_Inventory_System.Log
                                         });
 
                                     }
-                                }
-                                else
-                                {
-                                    MessageBox.Show("Item does not exist in the inventory");
-                                }
-                            }
-                        }
-                    }
-                    else
-                    {
-                        using (SqlCommand cmd = new SqlCommand("SELECT id.date, ii.description, id.qty, id.replacement, id.fastMoving, id.remarks from ImportDetails id LEFT JOIN InventoryItems ii on id.itemCode = ii.itemCode where id.date = @date", conn))
-                        {
-                            cmd.Parameters.AddWithValue("@date", txtDateFrom.Text);
-                            using (SqlDataReader reader = cmd.ExecuteReader())
-                            {
-                                if (reader.HasRows)
-                                {
-                                    details.Clear();
-                                    while (reader.Read())
-                                    {
-                                        int itemCodeIndex = reader.GetOrdinal("itemCode");
-                                        int dateIndex = reader.GetOrdinal("date");
-                                        int descriptionIndex = reader.GetOrdinal("description");
-                                        int qtyIndex = reader.GetOrdinal("qty");
-                                        int replacementIndex = reader.GetOrdinal("replacement");
-                                        int fastMovingIndex = reader.GetOrdinal("fastMoving");
-                                        int remarksIndex = reader.GetOrdinal("remarks");
-
-                                        details.Add(new ItemDataModel
-                                        {
-                                            date = Convert.ToString(reader.GetValue(dateIndex)),
-                                            itemCode = Convert.ToString(reader.GetValue(itemCodeIndex)),
-                                            description = Convert.ToString(reader.GetValue(descriptionIndex)),
-                                            qty = Convert.ToInt32(reader.GetValue(qtyIndex)),
-                                            replacement = Convert.ToString(reader.GetValue(replacementIndex)),
-                                            fastMoving = Convert.ToString(reader.GetValue(fastMovingIndex))
-                                        });
-
-                                    }
-                                }
-                                else
-                                {
-                                    MessageBox.Show("Item does not exist in the inventory");
                                 }
                             }
                         }
@@ -129,17 +88,16 @@ namespace Goldpoint_Inventory_System.Log
                 {
                     if (!string.IsNullOrEmpty(txtDateTo.Text))
                     {
-                        using (SqlCommand cmd = new SqlCommand("SELECT id.date, ii.description, id.qty, id.replacement, id.fastMoving, id.remarks from ImportDetails id LEFT JOIN InventoryItems ii on id.itemCode = ii.itemCode where id.itemCode = @itemCode and CAST(id.date AS datetime) between @dateFrom and @dateTo", conn))
+                        using (SqlCommand cmd = new SqlCommand("SELECT id.itemCode, id.date, ii.description, id.qty, id.replacement, id.fastMoving, id.remarks from ImportDetails id LEFT JOIN InventoryItems ii on id.itemCode = ii.itemCode where id.itemCode = @itemCode and CAST(id.date AS date) between @dateFrom and @dateTo", conn))
                         {
                             cmd.Parameters.AddWithValue("@itemCode", txtItemCode.Text);
                             cmd.Parameters.AddWithValue("@dateFrom", txtDateFrom.Text);
                             cmd.Parameters.AddWithValue("@dateTo", txtDateTo.Text);
-
                             using (SqlDataReader reader = cmd.ExecuteReader())
                             {
+                                details.Clear();
                                 if (reader.HasRows)
                                 {
-                                    details.Clear();
                                     while (reader.Read())
                                     {
                                         int itemCodeIndex = reader.GetOrdinal("itemCode");
@@ -161,50 +119,6 @@ namespace Goldpoint_Inventory_System.Log
                                         });
 
                                     }
-                                }
-                                else
-                                {
-                                    MessageBox.Show("Item does not exist in the inventory");
-                                }
-                            }
-                        }
-                    }
-                    else
-                    {
-                        using (SqlCommand cmd = new SqlCommand("SELECT id.date, ii.description, id.qty, id.replacement, id.fastMoving, id.remarks from ImportDetails id LEFT JOIN InventoryItems ii on id.itemCode = ii.itemCode where ud.itemCode = @itemCode and ud.date = @date", conn))
-                        {
-                            cmd.Parameters.AddWithValue("@itemCode", txtItemCode.Text);
-                            cmd.Parameters.AddWithValue("@date", txtDateFrom.Text);
-                            using (SqlDataReader reader = cmd.ExecuteReader())
-                            {
-                                if (reader.HasRows)
-                                {
-                                    details.Clear();
-                                    while (reader.Read())
-                                    {
-                                        int itemCodeIndex = reader.GetOrdinal("itemCode");
-                                        int dateIndex = reader.GetOrdinal("date");
-                                        int descriptionIndex = reader.GetOrdinal("description");
-                                        int qtyIndex = reader.GetOrdinal("qty");
-                                        int replacementIndex = reader.GetOrdinal("replacement");
-                                        int fastMovingIndex = reader.GetOrdinal("fastMoving");
-                                        int remarksIndex = reader.GetOrdinal("remarks");
-
-                                        details.Add(new ItemDataModel
-                                        {
-                                            date = Convert.ToString(reader.GetValue(dateIndex)),
-                                            itemCode = Convert.ToString(reader.GetValue(itemCodeIndex)),
-                                            description = Convert.ToString(reader.GetValue(descriptionIndex)),
-                                            qty = Convert.ToInt32(reader.GetValue(qtyIndex)),
-                                            replacement = Convert.ToString(reader.GetValue(replacementIndex)),
-                                            fastMoving = Convert.ToString(reader.GetValue(fastMovingIndex))
-                                        });
-
-                                    }
-                                }
-                                else
-                                {
-                                    MessageBox.Show("Item does not exist in the inventory");
                                 }
                             }
                         }
@@ -215,17 +129,15 @@ namespace Goldpoint_Inventory_System.Log
             {
                 SqlConnection conn = DBUtils.GetDBConnection();
                 conn.Open();
-                using (SqlCommand cmd = new SqlCommand("SELECT id.date, ii.description, id.qty, id.replacement, id.fastMoving, id.remarks from ImportDetails id LEFT JOIN InventoryItems ii on id.itemCode = ii.itemCode where id.itemCode = @itemCode and CAST(id.date AS datetime) between @dateFrom and @dateTo", conn))
+                using (SqlCommand cmd = new SqlCommand("SELECT id.itemCode, id.date, ii.description, id.qty, id.replacement, id.fastMoving, id.remarks from ImportDetails id LEFT JOIN InventoryItems ii on id.itemCode = ii.itemCode where CAST(id.date AS date) between @dateFrom and @dateTo", conn))
                 {
-                    cmd.Parameters.AddWithValue("@itemCode", txtItemCode.Text);
                     cmd.Parameters.AddWithValue("@dateFrom", txtDateFrom.Text);
                     cmd.Parameters.AddWithValue("@dateTo", txtDateTo.Text);
-
                     using (SqlDataReader reader = cmd.ExecuteReader())
                     {
+                        details.Clear();
                         if (reader.HasRows)
                         {
-                            details.Clear();
                             while (reader.Read())
                             {
                                 int itemCodeIndex = reader.GetOrdinal("itemCode");
@@ -247,10 +159,6 @@ namespace Goldpoint_Inventory_System.Log
                                 });
 
                             }
-                        }
-                        else
-                        {
-                            MessageBox.Show("Item does not exist in the inventory");
                         }
                     }
                 }
@@ -275,51 +183,16 @@ namespace Goldpoint_Inventory_System.Log
                 {
                     if (!string.IsNullOrEmpty(txtDateTo.Text))
                     {
-                        using (SqlCommand cmd = new SqlCommand("SELECT id.date, ii.description, id.qty, id.replacement, id.fastMoving, id.remarks from ImportDetails id LEFT JOIN InventoryItems ii on id.itemCode = ii.itemCode where CAST(id.date AS datetime) between @dateFrom and @dateTo", conn))
+                        using (SqlCommand cmd = new SqlCommand("SELECT id.itemCode, id.date, ii.description, id.qty, id.replacement, id.fastMoving, id.remarks from ImportDetails id LEFT JOIN InventoryItems ii on id.itemCode = ii.itemCode where CAST(id.date AS date) between @dateFrom and @dateTo", conn))
                         {
                             cmd.Parameters.AddWithValue("@dateFrom", txtDateFrom.Text);
                             cmd.Parameters.AddWithValue("@dateTo", txtDateTo.Text);
 
                             using (SqlDataReader reader = cmd.ExecuteReader())
                             {
+                                details.Clear();
                                 if (reader.HasRows)
                                 {
-                                    details.Clear();
-                                    while (reader.Read())
-                                    {
-                                        int itemCodeIndex = reader.GetOrdinal("itemCode");
-                                        int dateIndex = reader.GetOrdinal("date");
-                                        int descriptionIndex = reader.GetOrdinal("description");
-                                        int qtyIndex = reader.GetOrdinal("qty");
-                                        int replacementIndex = reader.GetOrdinal("replacement");
-                                        int fastMovingIndex = reader.GetOrdinal("fastMoving");
-                                        int remarksIndex = reader.GetOrdinal("remarks");
-
-                                        details.Add(new ItemDataModel
-                                        {
-                                            date = Convert.ToString(reader.GetValue(dateIndex)),
-                                            itemCode = Convert.ToString(reader.GetValue(itemCodeIndex)),
-                                            description = Convert.ToString(reader.GetValue(descriptionIndex)),
-                                            qty = Convert.ToInt32(reader.GetValue(qtyIndex)),
-                                            replacement = Convert.ToString(reader.GetValue(replacementIndex)),
-                                            fastMoving = Convert.ToString(reader.GetValue(fastMovingIndex))
-                                        });
-
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    else
-                    {
-                        using (SqlCommand cmd = new SqlCommand("SELECT id.date, ii.description, id.qty, id.replacement, id.fastMoving, id.remarks from ImportDetails id LEFT JOIN InventoryItems ii on id.itemCode = ii.itemCode where id.date = @date", conn))
-                        {
-                            cmd.Parameters.AddWithValue("@date", txtDateTo.Text);
-                            using (SqlDataReader reader = cmd.ExecuteReader())
-                            {
-                                if (reader.HasRows)
-                                {
-                                    details.Clear();
                                     while (reader.Read())
                                     {
                                         int itemCodeIndex = reader.GetOrdinal("itemCode");
@@ -350,7 +223,7 @@ namespace Goldpoint_Inventory_System.Log
                 {
                     if (!string.IsNullOrEmpty(txtDateTo.Text))
                     {
-                        using (SqlCommand cmd = new SqlCommand("SELECT id.date, ii.description, id.qty, id.replacement, id.fastMoving, id.remarks from ImportDetails id LEFT JOIN InventoryItems ii on id.itemCode = ii.itemCode where id.itemCode = @itemCode and CAST(id.date AS datetime) between @dateFrom and @dateTo", conn))
+                        using (SqlCommand cmd = new SqlCommand("SELECT id.itemCode, id.date, ii.description, id.qty, id.replacement, id.fastMoving, id.remarks from ImportDetails id LEFT JOIN InventoryItems ii on id.itemCode = ii.itemCode where id.itemCode = @itemCode and CAST(id.date AS date) between @dateFrom and @dateTo", conn))
                         {
                             cmd.Parameters.AddWithValue("@itemCode", txtItemCode.Text);
                             cmd.Parameters.AddWithValue("@dateFrom", txtDateFrom.Text);
@@ -358,45 +231,9 @@ namespace Goldpoint_Inventory_System.Log
 
                             using (SqlDataReader reader = cmd.ExecuteReader())
                             {
+                                details.Clear();
                                 if (reader.HasRows)
                                 {
-                                    details.Clear();
-                                    while (reader.Read())
-                                    {
-                                        int itemCodeIndex = reader.GetOrdinal("itemCode");
-                                        int dateIndex = reader.GetOrdinal("date");
-                                        int descriptionIndex = reader.GetOrdinal("description");
-                                        int qtyIndex = reader.GetOrdinal("qty");
-                                        int replacementIndex = reader.GetOrdinal("replacement");
-                                        int fastMovingIndex = reader.GetOrdinal("fastMoving");
-                                        int remarksIndex = reader.GetOrdinal("remarks");
-
-                                        details.Add(new ItemDataModel
-                                        {
-                                            date = Convert.ToString(reader.GetValue(dateIndex)),
-                                            itemCode = Convert.ToString(reader.GetValue(itemCodeIndex)),
-                                            description = Convert.ToString(reader.GetValue(descriptionIndex)),
-                                            qty = Convert.ToInt32(reader.GetValue(qtyIndex)),
-                                            replacement = Convert.ToString(reader.GetValue(replacementIndex)),
-                                            fastMoving = Convert.ToString(reader.GetValue(fastMovingIndex))
-                                        });
-
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    else
-                    {
-                        using (SqlCommand cmd = new SqlCommand("SELECT id.date, ii.description, id.qty, id.replacement, id.fastMoving, id.remarks from ImportDetails id LEFT JOIN InventoryItems ii on id.itemCode = ii.itemCode where id.itemCode = @itemCode and id.date = @date", conn))
-                        {
-                            cmd.Parameters.AddWithValue("@itemCode", txtItemCode.Text);
-                            cmd.Parameters.AddWithValue("@date", txtDateTo.Text);
-                            using (SqlDataReader reader = cmd.ExecuteReader())
-                            {
-                                if (reader.HasRows)
-                                {
-                                    details.Clear();
                                     while (reader.Read())
                                     {
                                         int itemCodeIndex = reader.GetOrdinal("itemCode");
@@ -428,17 +265,17 @@ namespace Goldpoint_Inventory_System.Log
             {
                 SqlConnection conn = DBUtils.GetDBConnection();
                 conn.Open();
-                using (SqlCommand cmd = new SqlCommand("SELECT * from ImportDetails where itemCode = @itemCode and CAST(date AS datetime) between @dateFrom and @dateTo", conn))
+                using (SqlCommand cmd = new SqlCommand("SELECT id.itemCode, id.date, ii.description, id.qty, id.replacement, id.fastMoving, id.remarks from ImportDetails id LEFT JOIN InventoryItems ii on id.itemCode = ii.itemCode where CAST(date AS date) between @dateFrom and @dateTo", conn))
                 {
-                    cmd.Parameters.AddWithValue("@itemCode", txtItemCode.Text);
+                
                     cmd.Parameters.AddWithValue("@dateFrom", txtDateFrom.Text);
                     cmd.Parameters.AddWithValue("@dateTo", txtDateTo.Text);
 
                     using (SqlDataReader reader = cmd.ExecuteReader())
                     {
+                        details.Clear();
                         if (reader.HasRows)
                         {
-                            details.Clear();
                             while (reader.Read())
                             {
                                 int itemCodeIndex = reader.GetOrdinal("itemCode");
@@ -514,11 +351,6 @@ namespace Goldpoint_Inventory_System.Log
                 }
 
             }
-        }
-
-        private void getReplenishedInventoryToday()
-        {
-
         }
     }
 }

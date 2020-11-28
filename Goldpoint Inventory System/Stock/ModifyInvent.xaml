@@ -46,11 +46,11 @@
                     <Label Content="Remarks:" HorizontalAlignment="Left" Margin="559,40,0,0" VerticalAlignment="Top"/>
                     <syncfusion:SfTextBoxExt x:Name="txtRemarks" HorizontalAlignment="Left" Height="31" Margin="668,40,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"  IsEnabled="False"/>
                     <Label Content="Price:" HorizontalAlignment="Left" Margin="559,76,0,0" VerticalAlignment="Top"/>
-                    <syncfusion:DoubleTextBox x:Name="txtPrice" HorizontalAlignment="Left" Height="31" Margin="668,76,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="120"  IsEnabled="False" NumberGroupSeparator="N"/>
+                    <syncfusion:IntegerTextBox x:Name="txtPrice" HorizontalAlignment="Left" Height="31" Margin="668,76,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="120"  IsEnabled="False" NumberGroupSeparator="N" MinValue="0" MaxValue="100000000" TextChanged="TxtPrice_TextChanged"/>
                     <Label Content="MSRP:" HorizontalAlignment="Left" Margin="559,112,0,0" VerticalAlignment="Top"/>
-                    <syncfusion:DoubleTextBox x:Name="txtMSRP" HorizontalAlignment="Left" Height="31" Margin="668,112,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="120"  IsEnabled="False"/>
+                    <syncfusion:DoubleTextBox x:Name="txtMSRP" HorizontalAlignment="Left" Height="31" Margin="668,112,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="120"  IsEnabled="False" MinValue="0"/>
                     <Label Content="Dealers Price:" HorizontalAlignment="Left" Margin="559,148,0,0" VerticalAlignment="Top"/>
-                    <syncfusion:DoubleTextBox x:Name="txtDealersPrice" HorizontalAlignment="Left" Height="31" Margin="668,148,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"  IsEnabled="False"/>
+                    <syncfusion:DoubleTextBox x:Name="txtDealersPrice" HorizontalAlignment="Left" Height="31" Margin="668,148,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"  IsEnabled="False" MinValue="0"/>
                     
                     <Button x:Name="btnAddItem" Click="BtnAddItem_Click" Content="Add" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="225,336,0,0"/>
                     <Button x:Name="btnSaveItem" Click="BtnSaveItem_Click" Content="Save" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="355,336,0,0" IsEnabled="False"/>

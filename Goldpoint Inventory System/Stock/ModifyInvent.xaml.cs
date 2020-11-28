@@ -397,12 +397,12 @@ namespace Goldpoint_Inventory_System.Stock
             cmbType.Text = null;
             txtBrand.Text = null;
             txtSize.Text = null;
-            txtQty.Text = null;
+            txtQty.Value = 0;
             txtCriticalLvl.Text = null;
             txtRemarks.Text = null;
-            txtDealersPrice.Text = null;
-            txtPrice.Text = null;
-            txtMSRP.Text = null;
+            txtDealersPrice.Value = 0;
+            txtPrice.Value = 0;
+            txtMSRP.Value = 0;
         }
 
         private void BtnRefresh_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -439,6 +439,23 @@ namespace Goldpoint_Inventory_System.Stock
                         }
                     }
                 }
+            }
+        }
+
+        private void TxtPrice_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            //only works for integer values lol
+            if (txtPrice.Value != 0)
+            {
+                string placeholder1 = txtPrice.Text;
+                string placeholder2 = txtPrice.Text;
+                txtMSRP.Value = Convert.ToInt32(placeholder1.Replace(",", "").Replace(".00", "")) * 1.30;
+                txtDealersPrice.Value = Convert.ToInt32(placeholder2.Replace(",", "").Replace(".00", "")) * 1.20;
+            }
+            else
+            {
+                txtMSRP.Value = 0;
+                txtDealersPrice.Value = 0;
             }
         }
     }

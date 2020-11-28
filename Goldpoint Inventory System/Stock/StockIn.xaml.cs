@@ -241,7 +241,7 @@ namespace Goldpoint_Inventory_System.Stock
         {
             txtItemCode.Text = null;
             txtDesc.Text = null;
-            txtQty.Text = null;
+            txtQty.Value = 0;
             txtSize.Text = null;
             txtType.Text = null;
             txtBrand.Text = null;

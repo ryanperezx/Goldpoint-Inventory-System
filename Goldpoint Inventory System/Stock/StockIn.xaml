@@ -30,7 +30,7 @@
         <Label Content="Size:" HorizontalAlignment="Left" Margin="159,255,0,0" VerticalAlignment="Top"/>
         <syncfusion:SfTextBoxExt x:Name="txtSize" HorizontalAlignment="Left" Height="30" Margin="258,259,0,0" VerticalAlignment="Top" Width="120" IsEnabled="False"/>
         <Label Content="Qty:" HorizontalAlignment="Left" Margin="159,294,0,0" VerticalAlignment="Top"/>
-        <syncfusion:IntegerTextBox x:Name="txtQty" HorizontalAlignment="Left" Height="31" Margin="258,294,0,0" MinWidth="100" NumberGroupSeparator="," TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="120"/>
+        <syncfusion:IntegerTextBox x:Name="txtQty" HorizontalAlignment="Left" Height="31" Margin="258,294,0,0" MinWidth="100" NumberGroupSeparator="," TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="120" MinValue="0"/>
         <Label Content="Remarks:" HorizontalAlignment="Left" Margin="159,330,0,0" VerticalAlignment="Top"/>
         <syncfusion:SfTextBoxExt x:Name="txtRemarks" HorizontalAlignment="Left" Height="31" Margin="258,330,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
         <Label Content="Replacement?" HorizontalAlignment="Left" Margin="222,366,0,0" VerticalAlignment="Top"/>
