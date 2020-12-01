@@ -103,7 +103,7 @@ namespace Goldpoint_Inventory_System.Stock
 
         private void BtnSaveItem_Click(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrEmpty(txtItemCode.Text) && string.IsNullOrEmpty(txtDesc.Text) && string.IsNullOrEmpty(txtQty.Text) && string.IsNullOrEmpty(txtCriticalLvl.Text) && string.IsNullOrEmpty(txtPrice.Text) && string.IsNullOrEmpty(txtMSRP.Text) && string.IsNullOrEmpty(txtDealersPrice.Text) && string.IsNullOrEmpty(cmbType.Text))
+            if (string.IsNullOrEmpty(txtItemCode.Text) || string.IsNullOrEmpty(txtDesc.Text) || string.IsNullOrEmpty(txtQty.Text) || string.IsNullOrEmpty(txtCriticalLvl.Text) || string.IsNullOrEmpty(txtPrice.Text) || string.IsNullOrEmpty(txtMSRP.Text) || string.IsNullOrEmpty(txtDealersPrice.Text) || string.IsNullOrEmpty(cmbType.Text))
             {
                 MessageBox.Show("One or more fields are empty!");
             }
@@ -165,7 +165,7 @@ namespace Goldpoint_Inventory_System.Stock
 
         private void BtnUpdateItem_Click(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrEmpty(txtDesc.Text) && string.IsNullOrEmpty(txtCriticalLvl.Text) && string.IsNullOrEmpty(txtPrice.Text) && string.IsNullOrEmpty(txtMSRP.Text) && string.IsNullOrEmpty(txtDealersPrice.Text) && string.IsNullOrEmpty(cmbType.Text))
+            if (string.IsNullOrEmpty(txtDesc.Text) || string.IsNullOrEmpty(txtCriticalLvl.Text) || string.IsNullOrEmpty(txtPrice.Text) || string.IsNullOrEmpty(txtMSRP.Text) || string.IsNullOrEmpty(txtDealersPrice.Text) || string.IsNullOrEmpty(cmbType.Text))
             {
                 MessageBox.Show("One or more fields should not be empty!");
             }

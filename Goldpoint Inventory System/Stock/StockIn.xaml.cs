@@ -21,7 +21,7 @@ namespace Goldpoint_Inventory_System.Stock
 
         private void BtnAddToList_Click(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrEmpty(txtItemCode.Text) && string.IsNullOrEmpty(txtQty.Text) && string.IsNullOrEmpty(txtDesc.Text))
+            if (string.IsNullOrEmpty(txtItemCode.Text) || string.IsNullOrEmpty(txtQty.Text) || string.IsNullOrEmpty(txtDesc.Text))
             {
                 MessageBox.Show("One or more fields is empty!");
             }
@@ -81,7 +81,7 @@ namespace Goldpoint_Inventory_System.Stock
 
         private void BtnSave_Click(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrEmpty(txtItemCode.Text) && string.IsNullOrEmpty(txtQty.Text) && string.IsNullOrEmpty(txtDesc.Text) && string.IsNullOrEmpty(txtDate.Text))
+            if (string.IsNullOrEmpty(txtItemCode.Text) || string.IsNullOrEmpty(txtQty.Text) || string.IsNullOrEmpty(txtDesc.Text) || string.IsNullOrEmpty(txtDate.Text))
             {
                 MessageBox.Show("One or more fields is empty!");
             }

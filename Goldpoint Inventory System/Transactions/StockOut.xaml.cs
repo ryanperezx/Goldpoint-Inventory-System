@@ -1,20 +1,8 @@
-﻿using Syncfusion.SfSkinManager;
-using Syncfusion.Themes.Office2019Colorful.WPF;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Data.SqlClient;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Goldpoint_Inventory_System.Transactions
 {
@@ -29,42 +17,8 @@ namespace Goldpoint_Inventory_System.Transactions
             InitializeComponent();
             stack.DataContext = new ExpanderListViewModel();
             dgStockOut.ItemsSource = items;
-            items.Add(new ItemDataModel
-            {
-                itemCode = "2020-1100001",
-                description = "Black Ballpen",
-                type = "Ballpen",
-                brand = "HBW",
-                size = "N\\A",
-                qty = 10,
-                totalPerItem = 80,
-                remarks = "",
-
-            });
-
-            items.Add(new ItemDataModel
-            {
-                itemCode = "2020-2100001",
-                description = "Short Ream",
-                type = "Bondpaper",
-                brand = "Hard Copy",
-                size = "N\\A",
-                qty = 1,
-                totalPerItem = 500,
-                remarks = "",
-            });
-
-            items.Add(new ItemDataModel
-            {
-                itemCode = "2020-3100001",
-                description = "Short Envelope",
-                type = "Envelope",
-                brand = "Generic",
-                size = "N\\A",
-                qty = 5,
-                totalPerItem = 27,
-                remarks = "",
-            });
+            //to avoid null error
+            txtQty.TextChanged += TxtQty_TextChanged;
 
         }
 
@@ -104,7 +58,7 @@ namespace Goldpoint_Inventory_System.Transactions
                 CheckBox chkbox = (CheckBox)sender;
                 string value = chkbox.Content.ToString();
 
-                if(chkbox.IsChecked == true && value == "Company Use")
+                if (chkbox.IsChecked == true && value == "Company Use")
                 {
                     chkDR.IsChecked = false;
                     chkInv.IsChecked = false;
@@ -147,6 +101,117 @@ namespace Goldpoint_Inventory_System.Transactions
             if (chkbox.IsChecked == false && value == "Original Receipt")
             {
                 txtORNo.IsEnabled = false;
+            }
+        }
+
+        private void BtnAddtoList_Click(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrEmpty(txtItemCode.Text) || string.IsNullOrEmpty(txtDesc.Text) || string.IsNullOrEmpty(txtQty.Text))
+            {
+                MessageBox.Show("One or more fields are empty!");
+            }
+            else
+            {
+                SqlConnection conn = DBUtils.GetDBConnection();
+                conn.Open();
+                using (SqlCommand cmd = new SqlCommand("SELECT * from InventoryItems where itemCode = @itemCode", conn))
+                {
+                    cmd.Parameters.AddWithValue("@itemCode", txtItemCode.Text);
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+
+                            reader.Read();
+                            int descriptionIndex = reader.GetOrdinal("description");
+                            int typeIndex = reader.GetOrdinal("type");
+                            int brandIndex = reader.GetOrdinal("brand");
+                            int sizeIndex = reader.GetOrdinal("size");
+                            int qtyIndex = reader.GetOrdinal("qty");
+                            if (Convert.ToInt32(reader.GetValue(qtyIndex)) < txtQty.Value)
+                            {
+                                MessageBox.Show("Quantity to be stock out is greater than the stock quantity");
+                                return;
+                            }
+
+                            items.Add(new ItemDataModel
+                            {
+                                itemCode = txtItemCode.Text,
+                                description = Convert.ToString(reader.GetValue(descriptionIndex)),
+                                type = Convert.ToString(reader.GetValue(typeIndex)),
+                                brand = Convert.ToString(reader.GetValue(brandIndex)),
+                                size = Convert.ToString(reader.GetValue(sizeIndex)),
+                                qty = (int)txtQty.Value,
+                                totalPerItem = (double)txtTotalPerItem.Value
+                            });
+
+                        }
+                        else
+                        {
+                            MessageBox.Show("Item does not exist in the inventory");
+                        }
+                    }
+                }
+            }
+        }
+
+        private void BtnSearchItem_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (string.IsNullOrEmpty(txtItemCode.Text))
+            {
+                MessageBox.Show("Please type the item code before searching");
+                txtItemCode.Focus();
+            }
+            else
+            {
+                SqlConnection conn = DBUtils.GetDBConnection();
+                conn.Open();
+                using (SqlCommand cmd = new SqlCommand("SELECT * from InventoryItems where itemCode = @itemCode", conn))
+                {
+                    cmd.Parameters.AddWithValue("@itemCode", txtItemCode.Text);
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+
+                            while (reader.Read())
+                            {
+                                int descriptionIndex = reader.GetOrdinal("description");
+                                txtDesc.Text = Convert.ToString(reader.GetValue(descriptionIndex));
+
+                                int typeIndex = reader.GetOrdinal("type");
+                                txtType.Text = Convert.ToString(reader.GetValue(typeIndex));
+
+                                int brandIndex = reader.GetOrdinal("brand");
+                                txtBrand.Text = Convert.ToString(reader.GetValue(brandIndex));
+
+                                int sizeIndex = reader.GetOrdinal("size");
+                                txtSize.Text = Convert.ToString(reader.GetValue(sizeIndex));
+
+                                int msrpIndex = reader.GetOrdinal("MSRP");
+                                txtItemPrice.Value = Convert.ToInt32(reader.GetValue(msrpIndex));
+
+                            }
+                        }
+                        else
+                        {
+                            MessageBox.Show("Item does not exist in the inventory");
+                        }
+                    }
+
+                }
+            }
+        }
+
+        private void TxtQty_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (txtItemPrice.Value > 0 && txtQty.Value > 0)
+            {
+                txtTotalPerItem.Value = txtItemPrice.Value * txtQty.Value;
+            }
+            else
+            {
+                txtTotalPerItem.Value = 0;
             }
         }
     }

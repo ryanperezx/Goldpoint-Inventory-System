@@ -28,24 +28,24 @@
                 <Grid Height="400" >
                     <Label Content="Item Code:" HorizontalAlignment="Left" Margin="38,34,0,0" VerticalAlignment="Top"/>
                     <syncfusion:SfTextBoxExt x:Name="txtItemCode" HorizontalAlignment="Left" Height="31" Margin="154,34,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
-                    <Label x:Name="btnSearchItem" VerticalAlignment="Top" HorizontalAlignment="Left" Height="30" Width="30" ToolTip="Search Item" Margin="279,34,0,0" Cursor="Hand">
+                    <Label x:Name="btnSearchItem" MouseLeftButtonDown="BtnSearchItem_MouseLeftButtonDown" VerticalAlignment="Top" HorizontalAlignment="Left" Height="30" Width="30" ToolTip="Search Item" Margin="279,34,0,0" Cursor="Hand">
                         <iconPacks:PackIconMaterialLight Kind="Magnify" Height="20" Width="20" Foreground="DarkGoldenrod" />
                     </Label>
                     <Label Content="Description:" HorizontalAlignment="Left" Margin="38,70,0,0" VerticalAlignment="Top"/>
                     <syncfusion:SfTextBoxExt x:Name="txtDesc" HorizontalAlignment="Left" Height="31" Margin="154,70,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" IsEnabled="False"/>
                     <Label Content="Type:" HorizontalAlignment="Left" Margin="38,106,0,0" VerticalAlignment="Top"/>
                     <syncfusion:SfTextBoxExt x:Name="txtType" HorizontalAlignment="Left" Height="31" Margin="154,106,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" IsEnabled="False"/>
-                    <Label Content="Brand:" HorizontalAlignment="Left" Margin="38,145,0,0" VerticalAlignment="Top"/>
-                    <syncfusion:SfTextBoxExt x:Name="txtBrand" HorizontalAlignment="Left" Height="31" Margin="154,145,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" IsEnabled="False"/>
-                    <Label Content="Remarks:" HorizontalAlignment="Left" Margin="38,181,0,0" VerticalAlignment="Top"/>
-                    <syncfusion:SfTextBoxExt x:Name="txtRemarks" HorizontalAlignment="Left" Height="31" Margin="154,181,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
-                    <Label Content="Qty:" HorizontalAlignment="Left" Margin="38,217,0,0" VerticalAlignment="Top"/>
-                    <syncfusion:IntegerTextBox x:Name="txtQty" HorizontalAlignment="Left" Height="31" Margin="154,217,0,0" MinWidth="100" NumberGroupSeparator="," TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="120"/>
+                    <Label Content="Brand:" HorizontalAlignment="Left" Margin="38,142,0,0" VerticalAlignment="Top"/>
+                    <syncfusion:SfTextBoxExt x:Name="txtBrand" HorizontalAlignment="Left" Height="31" Margin="154,142,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" IsEnabled="False"/>
+                    <Label Content="Size:" HorizontalAlignment="Left" Margin="38,178,0,0" VerticalAlignment="Top"/>
+                    <syncfusion:SfTextBoxExt x:Name="txtSize" HorizontalAlignment="Left" Height="31" Margin="154,178,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+                    <Label Content="Qty:" HorizontalAlignment="Left" Margin="38,214,0,0" VerticalAlignment="Top"/>
+                    <syncfusion:IntegerTextBox x:Name="txtQty" HorizontalAlignment="Left" Height="31" Margin="154,214,0,0" MinWidth="100" MinValue="0" Value="0" NumberGroupSeparator="," TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="120"/>
                     <Label Content="Item Price:" HorizontalAlignment="Left" Margin="38,253,0,0" VerticalAlignment="Top"/>
-                    <syncfusion:DoubleTextBox x:Name="txtItemPrice" HorizontalAlignment="Left" Height="31" Margin="154,253,0,0" MinWidth="100" NumberGroupSeparator="," TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="120" IsEnabled="False"/>
+                    <syncfusion:DoubleTextBox x:Name="txtItemPrice" HorizontalAlignment="Left" Height="31" Margin="154,253,0,0" MinWidth="100" NumberGroupSeparator="," TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="120" IsEnabled="False" Value="0.00"/>
                     <Label Content="Total per Item:" HorizontalAlignment="Left" Margin="38,289,0,0" VerticalAlignment="Top"/>
-                    <syncfusion:DoubleTextBox x:Name="txtTotalPerItem"  HorizontalAlignment="Left" Height="31" Margin="154,289,0,0" MinWidth="100" NumberGroupSeparator="," TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="120" IsEnabled="False"/>
-                    <syncfusion:ButtonAdv SmallIcon="{x:Null}"   HorizontalAlignment="Left" Height="29" Label="Add to list" Margin="89,341,0,0" VerticalAlignment="Top" Width="140"/>
+                    <syncfusion:DoubleTextBox x:Name="txtTotalPerItem"  HorizontalAlignment="Left" Height="31" Margin="154,289,0,0" MinWidth="100" NumberGroupSeparator="," TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="120" IsEnabled="False" Value="0.00"/>
+                    <syncfusion:ButtonAdv x:Name="btnAddtoList" Click="BtnAddtoList_Click " SmallIcon="{x:Null}" HorizontalAlignment="Left" Height="29" Label="Add to list" Margin="89,341,0,0" VerticalAlignment="Top" Width="140"/>
                 </Grid>
             </Expander>
             <Expander Header="Transaction" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Top" Width="400" IsExpanded="{Binding SelectedExpander, ConverterParameter=2, Converter={StaticResource ExpanderToBooleanConverter}, Mode=TwoWay}">
@@ -113,14 +113,13 @@
         </StackPanel>
         <syncfusion:SfDataGrid x:Name="dgStockOut"  HorizontalAlignment="Left" Height="451" Margin="215,80,0,0" VerticalAlignment="Top" Width="770" Grid.ColumnSpan="3" Grid.Column="1" ItemsSource="{Binding}" AutoGenerateColumns="False">
             <syncfusion:SfDataGrid.Columns>
-                <syncfusion:GridTextColumn MappingName="Item Code" DisplayBinding="{Binding itemCode}" Width="100"/>
-                <syncfusion:GridTextColumn MappingName="Description" DisplayBinding="{Binding description}" Width="150"/>
+                <syncfusion:GridTextColumn MappingName="Item Code" DisplayBinding="{Binding itemCode}" Width="110"/>
+                <syncfusion:GridTextColumn MappingName="Description" DisplayBinding="{Binding description}" Width="190"/>
                 <syncfusion:GridTextColumn MappingName="Type" DisplayBinding="{Binding type}" Width="100"/>
                 <syncfusion:GridTextColumn MappingName="Brand" DisplayBinding="{Binding brand}" Width="100"/>
                 <syncfusion:GridTextColumn MappingName="Size" DisplayBinding="{Binding size}" Width="80"/>
                 <syncfusion:GridTextColumn MappingName="Qty" DisplayBinding="{Binding qty}" Width="70"/>
-                <syncfusion:GridTextColumn MappingName="Total per item" DisplayBinding="{Binding totalPerItem}" Width="90"/>
-                <syncfusion:GridTextColumn MappingName="Remarks" DisplayBinding="{Binding remarks}" Width="170"/>
+                <syncfusion:GridTextColumn MappingName="Total per item" DisplayBinding="{Binding totalPerItem}" Width="120"/>
             </syncfusion:SfDataGrid.Columns>
 
         </syncfusion:SfDataGrid>

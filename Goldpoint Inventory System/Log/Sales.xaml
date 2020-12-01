@@ -7,6 +7,7 @@
              xmlns:syncfusion="http://schemas.syncfusion.com/wpf" 
              xmlns:chart="clr-namespace:Syncfusion.UI.Xaml.Charts;assembly=Syncfusion.SfChart.WPF"
              mc:Ignorable="d"
+             x:Name="SalesControl"
              xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
              d:DesignHeight="600" d:DesignWidth="1350"             
              FontSize="16"
@@ -15,7 +16,7 @@
         <Label VerticalAlignment="Top" HorizontalAlignment="Right" Height="40" Width="40" ToolTip="Reset" Cursor="Hand">
             <iconPacks:PackIconMaterialLight Kind="Refresh" Height="30" Width="30" Foreground="DarkGoldenrod"/>
         </Label>
-        <Label VerticalAlignment="Top" HorizontalAlignment="Left" Height="30" Width="30" ToolTip="Generate Report" Cursor="Hand" Margin="254,79,0,0">
+        <Label x:Name="txtSearch" MouseLeftButtonDown="TxtSearch_MouseLeftButtonDown" VerticalAlignment="Top" HorizontalAlignment="Left" Height="30" Width="30" ToolTip="Search Sales" Cursor="Hand" Margin="254,79,0,0">
             <iconPacks:PackIconMaterialLight Kind="Magnify" Height="20" Width="20" Foreground="DarkGoldenrod" />
         </Label>
         <Label Content="Date:" HorizontalAlignment="Left" Margin="63,78,0,0" VerticalAlignment="Top"/>
@@ -45,7 +46,7 @@
                         </syncfusion:SfDataGrid.Columns>
                     </syncfusion:SfDataGrid>
                     <Label Content="Overall total:" HorizontalAlignment="Left"  VerticalAlignment="Top" Margin="10,406,0,0"/>
-                    <syncfusion:DoubleTextBox HorizontalAlignment="Left" Height="31" TextWrapping="Wrap" VerticalAlignment="Top" Width="155" Margin="115,406,0,0"/>
+                    <syncfusion:DoubleTextBox x:Name="txtOverallTotal" IsReadOnly="True" HorizontalAlignment="Left" Height="31" TextWrapping="Wrap" VerticalAlignment="Top" Width="155" Margin="115,406,0,0"/>
                 </Grid>
             </Expander>
             <Expander ExpandDirection="Left" FontSize="16" HorizontalAlignment="Left"  Height="450" VerticalAlignment="Top" IsExpanded="{Binding SelectedExpander, ConverterParameter=2, Converter={StaticResource ExpanderToBooleanConverter}, Mode=TwoWay}">
@@ -58,17 +59,17 @@
                 </Expander.Header>
                 <Grid Width="700">
                     <Label Content="Date From:" HorizontalAlignment="Left" Margin="34,20,0,0" VerticalAlignment="Top"/>
-                    <syncfusion:DateTimeEdit HorizontalAlignment="Left" Height="31" Margin="494,20,0,0" TextWrapping="Wrap" Text="DateTimeEdit" VerticalAlignment="Top" Width="120"/>
+                    <syncfusion:DateTimeEdit x:Name="txtDateFrom" HorizontalAlignment="Left" Height="31" Margin="127,20,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" TextChanged="TxtDate_TextChanged"/>
                     <Label Content="Date To:" HorizontalAlignment="Left" Margin="422,20,0,0" VerticalAlignment="Top"/>
-                    <syncfusion:DateTimeEdit HorizontalAlignment="Left" Height="31" Margin="127,20,0,0" TextWrapping="Wrap" Text="DateTimeEdit" VerticalAlignment="Top" Width="120"/>
-                    <chart:SfChart Margin="10,56,10,35" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <syncfusion:DateTimeEdit x:Name="txtDateTo" HorizontalAlignment="Left" Height="31" Margin="494,20,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" TextChanged="TxtDate_TextChanged"/>
+                    <chart:SfChart x:Name="chartSales" Margin="10,56,10,35" HorizontalAlignment="Center" VerticalAlignment="Center" >
                         <syncfusion:SfChart.PrimaryAxis>
                             <syncfusion:CategoryAxis Header="Day(s)"/>
                         </syncfusion:SfChart.PrimaryAxis>
                         <syncfusion:SfChart.SecondaryAxis>
                             <syncfusion:NumericalAxis Header="Sales"/>
                         </syncfusion:SfChart.SecondaryAxis>
-                        <syncfusion:ColumnSeries  x:Name="chartSales" ItemsSource="{Binding}" XBindingPath="date" YBindingPath="sales">
+                        <syncfusion:ColumnSeries x:Name="columnSeries" ItemsSource="{Binding}" XBindingPath="date" YBindingPath="sales">
                             <syncfusion:ColumnSeries.AdornmentsInfo>
                                 <syncfusion:ChartAdornmentInfo ShowLabel="True" >
                                 </syncfusion:ChartAdornmentInfo>
@@ -79,8 +80,7 @@
                 </Grid>
             </Expander>
         </StackPanel>
-        <syncfusion:ButtonAdv x:Name="btnAddtoList"  SmallIcon="{x:Null}" HorizontalAlignment="Left" Height="29" Label="Add to list" Margin="129,240,0,0" VerticalAlignment="Top" Width="155"/>
-        <syncfusion:ButtonAdv x:Name="btnSave" SmallIcon="{x:Null}"  HorizontalAlignment="Left" Height="29" Label="Save" Margin="129,290,0,0" VerticalAlignment="Top" Width="155"/>
+        <syncfusion:ButtonAdv x:Name="btnAddtoList" Click="BtnAddtoList_Click" SmallIcon="{x:Null}" HorizontalAlignment="Left" Height="29" Label="Add to list" Margin="129,240,0,0" VerticalAlignment="Top" Width="155"/>
 
     </Grid>
 </UserControl>

@@ -109,7 +109,7 @@ namespace Goldpoint_Inventory_System.Transactions
                             else
                             {
                                 int invoiceNoIndex = reader.GetOrdinal("InvoiceNo");
-                                int invoiceNo = Convert.ToInt32(reader.GetValue(invoiceNoIndex)) +1;
+                                int invoiceNo = Convert.ToInt32(reader.GetValue(invoiceNoIndex)) + 1;
                                 txtInvoice.Text = invoiceNo.ToString();
                             }
                         }
@@ -247,7 +247,7 @@ namespace Goldpoint_Inventory_System.Transactions
             {
                 MessageBox.Show("The list of item to be photocopied is empty!");
             }
-            else if (string.IsNullOrEmpty(txtDate.Text) && string.IsNullOrEmpty(txtCustName.Text) && string.IsNullOrEmpty(txtContactNo.Text) && string.IsNullOrEmpty(address))
+            else if (string.IsNullOrEmpty(txtDate.Text) || string.IsNullOrEmpty(txtCustName.Text) || string.IsNullOrEmpty(txtContactNo.Text) || string.IsNullOrEmpty(address))
             {
                 MessageBox.Show("One or more fields are empty!");
             }
@@ -265,7 +265,7 @@ namespace Goldpoint_Inventory_System.Transactions
                         SqlConnection conn = DBUtils.GetDBConnection();
                         conn.Open();
                         bool success = false;
-                        foreach(var item in items)
+                        foreach (var item in items)
                         {
                             using (SqlCommand cmd = new SqlCommand("INSERT into PhotocopyDetails VALUES (@DRNo, @item, @qty, @price, @totalPerItem)", conn))
                             {
@@ -279,27 +279,51 @@ namespace Goldpoint_Inventory_System.Transactions
                                     cmd.ExecuteNonQuery();
                                     success = true;
                                 }
-                                catch(SqlException ex)
+                                catch (SqlException ex)
                                 {
                                     MessageBox.Show("An error has been encountered!" + ex);
                                 }
                             }
                         }
-                        using (SqlCommand cmd = new SqlCommand("INSERT into Sales VALUES (@date, @service, @total)", conn))
+                        if (chkDownpayment.IsChecked == true)
                         {
-                            cmd.Parameters.AddWithValue("@date", txtDate.Text);
-                            cmd.Parameters.AddWithValue("@service", "Photocopy");
-                            cmd.Parameters.AddWithValue("@total", txtCustTotal.Text);
-                            try
+                            using (SqlCommand cmd = new SqlCommand("INSERT into Sales VALUES (@date, @service, @total, @status)", conn))
                             {
-                                cmd.ExecuteNonQuery();
-                            }
-                            catch (SqlException ex)
-                            {
-                                MessageBox.Show("An error has been encountered!" + ex);
-                                success = false;
+                                cmd.Parameters.AddWithValue("@date", txtDate.Text);
+                                cmd.Parameters.AddWithValue("@service", "Photocopy");
+                                cmd.Parameters.AddWithValue("@total", txtDownpayment.Value);
+                                cmd.Parameters.AddWithValue("@status", "paid");
+                                try
+                                {
+                                    cmd.ExecuteNonQuery();
+                                }
+                                catch (SqlException ex)
+                                {
+                                    MessageBox.Show("An error has been encountered!" + ex);
+                                    success = false;
+                                }
                             }
                         }
+                        else if(chkPaid.IsChecked == true)
+                        {
+                            using (SqlCommand cmd = new SqlCommand("INSERT into Sales VALUES (@date, @service, @total, @status)", conn))
+                            {
+                                cmd.Parameters.AddWithValue("@date", txtDate.Text);
+                                cmd.Parameters.AddWithValue("@service", "Photocopy");
+                                cmd.Parameters.AddWithValue("@total", txtCustTotal.Value);
+                                cmd.Parameters.AddWithValue("@status", "paid");
+                                try
+                                {
+                                    cmd.ExecuteNonQuery();
+                                }
+                                catch (SqlException ex)
+                                {
+                                    MessageBox.Show("An error has been encountered!" + ex);
+                                    success = false;
+                                }
+                            }
+                        }
+
                         using (SqlCommand cmd = new SqlCommand("INSERT into TransactionLogs (date, [transaction], remarks) VALUES (@date, @transaction, @remarks)", conn))
                         {
                             cmd.Parameters.AddWithValue("@date", txtDate.Text);
