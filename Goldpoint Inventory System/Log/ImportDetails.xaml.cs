@@ -23,8 +23,8 @@ namespace Goldpoint_Inventory_System.Log
         {
             details.Clear();
             txtItemCode.Text = null;
-            txtDateFrom.Text = DateTime.Today.ToString();
-            txtDateTo.Text = DateTime.Today.ToString();
+            txtDateFrom.Text = DateTime.Today.ToShortDateString();
+            txtDateTo.Text = DateTime.Today.ToShortDateString();
         }
 
 

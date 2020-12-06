@@ -11,17 +11,17 @@
              FontSize="16"
              Background="White">
     <Grid>
-        <Label VerticalAlignment="Top" HorizontalAlignment="Right" Height="40" Width="40" ToolTip="Reset" Cursor="Hand">
+        <Label x:Name="btnReset" MouseLeftButtonDown="BtnReset_MouseLeftButtonDown" VerticalAlignment="Top" HorizontalAlignment="Right" Height="40" Width="40" ToolTip="Reset" Cursor="Hand">
             <iconPacks:PackIconMaterialLight Kind="Refresh" Height="30" Width="30" Foreground="DarkGoldenrod"/>
         </Label>
 
         <Label Content="Service No:" HorizontalAlignment="Left" Margin="82,25,0,0" VerticalAlignment="Top"/>
-        <syncfusion:SfTextBoxExt HorizontalAlignment="Left" Height="31" Margin="176,25,0,0" VerticalAlignment="Top" Width="155"/>
+        <syncfusion:SfTextBoxExt x:Name="txtServiceNo" HorizontalAlignment="Left" Height="31" Margin="176,25,0,0" VerticalAlignment="Top" Width="155"/>
         <Label Content="Service:" HorizontalAlignment="Left" Margin="442,25,0,0" VerticalAlignment="Top"/>
-        <Label VerticalAlignment="Top" HorizontalAlignment="Left" Height="30" Width="30" Cursor="Hand" Margin="715,26,0,0" >
+        <Label x:Name="btnSearchService" MouseLeftButtonDown="BtnSearchService_MouseLeftButtonDown" VerticalAlignment="Top" HorizontalAlignment="Left" Height="30" Width="30" Cursor="Hand" Margin="715,26,0,0" >
             <iconPacks:PackIconMaterialLight Kind="Magnify" Height="20" Width="20" Foreground="DarkGoldenrod" />
         </Label>
-        <syncfusion:ComboBoxAdv HorizontalAlignment="Left" Height="31" Margin="510,25,0,0" VerticalAlignment="Top" Width="200">
+        <syncfusion:ComboBoxAdv x:Name="cmbService" HorizontalAlignment="Left" Height="31" Margin="510,25,0,0" VerticalAlignment="Top" Width="200">
             <syncfusion:ComboBoxItemAdv>Official Receipt</syncfusion:ComboBoxItemAdv>
             <syncfusion:ComboBoxItemAdv>Delivery Receipt</syncfusion:ComboBoxItemAdv>
             <syncfusion:ComboBoxItemAdv>Invoice</syncfusion:ComboBoxItemAdv>
@@ -42,36 +42,37 @@
                 </Expander.Header>
                 <Grid Width="500" IsEnabled="False">
                     <Label Content="Date:" HorizontalAlignment="Left" Margin="40,33,0,0" VerticalAlignment="Top"/>
-                    <syncfusion:DateTimeEdit HorizontalAlignment="Left" Height="31" Margin="118,33,0,0" TextWrapping="Wrap" Text="DateTimeEdit" VerticalAlignment="Top" Width="120"/>
-
-                    <Label Content="Name:" HorizontalAlignment="Left" Margin="40,79,0,0" VerticalAlignment="Top" Width="58"/>
-                    <syncfusion:SfTextBoxExt HorizontalAlignment="Left" Height="31" Margin="118,79,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="168"/>
+                    <syncfusion:DateTimeEdit x:Name="txtDate" HorizontalAlignment="Left" Height="31" Margin="118,33,0,0" TextWrapping="Wrap" Text="DateTimeEdit" VerticalAlignment="Top" Width="120" />
+                    <Label Content="Deadline:" HorizontalAlignment="Left" Margin="276,33,0,0" VerticalAlignment="Top"/>
+                    <syncfusion:DateTimeEdit x:Name="txtDeadline" HorizontalAlignment="Left" Height="31" Margin="358,33,0,0" TextWrapping="Wrap" Text="DateTimeEdit" VerticalAlignment="Top" Width="120" />
+                    <Label Content="Name:" HorizontalAlignment="Left" Margin="40,79,0,0" VerticalAlignment="Top" Width="58" />
+                    <syncfusion:SfTextBoxExt x:Name="txtCustName" HorizontalAlignment="Left" Height="31" Margin="118,79,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="168"/>
                     <Label Content="Address:" HorizontalAlignment="Left" Margin="40,149,0,0" VerticalAlignment="Top" Width="73"/>
-                    <RichTextBox HorizontalAlignment="Left" Height="77" Margin="118,121,0,0" VerticalAlignment="Top" Width="265">
+                    <RichTextBox x:Name="txtAddress" HorizontalAlignment="Left" Height="77" Margin="118,121,0,0" VerticalAlignment="Top" Width="265">
                         <RichTextBox.Resources>
                             <Style TargetType="{x:Type Paragraph}">
                                 <Setter Property="Margin" Value="0"/>
                             </Style>
                         </RichTextBox.Resources>
                     </RichTextBox>
-                    <Label Content="Total:" HorizontalAlignment="Left" Margin="293,242,0,0" VerticalAlignment="Top"/>
-                    <syncfusion:DoubleTextBox HorizontalAlignment="Left" Height="31" Margin="345,242,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
                     <Label Content="Unpaid Balance:" HorizontalAlignment="Left" Margin="40,242,0,0" VerticalAlignment="Top"/>
-                    <syncfusion:DoubleTextBox HorizontalAlignment="Left" Height="31" Margin="168,242,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+                    <syncfusion:DoubleTextBox x:Name="txtUnpaidBalance" HorizontalAlignment="Left" Height="31" Margin="168,242,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+                    <Label Content="Total:" HorizontalAlignment="Left" Margin="293,242,0,0" VerticalAlignment="Top"/>
+                    <syncfusion:DoubleTextBox x:Name="txtTotal" HorizontalAlignment="Left" Height="31" Margin="345,242,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
 
                     <Label Content="Status:" HorizontalAlignment="Left" Margin="40,206,0,0" VerticalAlignment="Top"/>
-                    <RadioButton Content="Paid" HorizontalAlignment="Left" Margin="158,212,0,0" VerticalAlignment="Top"/>
-                    <RadioButton Content="Unpaid" HorizontalAlignment="Left" Margin="304,212,0,0" VerticalAlignment="Top"/>
+                    <RadioButton x:Name="rdPaid" Content="Paid" HorizontalAlignment="Left" Margin="158,212,0,0" VerticalAlignment="Top"/>
+                    <RadioButton x:Name="rdUnpaid" Content="Unpaid" HorizontalAlignment="Left" Margin="304,212,0,0" VerticalAlignment="Top"/>
                     <Label Content="Service:" HorizontalAlignment="Left" Margin="40,280,0,0" VerticalAlignment="Top"/>
-                    <CheckBox Content="Invoice" HorizontalAlignment="Left" Margin="117,285,0,0" VerticalAlignment="Top"/>
-                    <CheckBox Content="Official Receipt" HorizontalAlignment="Left" Margin="208,285,0,0" VerticalAlignment="Top"/>
-                    <CheckBox Content="Delivery Receipt" HorizontalAlignment="Left" Margin="345,285,0,0" VerticalAlignment="Top"/>
-                    <Label Content="D.R No:" HorizontalAlignment="Left" Margin="40,363,0,0" VerticalAlignment="Top"/>
-                    <syncfusion:SfTextBoxExt HorizontalAlignment="Left" Height="31" Margin="134,320,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+                    <CheckBox x:Name="chkInv" Content="Invoice" HorizontalAlignment="Left" Margin="117,285,0,0" VerticalAlignment="Top"/>
+                    <CheckBox x:Name="chkOR"  Content="Official Receipt" HorizontalAlignment="Left" Margin="208,285,0,0" VerticalAlignment="Top"/>
+                    <CheckBox x:Name="chkDR"  Content="Delivery Receipt" HorizontalAlignment="Left" Margin="345,285,0,0" VerticalAlignment="Top"/>
                     <Label Content="Invoice No:" HorizontalAlignment="Left" Margin="40,320,0,0" VerticalAlignment="Top"/>
-                    <syncfusion:SfTextBoxExt HorizontalAlignment="Left" Height="31" Margin="134,363,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+                    <syncfusion:SfTextBoxExt x:Name="txtInvoiceNo" HorizontalAlignment="Left" Height="31" Margin="134,320,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
                     <Label Content="O.R No:" HorizontalAlignment="Left" Margin="276,320,0,0" VerticalAlignment="Top"/>
-                    <syncfusion:SfTextBoxExt HorizontalAlignment="Left" Height="31" Margin="345,320,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+                    <syncfusion:SfTextBoxExt x:Name="txtORNo" HorizontalAlignment="Left" Height="31" Margin="345,320,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+                    <Label Content="D.R No:" HorizontalAlignment="Left" Margin="40,363,0,0" VerticalAlignment="Top"/>
+                    <syncfusion:SfTextBoxExt x:Name="txtDRNo" HorizontalAlignment="Left" Height="31" Margin="134,363,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
 
                 </Grid>
             </Expander>
@@ -85,26 +86,26 @@
                 </Expander.Header>
                 <Grid Width="700">
                     <Label Content="Date:" HorizontalAlignment="Left" Margin="21,39,0,0" VerticalAlignment="Top"/>
-                    <syncfusion:DateTimeEdit HorizontalAlignment="Left" Height="31" Margin="149,39,0,0" TextWrapping="Wrap" Text="DateTimeEdit" VerticalAlignment="Top" Width="120"/>
+                    <syncfusion:DateTimeEdit x:Name="txtDatePayment" HorizontalAlignment="Left" Height="31" Margin="149,39,0,0" TextWrapping="Wrap" Text="DateTimeEdit" VerticalAlignment="Top" Width="120"/>
 
                     <Label Content="Amount:" HorizontalAlignment="Left" Margin="21,79,0,0" VerticalAlignment="Top"/>
-                    <syncfusion:DoubleTextBox Height="31" Margin="149,79,431,0" NumberGroupSeparator="," NumberDecimalDigits="2" NumberDecimalSeparator="." TextWrapping="Wrap" Text="DoubleTextBox" Value="0" VerticalAlignment="Top"/>
+                    <syncfusion:DoubleTextBox x:Name="txtAmount" Height="31" Margin="149,79,431,0" NumberGroupSeparator="," NumberDecimalDigits="2" NumberDecimalSeparator="." TextWrapping="Wrap" Text="DoubleTextBox" Value="0" MinValue="0" VerticalAlignment="Top" TextChanged="TxtAmount_TextChanged"/>
                     <Label Content="Unpaid Balance:" HorizontalAlignment="Left" Margin="21,119,0,0" VerticalAlignment="Top"/>
-                    <syncfusion:DoubleTextBox HorizontalAlignment="Left" Height="31" Margin="149,119,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+                    <syncfusion:DoubleTextBox x:Name="txtUnpaidBalancePayment" HorizontalAlignment="Left" Height="31" Margin="149,119,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" IsEnabled="False"/>
                     <TextBlock HorizontalAlignment="Left" Margin="380,10,0,0" TextWrapping="Wrap" Text="Payment History" VerticalAlignment="Top"/>
                     <syncfusion:SfDataGrid x:Name="dgPaymentHistory" HorizontalAlignment="Center" Height="369" VerticalAlignment="Center" Width="310" ItemsSource="{Binding}" AutoGenerateColumns="False" Margin="380,39,10,10">
                         <syncfusion:SfDataGrid.Columns>
                             <syncfusion:GridTextColumn MappingName="Date" Width="110" DisplayBinding="{Binding date}"/>
-                            <syncfusion:GridTextColumn MappingName="Amount" Width="200" DisplayBinding="{Binding price}"/>
+                            <syncfusion:GridTextColumn MappingName="Amount" Width="200" DisplayBinding="{Binding amount}"/>
                         </syncfusion:SfDataGrid.Columns>
                     </syncfusion:SfDataGrid>
                     <syncfusion:ButtonAdv  SmallIcon="{x:Null}" HorizontalAlignment="Left" Height="29" Label="Process payment" Margin="69,279,0,0" VerticalAlignment="Top" Width="180"/>
                     <syncfusion:ButtonAdv  SmallIcon="{x:Null}" HorizontalAlignment="Left" Height="29" Label="For claiming" Margin="89,329,0,0" VerticalAlignment="Top" Width="135"/>
-                    <CheckBox Content="Claimed" HorizontalAlignment="Left" Margin="147,169,0,0" VerticalAlignment="Top" IsEnabled="False"/>
+                    <CheckBox x:Name="chkClaimed" Content="Claimed" HorizontalAlignment="Left" Margin="147,169,0,0" VerticalAlignment="Top" IsEnabled="True"/>
 
                 </Grid>
             </Expander>
-            <Expander ExpandDirection="Right" FontSize="16" HorizontalAlignment="Left"  Height="420" VerticalAlignment="Top" IsExpanded="{Binding SelectedExpander, ConverterParameter=3, Converter={StaticResource ExpanderToBooleanConverter}, Mode=TwoWay}" IsEnabled="False">
+            <Expander x:Name="exStockOut" ExpandDirection="Right" FontSize="16" HorizontalAlignment="Left"  Height="420" VerticalAlignment="Top" IsExpanded="{Binding SelectedExpander, ConverterParameter=3, Converter={StaticResource ExpanderToBooleanConverter}, Mode=TwoWay}" IsEnabled="False">
                 <Expander.Header>
                     <TextBlock Text="Item List" RenderTransformOrigin=".5,.5">
                         <TextBlock.LayoutTransform>
@@ -127,7 +128,7 @@
                     </syncfusion:SfDataGrid>
                 </StackPanel>
             </Expander>
-            <Expander ExpandDirection="Right" FontSize="16" HorizontalAlignment="Left"  Height="420" VerticalAlignment="Top" IsExpanded="{Binding SelectedExpander, ConverterParameter=4, Converter={StaticResource ExpanderToBooleanConverter}, Mode=TwoWay}" IsEnabled="False">
+            <Expander x:Name="exPhotocopy" ExpandDirection="Right" FontSize="16" HorizontalAlignment="Left"  Height="420" VerticalAlignment="Top" IsExpanded="{Binding SelectedExpander, ConverterParameter=4, Converter={StaticResource ExpanderToBooleanConverter}, Mode=TwoWay}" IsEnabled="False">
                 <Expander.Header>
                     <TextBlock Text="Photocopy" RenderTransformOrigin=".5,.5">
                         <TextBlock.LayoutTransform>
@@ -146,7 +147,7 @@
                     </syncfusion:SfDataGrid>
                 </StackPanel>
             </Expander>
-            <Expander ExpandDirection="Right" FontSize="16" HorizontalAlignment="Left"  Height="420" VerticalAlignment="Top" IsExpanded="{Binding SelectedExpander, ConverterParameter=5, Converter={StaticResource ExpanderToBooleanConverter}, Mode=TwoWay}" IsEnabled="False">
+            <Expander x:Name="exJobOrder" ExpandDirection="Right" FontSize="16" HorizontalAlignment="Left"  Height="420" VerticalAlignment="Top" IsExpanded="{Binding SelectedExpander, ConverterParameter=5, Converter={StaticResource ExpanderToBooleanConverter}, Mode=TwoWay}" IsEnabled="False">
                 <Expander.Header>
                     <TextBlock Text="Job Order (Printing, Services, etc.)" RenderTransformOrigin=".5,.5">
                         <TextBlock.LayoutTransform>
@@ -172,7 +173,7 @@
                     </syncfusion:SfDataGrid>
                 </StackPanel>
             </Expander>
-            <Expander ExpandDirection="Right" FontSize="16" HorizontalAlignment="Left"  Height="420" VerticalAlignment="Top" IsExpanded="{Binding SelectedExpander, ConverterParameter=6, Converter={StaticResource ExpanderToBooleanConverter}, Mode=TwoWay}" IsEnabled="False">
+            <Expander x:Name="exJobOrderTarp" ExpandDirection="Right" FontSize="16" HorizontalAlignment="Left"  Height="420" VerticalAlignment="Top" IsExpanded="{Binding SelectedExpander, ConverterParameter=6, Converter={StaticResource ExpanderToBooleanConverter}, Mode=TwoWay}" IsEnabled="False">
                 <Expander.Header>
                     <TextBlock Text="Job Order (Tarpaulin)" RenderTransformOrigin=".5,.5">
                         <TextBlock.LayoutTransform>

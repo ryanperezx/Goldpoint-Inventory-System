@@ -28,7 +28,7 @@ namespace Goldpoint_Inventory_System.Transactions
         {
             SqlConnection conn = DBUtils.GetDBConnection();
             conn.Open();
-            using (SqlCommand cmd = new SqlCommand("SELECT TOP 1 DRNo from TransactionDetails ORDER BY DRNo", conn))
+            using (SqlCommand cmd = new SqlCommand("SELECT TOP 1 DRNo from TransactionDetails WHERE TRIM(DRNo) is not null AND DATALENGTH(DRNo) > 0 ORDER BY DRNo DESC", conn))
             {
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
@@ -83,7 +83,7 @@ namespace Goldpoint_Inventory_System.Transactions
             switch (value)
             {
                 case "Official Receipt":
-                    using (SqlCommand cmd = new SqlCommand("SELECT TOP 1 ORNo from TransactionDetails WHERE TRIM(ORNo) is not null ORDER BY ORNo DESC", conn))
+                    using (SqlCommand cmd = new SqlCommand("SELECT TOP 1 ORNo from TransactionDetails WHERE TRIM(ORNo) is not null AND DATALENGTH(ORNo) > 0  ORDER BY ORNo DESC", conn))
                     {
                         using (SqlDataReader reader = cmd.ExecuteReader())
                         {
@@ -100,7 +100,7 @@ namespace Goldpoint_Inventory_System.Transactions
                     }
                     break;
                 case "Invoice":
-                    using (SqlCommand cmd = new SqlCommand("SELECT TOP 1 InvoiceNo from TransactionDetails WHERE TRIM(invoiceNo) is not null ORDER BY InvoiceNo DESC", conn))
+                    using (SqlCommand cmd = new SqlCommand("SELECT TOP 1 InvoiceNo from TransactionDetails WHERE TRIM(invoiceNo) is not null AND DATALENGTH(invoiceNo) > 0 ORDER BY InvoiceNo DESC", conn))
                     {
                         using (SqlDataReader reader = cmd.ExecuteReader())
                         {
@@ -165,7 +165,7 @@ namespace Goldpoint_Inventory_System.Transactions
                 items.Add(new PhotocopyDataModel
                 {
                     item = "Short",
-                    qty = Convert.ToInt32(txtShort.Text.Replace(",", "")),
+                    qty = Convert.ToInt32(txtShort.Value),
                     price = 0.70,
                     totalPerItem = Convert.ToInt32(txtShort.Text) * 0.70
                 });
@@ -177,7 +177,7 @@ namespace Goldpoint_Inventory_System.Transactions
                 items.Add(new PhotocopyDataModel
                 {
                     item = "Long",
-                    qty = Convert.ToInt32(txtLong.Text.Replace(",", "")),
+                    qty = Convert.ToInt32(txtLong.Value),
                     price = 0.80,
                     totalPerItem = Convert.ToInt32(txtLong.Text) * 0.80
                 });
@@ -190,7 +190,7 @@ namespace Goldpoint_Inventory_System.Transactions
                 items.Add(new PhotocopyDataModel
                 {
                     item = "Legal",
-                    qty = Convert.ToInt32(txtLegal.Text.Replace(",", "")),
+                    qty = Convert.ToInt32(txtLegal.Value),
                     price = 1.50,
                     totalPerItem = Convert.ToInt32(txtLegal.Text) * 1.50
                 });
@@ -202,7 +202,7 @@ namespace Goldpoint_Inventory_System.Transactions
                 items.Add(new PhotocopyDataModel
                 {
                     item = "A4",
-                    qty = Convert.ToInt32(txtA4.Text.Replace(",", "")),
+                    qty = Convert.ToInt32(txtA4.Value),
                     price = 0.90,
                     totalPerItem = Convert.ToInt32(txtLegal.Text) * 0.90
                 });
@@ -215,7 +215,7 @@ namespace Goldpoint_Inventory_System.Transactions
                 items.Add(new PhotocopyDataModel
                 {
                     item = "A3",
-                    qty = Convert.ToInt32(txtA3.Text.Replace(",", "")),
+                    qty = Convert.ToInt32(txtA3.Value),
                     price = 0.90,
                     totalPerItem = Convert.ToInt32(txtLegal.Text) * 5.00
                 });
@@ -251,6 +251,10 @@ namespace Goldpoint_Inventory_System.Transactions
             {
                 MessageBox.Show("One or more fields are empty!");
             }
+            else if (chkDownpayment.IsChecked == true && string.IsNullOrEmpty(txtDownpayment.Text))
+            {
+                MessageBox.Show("Please input downpayment to be able to proceed");
+            }
             else
             {
                 string sMessageBoxText = "Confirming Photocopy transaction";
@@ -267,7 +271,7 @@ namespace Goldpoint_Inventory_System.Transactions
                         bool success = false;
                         foreach (var item in items)
                         {
-                            using (SqlCommand cmd = new SqlCommand("INSERT into PhotocopyDetails VALUES (@DRNo, @item, @qty, @price, @totalPerItem)", conn))
+                            using (SqlCommand cmd = new SqlCommand("INSERT into PhotocopyDetails VALUES (@DRNo, @item, @price, @qty, @totalPerItem)", conn))
                             {
                                 cmd.Parameters.AddWithValue("@DRNo", txtDRNo.Text);
                                 cmd.Parameters.AddWithValue("@item", item.item);
@@ -422,10 +426,8 @@ namespace Goldpoint_Inventory_System.Transactions
         {
             if (!string.IsNullOrEmpty(txtDownpayment.Text) && !string.IsNullOrEmpty(txtCustTotal.Text))
             {
-                string placeholder1 = txtDownpayment.Text;
-                string placeholder2 = txtCustTotal.Text;
-                double downpayment = Convert.ToDouble(placeholder1.Replace(",", "").Replace(".00", ""));
-                double total = Convert.ToDouble(placeholder2.Replace(",", "").Replace(".00", ""));
+                double downpayment = (double) txtDownpayment.Value;
+                double total = (double) txtCustTotal.Value;
                 if (downpayment > total)
                 {
                     txtDownpayment.Text = total.ToString();

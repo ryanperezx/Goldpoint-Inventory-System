@@ -17,7 +17,7 @@
             <ColumnDefinition Width="1*"/>
             <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
-        <Label Grid.Column="3" VerticalAlignment="Top" HorizontalAlignment="Right" Height="40" Width="40" ToolTip="Reset" Cursor="Hand">
+        <Label Grid.Column="3" x:Name="btnReset" MouseLeftButtonDown="BtnReset_MouseLeftButtonDown" VerticalAlignment="Top" HorizontalAlignment="Right" Height="40" Width="40" ToolTip="Reset" Cursor="Hand">
             <iconPacks:PackIconMaterialLight Kind="Refresh" Height="30" Width="30" Foreground="DarkGoldenrod"/>
         </Label>
         <StackPanel x:Name="stack" Grid.Column="0" Grid.ColumnSpan="2" Margin="100,105,100,0" VerticalAlignment="Top" HorizontalAlignment="Left">
@@ -38,7 +38,7 @@
                     <Label Content="Brand:" HorizontalAlignment="Left" Margin="38,142,0,0" VerticalAlignment="Top"/>
                     <syncfusion:SfTextBoxExt x:Name="txtBrand" HorizontalAlignment="Left" Height="31" Margin="154,142,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" IsEnabled="False"/>
                     <Label Content="Size:" HorizontalAlignment="Left" Margin="38,178,0,0" VerticalAlignment="Top"/>
-                    <syncfusion:SfTextBoxExt x:Name="txtSize" HorizontalAlignment="Left" Height="31" Margin="154,178,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+                    <syncfusion:SfTextBoxExt x:Name="txtSize" HorizontalAlignment="Left" Height="31" Margin="154,178,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" IsEnabled="False"/>
                     <Label Content="Qty:" HorizontalAlignment="Left" Margin="38,214,0,0" VerticalAlignment="Top"/>
                     <syncfusion:IntegerTextBox x:Name="txtQty" HorizontalAlignment="Left" Height="31" Margin="154,214,0,0" MinWidth="100" MinValue="0" Value="0" NumberGroupSeparator="," TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="120"/>
                     <Label Content="Item Price:" HorizontalAlignment="Left" Margin="38,253,0,0" VerticalAlignment="Top"/>
@@ -63,7 +63,7 @@
                     </Grid.Resources>
                     <Label Content="Service:" HorizontalAlignment="Left" Margin="29,40,0,0" VerticalAlignment="Top"/>
                     <CheckBox x:Name="chkCompany" Checked="checkboxService" Unchecked="unCheckBoxService" Content="Company Use" HorizontalAlignment="Left" Margin="139,15,0,0" VerticalAlignment="Top"/>
-                    <CheckBox x:Name="chkDR" Checked="checkboxService" Unchecked="unCheckBoxService" Content="Delivery Receipt" HorizontalAlignment="Left" Margin="139,35,0,0" VerticalAlignment="Top"/>
+                    <CheckBox x:Name="chkDR" IsChecked="True" IsEnabled="False" Content="Delivery Receipt" HorizontalAlignment="Left" Margin="139,35,0,0" VerticalAlignment="Top"/>
                     <CheckBox x:Name="chkInv" Checked="checkboxService" Unchecked="unCheckBoxService" Content="Invoice" HorizontalAlignment="Left" Margin="139,55,0,0" VerticalAlignment="Top"/>
                     <CheckBox x:Name="chkOR" Checked="checkboxService" Unchecked="unCheckBoxService" Content="Original Receipt" HorizontalAlignment="Left" Margin="139,75,0,0" VerticalAlignment="Top"/>
 
@@ -95,19 +95,25 @@
                     <syncfusion:DateTimeEdit x:Name="txtDate" HorizontalAlignment="Left" Height="31" Margin="164,36,0,0" TextWrapping="Wrap" Text="DateTimeEdit" VerticalAlignment="Top" Width="135"/>
                     <Label Content="Customer Name:" HorizontalAlignment="Left" Margin="31,85,0,0" VerticalAlignment="Top"/>
                     <syncfusion:SfTextBoxExt x:Name="txtCustName" HorizontalAlignment="Left" Height="31" Margin="164,85,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="165"/>
-                    <Label Content="Address:" HorizontalAlignment="Left" Margin="31,136,0,0" VerticalAlignment="Top"/>
-                    <RichTextBox x:Name="txtAddress" HorizontalAlignment="Left" Height="100" Margin="164,136,0,0" VerticalAlignment="Top" Width="165">
+                    <Label Content="Address:" HorizontalAlignment="Left" Margin="31,126,0,0" VerticalAlignment="Top"/>
+                    <RichTextBox x:Name="txtAddress" HorizontalAlignment="Left" Height="100" Margin="164,126,0,0" VerticalAlignment="Top" Width="165">
                         <RichTextBox.Resources>
                             <Style TargetType="{x:Type Paragraph}">
                                 <Setter Property="Margin" Value="0"/>
                             </Style>
                         </RichTextBox.Resources>
                     </RichTextBox>
-                    <Label Content="Contact No:" HorizontalAlignment="Left" Margin="31,255,0,0" VerticalAlignment="Top"/>
-                    <syncfusion:SfTextBoxExt x:Name="txtContactNo"  HorizontalAlignment="Left" Height="31" Margin="164,255,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="165"/>
-                    <Label Content="Remarks:" HorizontalAlignment="Left" Margin="31,305,0,0" VerticalAlignment="Top"/>
-                    <syncfusion:SfTextBoxExt x:Name="txtTransactRemarks" HorizontalAlignment="Left" Height="31" Margin="164,305,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="165"/>
-                    <syncfusion:ButtonAdv HorizontalAlignment="Left" Height="29" SmallIcon="{x:Null}" Label="Check out" Margin="164,352,0,0" VerticalAlignment="Top" Width="165"/>
+                    <Label Content="Contact No:" HorizontalAlignment="Left" Margin="31,236,0,0" VerticalAlignment="Top"/>
+                    <syncfusion:SfTextBoxExt x:Name="txtContactNo"  HorizontalAlignment="Left" Height="31" Margin="164,236,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="165"/>
+                    <Label Content="Remarks:" HorizontalAlignment="Left" Margin="31,286,0,0" VerticalAlignment="Top"/>
+                    <RichTextBox x:Name="txtTransactRemarks" HorizontalAlignment="Left" Height="55" Margin="164,286,0,0" VerticalAlignment="Top" Width="165">
+                        <RichTextBox.Resources>
+                            <Style TargetType="{x:Type Paragraph}">
+                                <Setter Property="Margin" Value="0"/>
+                            </Style>
+                        </RichTextBox.Resources>
+                    </RichTextBox>
+                    <syncfusion:ButtonAdv x:Name="btnCheckOut" Click="BtnCheckOut_Click"  HorizontalAlignment="Left" Height="29" SmallIcon="{x:Null}" Label="Check out" Margin="164,352,0,0" VerticalAlignment="Top" Width="165"/>
                 </Grid>
             </Expander>
         </StackPanel>

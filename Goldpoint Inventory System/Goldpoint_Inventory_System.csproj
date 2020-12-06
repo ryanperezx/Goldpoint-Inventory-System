@@ -280,7 +280,6 @@
     <Compile Include="Log\Sales.xaml.cs">
       <DependentUpon>Sales.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Log\SalesViewModel.cs" />
     <Compile Include="Log\TransactDetails.xaml.cs">
       <DependentUpon>TransactDetails.xaml</DependentUpon>
     </Compile>

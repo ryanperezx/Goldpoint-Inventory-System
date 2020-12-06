@@ -14,7 +14,7 @@ namespace Goldpoint_Inventory_System.Transactions
             set;
         }
 
-        public double price
+        public double amount
         {
             get;
             set;
