@@ -61,7 +61,7 @@
                             <Setter Property="FontSize" Value="12" />
                         </Style>
                     </Grid.Resources>
-                    <Label Content="Service:" HorizontalAlignment="Left" Margin="29,40,0,0" VerticalAlignment="Top"/>
+                    <Label Content="Receipt:" HorizontalAlignment="Left" Margin="29,40,0,0" VerticalAlignment="Top"/>
                     <CheckBox x:Name="chkCompany" Checked="checkboxService" Unchecked="unCheckBoxService" Content="Company Use" HorizontalAlignment="Left" Margin="139,15,0,0" VerticalAlignment="Top"/>
                     <CheckBox x:Name="chkDR" IsChecked="True" IsEnabled="False" Content="Delivery Receipt" HorizontalAlignment="Left" Margin="139,35,0,0" VerticalAlignment="Top"/>
                     <CheckBox x:Name="chkInv" Checked="checkboxService" Unchecked="unCheckBoxService" Content="Invoice" HorizontalAlignment="Left" Margin="139,55,0,0" VerticalAlignment="Top"/>

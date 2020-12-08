@@ -43,7 +43,7 @@ namespace Goldpoint_Inventory_System.Stock
                         type = found.type,
                         brand = found.brand,
                         size = found.size,
-                        qty = Convert.ToInt32(txtQty.Text.Replace(",", "")),
+                        qty = Convert.ToInt32(txtQty.Value),
                         remarks = txtRemarks.Text,
                         replacement = found.replacement,
                         fastMoving = cmbFastMoving.Text
@@ -67,7 +67,7 @@ namespace Goldpoint_Inventory_System.Stock
                         type = txtType.Text,
                         brand = txtBrand.Text,
                         size = txtSize.Text,
-                        qty = Convert.ToInt32(txtQty.Text.Replace(",", "")),
+                        qty = Convert.ToInt32(txtQty.Value),
                         remarks = txtRemarks.Text,
                         replacement = replacement,
                         fastMoving = cmbFastMoving.Text

@@ -305,7 +305,6 @@
     <Compile Include="Stock\StockIn.xaml.cs">
       <DependentUpon>StockIn.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TransactionModel.cs" />
     <Compile Include="Transactions\JobOrder.xaml.cs">
       <DependentUpon>JobOrder.xaml</DependentUpon>
     </Compile>

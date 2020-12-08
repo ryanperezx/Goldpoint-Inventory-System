@@ -15,8 +15,8 @@
             <iconPacks:PackIconMaterialLight Kind="Refresh" Height="30" Width="30" Foreground="DarkGoldenrod"/>
         </Label>
 
-        <Label Content="Service No:" HorizontalAlignment="Left" Margin="82,25,0,0" VerticalAlignment="Top"/>
-        <syncfusion:SfTextBoxExt x:Name="txtServiceNo" HorizontalAlignment="Left" Height="31" Margin="176,25,0,0" VerticalAlignment="Top" Width="155"/>
+        <Label Content="Service/Receipt  No:" HorizontalAlignment="Left" Margin="82,25,0,0" VerticalAlignment="Top"/>
+        <syncfusion:SfTextBoxExt x:Name="txtServiceNo" HorizontalAlignment="Left" Height="31" Margin="238,26,0,0" VerticalAlignment="Top" Width="155"/>
         <Label Content="Service:" HorizontalAlignment="Left" Margin="442,25,0,0" VerticalAlignment="Top"/>
         <Label x:Name="btnSearchService" MouseLeftButtonDown="BtnSearchService_MouseLeftButtonDown" VerticalAlignment="Top" HorizontalAlignment="Left" Height="30" Width="30" Cursor="Hand" Margin="715,26,0,0" >
             <iconPacks:PackIconMaterialLight Kind="Magnify" Height="20" Width="20" Foreground="DarkGoldenrod" />
@@ -40,7 +40,7 @@
                         </TextBlock.LayoutTransform>
                     </TextBlock>
                 </Expander.Header>
-                <Grid Width="500" IsEnabled="False">
+                <Grid Width="500" IsEnabled="False" >
                     <Label Content="Date:" HorizontalAlignment="Left" Margin="40,33,0,0" VerticalAlignment="Top"/>
                     <syncfusion:DateTimeEdit x:Name="txtDate" HorizontalAlignment="Left" Height="31" Margin="118,33,0,0" TextWrapping="Wrap" Text="DateTimeEdit" VerticalAlignment="Top" Width="120" />
                     <Label Content="Deadline:" HorizontalAlignment="Left" Margin="276,33,0,0" VerticalAlignment="Top"/>
@@ -99,9 +99,9 @@
                             <syncfusion:GridTextColumn MappingName="Amount" Width="200" DisplayBinding="{Binding amount}"/>
                         </syncfusion:SfDataGrid.Columns>
                     </syncfusion:SfDataGrid>
-                    <syncfusion:ButtonAdv  SmallIcon="{x:Null}" HorizontalAlignment="Left" Height="29" Label="Process payment" Margin="69,279,0,0" VerticalAlignment="Top" Width="180"/>
-                    <syncfusion:ButtonAdv  SmallIcon="{x:Null}" HorizontalAlignment="Left" Height="29" Label="For claiming" Margin="89,329,0,0" VerticalAlignment="Top" Width="135"/>
-                    <CheckBox x:Name="chkClaimed" Content="Claimed" HorizontalAlignment="Left" Margin="147,169,0,0" VerticalAlignment="Top" IsEnabled="True"/>
+                    <syncfusion:ButtonAdv x:Name="btnPayment" Click="BtnPayment_Click" SmallIcon="{x:Null}" HorizontalAlignment="Left" Height="29" Label="Process payment" Margin="69,279,0,0" VerticalAlignment="Top" Width="180"/>
+                    <syncfusion:ButtonAdv x:Name="btnClaiming" Click="BtnClaiming_Click" SmallIcon="{x:Null}" HorizontalAlignment="Left" Height="29" Label="For claiming" Margin="89,329,0,0" VerticalAlignment="Top" Width="135"/>
+                    <CheckBox x:Name="chkClaimed" Content="Claimed" HorizontalAlignment="Left" Margin="147,169,0,0" VerticalAlignment="Top" IsEnabled="False"/>
 
                 </Grid>
             </Expander>

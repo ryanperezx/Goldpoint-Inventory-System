@@ -21,7 +21,7 @@ namespace Goldpoint_Inventory_System.Transactions
             stack.DataContext = new ExpanderListViewModel();
             dgPhotocopy.ItemsSource = items;
             getDRNo();
-
+            chkUnpaid.IsChecked = true;
         }
 
         private void getDRNo()
@@ -167,7 +167,7 @@ namespace Goldpoint_Inventory_System.Transactions
                     item = "Short",
                     qty = Convert.ToInt32(txtShort.Value),
                     price = 0.70,
-                    totalPerItem = Convert.ToInt32(txtShort.Text) * 0.70
+                    totalPerItem = Convert.ToInt32(txtShort.Value) * 0.70
                 });
                 total += Convert.ToInt32(txtShort.Text) * 0.70;
                 isEmpty = false;
@@ -179,7 +179,7 @@ namespace Goldpoint_Inventory_System.Transactions
                     item = "Long",
                     qty = Convert.ToInt32(txtLong.Value),
                     price = 0.80,
-                    totalPerItem = Convert.ToInt32(txtLong.Text) * 0.80
+                    totalPerItem = Convert.ToInt32(txtLong.Value) * 0.80
                 });
                 total += Convert.ToInt32(txtLong.Text) * 0.80;
                 isEmpty = false;
@@ -192,7 +192,7 @@ namespace Goldpoint_Inventory_System.Transactions
                     item = "Legal",
                     qty = Convert.ToInt32(txtLegal.Value),
                     price = 1.50,
-                    totalPerItem = Convert.ToInt32(txtLegal.Text) * 1.50
+                    totalPerItem = Convert.ToInt32(txtLegal.Value) * 1.50
                 });
                 total += Convert.ToInt32(txtLegal.Text) * 1.50;
                 isEmpty = false;
@@ -204,7 +204,7 @@ namespace Goldpoint_Inventory_System.Transactions
                     item = "A4",
                     qty = Convert.ToInt32(txtA4.Value),
                     price = 0.90,
-                    totalPerItem = Convert.ToInt32(txtLegal.Text) * 0.90
+                    totalPerItem = Convert.ToInt32(txtLegal.Value) * 0.90
                 });
                 total += Convert.ToInt32(txtLegal.Text) * 0.90;
                 isEmpty = false;
@@ -217,7 +217,7 @@ namespace Goldpoint_Inventory_System.Transactions
                     item = "A3",
                     qty = Convert.ToInt32(txtA3.Value),
                     price = 0.90,
-                    totalPerItem = Convert.ToInt32(txtLegal.Text) * 5.00
+                    totalPerItem = Convert.ToInt32(txtLegal.Value) * 5.00
                 });
                 total += Convert.ToInt32(txtLegal.Text) * 5.00;
                 isEmpty = false;
@@ -254,6 +254,10 @@ namespace Goldpoint_Inventory_System.Transactions
             else if (chkDownpayment.IsChecked == true && string.IsNullOrEmpty(txtDownpayment.Text))
             {
                 MessageBox.Show("Please input downpayment to be able to proceed");
+            }
+            else if (chkDownpayment.IsChecked == true && txtDownpayment.Value == 0)
+            {
+                MessageBox.Show("Please set downpayment to anything greater than zero.");
             }
             else
             {
@@ -373,7 +377,7 @@ namespace Goldpoint_Inventory_System.Transactions
                                 success = false;
                             }
                         }
-                        using (SqlCommand cmd = new SqlCommand("INSERT into TransactionDetails VALUES (@DRNo, @service, @date, @deadline, @customerName, @address, @contactNo, @remarks, @ORNo, @InvoiceNo, @status)", conn))
+                        using (SqlCommand cmd = new SqlCommand("INSERT into TransactionDetails VALUES (@DRNo, @service, @date, @deadline, @customerName, @address, @contactNo, @remarks, @ORNo, @InvoiceNo, @status, @claimed)", conn))
                         {
                             cmd.Parameters.AddWithValue("@DRNo", txtDRNo.Text);
                             cmd.Parameters.AddWithValue("@date", txtDate.Text);
@@ -385,17 +389,24 @@ namespace Goldpoint_Inventory_System.Transactions
                             cmd.Parameters.AddWithValue("@remarks", txtRemarks.Text);
                             cmd.Parameters.AddWithValue("@ORNo", txtORNo.Text);
                             cmd.Parameters.AddWithValue("@InvoiceNo", txtInvoice.Text);
+
                             if (chkPaid.IsChecked == true)
                             {
                                 cmd.Parameters.AddWithValue("@status", "Paid");
+                                cmd.Parameters.AddWithValue("@claimed", "Claimed");
+
                             }
                             if (chkUnpaid.IsChecked == true)
                             {
                                 cmd.Parameters.AddWithValue("@status", "Unpaid");
+                                cmd.Parameters.AddWithValue("@claimed", "Claimed");
+
                             }
                             if (chkDownpayment.IsChecked == true)
                             {
                                 cmd.Parameters.AddWithValue("@status", "Downpayment");
+                                cmd.Parameters.AddWithValue("@claimed", "Claimed");
+
                             }
                             try
                             {

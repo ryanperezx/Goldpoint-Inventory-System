@@ -53,7 +53,7 @@
                     <syncfusion:SfTextBoxExt x:Name="txtORNo" HorizontalAlignment="Left" Height="31" Margin="242,417,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="135" Grid.Column="1" />
                     <Label Content="Invoice No:" HorizontalAlignment="Left" Margin="136,459,0,0" VerticalAlignment="Top" Grid.Column="1"/>
                     <syncfusion:SfTextBoxExt x:Name="txtInvoice" HorizontalAlignment="Left" Height="31" Margin="242,459,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="135" Grid.Column="1" />
-                    <Label Content="Service:" HorizontalAlignment="Left" Margin="15,411,0,0" VerticalAlignment="Top"/>
+                    <Label Content="Receipt:" HorizontalAlignment="Left" Margin="15,411,0,0" VerticalAlignment="Top"/>
                     <CheckBox x:Name="chkDR" IsChecked="True" IsEnabled="False"  Content="Delivery Receipt" HorizontalAlignment="Left" Margin="83,382,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
                     <CheckBox x:Name="chkOR" Checked="chkServ_Checked" Unchecked="chkServ_Unchecked" Content="Official Receipt"  HorizontalAlignment="Left" Margin="84,423,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
                     <CheckBox x:Name="chkInv" Checked="chkServ_Checked" Unchecked="chkServ_Unchecked" Content="Invoice"  HorizontalAlignment="Left" Margin="84,465,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>

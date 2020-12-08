@@ -18,7 +18,7 @@ namespace Goldpoint_Inventory_System.Log
         ObservableCollection<ItemDataModel> stockOut = new ObservableCollection<ItemDataModel>();
         ObservableCollection<PaymentHistoryDataModel> payHist = new ObservableCollection<PaymentHistoryDataModel>();
         ObservableCollection<JobOrderDataModel> services = new ObservableCollection<JobOrderDataModel>();
-
+        bool exist = false;
 
         public TransactDetails()
         {
@@ -97,7 +97,7 @@ namespace Goldpoint_Inventory_System.Log
 
                                         service = Convert.ToString(reader.GetValue(serviceIndex));
                                         drNo = Convert.ToInt32(reader.GetValue(drNoIndex));
-
+                                        exist = true;
                                     }
                                 }
                                 else
@@ -235,11 +235,13 @@ namespace Goldpoint_Inventory_System.Log
                                         int invoiceNoIndex = reader.GetOrdinal("invoiceNo");
                                         int orNoIndex = reader.GetOrdinal("ORNo");
                                         int statusIndex = reader.GetOrdinal("status");
+                                        int claimedIndex = reader.GetOrdinal("claimed");
 
                                         txtDate.Text = Convert.ToString(reader.GetValue(dateIndex));
                                         txtDeadline.Text = Convert.ToString(reader.GetValue(deadlineIndex));
                                         txtCustName.Text = Convert.ToString(reader.GetValue(custNameIndex));
-                                        txtAddress.Document.Blocks.Add(new Paragraph(new Run(Convert.ToString(reader.GetValue(addressIndex)))));
+                                        TextRange textRange = new TextRange(txtAddress.Document.ContentStart, txtAddress.Document.ContentEnd);
+                                        textRange.Text = Convert.ToString(reader.GetValue(addressIndex));
                                         if (!string.IsNullOrEmpty(Convert.ToString(reader.GetValue(invoiceNoIndex))))
                                         {
                                             chkInv.IsChecked = true;
@@ -262,8 +264,19 @@ namespace Goldpoint_Inventory_System.Log
                                             rdUnpaid.IsChecked = true;
                                         }
 
+                                        if (Convert.ToString(reader.GetValue(claimedIndex)) == "Claimed")
+                                        {
+                                            chkClaimed.IsChecked = true;
+                                        }
+                                        else
+                                        {
+                                            chkClaimed.IsChecked = false;
+                                        }
+
                                         service = Convert.ToString(reader.GetValue(serviceIndex));
                                         drNo = Convert.ToInt32(txtServiceNo.Text);
+                                        exist = true;
+
                                     }
                                 }
                                 else
@@ -424,6 +437,8 @@ namespace Goldpoint_Inventory_System.Log
 
                                         service = Convert.ToString(reader.GetValue(serviceIndex));
                                         drNo = Convert.ToInt32(reader.GetValue(drNoIndex));
+                                        exist = true;
+
                                     }
                                 }
                                 else
@@ -564,6 +579,10 @@ namespace Goldpoint_Inventory_System.Log
             txtTotal.Value = 0;
             txtUnpaidBalance.Value = 0;
             txtUnpaidBalancePayment.Value = 0;
+            chkClaimed.IsChecked = false;
+            chkDR.IsChecked = false;
+            chkInv.IsChecked = false;
+            chkOR.IsChecked = false;
         }
 
         private void BtnReset_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -577,11 +596,120 @@ namespace Goldpoint_Inventory_System.Log
             exStockOut.IsEnabled = false;
             exJobOrder.IsEnabled = false;
             exJobOrderTarp.IsEnabled = false;
+            exist = false;
         }
 
         private void TxtAmount_TextChanged(object sender, TextChangedEventArgs e)
         {
+            if (txtAmount.Value > txtUnpaidBalancePayment.Value)
+            {
+                txtAmount.Value = txtUnpaidBalancePayment.Value;
+            }
+        }
+
+        private void BtnPayment_Click(object sender, RoutedEventArgs e)
+        {
+            if (exist == true)
+            {
+                if (txtAmount.Value == 0 || string.IsNullOrEmpty(txtAmount.Text))
+                {
+                    MessageBox.Show("Please enter amount greater than 0 to process payment");
+                }
+                else
+                {
+                    //if already fully paid, should disable the button
+                    string sMessageBoxText = "Confirming payment";
+                    string sCaption = "Update payment history?";
+                    MessageBoxButton btnMessageBox = MessageBoxButton.YesNoCancel;
+                    MessageBoxImage icnMessageBox = MessageBoxImage.Warning;
+
+                    MessageBoxResult dr = MessageBox.Show(sMessageBoxText, sCaption, btnMessageBox, icnMessageBox);
+                    switch (dr)
+                    {
+                        case MessageBoxResult.Yes:
+                            SqlConnection conn = DBUtils.GetDBConnection();
+                            conn.Open();
+                            //if fully paid or not, update all if fully paid, if not, normal add
+                            using (SqlCommand cmd = new SqlCommand("INSERT into PaymentHist (@DRNo, @date, @paidAmount, @total)", conn))
+                            {
+                                cmd.Parameters.AddWithValue("@DRNo", txtDRNo.Text);
+                                cmd.Parameters.AddWithValue("@date", txtDatePayment.Text);
+                                cmd.Parameters.AddWithValue("@paidAmount", txtUnpaidBalancePayment.Value);
+                                cmd.Parameters.AddWithValue("@total", txtTotal.Value);
+                                try
+                                {
+                                    cmd.ExecuteNonQuery();
+                                    MessageBox.Show("Payment history updated");
+                                    payHist.Add(new PaymentHistoryDataModel
+                                    {
+                                        date = txtDatePayment.Text,
+                                        amount = (double) txtUnpaidBalancePayment.Value
+                                    });
+                                    txtUnpaidBalance.Value -= txtUnpaidBalancePayment.Value;
+                                }
+                                catch (SqlException ex)
+                                {
+                                    MessageBox.Show("An error has been encountered! " + ex);
+                                }
+
+                            }
+                            break;
+                        case MessageBoxResult.No:
+                            return;
+                        case MessageBoxResult.Cancel:
+                            return;
+                    }
+                }
+            }
+            else
+            {
+                MessageBox.Show("Please search for the transaction first.");
+            }
 
         }
+
+        private void BtnClaiming_Click(object sender, RoutedEventArgs e)
+        {
+            if (exist == true)
+            {
+                //if already claimed, should disable the button
+                string sMessageBoxText = "Confirming claiming of materials/supplies";
+                string sCaption = "Update transaction?";
+                MessageBoxButton btnMessageBox = MessageBoxButton.YesNoCancel;
+                MessageBoxImage icnMessageBox = MessageBoxImage.Warning;
+
+                MessageBoxResult dr = MessageBox.Show(sMessageBoxText, sCaption, btnMessageBox, icnMessageBox);
+                switch (dr)
+                {
+                    case MessageBoxResult.Yes:
+                        SqlConnection conn = DBUtils.GetDBConnection();
+                        conn.Open();
+                        using (SqlCommand cmd = new SqlCommand("UPDATE TransactionDetails set claimed = 'Claimed' where DRNo = @DRNo", conn))
+                        {
+                            cmd.Parameters.AddWithValue("@DRNo", txtDRNo.Text);
+                            try
+                            {
+                                cmd.ExecuteNonQuery();
+                                MessageBox.Show("Transaction updated");
+                                chkClaimed.IsChecked = true;
+                            }
+                            catch (SqlException ex)
+                            {
+                                MessageBox.Show("An error has been encountered! " + ex);
+                            }
+                        }
+                        break;
+                    case MessageBoxResult.No:
+                        return;
+                    case MessageBoxResult.Cancel:
+                        return;
+                }
+            }
+            else
+            {
+                MessageBox.Show("Please search for the transaction first.");
+            }
+        }
+
     }
 }

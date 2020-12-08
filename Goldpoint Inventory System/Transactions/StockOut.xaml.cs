@@ -21,6 +21,8 @@ namespace Goldpoint_Inventory_System.Transactions
             //to avoid null error
             txtQty.TextChanged += TxtQty_TextChanged;
             getDRNo();
+            rdUnpaid.IsChecked = true;
+
         }
 
         private void radiobuttonPayment(object sender, RoutedEventArgs e)
@@ -58,6 +60,14 @@ namespace Goldpoint_Inventory_System.Transactions
                 txtDRNo.Text = null;
                 txtORNo.Text = null;
 
+                rdPaid.IsChecked = true;
+                rdUnpaid.IsEnabled = false;
+                rdDownpayment.IsEnabled = false;
+                txtAddress.IsEnabled = false;
+                txtAddress.Document.Blocks.Clear();
+                txtContactNo.IsEnabled = false;
+                txtContactNo.Text = null;
+
             }
             else
             {
@@ -66,6 +76,10 @@ namespace Goldpoint_Inventory_System.Transactions
 
                 getDRNo();
                 chkDR.IsChecked = true;
+                txtAddress.IsEnabled = true;
+                txtContactNo.IsEnabled = true;
+                rdUnpaid.IsEnabled = true;
+                rdDownpayment.IsEnabled = true;
 
                 if (chkbox.IsChecked == true && value == "Original Receipt")
                 {
@@ -126,6 +140,15 @@ namespace Goldpoint_Inventory_System.Transactions
             if (chkbox.IsChecked == false && value == "Original Receipt")
             {
                 txtORNo.Text = null;
+            }
+            if(chkCompany.IsChecked == false)
+            {
+                getDRNo();
+                chkDR.IsChecked = true;
+                txtAddress.IsEnabled = true;
+                txtContactNo.IsEnabled = true;
+                rdUnpaid.IsEnabled = true;
+                rdDownpayment.IsEnabled = true;
             }
         }
 
@@ -288,9 +311,24 @@ namespace Goldpoint_Inventory_System.Transactions
             {
                 MessageBox.Show("Item list is empty");
             }
-            else if (string.IsNullOrEmpty(txtDate.Text) || string.IsNullOrEmpty(txtCustName.Text) || string.IsNullOrEmpty(txtContactNo.Text) || string.IsNullOrEmpty(address))
+            else if (string.IsNullOrEmpty(txtDate.Text) || string.IsNullOrEmpty(txtCustName.Text))
             {
-                MessageBox.Show("One or more fields are empty!");
+                if(chkCompany.IsChecked == false && string.IsNullOrEmpty(txtContactNo.Text) || string.IsNullOrEmpty(address))
+                {
+                    MessageBox.Show("One or more fields are empty!");
+                }
+                else
+                {
+                    MessageBox.Show("One or more fields are empty!");
+                }
+            }
+            else if (rdDownpayment.IsChecked == true && string.IsNullOrEmpty(txtDownpayment.Text))
+            {
+                MessageBox.Show("Please input downpayment to be able to proceed");
+            }
+            else if(rdDownpayment.IsChecked == true && txtDownpayment.Value == 0)
+            {
+                MessageBox.Show("Please set downpayment to anything greater than zero.");
             }
             else
             {
@@ -347,7 +385,7 @@ namespace Goldpoint_Inventory_System.Transactions
                                 }
                             }
                         }
-                        if (rdDownpayment.IsChecked == true)
+                        if (rdDownpayment.IsChecked == true && chkCompany.IsChecked == false)
                         {
                             using (SqlCommand cmd = new SqlCommand("INSERT into Sales VALUES (@date, @service, @total, @status)", conn))
                             {
@@ -366,7 +404,7 @@ namespace Goldpoint_Inventory_System.Transactions
                                 }
                             }
                         }
-                        else if (rdPaid.IsChecked == true)
+                        else if (rdPaid.IsChecked == true && chkCompany.IsChecked == false)
                         {
                             using (SqlCommand cmd = new SqlCommand("INSERT into Sales VALUES (@date, @service, @total, @status)", conn))
                             {
@@ -432,7 +470,7 @@ namespace Goldpoint_Inventory_System.Transactions
                                     success = false;
                                 }
                             }
-                            using (SqlCommand cmd = new SqlCommand("INSERT into TransactionDetails VALUES (@DRNo, @service, @date, @deadline, @customerName, @address, @contactNo, @remarks, @ORNo, @InvoiceNo, @status)", conn))
+                            using (SqlCommand cmd = new SqlCommand("INSERT into TransactionDetails VALUES (@DRNo, @service, @date, @deadline, @customerName, @address, @contactNo, @remarks, @ORNo, @InvoiceNo, @status, @claimed)", conn))
                             {
                                 cmd.Parameters.AddWithValue("@DRNo", txtDRNo.Text);
                                 cmd.Parameters.AddWithValue("@date", txtDate.Text);
@@ -447,14 +485,18 @@ namespace Goldpoint_Inventory_System.Transactions
                                 if (rdPaid.IsChecked == true)
                                 {
                                     cmd.Parameters.AddWithValue("@status", "Paid");
+                                    cmd.Parameters.AddWithValue("@claimed", "Claimed");
                                 }
                                 if (rdUnpaid.IsChecked == true)
                                 {
                                     cmd.Parameters.AddWithValue("@status", "Unpaid");
+                                    cmd.Parameters.AddWithValue("@claimed", "Claimed");
+
                                 }
                                 if (rdDownpayment.IsChecked == true)
                                 {
                                     cmd.Parameters.AddWithValue("@status", "Downpayment");
+                                    cmd.Parameters.AddWithValue("@claimed", "Claimed");
                                 }
                                 try
                                 {

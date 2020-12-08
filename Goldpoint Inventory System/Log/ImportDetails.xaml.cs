@@ -32,8 +32,6 @@ namespace Goldpoint_Inventory_System.Log
         {
             if (!string.IsNullOrEmpty(txtItemCode.Text))
             {
-                //if itemcode is valid then..
-                //if itemcode and txtdateto has text then..
                 SqlConnection conn = DBUtils.GetDBConnection();
                 conn.Open();
                 int exist = 0;

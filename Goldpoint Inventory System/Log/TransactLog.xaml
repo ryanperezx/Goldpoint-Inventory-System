@@ -16,7 +16,7 @@
         <syncfusion:DateTimeEdit x:Name="txtDateFrom" HorizontalAlignment="Left" Height="31" Margin="173,25,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="120"/>
         <Label Content="Date To:" HorizontalAlignment="Left" Margin="403,25,0,0" VerticalAlignment="Top"/>
         <syncfusion:DateTimeEdit x:Name="txtDateTo"  HorizontalAlignment="Left" Height="31" Margin="475,25,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="120"/>
-        <Label x:Name="lblSearchTransact" VerticalAlignment="Top" HorizontalAlignment="Left" Height="30" Width="30" ToolTip="Search Transaction" Cursor="Hand" Margin="600,25,0,0">
+        <Label x:Name="lblSearchTransact" MouseLeftButtonDown="LblSearchTransact_MouseLeftButtonDown" VerticalAlignment="Top" HorizontalAlignment="Left" Height="30" Width="30" ToolTip="Search Transaction" Cursor="Hand" Margin="600,25,0,0">
             <iconPacks:PackIconMaterialLight Kind="Magnify" Height="20" Width="20" Foreground="DarkGoldenrod" />
         </Label>
         <syncfusion:SfDataGrid x:Name="dgTransaction" HorizontalAlignment="Left"  Height="500" Margin="80,25,0,20" VerticalAlignment="Center" Width="1200" ItemsSource="{Binding}" AutoGenerateColumns="False">
