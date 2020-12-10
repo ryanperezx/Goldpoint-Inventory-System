@@ -21,7 +21,7 @@
                 <syncfusion:GridTextColumn MappingName="Deadline" DisplayBinding="{Binding deadline}" Width="120"/>
                 <syncfusion:GridTextColumn MappingName="Customer Name" DisplayBinding="{Binding customerName}" Width="170"/>
                 <syncfusion:GridTextColumn MappingName="Service" DisplayBinding="{Binding service}" Width="120"/>
-                <syncfusion:GridTextColumn MappingName="Delivery Receipt No" DisplayBinding="{Binding serviceNo}"/>
+                <syncfusion:GridTextColumn MappingName="Delivery Receipt No" DisplayBinding="{Binding receiptNo}"/>
                 <syncfusion:GridTextColumn MappingName="Status" DisplayBinding="{Binding status}"/>
                 <syncfusion:GridTextColumn MappingName="Total" DisplayBinding="{Binding total}" Width="120"/>
 

@@ -89,7 +89,7 @@
                     <syncfusion:DateTimeEdit x:Name="txtDatePayment" HorizontalAlignment="Left" Height="31" Margin="149,39,0,0" TextWrapping="Wrap" Text="DateTimeEdit" VerticalAlignment="Top" Width="120"/>
 
                     <Label Content="Amount:" HorizontalAlignment="Left" Margin="21,79,0,0" VerticalAlignment="Top"/>
-                    <syncfusion:DoubleTextBox x:Name="txtAmount" Height="31" Margin="149,79,431,0" NumberGroupSeparator="," NumberDecimalDigits="2" NumberDecimalSeparator="." TextWrapping="Wrap" Text="DoubleTextBox" Value="0" MinValue="0" VerticalAlignment="Top" TextChanged="TxtAmount_TextChanged"/>
+                    <syncfusion:DoubleTextBox x:Name="txtAmount" Height="31" Margin="149,79,431,0" NumberGroupSeparator="," NumberDecimalDigits="2" NumberDecimalSeparator="." TextWrapping="Wrap" Text="DoubleTextBox" Value="0" MinValue="0"  VerticalAlignment="Top"/>
                     <Label Content="Unpaid Balance:" HorizontalAlignment="Left" Margin="21,119,0,0" VerticalAlignment="Top"/>
                     <syncfusion:DoubleTextBox x:Name="txtUnpaidBalancePayment" HorizontalAlignment="Left" Height="31" Margin="149,119,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" IsEnabled="False"/>
                     <TextBlock HorizontalAlignment="Left" Margin="380,10,0,0" TextWrapping="Wrap" Text="Payment History" VerticalAlignment="Top"/>
@@ -99,8 +99,8 @@
                             <syncfusion:GridTextColumn MappingName="Amount" Width="200" DisplayBinding="{Binding amount}"/>
                         </syncfusion:SfDataGrid.Columns>
                     </syncfusion:SfDataGrid>
-                    <syncfusion:ButtonAdv x:Name="btnPayment" Click="BtnPayment_Click" SmallIcon="{x:Null}" HorizontalAlignment="Left" Height="29" Label="Process payment" Margin="69,279,0,0" VerticalAlignment="Top" Width="180"/>
-                    <syncfusion:ButtonAdv x:Name="btnClaiming" Click="BtnClaiming_Click" SmallIcon="{x:Null}" HorizontalAlignment="Left" Height="29" Label="For claiming" Margin="89,329,0,0" VerticalAlignment="Top" Width="135"/>
+                    <syncfusion:ButtonAdv x:Name="btnPayment" Click="BtnPayment_Click" SmallIcon="{x:Null}" HorizontalAlignment="Left" Height="29" Label="Process payment" Margin="69,279,0,0" VerticalAlignment="Top" Width="180" IsEnabled="False"/>
+                    <syncfusion:ButtonAdv x:Name="btnClaiming" Click="BtnClaiming_Click" SmallIcon="{x:Null}" HorizontalAlignment="Left" Height="29" Label="For claiming" Margin="89,329,0,0" VerticalAlignment="Top" Width="135" IsEnabled="False"/>
                     <CheckBox x:Name="chkClaimed" Content="Claimed" HorizontalAlignment="Left" Margin="147,169,0,0" VerticalAlignment="Top" IsEnabled="False"/>
 
                 </Grid>

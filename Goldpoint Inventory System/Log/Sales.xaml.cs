@@ -83,7 +83,7 @@ namespace Goldpoint_Inventory_System.Log
             {
                 SqlConnection conn = DBUtils.GetDBConnection();
                 conn.Open();
-                using (SqlCommand cmd = new SqlCommand("SELECT service, SUM(total) from Sales where date = @date and status = 'paid'", conn))
+                using (SqlCommand cmd = new SqlCommand("SELECT service, SUM(total) from Sales where date = @date and status = 'Paid'", conn))
                 {
                     cmd.Parameters.AddWithValue("@date", txtDate.Text);
                     using (SqlDataReader reader = cmd.ExecuteReader())
@@ -129,7 +129,7 @@ namespace Goldpoint_Inventory_System.Log
             conn.Open();
             if (dateTime.Name == "txtDateFrom")
             {
-                using (SqlCommand cmd = new SqlCommand("SELECT cast(date as date) as date, SUM(total) as total from Sales where status = 'paid' and CAST(date AS date) between @dateFrom and @dateTo GROUP BY cast(date as date) order by cast(date as date)", conn))
+                using (SqlCommand cmd = new SqlCommand("SELECT cast(date as date) as date, SUM(total) as total from Sales where status = 'Paid' and CAST(date AS date) between @dateFrom and @dateTo GROUP BY cast(date as date) order by cast(date as date)", conn))
                 {
                     cmd.Parameters.AddWithValue("@dateFrom", dateTime.DateTime);
                     cmd.Parameters.AddWithValue("@dateTo", txtDateTo.Text);
@@ -155,7 +155,7 @@ namespace Goldpoint_Inventory_System.Log
             }
             else
             {
-                using (SqlCommand cmd = new SqlCommand("SELECT cast(date as date) as date, SUM(total) as total from Sales where status = 'paid' and CAST(date AS date) between @dateFrom and @dateTo GROUP BY cast(date as date) order by cast(date as date)", conn))
+                using (SqlCommand cmd = new SqlCommand("SELECT cast(date as date) as date, SUM(total) as total from Sales where status = 'Paid' and CAST(date AS date) between @dateFrom and @dateTo GROUP BY cast(date as date) order by cast(date as date)", conn))
                 {
                     cmd.Parameters.AddWithValue("@dateFrom", txtDateFrom.Text);
                     cmd.Parameters.AddWithValue("@dateTo", dateTime.DateTime);

@@ -49,6 +49,7 @@ namespace Goldpoint_Inventory_System.Log
                 exStockOut.IsEnabled = false;
                 exJobOrder.IsEnabled = false;
                 exJobOrderTarp.IsEnabled = false;
+                emptyFields();
                 switch (cmbService.Text)
                 {
                     case "Official Receipt":
@@ -74,7 +75,8 @@ namespace Goldpoint_Inventory_System.Log
                                         txtDate.Text = Convert.ToString(reader.GetValue(dateIndex));
                                         txtDeadline.Text = Convert.ToString(reader.GetValue(deadlineIndex));
                                         txtCustName.Text = Convert.ToString(reader.GetValue(custNameIndex));
-                                        txtAddress.Document.Blocks.Add(new Paragraph(new Run(Convert.ToString(reader.GetValue(addressIndex)))));
+                                        TextRange textRange = new TextRange(txtAddress.Document.ContentStart, txtAddress.Document.ContentEnd);
+                                        textRange.Text = Convert.ToString(reader.GetValue(addressIndex));
                                         if (!string.IsNullOrEmpty(Convert.ToString(reader.GetValue(invoiceNoIndex))))
                                         {
                                             chkInv.IsChecked = true;
@@ -126,7 +128,7 @@ namespace Goldpoint_Inventory_System.Log
                                         payHist.Add(new PaymentHistoryDataModel
                                         {
                                             date = Convert.ToString(reader.GetValue(dateIndex)),
-                                            amount = Convert.ToDouble(reader.GetValue(totalIndex))
+                                            amount = Convert.ToDouble(reader.GetValue(paidAmtIndex))
                                         });
 
                                         unpaidBalance += Convert.ToDouble(reader.GetValue(paidAmtIndex));
@@ -137,6 +139,7 @@ namespace Goldpoint_Inventory_System.Log
                         }
                         txtUnpaidBalance.Value = txtTotal.Value - unpaidBalance;
                         txtUnpaidBalancePayment.Value = txtUnpaidBalance.Value;
+                        txtAmount.MaxValue = (double)txtUnpaidBalancePayment.Value;
 
                         if (service == "Photocopy")
                         {
@@ -267,10 +270,13 @@ namespace Goldpoint_Inventory_System.Log
                                         if (Convert.ToString(reader.GetValue(claimedIndex)) == "Claimed")
                                         {
                                             chkClaimed.IsChecked = true;
+                                            btnClaiming.IsEnabled = false;
                                         }
                                         else
                                         {
                                             chkClaimed.IsChecked = false;
+                                            btnClaiming.IsEnabled = true;
+
                                         }
 
                                         service = Convert.ToString(reader.GetValue(serviceIndex));
@@ -304,17 +310,20 @@ namespace Goldpoint_Inventory_System.Log
                                         payHist.Add(new PaymentHistoryDataModel
                                         {
                                             date = Convert.ToString(reader.GetValue(dateIndex)),
-                                            amount = Convert.ToDouble(reader.GetValue(totalIndex))
+                                            amount = Convert.ToDouble(reader.GetValue(paidAmtIndex))
                                         });
 
                                         unpaidBalance += Convert.ToDouble(reader.GetValue(paidAmtIndex));
                                         txtTotal.Value = Convert.ToDouble(reader.GetValue(totalIndex));
+
+
                                     }
                                 }
                             }
                         }
                         txtUnpaidBalance.Value = txtTotal.Value - unpaidBalance;
                         txtUnpaidBalancePayment.Value = txtUnpaidBalance.Value;
+                        txtAmount.MaxValue = (double)txtUnpaidBalancePayment.Value;
 
                         if (service == "Photocopy")
                         {
@@ -416,7 +425,8 @@ namespace Goldpoint_Inventory_System.Log
                                         txtDate.Text = Convert.ToString(reader.GetValue(dateIndex));
                                         txtDeadline.Text = Convert.ToString(reader.GetValue(deadlineIndex));
                                         txtCustName.Text = Convert.ToString(reader.GetValue(custNameIndex));
-                                        txtAddress.Document.Blocks.Add(new Paragraph(new Run(Convert.ToString(reader.GetValue(addressIndex)))));
+                                        TextRange textRange = new TextRange(txtAddress.Document.ContentStart, txtAddress.Document.ContentEnd);
+                                        textRange.Text = Convert.ToString(reader.GetValue(addressIndex));
                                         txtDRNo.Text = Convert.ToString(reader.GetValue(drNoIndex));
                                         if (!string.IsNullOrEmpty(Convert.ToString(reader.GetValue(orNoIndex))))
                                         {
@@ -466,7 +476,7 @@ namespace Goldpoint_Inventory_System.Log
                                         payHist.Add(new PaymentHistoryDataModel
                                         {
                                             date = Convert.ToString(reader.GetValue(dateIndex)),
-                                            amount = Convert.ToDouble(reader.GetValue(totalIndex))
+                                            amount = Convert.ToDouble(reader.GetValue(paidAmtIndex))
                                         });
 
                                         unpaidBalance += Convert.ToDouble(reader.GetValue(paidAmtIndex));
@@ -477,6 +487,7 @@ namespace Goldpoint_Inventory_System.Log
                         }
                         txtUnpaidBalance.Value = txtTotal.Value - unpaidBalance;
                         txtUnpaidBalancePayment.Value = txtUnpaidBalance.Value;
+                        txtAmount.MaxValue = (double)txtUnpaidBalancePayment.Value;
 
                         if (service == "Photocopy")
                         {
@@ -562,7 +573,14 @@ namespace Goldpoint_Inventory_System.Log
 
                         break;
                 }
-
+                if (txtUnpaidBalance.Value == 0)
+                {
+                    btnPayment.IsEnabled = false;
+                }
+                else
+                {
+                    btnPayment.IsEnabled = true;
+                }
             }
         }
         private void emptyFields()
@@ -575,7 +593,6 @@ namespace Goldpoint_Inventory_System.Log
             txtDRNo.Text = null;
             txtInvoiceNo.Text = null;
             txtORNo.Text = null;
-            txtServiceNo.Text = null;
             txtTotal.Value = 0;
             txtUnpaidBalance.Value = 0;
             txtUnpaidBalancePayment.Value = 0;
@@ -588,6 +605,7 @@ namespace Goldpoint_Inventory_System.Log
         private void BtnReset_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             emptyFields();
+            txtServiceNo.Text = null;
             photocopy.Clear();
             stockOut.Clear();
             payHist.Clear();
@@ -597,14 +615,6 @@ namespace Goldpoint_Inventory_System.Log
             exJobOrder.IsEnabled = false;
             exJobOrderTarp.IsEnabled = false;
             exist = false;
-        }
-
-        private void TxtAmount_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            if (txtAmount.Value > txtUnpaidBalancePayment.Value)
-            {
-                txtAmount.Value = txtUnpaidBalancePayment.Value;
-            }
         }
 
         private void BtnPayment_Click(object sender, RoutedEventArgs e)
@@ -617,7 +627,7 @@ namespace Goldpoint_Inventory_System.Log
                 }
                 else
                 {
-                    //if already fully paid, should disable the button
+                    //if already fully paid, should disable the button and update transactiondetails status
                     string sMessageBoxText = "Confirming payment";
                     string sCaption = "Update payment history?";
                     MessageBoxButton btnMessageBox = MessageBoxButton.YesNoCancel;
@@ -630,12 +640,22 @@ namespace Goldpoint_Inventory_System.Log
                             SqlConnection conn = DBUtils.GetDBConnection();
                             conn.Open();
                             //if fully paid or not, update all if fully paid, if not, normal add
-                            using (SqlCommand cmd = new SqlCommand("INSERT into PaymentHist (@DRNo, @date, @paidAmount, @total)", conn))
+                            bool fullyPaid = false;
+                            using (SqlCommand cmd = new SqlCommand("INSERT into PaymentHist VALUES (@DRNo, @date, @paidAmount, @total, @status)", conn))
                             {
                                 cmd.Parameters.AddWithValue("@DRNo", txtDRNo.Text);
                                 cmd.Parameters.AddWithValue("@date", txtDatePayment.Text);
-                                cmd.Parameters.AddWithValue("@paidAmount", txtUnpaidBalancePayment.Value);
+                                cmd.Parameters.AddWithValue("@paidAmount", txtAmount.Value);
                                 cmd.Parameters.AddWithValue("@total", txtTotal.Value);
+                                if (txtAmount.Value == txtUnpaidBalance.Value)
+                                {
+                                    cmd.Parameters.AddWithValue("@status", "Paid");
+                                    fullyPaid = true;
+                                }
+                                else
+                                {
+                                    cmd.Parameters.AddWithValue("@status", "Downpayment");
+                                }
                                 try
                                 {
                                     cmd.ExecuteNonQuery();
@@ -643,9 +663,51 @@ namespace Goldpoint_Inventory_System.Log
                                     payHist.Add(new PaymentHistoryDataModel
                                     {
                                         date = txtDatePayment.Text,
-                                        amount = (double) txtUnpaidBalancePayment.Value
+                                        amount = (double)txtAmount.Value
                                     });
-                                    txtUnpaidBalance.Value -= txtUnpaidBalancePayment.Value;
+                                    txtUnpaidBalance.Value -= txtAmount.Value;
+                                    txtUnpaidBalancePayment.Value = txtUnpaidBalance.Value;
+                                    txtAmount.MaxValue = (double) txtUnpaidBalancePayment.Value;
+                                    if (txtUnpaidBalance.Value == 0)
+                                    {
+                                        btnPayment.IsEnabled = false;
+                                    }
+                                    else
+                                    {
+                                        btnPayment.IsEnabled = true;
+                                    }
+                                    if (fullyPaid)
+                                    {
+                                        using (SqlCommand cmd1 = new SqlCommand("UPDATE PaymentHist set status = 'Paid' where DRNo = @DRNo", conn))
+                                        {
+                                            cmd1.Parameters.AddWithValue("@DRNo", txtDRNo.Text);
+                                            try
+                                            {
+                                                cmd1.ExecuteNonQuery();
+                                            }
+                                            catch (SqlException ex)
+                                            {
+                                                MessageBox.Show("An error has been encountered! " + ex);
+
+                                            }
+
+                                        }
+                                        using (SqlCommand cmd1 = new SqlCommand("UPDATE TransactionDetails set status = 'Paid' where DRNo = @DRNo", conn))
+                                        {
+                                            cmd1.Parameters.AddWithValue("@DRNo", txtDRNo.Text);
+                                            try
+                                            {
+                                                cmd1.ExecuteNonQuery();
+                                            }
+                                            catch (SqlException ex)
+                                            {
+                                                MessageBox.Show("An error has been encountered! " + ex);
+
+                                            }
+
+                                        }
+                                    }
+
                                 }
                                 catch (SqlException ex)
                                 {
@@ -672,7 +734,6 @@ namespace Goldpoint_Inventory_System.Log
         {
             if (exist == true)
             {
-                //if already claimed, should disable the button
                 string sMessageBoxText = "Confirming claiming of materials/supplies";
                 string sCaption = "Update transaction?";
                 MessageBoxButton btnMessageBox = MessageBoxButton.YesNoCancel;

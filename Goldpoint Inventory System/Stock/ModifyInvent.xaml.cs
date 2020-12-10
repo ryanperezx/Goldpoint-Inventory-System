@@ -448,9 +448,8 @@ namespace Goldpoint_Inventory_System.Stock
             if (txtPrice.Value != 0)
             {
                 string placeholder1 = txtPrice.Text;
-                string placeholder2 = txtPrice.Text;
                 txtMSRP.Value = Convert.ToInt32(placeholder1.Replace(",", "").Replace(".00", "")) * 1.30;
-                txtDealersPrice.Value = Convert.ToInt32(placeholder2.Replace(",", "").Replace(".00", "")) * 1.20;
+                txtDealersPrice.Value = Convert.ToInt32(placeholder1.Replace(",", "").Replace(".00", "")) * 1.20;
             }
             else
             {

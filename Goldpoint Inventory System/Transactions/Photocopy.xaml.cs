@@ -169,7 +169,7 @@ namespace Goldpoint_Inventory_System.Transactions
                     price = 0.70,
                     totalPerItem = Convert.ToInt32(txtShort.Value) * 0.70
                 });
-                total += Convert.ToInt32(txtShort.Text) * 0.70;
+                total += Convert.ToInt32(txtShort.Value) * 0.70;
                 isEmpty = false;
             }
             if (!string.IsNullOrEmpty(txtLong.Text) && txtLong.Value != 0)
@@ -181,7 +181,7 @@ namespace Goldpoint_Inventory_System.Transactions
                     price = 0.80,
                     totalPerItem = Convert.ToInt32(txtLong.Value) * 0.80
                 });
-                total += Convert.ToInt32(txtLong.Text) * 0.80;
+                total += Convert.ToInt32(txtLong.Value) * 0.80;
                 isEmpty = false;
 
             }
@@ -194,7 +194,7 @@ namespace Goldpoint_Inventory_System.Transactions
                     price = 1.50,
                     totalPerItem = Convert.ToInt32(txtLegal.Value) * 1.50
                 });
-                total += Convert.ToInt32(txtLegal.Text) * 1.50;
+                total += Convert.ToInt32(txtLegal.Value) * 1.50;
                 isEmpty = false;
             }
             if (!string.IsNullOrEmpty(txtA4.Text) && txtA4.Value != 0)
@@ -206,7 +206,7 @@ namespace Goldpoint_Inventory_System.Transactions
                     price = 0.90,
                     totalPerItem = Convert.ToInt32(txtLegal.Value) * 0.90
                 });
-                total += Convert.ToInt32(txtLegal.Text) * 0.90;
+                total += Convert.ToInt32(txtA4.Value) * 0.90;
                 isEmpty = false;
             }
             //pallet is what
@@ -217,9 +217,9 @@ namespace Goldpoint_Inventory_System.Transactions
                     item = "A3",
                     qty = Convert.ToInt32(txtA3.Value),
                     price = 0.90,
-                    totalPerItem = Convert.ToInt32(txtLegal.Value) * 5.00
+                    totalPerItem = Convert.ToInt32(txtA3.Value) * 5.00
                 });
-                total += Convert.ToInt32(txtLegal.Text) * 5.00;
+                total += Convert.ToInt32(txtA3.Value) * 5.00;
                 isEmpty = false;
             }
             if (isEmpty)
@@ -300,7 +300,7 @@ namespace Goldpoint_Inventory_System.Transactions
                                 cmd.Parameters.AddWithValue("@date", txtDate.Text);
                                 cmd.Parameters.AddWithValue("@service", "Photocopy");
                                 cmd.Parameters.AddWithValue("@total", txtDownpayment.Value);
-                                cmd.Parameters.AddWithValue("@status", "paid");
+                                cmd.Parameters.AddWithValue("@status", "Paid");
                                 try
                                 {
                                     cmd.ExecuteNonQuery();
@@ -319,7 +319,7 @@ namespace Goldpoint_Inventory_System.Transactions
                                 cmd.Parameters.AddWithValue("@date", txtDate.Text);
                                 cmd.Parameters.AddWithValue("@service", "Photocopy");
                                 cmd.Parameters.AddWithValue("@total", txtCustTotal.Value);
-                                cmd.Parameters.AddWithValue("@status", "paid");
+                                cmd.Parameters.AddWithValue("@status", "Paid");
                                 try
                                 {
                                     cmd.ExecuteNonQuery();
@@ -351,10 +351,10 @@ namespace Goldpoint_Inventory_System.Transactions
                         {
                             cmd.Parameters.AddWithValue("@DRNo", txtDRNo.Text);
                             cmd.Parameters.AddWithValue("@date", txtDate.Text);
-                            cmd.Parameters.AddWithValue("@total", txtCustTotal.Text);
+                            cmd.Parameters.AddWithValue("@total", txtCustTotal.Value);
                             if (chkPaid.IsChecked == true)
                             {
-                                cmd.Parameters.AddWithValue("@paidAmt", txtCustTotal.Text);
+                                cmd.Parameters.AddWithValue("@paidAmt", txtCustTotal.Value);
                                 cmd.Parameters.AddWithValue("@status", "Paid");
                             }
                             if (chkUnpaid.IsChecked == true)
@@ -364,7 +364,7 @@ namespace Goldpoint_Inventory_System.Transactions
                             }
                             if (chkDownpayment.IsChecked == true)
                             {
-                                cmd.Parameters.AddWithValue("@paidAmt", txtDownpayment.Text);
+                                cmd.Parameters.AddWithValue("@paidAmt", txtDownpayment.Value);
                                 cmd.Parameters.AddWithValue("@status", "Downpayment");
                             }
                             try

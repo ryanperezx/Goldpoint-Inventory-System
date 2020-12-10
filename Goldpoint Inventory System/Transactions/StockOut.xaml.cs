@@ -277,7 +277,6 @@ namespace Goldpoint_Inventory_System.Transactions
         {
             items.Clear();
             emptyFields();
-            getDRNo();
         }
 
         private void emptyFields()
@@ -300,6 +299,12 @@ namespace Goldpoint_Inventory_System.Transactions
             txtTotalPerItem.Value = 0;
             txtTransactRemarks.Document.Blocks.Clear();
             txtType.Text = null;
+            getDRNo();
+
+            chkInv.IsChecked = false;
+            chkOR.IsChecked = false;
+            chkCompany.IsChecked = false;
+
         }
 
         private void BtnCheckOut_Click(object sender, RoutedEventArgs e)
@@ -392,7 +397,7 @@ namespace Goldpoint_Inventory_System.Transactions
                                 cmd.Parameters.AddWithValue("@date", txtDate.Text);
                                 cmd.Parameters.AddWithValue("@service", "Stock Out");
                                 cmd.Parameters.AddWithValue("@total", txtDownpayment.Value);
-                                cmd.Parameters.AddWithValue("@status", "paid");
+                                cmd.Parameters.AddWithValue("@status", "Paid");
                                 try
                                 {
                                     cmd.ExecuteNonQuery();
@@ -411,7 +416,7 @@ namespace Goldpoint_Inventory_System.Transactions
                                 cmd.Parameters.AddWithValue("@date", txtDate.Text);
                                 cmd.Parameters.AddWithValue("@service", "Stock Out");
                                 cmd.Parameters.AddWithValue("@total", txtTotal.Value);
-                                cmd.Parameters.AddWithValue("@status", "paid");
+                                cmd.Parameters.AddWithValue("@status", "Paid");
                                 try
                                 {
                                     cmd.ExecuteNonQuery();
@@ -444,10 +449,10 @@ namespace Goldpoint_Inventory_System.Transactions
                             {
                                 cmd.Parameters.AddWithValue("@DRNo", txtDRNo.Text);
                                 cmd.Parameters.AddWithValue("@date", txtDate.Text);
-                                cmd.Parameters.AddWithValue("@total", txtTotal.Text);
+                                cmd.Parameters.AddWithValue("@total", txtTotal.Value);
                                 if (rdPaid.IsChecked == true)
                                 {
-                                    cmd.Parameters.AddWithValue("@paidAmt", txtTotal.Text);
+                                    cmd.Parameters.AddWithValue("@paidAmt", txtTotal.Value);
                                     cmd.Parameters.AddWithValue("@status", "Paid");
                                 }
                                 if (rdUnpaid.IsChecked == true)
@@ -457,7 +462,7 @@ namespace Goldpoint_Inventory_System.Transactions
                                 }
                                 if (rdDownpayment.IsChecked == true)
                                 {
-                                    cmd.Parameters.AddWithValue("@paidAmt", txtDownpayment.Text);
+                                    cmd.Parameters.AddWithValue("@paidAmt", txtDownpayment.Value);
                                     cmd.Parameters.AddWithValue("@status", "Downpayment");
                                 }
                                 try
