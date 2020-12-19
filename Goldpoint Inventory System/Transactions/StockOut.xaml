@@ -45,7 +45,9 @@
                     <syncfusion:DoubleTextBox x:Name="txtItemPrice" HorizontalAlignment="Left" Height="31" Margin="154,253,0,0" MinWidth="100" NumberGroupSeparator="," TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="120" IsEnabled="False" Value="0.00"/>
                     <Label Content="Total per Item:" HorizontalAlignment="Left" Margin="38,289,0,0" VerticalAlignment="Top"/>
                     <syncfusion:DoubleTextBox x:Name="txtTotalPerItem"  HorizontalAlignment="Left" Height="31" Margin="154,289,0,0" MinWidth="100" NumberGroupSeparator="," TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="120" IsEnabled="False" Value="0.00"/>
-                    <syncfusion:ButtonAdv x:Name="btnAddtoList" Click="BtnAddtoList_Click " SmallIcon="{x:Null}" HorizontalAlignment="Left" Height="29" Label="Add to list" Margin="89,341,0,0" VerticalAlignment="Top" Width="140"/>
+                    <syncfusion:ButtonAdv x:Name="btnAddtoList" Click="BtnAddtoList_Click " SmallIcon="{x:Null}" HorizontalAlignment="Left" Height="29" Label="Add to list" Margin="34,341,0,0" VerticalAlignment="Top" Width="140"/>
+                    <syncfusion:ButtonAdv x:Name="btnRemoveLastItem" Click="BtnRemoveLastItem_Click" SmallIcon="{x:Null}" HorizontalAlignment="Left" Height="29" Label="Remove last item" Margin="224,341,0,0" VerticalAlignment="Top" Width="140"/>
+
                 </Grid>
             </Expander>
             <Expander Header="Transaction" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Top" Width="400" IsExpanded="{Binding SelectedExpander, ConverterParameter=2, Converter={StaticResource ExpanderToBooleanConverter}, Mode=TwoWay}">

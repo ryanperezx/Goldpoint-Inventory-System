@@ -141,7 +141,7 @@ namespace Goldpoint_Inventory_System.Transactions
             {
                 txtORNo.Text = null;
             }
-            if(chkCompany.IsChecked == false)
+            if (chkCompany.IsChecked == false)
             {
                 getDRNo();
                 chkDR.IsChecked = true;
@@ -158,7 +158,7 @@ namespace Goldpoint_Inventory_System.Transactions
             {
                 MessageBox.Show("One or more fields are empty!");
             }
-            else if(txtQty.Value == 0)
+            else if (txtQty.Value == 0)
             {
                 MessageBox.Show("Please set quantity to any greater than zero");
                 txtQty.Focus();
@@ -318,7 +318,7 @@ namespace Goldpoint_Inventory_System.Transactions
             }
             else if (string.IsNullOrEmpty(txtDate.Text) || string.IsNullOrEmpty(txtCustName.Text))
             {
-                if(chkCompany.IsChecked == false && string.IsNullOrEmpty(txtContactNo.Text) || string.IsNullOrEmpty(address))
+                if (chkCompany.IsChecked == false && string.IsNullOrEmpty(txtContactNo.Text) || string.IsNullOrEmpty(address))
                 {
                     MessageBox.Show("One or more fields are empty!");
                 }
@@ -331,7 +331,7 @@ namespace Goldpoint_Inventory_System.Transactions
             {
                 MessageBox.Show("Please input downpayment to be able to proceed");
             }
-            else if(rdDownpayment.IsChecked == true && txtDownpayment.Value == 0)
+            else if (rdDownpayment.IsChecked == true && txtDownpayment.Value == 0)
             {
                 MessageBox.Show("Please set downpayment to anything greater than zero.");
             }
@@ -349,6 +349,15 @@ namespace Goldpoint_Inventory_System.Transactions
                         SqlConnection conn = DBUtils.GetDBConnection();
                         conn.Open();
                         bool success = false;
+                        getDRNo();
+                        if (chkInv.IsChecked == true)
+                        {
+                            getInvNo();
+                        }
+                        if (chkOR.IsChecked == true)
+                        {
+                            getORNo();
+                        }
                         foreach (var item in items)
                         {
                             if (chkCompany.IsChecked == false)
@@ -360,7 +369,7 @@ namespace Goldpoint_Inventory_System.Transactions
                                     cmd.Parameters.AddWithValue("@desc", item.description);
                                     cmd.Parameters.AddWithValue("@type", item.type);
                                     cmd.Parameters.AddWithValue("@brand", item.brand);
-                                    cmd.Parameters.AddWithValue("@size", item.brand);
+                                    cmd.Parameters.AddWithValue("@size", item.size);
                                     cmd.Parameters.AddWithValue("@qty", item.qty);
                                     cmd.Parameters.AddWithValue("@totalPerItem", item.totalPerItem);
                                     try
@@ -428,7 +437,7 @@ namespace Goldpoint_Inventory_System.Transactions
                                 }
                             }
                         }
-                        if(chkCompany.IsChecked == false)
+                        if (chkCompany.IsChecked == false)
                         {
                             using (SqlCommand cmd = new SqlCommand("INSERT into TransactionLogs (date, [transaction], remarks) VALUES (@date, @transaction, @remarks)", conn))
                             {
@@ -475,7 +484,7 @@ namespace Goldpoint_Inventory_System.Transactions
                                     success = false;
                                 }
                             }
-                            using (SqlCommand cmd = new SqlCommand("INSERT into TransactionDetails VALUES (@DRNo, @service, @date, @deadline, @customerName, @address, @contactNo, @remarks, @ORNo, @InvoiceNo, @status, @claimed)", conn))
+                            using (SqlCommand cmd = new SqlCommand("INSERT into TransactionDetails (DRNo, service, date, deadline, customerName, address, contactNo, remarks, ORNo, invoiceNo, status, claimed) VALUES (@DRNo, @service, @date, @deadline, @customerName, @address, @contactNo, @remarks, @ORNo, @InvoiceNo, @status, @claimed)", conn))
                             {
                                 cmd.Parameters.AddWithValue("@DRNo", txtDRNo.Text);
                                 cmd.Parameters.AddWithValue("@date", txtDate.Text);
@@ -565,6 +574,58 @@ namespace Goldpoint_Inventory_System.Transactions
 
                     }
                 }
+            }
+        }
+        private void getInvNo()
+        {
+            SqlConnection conn = DBUtils.GetDBConnection();
+            conn.Open();
+            using (SqlCommand cmd = new SqlCommand("SELECT TOP 1 InvoiceNo from TransactionDetails WHERE TRIM(invoiceNo) is not null AND DATALENGTH(invoiceNo) > 0 ORDER BY InvoiceNo DESC", conn))
+            {
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (!reader.Read())
+                        txtInv.Text = "1";
+                    else
+                    {
+                        int invoiceNoIndex = reader.GetOrdinal("InvoiceNo");
+                        int invoiceNo = Convert.ToInt32(reader.GetValue(invoiceNoIndex)) + 1;
+                        txtInv.Text = invoiceNo.ToString();
+                    }
+                }
+            }
+
+        }
+        private void getORNo()
+        {
+            SqlConnection conn = DBUtils.GetDBConnection();
+            conn.Open();
+            using (SqlCommand cmd = new SqlCommand("SELECT TOP 1 ORNo from TransactionDetails WHERE TRIM(ORNo) is not null AND DATALENGTH(ORNo) > 0  ORDER BY ORNo DESC", conn))
+            {
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (!reader.Read())
+                        txtORNo.Text = "1";
+                    else
+                    {
+                        int ORNoIndex = reader.GetOrdinal("ORNo");
+                        int ORNo = Convert.ToInt32(reader.GetValue(ORNoIndex)) + 1;
+                        txtORNo.Text = ORNo.ToString();
+
+                    }
+                }
+            }
+        }
+
+        private void BtnRemoveLastItem_Click(object sender, RoutedEventArgs e)
+        {
+            if(items.Count == 0)
+            {
+                MessageBox.Show("Item list is empty");
+            }
+            else
+            {
+                items.RemoveAt(items.Count - 1);
             }
         }
     }

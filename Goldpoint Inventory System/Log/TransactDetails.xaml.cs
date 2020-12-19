@@ -39,7 +39,7 @@ namespace Goldpoint_Inventory_System.Log
             }
             else
             {
-                //claim is missing?
+                //should search joborderno in transactdetails
                 SqlConnection conn = DBUtils.GetDBConnection();
                 conn.Open();
                 string service = "";
@@ -77,6 +77,7 @@ namespace Goldpoint_Inventory_System.Log
                                         txtCustName.Text = Convert.ToString(reader.GetValue(custNameIndex));
                                         TextRange textRange = new TextRange(txtAddress.Document.ContentStart, txtAddress.Document.ContentEnd);
                                         textRange.Text = Convert.ToString(reader.GetValue(addressIndex));
+                                        txtContactNo.Text = Convert.ToString(reader.GetValue(contactNoIndex));
                                         if (!string.IsNullOrEmpty(Convert.ToString(reader.GetValue(invoiceNoIndex))))
                                         {
                                             chkInv.IsChecked = true;
@@ -137,8 +138,7 @@ namespace Goldpoint_Inventory_System.Log
                                 }
                             }
                         }
-                        txtUnpaidBalance.Value = txtTotal.Value - unpaidBalance;
-                        txtUnpaidBalancePayment.Value = txtUnpaidBalance.Value;
+                        txtUnpaidBalancePayment.Value = txtTotal.Value - unpaidBalance;
                         txtAmount.MaxValue = (double)txtUnpaidBalancePayment.Value;
 
                         if (service == "Photocopy")
@@ -321,8 +321,7 @@ namespace Goldpoint_Inventory_System.Log
                                 }
                             }
                         }
-                        txtUnpaidBalance.Value = txtTotal.Value - unpaidBalance;
-                        txtUnpaidBalancePayment.Value = txtUnpaidBalance.Value;
+                        txtUnpaidBalancePayment.Value = txtTotal.Value - unpaidBalance;
                         txtAmount.MaxValue = (double)txtUnpaidBalancePayment.Value;
 
                         if (service == "Photocopy")
@@ -485,8 +484,7 @@ namespace Goldpoint_Inventory_System.Log
                                 }
                             }
                         }
-                        txtUnpaidBalance.Value = txtTotal.Value - unpaidBalance;
-                        txtUnpaidBalancePayment.Value = txtUnpaidBalance.Value;
+                        txtUnpaidBalancePayment.Value = txtTotal.Value - unpaidBalance;
                         txtAmount.MaxValue = (double)txtUnpaidBalancePayment.Value;
 
                         if (service == "Photocopy")
@@ -567,13 +565,109 @@ namespace Goldpoint_Inventory_System.Log
 
                         break;
                     case "Job Order (Tarpaulin)":
+                        using (SqlCommand cmd = new SqlCommand("SELECT * from TransactionDetails where jobOrderNo = @jobOrderNo and service = 'Job Order(Tarpaulin)'", conn))
+                        {
+                            cmd.Parameters.AddWithValue("@jobOrderNo", txtServiceNo.Text);
+                            using (SqlDataReader reader = cmd.ExecuteReader())
+                            {
+                                if (reader.HasRows)
+                                {
+                                    reader.Read();
+                                    int drNoIndex = reader.GetOrdinal("DRNo");
+                                    int serviceIndex = reader.GetOrdinal("service");
+                                    int dateIndex = reader.GetOrdinal("date");
+                                    int deadlineIndex = reader.GetOrdinal("deadline");
+                                    int customerNameIndex = reader.GetOrdinal("customerName");
+                                    int addressIndex = reader.GetOrdinal("address");
+                                    int contactNoIndex = reader.GetOrdinal("contactNo");
+                                    int remarksIndex = reader.GetOrdinal("remarks");
+                                    int statusIndex = reader.GetOrdinal("status");
+                                    int claimStatusIndex = reader.GetOrdinal("claimStatus");
 
+                                    txtDate.Text = Convert.ToString(reader.GetValue(dateIndex));
+                                    txtDeadline.Text = Convert.ToString(reader.GetValue(deadlineIndex));
+                                    txtCustName.Text = Convert.ToString(reader.GetValue(customerNameIndex));
+                                    TextRange textRange = new TextRange(txtAddress.Document.ContentStart, txtAddress.Document.ContentEnd);
+                                    textRange.Text = Convert.ToString(reader.GetValue(addressIndex));
+                                    txtContactNo.Text = Convert.ToString(reader.GetValue(contactNoIndex));
+                                    txtDRNo.Text = Convert.ToString(reader.GetValue(drNoIndex));
+
+                                    if (Convert.ToString(reader.GetValue(statusIndex)) == "Paid")
+                                    {
+                                        rdPaid.IsChecked = true;
+                                    }
+                                    else
+                                    {
+                                        rdUnpaid.IsChecked = true;
+                                    }
+
+                                    service = Convert.ToString(reader.GetValue(serviceIndex));
+                                    drNo = Convert.ToInt32(reader.GetValue(drNoIndex));
+                                    exist = true;
+
+
+                                }
+                                else
+                                {
+                                    MessageBox.Show("Job order does not exist.");
+                                    return;
+                                }
+                            }
+                        }
                         break;
                     case "Job Order (Printing, Services, etc.)":
+                        using (SqlCommand cmd = new SqlCommand("SELECT * from TransactionDetails where jobOrderNo = @jobOrderNo and service = 'Job Order (Printing, Services, etc.)'", conn))
+                        {
+                            cmd.Parameters.AddWithValue("@jobOrderNo", cmbService.Text);
+                            using (SqlDataReader reader = cmd.ExecuteReader())
+                            {
+                                if (reader.HasRows)
+                                {
+                                    reader.Read();
+                                    int drNoIndex = reader.GetOrdinal("DRNo");
+                                    int serviceIndex = reader.GetOrdinal("service");
+                                    int dateIndex = reader.GetOrdinal("date");
+                                    int deadlineIndex = reader.GetOrdinal("deadline");
+                                    int customerNameIndex = reader.GetOrdinal("customerName");
+                                    int addressIndex = reader.GetOrdinal("address");
+                                    int contactNoIndex = reader.GetOrdinal("contactNo");
+                                    int remarksIndex = reader.GetOrdinal("remarks");
+                                    int statusIndex = reader.GetOrdinal("status");
+                                    int claimStatusIndex = reader.GetOrdinal("claimStatus");
 
+                                    txtDate.Text = Convert.ToString(reader.GetValue(dateIndex));
+                                    txtDeadline.Text = Convert.ToString(reader.GetValue(deadlineIndex));
+                                    txtCustName.Text = Convert.ToString(reader.GetValue(customerNameIndex));
+                                    TextRange textRange = new TextRange(txtAddress.Document.ContentStart, txtAddress.Document.ContentEnd);
+                                    textRange.Text = Convert.ToString(reader.GetValue(addressIndex));
+                                    txtContactNo.Text = Convert.ToString(reader.GetValue(contactNoIndex));
+                                    txtDRNo.Text = Convert.ToString(reader.GetValue(drNoIndex));
+
+                                    if (Convert.ToString(reader.GetValue(statusIndex)) == "Paid")
+                                    {
+                                        rdPaid.IsChecked = true;
+                                    }
+                                    else
+                                    {
+                                        rdUnpaid.IsChecked = true;
+                                    }
+
+                                    service = Convert.ToString(reader.GetValue(serviceIndex));
+                                    drNo = Convert.ToInt32(reader.GetValue(drNoIndex));
+                                    exist = true;
+
+
+                                }
+                                else
+                                {
+                                    MessageBox.Show("Job order does not exist.");
+                                    return;
+                                }
+                            }
+                        }
                         break;
                 }
-                if (txtUnpaidBalance.Value == 0)
+                if (txtUnpaidBalancePayment.Value == 0)
                 {
                     btnPayment.IsEnabled = false;
                 }
@@ -593,8 +687,8 @@ namespace Goldpoint_Inventory_System.Log
             txtDRNo.Text = null;
             txtInvoiceNo.Text = null;
             txtORNo.Text = null;
+            txtContactNo.Text = null;
             txtTotal.Value = 0;
-            txtUnpaidBalance.Value = 0;
             txtUnpaidBalancePayment.Value = 0;
             chkClaimed.IsChecked = false;
             chkDR.IsChecked = false;
@@ -647,7 +741,7 @@ namespace Goldpoint_Inventory_System.Log
                                 cmd.Parameters.AddWithValue("@date", txtDatePayment.Text);
                                 cmd.Parameters.AddWithValue("@paidAmount", txtAmount.Value);
                                 cmd.Parameters.AddWithValue("@total", txtTotal.Value);
-                                if (txtAmount.Value == txtUnpaidBalance.Value)
+                                if (txtAmount.Value == txtUnpaidBalancePayment.Value)
                                 {
                                     cmd.Parameters.AddWithValue("@status", "Paid");
                                     fullyPaid = true;
@@ -665,10 +759,9 @@ namespace Goldpoint_Inventory_System.Log
                                         date = txtDatePayment.Text,
                                         amount = (double)txtAmount.Value
                                     });
-                                    txtUnpaidBalance.Value -= txtAmount.Value;
-                                    txtUnpaidBalancePayment.Value = txtUnpaidBalance.Value;
+                                    txtUnpaidBalancePayment.Value -= txtAmount.Value;
                                     txtAmount.MaxValue = (double) txtUnpaidBalancePayment.Value;
-                                    if (txtUnpaidBalance.Value == 0)
+                                    if (txtUnpaidBalancePayment.Value == 0)
                                     {
                                         btnPayment.IsEnabled = false;
                                     }

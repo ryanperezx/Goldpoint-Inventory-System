@@ -44,6 +44,45 @@ namespace Goldpoint_Inventory_System.Transactions
                 }
             }
         }
+        private void getORNo()
+        {
+            SqlConnection conn = DBUtils.GetDBConnection();
+            conn.Open();
+            using (SqlCommand cmd = new SqlCommand("SELECT TOP 1 ORNo from TransactionDetails WHERE TRIM(ORNo) is not null AND DATALENGTH(ORNo) > 0  ORDER BY ORNo DESC", conn))
+            {
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (!reader.Read())
+                        txtORNo.Text = "1";
+                    else
+                    {
+                        int ORNoIndex = reader.GetOrdinal("ORNo");
+                        int ORNo = Convert.ToInt32(reader.GetValue(ORNoIndex)) + 1;
+                        txtORNo.Text = ORNo.ToString();
+
+                    }
+                }
+            }
+        }
+        private void getInvNo()
+        {
+            SqlConnection conn = DBUtils.GetDBConnection();
+            conn.Open();
+            using (SqlCommand cmd = new SqlCommand("SELECT TOP 1 InvoiceNo from TransactionDetails WHERE TRIM(invoiceNo) is not null AND DATALENGTH(invoiceNo) > 0 ORDER BY InvoiceNo DESC", conn))
+            {
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (!reader.Read())
+                        txtInvoice.Text = "1";
+                    else
+                    {
+                        int invoiceNoIndex = reader.GetOrdinal("InvoiceNo");
+                        int invoiceNo = Convert.ToInt32(reader.GetValue(invoiceNoIndex)) + 1;
+                        txtInvoice.Text = invoiceNo.ToString();
+                    }
+                }
+            }
+        }
 
         private void BtnReset_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
@@ -83,37 +122,10 @@ namespace Goldpoint_Inventory_System.Transactions
             switch (value)
             {
                 case "Official Receipt":
-                    using (SqlCommand cmd = new SqlCommand("SELECT TOP 1 ORNo from TransactionDetails WHERE TRIM(ORNo) is not null AND DATALENGTH(ORNo) > 0  ORDER BY ORNo DESC", conn))
-                    {
-                        using (SqlDataReader reader = cmd.ExecuteReader())
-                        {
-                            if (!reader.Read())
-                                txtORNo.Text = "1";
-                            else
-                            {
-                                int ORNoIndex = reader.GetOrdinal("ORNo");
-                                int ORNo = Convert.ToInt32(reader.GetValue(ORNoIndex)) + 1;
-                                txtORNo.Text = ORNo.ToString();
-
-                            }
-                        }
-                    }
+                    getORNo();
                     break;
                 case "Invoice":
-                    using (SqlCommand cmd = new SqlCommand("SELECT TOP 1 InvoiceNo from TransactionDetails WHERE TRIM(invoiceNo) is not null AND DATALENGTH(invoiceNo) > 0 ORDER BY InvoiceNo DESC", conn))
-                    {
-                        using (SqlDataReader reader = cmd.ExecuteReader())
-                        {
-                            if (!reader.Read())
-                                txtInvoice.Text = "1";
-                            else
-                            {
-                                int invoiceNoIndex = reader.GetOrdinal("InvoiceNo");
-                                int invoiceNo = Convert.ToInt32(reader.GetValue(invoiceNoIndex)) + 1;
-                                txtInvoice.Text = invoiceNo.ToString();
-                            }
-                        }
-                    }
+                    getInvNo();
                     break;
             }
 
@@ -273,6 +285,16 @@ namespace Goldpoint_Inventory_System.Transactions
                         SqlConnection conn = DBUtils.GetDBConnection();
                         conn.Open();
                         bool success = false;
+                        //update DRNo in case Stock out or Job order updated it
+                        getDRNo();
+                        if(chkInv.IsChecked == true)
+                        {
+                            getInvNo();
+                        }
+                        if(chkOR.IsChecked == true)
+                        {
+                            getORNo();
+                        }
                         foreach (var item in items)
                         {
                             using (SqlCommand cmd = new SqlCommand("INSERT into PhotocopyDetails VALUES (@DRNo, @item, @price, @qty, @totalPerItem)", conn))
@@ -377,7 +399,7 @@ namespace Goldpoint_Inventory_System.Transactions
                                 success = false;
                             }
                         }
-                        using (SqlCommand cmd = new SqlCommand("INSERT into TransactionDetails VALUES (@DRNo, @service, @date, @deadline, @customerName, @address, @contactNo, @remarks, @ORNo, @InvoiceNo, @status, @claimed)", conn))
+                        using (SqlCommand cmd = new SqlCommand("INSERT into TransactionDetails (DRNo, service, date, deadline, customerName, address, contactNo, remarks, ORNo, invoiceNo, status, claimed) VALUES (@DRNo, @service, @date, @deadline, @customerName, @address, @contactNo, @remarks, @ORNo, @InvoiceNo, @status, @claimed)", conn))
                         {
                             cmd.Parameters.AddWithValue("@DRNo", txtDRNo.Text);
                             cmd.Parameters.AddWithValue("@date", txtDate.Text);

@@ -14,13 +14,31 @@ namespace Goldpoint_Inventory_System.Transactions
             set;
         }
 
-        public string description
+        public string Description
         {
             get;
             set;
         }
 
         public int qty
+        {
+            get;
+            set;
+        }
+
+        public string itemCode
+        {
+            get;
+            set;
+        }
+
+        public string type
+        {
+            get;
+            set;
+        }
+
+        public string brand
         {
             get;
             set;
@@ -51,6 +69,42 @@ namespace Goldpoint_Inventory_System.Transactions
         }
 
         public double amount
+        {
+            get;
+            set;
+        }
+
+        public string fileName
+        {
+            get;
+            set;
+        }
+
+        public int tarpQty
+        {
+            get;
+            set;
+        }
+
+        public string tarpSize
+        {
+            get;
+            set;
+        }
+
+        public string media
+        {
+            get;
+            set;
+        }
+
+        public string border
+        {
+            get;
+            set;
+        }
+
+        public string ILET
         {
             get;
             set;
