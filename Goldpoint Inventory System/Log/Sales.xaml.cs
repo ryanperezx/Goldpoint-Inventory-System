@@ -83,7 +83,7 @@ namespace Goldpoint_Inventory_System.Log
             {
                 SqlConnection conn = DBUtils.GetDBConnection();
                 conn.Open();
-                using (SqlCommand cmd = new SqlCommand("SELECT service, SUM(total) from Sales where date = @date and status = 'Paid'", conn))
+                using (SqlCommand cmd = new SqlCommand("SELECT service, SUM(total) as total from Sales where date = @date and status = 'Paid' GROUP BY service", conn))
                 {
                     cmd.Parameters.AddWithValue("@date", txtDate.Text);
                     using (SqlDataReader reader = cmd.ExecuteReader())

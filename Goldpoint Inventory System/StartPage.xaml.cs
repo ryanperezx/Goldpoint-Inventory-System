@@ -80,7 +80,7 @@ namespace Goldpoint_Inventory_System
         {
             SqlConnection conn = DBUtils.GetDBConnection();
             conn.Open();
-            using (SqlCommand cmd = new SqlCommand("SELECT td.service, td.deadline, td.customerName, td.DRNo, td.status, ph.total from TransactionDetails td INNER JOIN PaymentHist ph on td.DRNo = ph.DRNo WHERE td.date = @date", conn))
+            using (SqlCommand cmd = new SqlCommand("SELECT td.service, td.deadline, td.customerName, td.DRNo, td.status, ph.total from TransactionDetails td INNER JOIN PaymentHist ph on td.DRNo = ph.DRNo WHERE ph.date = @date", conn))
             {
                 cmd.Parameters.AddWithValue("@date", DateTime.Today.ToShortDateString());
                 using (SqlDataReader reader = cmd.ExecuteReader())

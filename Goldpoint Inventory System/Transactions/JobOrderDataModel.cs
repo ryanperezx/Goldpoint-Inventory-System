@@ -32,6 +32,12 @@ namespace Goldpoint_Inventory_System.Transactions
             set;
         }
 
+        public int itemQty
+        {
+            get;
+            set;
+        }
+
         public string type
         {
             get;

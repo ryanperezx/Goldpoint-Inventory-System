@@ -111,7 +111,7 @@
                     <Label Content="Unit:" HorizontalAlignment="Left" Margin="17,49,0,0" VerticalAlignment="Top"/>
                     <syncfusion:SfTextBoxExt x:Name="txtDescUnit" HorizontalAlignment="Left" Height="31" Margin="133,49,0,0" MinWidth="100"  TextWrapping="Wrap"  VerticalAlignment="Top" Width="135"/>
                     <Label Content="Qty:" HorizontalAlignment="Left" Margin="17,288,0,0" VerticalAlignment="Top"/>
-                    <syncfusion:IntegerTextBox x:Name="txtItemQty" HorizontalAlignment="Left" Height="31" Margin="133,288,0,0" MinWidth="100"  TextWrapping="Wrap"  VerticalAlignment="Top" Width="73"/>
+                    <syncfusion:IntegerTextBox x:Name="txtDescQty" HorizontalAlignment="Left" Height="31" Margin="133,89,0,0" MinWidth="100"  TextWrapping="Wrap"  VerticalAlignment="Top" Width="73"/>
                     <Label Content="Item Code:" HorizontalAlignment="Left" Margin="17,128,0,0" VerticalAlignment="Top"/>
                     <syncfusion:SfTextBoxExt x:Name="txtItemCode" HorizontalAlignment="Left" Height="31" Margin="133,128,0,0" MinWidth="100"  TextWrapping="Wrap"  VerticalAlignment="Top" Width="118"/>
                     <Label x:Name="txtSearchItem" MouseLeftButtonDown="TxtSearchItem_MouseLeftButtonDown" VerticalAlignment="Top" HorizontalAlignment="Left" Height="30" Width="30" Cursor="Hand" ToolTip="Search Item" Margin="256,129,0,0">
@@ -124,7 +124,7 @@
                     <Label Content="Size:" HorizontalAlignment="Left" Margin="17,249,0,0" VerticalAlignment="Top"/>
                     <syncfusion:SfTextBoxExt x:Name="txtSize" HorizontalAlignment="Left" Height="31" Margin="133,249,0,0" MinWidth="100"  TextWrapping="Wrap"  VerticalAlignment="Top" Width="118"/>
                     <Label Content="Qty:" HorizontalAlignment="Left" Margin="17,89,0,0" VerticalAlignment="Top"/>
-                    <syncfusion:IntegerTextBox x:Name="txtDescQty" HorizontalAlignment="Left" Height="31" Margin="133,89,0,0" MinWidth="100"  TextWrapping="Wrap"  VerticalAlignment="Top" Width="73"/>
+                    <syncfusion:IntegerTextBox x:Name="txtItemQty" HorizontalAlignment="Left" Height="31" Margin="133,288,0,0" MinWidth="100"  TextWrapping="Wrap"  VerticalAlignment="Top" Width="73"/>
                     <Label Content="Price per item:" HorizontalAlignment="Left" Margin="17,328,0,0" VerticalAlignment="Top"/>
                     <syncfusion:DoubleTextBox x:Name="txtPricePerItem" IsReadOnly="True" HorizontalAlignment="Left" Height="31" Margin="133,328,0,0" MinWidth="100"  TextWrapping="Wrap"  VerticalAlignment="Top" Width="118"/>
                     <syncfusion:SfDataGrid x:Name="dgService" HorizontalAlignment="Right"  Height="418" VerticalAlignment="Center" Width="444" ItemsSource="{Binding}" AutoGenerateColumns="False" Margin="0,0,0,0" AutoExpandGroups="True">
@@ -170,7 +170,7 @@
                     <syncfusion:SfTextBoxExt x:Name="txtTarpILET" HorizontalAlignment="Left" Height="31" Margin="119,239,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
                     <Label Content="Unit Price:" HorizontalAlignment="Left" Margin="30,279,0,0" VerticalAlignment="Top"/>
                     <syncfusion:DoubleTextBox x:Name="txtTarpUnitPrice" HorizontalAlignment="Left" Height="31" Margin="119,279,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
-                    <syncfusion:ButtonAdv x:Name="txtAddTarp" SmallIcon="{x:Null}"  HorizontalAlignment="Left" Height="29" Label="Add Tarpaulin" Margin="119,354,0,0" VerticalAlignment="Top" Width="120" Click="TxtAddTarp_Click"/>
+                    <syncfusion:ButtonAdv x:Name="btnAddTarp" SmallIcon="{x:Null}"  HorizontalAlignment="Left" Height="29" Label="Add Tarpaulin" Margin="119,354,0,0" VerticalAlignment="Top" Width="120" Click="BtnAddTarp_Click"/>
                     <syncfusion:SfDataGrid x:Name="dgTarpaulin" HorizontalAlignment="Center" Height="418" VerticalAlignment="Center" Width="444" ItemsSource="{Binding}" AutoGenerateColumns="False" Margin="356,0,0,0">
                         <syncfusion:SfDataGrid.Columns>
                             <syncfusion:GridTextColumn MappingName="File Name" Width="125" IsReadOnly="True" DisplayBinding="{Binding fileName}"/>

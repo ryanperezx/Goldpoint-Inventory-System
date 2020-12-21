@@ -18,6 +18,9 @@ namespace Goldpoint_Inventory_System.Log
         ObservableCollection<ItemDataModel> stockOut = new ObservableCollection<ItemDataModel>();
         ObservableCollection<PaymentHistoryDataModel> payHist = new ObservableCollection<PaymentHistoryDataModel>();
         ObservableCollection<JobOrderDataModel> services = new ObservableCollection<JobOrderDataModel>();
+        ObservableCollection<JobOrderDataModel> tarp = new ObservableCollection<JobOrderDataModel>();
+
+        //for payment and claiming button
         bool exist = false;
 
         public TransactDetails()
@@ -31,6 +34,7 @@ namespace Goldpoint_Inventory_System.Log
 
         }
 
+
         private void BtnSearchService_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (string.IsNullOrEmpty(txtServiceNo.Text) || string.IsNullOrEmpty(cmbService.Text))
@@ -39,7 +43,6 @@ namespace Goldpoint_Inventory_System.Log
             }
             else
             {
-                //should search joborderno in transactdetails
                 SqlConnection conn = DBUtils.GetDBConnection();
                 conn.Open();
                 string service = "";
@@ -50,6 +53,7 @@ namespace Goldpoint_Inventory_System.Log
                 exJobOrder.IsEnabled = false;
                 exJobOrderTarp.IsEnabled = false;
                 emptyFields();
+                clearServices();
                 switch (cmbService.Text)
                 {
                     case "Official Receipt":
@@ -208,11 +212,45 @@ namespace Goldpoint_Inventory_System.Log
                                 }
                             }
                         }
-                        else if (service == "Job Order")
+                        else if (service == "Printing, Services, etc.")
                         {
                             exJobOrder.IsEnabled = true;
+                            using (SqlCommand cmd = new SqlCommand("SELECT * from ServiceMaterial sm INNER JOIN InventoryItems ii on sm.itemCode = ii.itemCode where JobOrderNo = @jobOrderNo", conn))
+                            {
+                                cmd.Parameters.AddWithValue("@jobOrderNo", txtServiceNo.Text);
+                                using (SqlDataReader reader = cmd.ExecuteReader())
+                                {
+                                    services.Clear();
+                                    while (reader.Read())
+                                    {
+                                        int descriptionIndex = reader.GetOrdinal("description");
+                                        int unitIndex = reader.GetOrdinal("unit");
+                                        int qtyIndex = reader.GetOrdinal("qty");
+                                        int itemCodeIndex = reader.GetOrdinal("itemCode");
+                                        int materialIndex = reader.GetOrdinal("material");
+                                        int copyIndex = reader.GetOrdinal("copy");
+                                        int sizeIndex = reader.GetOrdinal("size");
+                                        int itemQtyIndex = reader.GetOrdinal("itemQty");
+                                        int totalPerItemIndex = reader.GetOrdinal("totalPerItem");
+
+                                        services.Add(new JobOrderDataModel
+                                        {
+                                            Description = Convert.ToString(reader.GetValue(descriptionIndex)),
+                                            unit = Convert.ToString(reader.GetValue(unitIndex)),
+                                            qty = Convert.ToInt32(reader.GetValue(qtyIndex)),
+                                            itemCode = Convert.ToString(reader.GetValue(itemCodeIndex)),
+                                            material = Convert.ToString(reader.GetValue(materialIndex)),
+                                            copy = Convert.ToString(reader.GetValue(copyIndex)),
+                                            size = Convert.ToString(reader.GetValue(sizeIndex)),
+                                            itemQty = Convert.ToInt32(reader.GetValue(itemQtyIndex)),
+                                            unitPrice = Convert.ToDouble(reader.GetValue(totalPerItemIndex)),
+                                            amount = Convert.ToDouble(reader.GetValue(totalPerItemIndex)) / Convert.ToInt32(reader.GetValue(itemQtyIndex))
+                                        });
+                                    }
+                                }
+                            }
                         }
-                        else if (service == "Job Order (Tarpaulin)")
+                        else if (service == "Tarpaulin")
                         {
                             exJobOrderTarp.IsEnabled = true;
                         }
@@ -233,7 +271,7 @@ namespace Goldpoint_Inventory_System.Log
                                         int deadlineIndex = reader.GetOrdinal("deadline");
                                         int custNameIndex = reader.GetOrdinal("customerName");
                                         int addressIndex = reader.GetOrdinal("address");
-                                        int contactNo = reader.GetOrdinal("contactNo");
+                                        int contactNoIndex = reader.GetOrdinal("contactNo");
                                         int remarks = reader.GetOrdinal("remarks");
                                         int invoiceNoIndex = reader.GetOrdinal("invoiceNo");
                                         int orNoIndex = reader.GetOrdinal("ORNo");
@@ -245,6 +283,7 @@ namespace Goldpoint_Inventory_System.Log
                                         txtCustName.Text = Convert.ToString(reader.GetValue(custNameIndex));
                                         TextRange textRange = new TextRange(txtAddress.Document.ContentStart, txtAddress.Document.ContentEnd);
                                         textRange.Text = Convert.ToString(reader.GetValue(addressIndex));
+                                        txtContactNo.Text = Convert.ToString(reader.GetValue(contactNoIndex));
                                         if (!string.IsNullOrEmpty(Convert.ToString(reader.GetValue(invoiceNoIndex))))
                                         {
                                             chkInv.IsChecked = true;
@@ -391,11 +430,45 @@ namespace Goldpoint_Inventory_System.Log
                                 }
                             }
                         }
-                        else if (service == "Job Order")
+                        else if (service == "Printing, Services, etc.")
                         {
                             exJobOrder.IsEnabled = true;
+                            using (SqlCommand cmd = new SqlCommand("SELECT * from ServiceMaterial sm INNER JOIN InventoryItems ii on sm.itemCode = ii.itemCode where JobOrderNo = @jobOrderNo", conn))
+                            {
+                                cmd.Parameters.AddWithValue("@jobOrderNo", txtServiceNo.Text);
+                                using (SqlDataReader reader = cmd.ExecuteReader())
+                                {
+                                    services.Clear();
+                                    while (reader.Read())
+                                    {
+                                        int descriptionIndex = reader.GetOrdinal("description");
+                                        int unitIndex = reader.GetOrdinal("unit");
+                                        int qtyIndex = reader.GetOrdinal("qty");
+                                        int itemCodeIndex = reader.GetOrdinal("itemCode");
+                                        int materialIndex = reader.GetOrdinal("material");
+                                        int copyIndex = reader.GetOrdinal("copy");
+                                        int sizeIndex = reader.GetOrdinal("size");
+                                        int itemQtyIndex = reader.GetOrdinal("itemQty");
+                                        int totalPerItemIndex = reader.GetOrdinal("totalPerItem");
+
+                                        services.Add(new JobOrderDataModel
+                                        {
+                                            Description = Convert.ToString(reader.GetValue(descriptionIndex)),
+                                            unit = Convert.ToString(reader.GetValue(unitIndex)),
+                                            qty = Convert.ToInt32(reader.GetValue(qtyIndex)),
+                                            itemCode = Convert.ToString(reader.GetValue(itemCodeIndex)),
+                                            material = Convert.ToString(reader.GetValue(materialIndex)),
+                                            copy = Convert.ToString(reader.GetValue(copyIndex)),
+                                            size = Convert.ToString(reader.GetValue(sizeIndex)),
+                                            itemQty = Convert.ToInt32(reader.GetValue(itemQtyIndex)),
+                                            unitPrice = Convert.ToDouble(reader.GetValue(totalPerItemIndex)),
+                                            amount = Convert.ToDouble(reader.GetValue(totalPerItemIndex)) / Convert.ToInt32(reader.GetValue(itemQtyIndex))
+                                        });
+                                    }
+                                }
+                            }
                         }
-                        else if (service == "Job Order (Tarpaulin)")
+                        else if (service == "Tarpaulin")
                         {
                             exJobOrderTarp.IsEnabled = true;
                         }
@@ -415,7 +488,7 @@ namespace Goldpoint_Inventory_System.Log
                                         int deadlineIndex = reader.GetOrdinal("deadline");
                                         int custNameIndex = reader.GetOrdinal("customerName");
                                         int addressIndex = reader.GetOrdinal("address");
-                                        int contactNo = reader.GetOrdinal("contactNo");
+                                        int contactNoIndex = reader.GetOrdinal("contactNo");
                                         int remarks = reader.GetOrdinal("remarks");
                                         int orNoIndex = reader.GetOrdinal("ORNo");
                                         int drNoIndex = reader.GetOrdinal("DRNo");
@@ -427,6 +500,7 @@ namespace Goldpoint_Inventory_System.Log
                                         TextRange textRange = new TextRange(txtAddress.Document.ContentStart, txtAddress.Document.ContentEnd);
                                         textRange.Text = Convert.ToString(reader.GetValue(addressIndex));
                                         txtDRNo.Text = Convert.ToString(reader.GetValue(drNoIndex));
+                                        txtContactNo.Text = Convert.ToString(reader.GetValue(contactNoIndex));
                                         if (!string.IsNullOrEmpty(Convert.ToString(reader.GetValue(orNoIndex))))
                                         {
                                             chkOR.IsChecked = true;
@@ -554,18 +628,53 @@ namespace Goldpoint_Inventory_System.Log
                                 }
                             }
                         }
-                        else if (service == "Job Order")
+                        else if (service == "Printing, Services, etc.")
                         {
                             exJobOrder.IsEnabled = true;
+                            using (SqlCommand cmd = new SqlCommand("SELECT * from ServiceMaterial sm INNER JOIN InventoryItems ii on sm.itemCode = ii.itemCode where JobOrderNo = @jobOrderNo", conn))
+                            {
+                                cmd.Parameters.AddWithValue("@jobOrderNo", txtServiceNo.Text);
+                                using (SqlDataReader reader = cmd.ExecuteReader())
+                                {
+                                    services.Clear();
+                                    while (reader.Read())
+                                    {
+                                        int descriptionIndex = reader.GetOrdinal("description");
+                                        int unitIndex = reader.GetOrdinal("unit");
+                                        int qtyIndex = reader.GetOrdinal("qty");
+                                        int itemCodeIndex = reader.GetOrdinal("itemCode");
+                                        int materialIndex = reader.GetOrdinal("material");
+                                        int copyIndex = reader.GetOrdinal("copy");
+                                        int sizeIndex = reader.GetOrdinal("size");
+                                        int itemQtyIndex = reader.GetOrdinal("itemQty");
+                                        int totalPerItemIndex = reader.GetOrdinal("totalPerItem");
+
+                                        services.Add(new JobOrderDataModel
+                                        {
+                                            Description = Convert.ToString(reader.GetValue(descriptionIndex)),
+                                            unit = Convert.ToString(reader.GetValue(unitIndex)),
+                                            qty = Convert.ToInt32(reader.GetValue(qtyIndex)),
+                                            itemCode = Convert.ToString(reader.GetValue(itemCodeIndex)),
+                                            material = Convert.ToString(reader.GetValue(materialIndex)),
+                                            copy = Convert.ToString(reader.GetValue(copyIndex)),
+                                            size = Convert.ToString(reader.GetValue(sizeIndex)),
+                                            itemQty = Convert.ToInt32(reader.GetValue(itemQtyIndex)),
+                                            unitPrice = Convert.ToDouble(reader.GetValue(totalPerItemIndex)),
+                                            amount = Convert.ToDouble(reader.GetValue(totalPerItemIndex)) / Convert.ToInt32(reader.GetValue(itemQtyIndex))
+                                        });
+                                    }
+                                }
+                            }
                         }
-                        else if (service == "Job Order (Tarpaulin)")
+                        else if (service == "Tarpaulin")
                         {
                             exJobOrderTarp.IsEnabled = true;
                         }
 
                         break;
                     case "Job Order (Tarpaulin)":
-                        using (SqlCommand cmd = new SqlCommand("SELECT * from TransactionDetails where jobOrderNo = @jobOrderNo and service = 'Job Order(Tarpaulin)'", conn))
+                        //should be able to issue or and dr here
+                        using (SqlCommand cmd = new SqlCommand("SELECT * from TransactionDetails where jobOrderNo = @jobOrderNo and service = 'Tarpaulin'", conn))
                         {
                             cmd.Parameters.AddWithValue("@jobOrderNo", txtServiceNo.Text);
                             using (SqlDataReader reader = cmd.ExecuteReader())
@@ -574,6 +683,8 @@ namespace Goldpoint_Inventory_System.Log
                                 {
                                     reader.Read();
                                     int drNoIndex = reader.GetOrdinal("DRNo");
+                                    int orNoIndex = reader.GetOrdinal("ORNo");
+                                    int invoiceNoIndex = reader.GetOrdinal("invoiceNo");
                                     int serviceIndex = reader.GetOrdinal("service");
                                     int dateIndex = reader.GetOrdinal("date");
                                     int deadlineIndex = reader.GetOrdinal("deadline");
@@ -582,7 +693,7 @@ namespace Goldpoint_Inventory_System.Log
                                     int contactNoIndex = reader.GetOrdinal("contactNo");
                                     int remarksIndex = reader.GetOrdinal("remarks");
                                     int statusIndex = reader.GetOrdinal("status");
-                                    int claimStatusIndex = reader.GetOrdinal("claimStatus");
+                                    int claimedIndex = reader.GetOrdinal("Claimed");
 
                                     txtDate.Text = Convert.ToString(reader.GetValue(dateIndex));
                                     txtDeadline.Text = Convert.ToString(reader.GetValue(deadlineIndex));
@@ -591,6 +702,8 @@ namespace Goldpoint_Inventory_System.Log
                                     textRange.Text = Convert.ToString(reader.GetValue(addressIndex));
                                     txtContactNo.Text = Convert.ToString(reader.GetValue(contactNoIndex));
                                     txtDRNo.Text = Convert.ToString(reader.GetValue(drNoIndex));
+                                    txtORNo.Text = Convert.ToString(reader.GetValue(orNoIndex));
+                                    txtInvoiceNo.Text = Convert.ToString(reader.GetValue(invoiceNoIndex));
 
                                     if (Convert.ToString(reader.GetValue(statusIndex)) == "Paid")
                                     {
@@ -604,27 +717,31 @@ namespace Goldpoint_Inventory_System.Log
                                     service = Convert.ToString(reader.GetValue(serviceIndex));
                                     drNo = Convert.ToInt32(reader.GetValue(drNoIndex));
                                     exist = true;
-
+                                    exJobOrderTarp.IsEnabled = true;
 
                                 }
                                 else
                                 {
                                     MessageBox.Show("Job order does not exist.");
+                                    exJobOrderTarp.IsEnabled = false;
                                     return;
                                 }
                             }
                         }
                         break;
                     case "Job Order (Printing, Services, etc.)":
-                        using (SqlCommand cmd = new SqlCommand("SELECT * from TransactionDetails where jobOrderNo = @jobOrderNo and service = 'Job Order (Printing, Services, etc.)'", conn))
+                        //should be able to issue or and dr here
+                        using (SqlCommand cmd = new SqlCommand("SELECT * from TransactionDetails where jobOrderNo = @jobOrderNo and service = 'Printing, Services, etc.'", conn))
                         {
-                            cmd.Parameters.AddWithValue("@jobOrderNo", cmbService.Text);
+                            cmd.Parameters.AddWithValue("@jobOrderNo", txtServiceNo.Text);
                             using (SqlDataReader reader = cmd.ExecuteReader())
                             {
                                 if (reader.HasRows)
                                 {
                                     reader.Read();
                                     int drNoIndex = reader.GetOrdinal("DRNo");
+                                    int orNoIndex = reader.GetOrdinal("ORNo");
+                                    int invoiceNoIndex = reader.GetOrdinal("invoiceNo");
                                     int serviceIndex = reader.GetOrdinal("service");
                                     int dateIndex = reader.GetOrdinal("date");
                                     int deadlineIndex = reader.GetOrdinal("deadline");
@@ -633,7 +750,7 @@ namespace Goldpoint_Inventory_System.Log
                                     int contactNoIndex = reader.GetOrdinal("contactNo");
                                     int remarksIndex = reader.GetOrdinal("remarks");
                                     int statusIndex = reader.GetOrdinal("status");
-                                    int claimStatusIndex = reader.GetOrdinal("claimStatus");
+                                    int claimedIndex = reader.GetOrdinal("Claimed");
 
                                     txtDate.Text = Convert.ToString(reader.GetValue(dateIndex));
                                     txtDeadline.Text = Convert.ToString(reader.GetValue(deadlineIndex));
@@ -642,6 +759,8 @@ namespace Goldpoint_Inventory_System.Log
                                     textRange.Text = Convert.ToString(reader.GetValue(addressIndex));
                                     txtContactNo.Text = Convert.ToString(reader.GetValue(contactNoIndex));
                                     txtDRNo.Text = Convert.ToString(reader.GetValue(drNoIndex));
+                                    txtORNo.Text = Convert.ToString(reader.GetValue(orNoIndex));
+                                    txtInvoiceNo.Text = Convert.ToString(reader.GetValue(invoiceNoIndex));
 
                                     if (Convert.ToString(reader.GetValue(statusIndex)) == "Paid")
                                     {
@@ -655,13 +774,79 @@ namespace Goldpoint_Inventory_System.Log
                                     service = Convert.ToString(reader.GetValue(serviceIndex));
                                     drNo = Convert.ToInt32(reader.GetValue(drNoIndex));
                                     exist = true;
+                                    exJobOrder.IsEnabled = true;
 
 
                                 }
                                 else
                                 {
                                     MessageBox.Show("Job order does not exist.");
+                                    exJobOrder.IsEnabled = false;
+
                                     return;
+                                }
+                            }
+                        }
+                        using (SqlCommand cmd = new SqlCommand("SELECT * from PaymentHist where DRNo = @serviceNo", conn))
+                        {
+                            cmd.Parameters.AddWithValue("@serviceNo", drNo);
+                            using (SqlDataReader reader = cmd.ExecuteReader())
+                            {
+                                payHist.Clear();
+                                if (reader.HasRows)
+                                {
+                                    while (reader.Read())
+                                    {
+                                        int dateIndex = reader.GetOrdinal("date");
+                                        int paidAmtIndex = reader.GetOrdinal("paidAmount");
+                                        int totalIndex = reader.GetOrdinal("total");
+                                        int statusIndex = reader.GetOrdinal("status");
+
+                                        payHist.Add(new PaymentHistoryDataModel
+                                        {
+                                            date = Convert.ToString(reader.GetValue(dateIndex)),
+                                            amount = Convert.ToDouble(reader.GetValue(paidAmtIndex))
+                                        });
+
+                                        unpaidBalance += Convert.ToDouble(reader.GetValue(paidAmtIndex));
+                                        txtTotal.Value = Convert.ToDouble(reader.GetValue(totalIndex));
+                                    }
+                                }
+                            }
+                        }
+                        txtUnpaidBalancePayment.Value = txtTotal.Value - unpaidBalance;
+                        txtAmount.MaxValue = (double)txtUnpaidBalancePayment.Value;
+                        using (SqlCommand cmd = new SqlCommand("SELECT * from ServiceMaterial sm INNER JOIN InventoryItems ii on sm.itemCode = ii.itemCode where JobOrderNo = @jobOrderNo", conn))
+                        {
+                            cmd.Parameters.AddWithValue("@jobOrderNo", txtServiceNo.Text);
+                            using (SqlDataReader reader = cmd.ExecuteReader())
+                            {
+                                services.Clear();
+                                while (reader.Read())
+                                {
+                                    int descriptionIndex = reader.GetOrdinal("description");
+                                    int unitIndex = reader.GetOrdinal("unit");
+                                    int qtyIndex = reader.GetOrdinal("qty");
+                                    int itemCodeIndex = reader.GetOrdinal("itemCode");
+                                    int materialIndex = reader.GetOrdinal("material");
+                                    int copyIndex = reader.GetOrdinal("copy");
+                                    int sizeIndex = reader.GetOrdinal("size");
+                                    int itemQtyIndex = reader.GetOrdinal("itemQty");
+                                    int totalPerItemIndex = reader.GetOrdinal("totalPerItem");
+
+                                    services.Add(new JobOrderDataModel
+                                    {
+                                        Description = Convert.ToString(reader.GetValue(descriptionIndex)),
+                                        unit = Convert.ToString(reader.GetValue(unitIndex)),
+                                        qty = Convert.ToInt32(reader.GetValue(qtyIndex)),
+                                        itemCode = Convert.ToString(reader.GetValue(itemCodeIndex)),
+                                        material = Convert.ToString(reader.GetValue(materialIndex)),
+                                        copy = Convert.ToString(reader.GetValue(copyIndex)),
+                                        size = Convert.ToString(reader.GetValue(sizeIndex)),
+                                        itemQty = Convert.ToInt32(reader.GetValue(itemQtyIndex)),
+                                        unitPrice = Convert.ToDouble(reader.GetValue(totalPerItemIndex)),
+                                        amount = Convert.ToDouble(reader.GetValue(totalPerItemIndex)) / Convert.ToInt32(reader.GetValue(itemQtyIndex))
+                                    });
                                 }
                             }
                         }
@@ -677,9 +862,18 @@ namespace Goldpoint_Inventory_System.Log
                 }
             }
         }
+
+        private void clearServices()
+        {
+            photocopy.Clear();
+            stockOut.Clear();
+            payHist.Clear();
+            services.Clear();
+            tarp.Clear();
+        }
+
         private void emptyFields()
         {
-            txtAddress.Document.Blocks.Clear();
             txtAmount.Value = 0;
             txtCustName.Text = null;
             txtDate.Text = DateTime.Today.ToShortDateString();
@@ -704,6 +898,7 @@ namespace Goldpoint_Inventory_System.Log
             stockOut.Clear();
             payHist.Clear();
             services.Clear();
+            tarp.Clear();
             exPhotocopy.IsEnabled = false;
             exStockOut.IsEnabled = false;
             exJobOrder.IsEnabled = false;
