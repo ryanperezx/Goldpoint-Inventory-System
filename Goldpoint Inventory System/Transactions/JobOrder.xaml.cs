@@ -59,7 +59,6 @@ namespace Goldpoint_Inventory_System.Transactions
                 }
             }
         }
-
         private void radiobuttonPayment(object sender, System.Windows.RoutedEventArgs e)
         {
             RadioButton radiobtn = (RadioButton)sender;
@@ -80,7 +79,6 @@ namespace Goldpoint_Inventory_System.Transactions
                     break;
             }
         }
-
         private void getDRNo()
         {
             SqlConnection conn = DBUtils.GetDBConnection();
@@ -101,7 +99,6 @@ namespace Goldpoint_Inventory_System.Transactions
                 }
             }
         }
-
         private void chkServ_Unchecked(object sender, RoutedEventArgs e)
         {
             CheckBox chkBox = (CheckBox)sender;
@@ -145,7 +142,6 @@ namespace Goldpoint_Inventory_System.Transactions
             txtTarpILET.IsReadOnly = true;
             txtTarpUnitPrice.IsReadOnly = true;
         }
-
         private void enableFields()
         {
             txtDate.IsReadOnly = false;
@@ -177,24 +173,24 @@ namespace Goldpoint_Inventory_System.Transactions
             txtTarpILET.IsReadOnly = false;
             txtTarpUnitPrice.IsReadOnly = false;
         }
-
         private void emptyFields()
         {
-            cmbJobOrder.SelectedIndex = 1;
+            cmbJobOrder.SelectedIndex = 0;
             txtJobOrder.Text = null;
+            cmbJobOrder.IsEnabled = true;
 
             txtDate.Text = DateTime.Today.ToShortDateString();
             txtDateDeadline.Text = DateTime.Today.ToShortDateString();
             txtCustName.Text = null;
             txtContactNo.Text = null;
             txtAddress.Document.Blocks.Clear();
+            txtRemarks.Document.Blocks.Clear();
             rdUnpaid.IsChecked = true;
             txtDownpayment.Value = 0;
             txtItemTotal.Value = 0;
             txtDownpayment.MaxValue = 0;
 
         }
-
         private void emptyService()
         {
             txtDesc.Text = null;
@@ -207,7 +203,6 @@ namespace Goldpoint_Inventory_System.Transactions
             txtItemQty.Text = null;
             txtPricePerItem.Value = 0;
         }
-
         private void emptyTarp()
         {
             txtFileName.Text = null;
@@ -218,7 +213,6 @@ namespace Goldpoint_Inventory_System.Transactions
             txtTarpILET.Text = null;
             txtTarpUnitPrice.Value = 0;
         }
-
         private void BtnReset_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             getDRNo();
@@ -226,6 +220,7 @@ namespace Goldpoint_Inventory_System.Transactions
             tarp.Clear();
             txtJobOrder.IsEnabled = true;
             txtJobOrder.Text = null;
+            cmbJobOrder.IsEnabled = true;
             btnCancelJobOrder.IsEnabled = false;
             btnAddJobOrder.IsEnabled = true;
             btnSaveJobOrder.IsEnabled = false;
@@ -237,7 +232,6 @@ namespace Goldpoint_Inventory_System.Transactions
             emptyTarp();
             enableFields();
         }
-
         private void BtnSearchJO_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (string.IsNullOrEmpty(txtDate.Text) || string.IsNullOrEmpty(cmbJobOrder.Text))
@@ -339,7 +333,7 @@ namespace Goldpoint_Inventory_System.Transactions
                                         size = Convert.ToString(reader.GetValue(sizeIndex)),
                                         itemQty = Convert.ToInt32(reader.GetValue(itemQtyIndex)),
                                         unitPrice = Convert.ToDouble(reader.GetValue(totalPerItemIndex)),
-                                        amount = Convert.ToDouble(reader.GetValue(totalPerItemIndex))/ Convert.ToInt32(reader.GetValue(itemQtyIndex))
+                                        amount = Convert.ToDouble(reader.GetValue(totalPerItemIndex)) / Convert.ToInt32(reader.GetValue(itemQtyIndex))
                                     });
 
                                     txtItemTotal.Value += Convert.ToDouble(reader.GetValue(totalPerItemIndex)) / Convert.ToInt32(reader.GetValue(itemQtyIndex));
@@ -357,14 +351,32 @@ namespace Goldpoint_Inventory_System.Transactions
                                 tarp.Clear();
                                 while (reader.Read())
                                 {
+                                    int fileNameIndex = reader.GetOrdinal("fileName");
+                                    int qtyIndex = reader.GetOrdinal("qty");
+                                    int sizeIndex = reader.GetOrdinal("size");
+                                    int mediaIndex = reader.GetOrdinal("media");
+                                    int borderIndex = reader.GetOrdinal("border");
+                                    int iLETIndex = reader.GetOrdinal("ILET");
+                                    int unitPriceIndex = reader.GetOrdinal("unitPrice");
 
+                                    tarp.Add(new JobOrderDataModel
+                                    {
+                                        fileName = Convert.ToString(reader.GetValue(fileNameIndex)),
+                                        tarpQty = Convert.ToInt32(reader.GetValue(qtyIndex)),
+                                        size = Convert.ToString(reader.GetValue(sizeIndex)),
+                                        media = Convert.ToString(reader.GetValue(mediaIndex)),
+                                        border = Convert.ToString(reader.GetValue(borderIndex)),
+                                        ILET = Convert.ToString(reader.GetValue(iLETIndex)),
+                                        unitPrice = Convert.ToDouble(reader.GetValue(unitPriceIndex)),
+                                        amount = (double)(Convert.ToDouble(reader.GetValue(unitPriceIndex)) * Convert.ToInt32(reader.GetValue(qtyIndex)))
+                                    });
                                 }
                             }
                         }
                     }
 
 
-
+                    txtJobOrder.IsEnabled = false;
                     btnCancelJobOrder.IsEnabled = true;
                     btnAddJobOrder.IsEnabled = false;
                     btnSaveJobOrder.IsEnabled = false;
@@ -375,11 +387,50 @@ namespace Goldpoint_Inventory_System.Transactions
                 }
             }
         }
+        private void TxtSearchItem_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (string.IsNullOrEmpty(txtItemCode.Text))
+            {
+                MessageBox.Show("Please type the item code before searching");
+                txtItemCode.Focus();
+            }
+            else
+            {
+                SqlConnection conn = DBUtils.GetDBConnection();
+                conn.Open();
+                using (SqlCommand cmd = new SqlCommand("SELECT * from InventoryItems where itemCode = @itemCode", conn))
+                {
+                    cmd.Parameters.AddWithValue("@itemCode", txtItemCode.Text);
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+
+                            reader.Read();
+                            int descriptionIndex = reader.GetOrdinal("description");
+                            txtMaterial.Text = Convert.ToString(reader.GetValue(descriptionIndex));
+
+                            txtItemQty.Value = 0;
+
+                            int sizeIndex = reader.GetOrdinal("size");
+                            txtSize.Text = Convert.ToString(reader.GetValue(sizeIndex));
+
+                            int msrpIndex = reader.GetOrdinal("MSRP");
+                            txtPricePerItem.Value = Convert.ToDouble(reader.GetValue(msrpIndex));
+                        }
+                        else
+                        {
+                            MessageBox.Show("Item does not exist in the inventory");
+                        }
+                    }
+                }
+            }
+        }
 
         private void BtnCancelJobOrder_Click(object sender, RoutedEventArgs e)
         {
             //should return materials if cancelled
-            if (string.IsNullOrEmpty(txtJobOrder.Text))
+            if (string.IsNullOrEmpty(txtJobOrder.Text) || string.IsNullOrEmpty(cmbJobOrder.Text))
             {
                 MessageBox.Show("Please input Job Order No before cancelling.");
             }
@@ -388,9 +439,10 @@ namespace Goldpoint_Inventory_System.Transactions
                 SqlConnection conn = DBUtils.GetDBConnection();
                 conn.Open();
                 bool exist = false;
-                using (SqlCommand cmd = new SqlCommand("SELECT COUNT(1) from TransactionDetails where jobOrderNo = @jobOrderNo", conn))
+                using (SqlCommand cmd = new SqlCommand("SELECT COUNT(1) from TransactionDetails where jobOrderNo = @jobOrderNo and service = @service", conn))
                 {
                     cmd.Parameters.AddWithValue("@jobOrderNo", txtJobOrder.Text);
+                    cmd.Parameters.AddWithValue("@service", cmbJobOrder.Text);
                     using (SqlDataReader reader = cmd.ExecuteReader())
                     {
                         if (reader.HasRows)
@@ -424,9 +476,14 @@ namespace Goldpoint_Inventory_System.Transactions
                                     {
                                         cmd.ExecuteNonQuery();
                                         MessageBox.Show("Job Order has been cancelled successfully");
+
+                                        txtJobOrder.IsEnabled = true;
                                         btnCancelJobOrder.IsEnabled = false;
                                         btnAddJobOrder.IsEnabled = true;
-                                        btnSaveJobOrder.IsEnabled = false;
+                                        btnSaveJobOrder.IsEnabled = true;
+                                        btnAddService.IsEnabled = true;
+                                        btnRemoveLastService.IsEnabled = true;
+                                        btnAddTarp.IsEnabled = true;
                                     }
                                     catch (SqlException ex)
                                     {
@@ -444,33 +501,58 @@ namespace Goldpoint_Inventory_System.Transactions
                 }
             }
         }
-
         private void BtnAddJobOrder_Click(object sender, RoutedEventArgs e)
         {
             SqlConnection conn = DBUtils.GetDBConnection();
             conn.Open();
-            using (SqlCommand cmd = new SqlCommand("SELECT TOP 1 jobOrderNo from TransactionDetails WHERE TRIM(jobOrderNo) is not null AND DATALENGTH(jobOrderNo) > 0 ORDER BY jobOrderNo DESC", conn))
+            if (cmbJobOrder.Text == "Printing, Services, etc.")
             {
-                using (SqlDataReader reader = cmd.ExecuteReader())
+                using (SqlCommand cmd = new SqlCommand("SELECT TOP 1 jobOrderNo from TransactionDetails WHERE TRIM(jobOrderNo) is not null AND DATALENGTH(jobOrderNo) > 0 and service = 'Printing, Services, etc.' ORDER BY jobOrderNo DESC", conn))
                 {
-                    if (!reader.Read())
-                        txtJobOrder.Text = "1";
-                    else
+                    using (SqlDataReader reader = cmd.ExecuteReader())
                     {
-                        int jobOrderNoIndex = reader.GetOrdinal("jobOrderNo");
-                        int jobOrderNo = Convert.ToInt32(reader.GetValue(jobOrderNoIndex)) + 1;
-                        txtJobOrder.Text = jobOrderNo.ToString();
+                        if (!reader.Read())
+                            txtJobOrder.Text = "1";
+                        else
+                        {
+                            int jobOrderNoIndex = reader.GetOrdinal("jobOrderNo");
+                            int jobOrderNo = Convert.ToInt32(reader.GetValue(jobOrderNoIndex)) + 1;
+                            txtJobOrder.Text = jobOrderNo.ToString();
+                        }
+                        txtJobOrder.IsEnabled = false;
+                        cmbJobOrder.IsEnabled = false;
+                        btnCancelJobOrder.IsEnabled = false;
+                        btnAddJobOrder.IsEnabled = false;
+                        btnSaveJobOrder.IsEnabled = true;
+                        getDRNo();
                     }
-                    txtJobOrder.IsEnabled = false;
-                    btnCancelJobOrder.IsEnabled = false;
-                    btnAddJobOrder.IsEnabled = false;
-                    btnSaveJobOrder.IsEnabled = true;
-                    getDRNo();
                 }
             }
+            else
+            {
+                using (SqlCommand cmd = new SqlCommand("SELECT TOP 1 jobOrderNo from TransactionDetails WHERE TRIM(jobOrderNo) is not null AND DATALENGTH(jobOrderNo) > 0 and service = 'Tarpaulin' ORDER BY jobOrderNo DESC", conn))
+                {
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (!reader.Read())
+                            txtJobOrder.Text = "1";
+                        else
+                        {
+                            int jobOrderNoIndex = reader.GetOrdinal("jobOrderNo");
+                            int jobOrderNo = Convert.ToInt32(reader.GetValue(jobOrderNoIndex)) + 1;
+                            txtJobOrder.Text = jobOrderNo.ToString();
+                        }
+                        txtJobOrder.IsEnabled = false;
+                        cmbJobOrder.IsEnabled = false;
+                        btnCancelJobOrder.IsEnabled = false;
+                        btnAddJobOrder.IsEnabled = false;
+                        btnSaveJobOrder.IsEnabled = true;
+                        getDRNo();
+                    }
+                }
+            }
+
         }
-
-
         private void BtnSaveJobOrder_Click(object sender, RoutedEventArgs e)
         {
             string address = new TextRange(txtAddress.Document.ContentStart, txtAddress.Document.ContentEnd).Text;
@@ -479,11 +561,15 @@ namespace Goldpoint_Inventory_System.Transactions
             {
                 MessageBox.Show("Please enter job order");
             }
+            else if (string.IsNullOrEmpty(cmbJobOrder.Text))
+            {
+                MessageBox.Show("Please select job order");
+            }
             else if (cmbJobOrder.Text == "Printing, Services, etc." && services.Count == 0)
             {
                 MessageBox.Show("Item list is empty!");
             }
-            else if (cmbJobOrder.Text == "Job Order")
+            else if (cmbJobOrder.Text == "Tarpaulin" && tarp.Count == 0)
             {
                 MessageBox.Show("Item list is empty!");
             }
@@ -620,21 +706,27 @@ namespace Goldpoint_Inventory_System.Transactions
                         }
                         else if (cmbJobOrder.Text == "Tarpaulin")
                         {
-                            foreach (var item in tarp)
+
+                            foreach (var tarp in tarp)
                             {
-                                //s
-                                using (SqlCommand cmd = new SqlCommand("UPDATE InventoryItems set qty = qty - @qty where itemCode = @itemCode", conn))
+                                using (SqlCommand cmd = new SqlCommand("INSERT into TarpMaterial VALUES (@jobOrderNo, @fileName, @qty, @size, @media, @border, @iLET, @unitPrice)", conn))
                                 {
-                                    cmd.Parameters.AddWithValue("@itemCode", item.itemCode);
-                                    cmd.Parameters.AddWithValue("@qty", item.qty);
+                                    cmd.Parameters.AddWithValue("@jobOrderNo", txtJobOrder.Text);
+                                    cmd.Parameters.AddWithValue("@fileName", tarp.fileName);
+                                    cmd.Parameters.AddWithValue("@qty", tarp.tarpQty);
+                                    cmd.Parameters.AddWithValue("@size", tarp.tarpSize);
+                                    cmd.Parameters.AddWithValue("@media", tarp.media);
+                                    cmd.Parameters.AddWithValue("@border", tarp.border);
+                                    cmd.Parameters.AddWithValue("@iLET", tarp.ILET);
+                                    cmd.Parameters.AddWithValue("@unitPrice", tarp.unitPrice);
                                     try
                                     {
                                         cmd.ExecuteNonQuery();
-                                        success = true;
                                     }
                                     catch (SqlException ex)
                                     {
                                         MessageBox.Show("An error has been encountered!" + ex);
+                                        success = false;
                                     }
                                 }
                             }
@@ -670,6 +762,7 @@ namespace Goldpoint_Inventory_System.Transactions
                                 catch (SqlException ex)
                                 {
                                     MessageBox.Show("An error has been encountered!" + ex);
+                                    success = false;
                                 }
                             }
 
@@ -769,6 +862,7 @@ namespace Goldpoint_Inventory_System.Transactions
                         emptyFields();
                         emptyService();
                         emptyTarp();
+                        getDRNo();
                         break;
                     case MessageBoxResult.No:
                         return;
@@ -778,17 +872,6 @@ namespace Goldpoint_Inventory_System.Transactions
             }
         }
 
-        private void BtnRemoveLastService_Click(object sender, RoutedEventArgs e)
-        {
-            if (services.Count == 0)
-            {
-                MessageBox.Show("Service/Material list is empty");
-            }
-            else
-            {
-                services.RemoveAt(services.Count - 1);
-            }
-        }
 
         private void BtnAddService_Click(object sender, RoutedEventArgs e)
         {
@@ -841,7 +924,7 @@ namespace Goldpoint_Inventory_System.Transactions
                                 copy = txtCopy.Text,
                                 size = txtSize.Text,
                                 unitPrice = (double)txtPricePerItem.Value,
-                                itemQty = (int) txtItemQty.Value,
+                                itemQty = (int)txtItemQty.Value,
                                 amount = (double)(txtPricePerItem.Value * txtItemQty.Value)
                             });
 
@@ -860,50 +943,38 @@ namespace Goldpoint_Inventory_System.Transactions
                 }
             }
         }
-
-        private void TxtSearchItem_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void BtnRemoveLastService_Click(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrEmpty(txtItemCode.Text))
+            if (services.Count == 0)
             {
-                MessageBox.Show("Please type the item code before searching");
-                txtItemCode.Focus();
+                MessageBox.Show("Service/Material list is empty");
             }
             else
             {
-                SqlConnection conn = DBUtils.GetDBConnection();
-                conn.Open();
-                using (SqlCommand cmd = new SqlCommand("SELECT * from InventoryItems where itemCode = @itemCode", conn))
-                {
-                    cmd.Parameters.AddWithValue("@itemCode", txtItemCode.Text);
-                    using (SqlDataReader reader = cmd.ExecuteReader())
-                    {
-                        if (reader.HasRows)
-                        {
-
-                            reader.Read();
-                            int descriptionIndex = reader.GetOrdinal("description");
-                            txtMaterial.Text = Convert.ToString(reader.GetValue(descriptionIndex));
-
-                            txtItemQty.Value = 0;
-
-                            int sizeIndex = reader.GetOrdinal("size");
-                            txtSize.Text = Convert.ToString(reader.GetValue(sizeIndex));
-
-                            int msrpIndex = reader.GetOrdinal("MSRP");
-                            txtPricePerItem.Value = Convert.ToDouble(reader.GetValue(msrpIndex));
-                        }
-                        else
-                        {
-                            MessageBox.Show("Item does not exist in the inventory");
-                        }
-                    }
-                }
+                services.RemoveAt(services.Count - 1);
             }
         }
-
         private void BtnAddTarp_Click(object sender, RoutedEventArgs e)
         {
-
+            if (string.IsNullOrEmpty(txtFileName.Text) || string.IsNullOrEmpty(txtTarpQty.Text) || string.IsNullOrEmpty(txtTarpSize.Text))
+            {
+                MessageBox.Show("One or more fields are empty!");
+            }
+            else
+            {
+                tarp.Add(new JobOrderDataModel
+                {
+                    fileName = txtFileName.Text,
+                    tarpQty = (int)txtTarpQty.Value,
+                    tarpSize = txtTarpSize.Text,
+                    media = txtTarpMedia.Text,
+                    border = txtTarpBorder.Text,
+                    ILET = txtTarpILET.Text,
+                    unitPrice = (double)txtTarpUnitPrice.Value,
+                    amount = (double)(txtTarpUnitPrice.Value * txtTarpQty.Value)
+                });
+                emptyTarp();
+            }
         }
     }
 }

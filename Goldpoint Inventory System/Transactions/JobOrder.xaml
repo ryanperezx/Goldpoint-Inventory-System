@@ -169,13 +169,13 @@
                     <Label Content="I-LET:" HorizontalAlignment="Left" Margin="30,239,0,0" VerticalAlignment="Top"/>
                     <syncfusion:SfTextBoxExt x:Name="txtTarpILET" HorizontalAlignment="Left" Height="31" Margin="119,239,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
                     <Label Content="Unit Price:" HorizontalAlignment="Left" Margin="30,279,0,0" VerticalAlignment="Top"/>
-                    <syncfusion:DoubleTextBox x:Name="txtTarpUnitPrice" HorizontalAlignment="Left" Height="31" Margin="119,279,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+                    <syncfusion:DoubleTextBox x:Name="txtTarpUnitPrice" MinValue="0" HorizontalAlignment="Left" Height="31" Margin="119,279,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
                     <syncfusion:ButtonAdv x:Name="btnAddTarp" SmallIcon="{x:Null}"  HorizontalAlignment="Left" Height="29" Label="Add Tarpaulin" Margin="119,354,0,0" VerticalAlignment="Top" Width="120" Click="BtnAddTarp_Click"/>
                     <syncfusion:SfDataGrid x:Name="dgTarpaulin" HorizontalAlignment="Center" Height="418" VerticalAlignment="Center" Width="444" ItemsSource="{Binding}" AutoGenerateColumns="False" Margin="356,0,0,0">
                         <syncfusion:SfDataGrid.Columns>
                             <syncfusion:GridTextColumn MappingName="File Name" Width="125" IsReadOnly="True" DisplayBinding="{Binding fileName}"/>
-                            <syncfusion:GridTextColumn MappingName="Qty" Width="90" IsReadOnly="True" DisplayBinding="{Binding qty}"/>
-                            <syncfusion:GridTextColumn MappingName="Size" Width="90" DisplayBinding="{Binding size}"/>
+                            <syncfusion:GridTextColumn MappingName="Qty" Width="90" IsReadOnly="True" DisplayBinding="{Binding tarpQty}"/>
+                            <syncfusion:GridTextColumn MappingName="Size" Width="90" DisplayBinding="{Binding tarpSize}"/>
                             <syncfusion:GridTextColumn MappingName="Media" Width="100" IsReadOnly="True" DisplayBinding="{Binding media}"/>
                             <syncfusion:GridTextColumn MappingName="Border" Width="150" IsReadOnly="True" DisplayBinding="{Binding border}"/>
                             <syncfusion:GridTextColumn MappingName="I-LET" Width="150" IsReadOnly="True" DisplayBinding="{Binding ILET}"/>

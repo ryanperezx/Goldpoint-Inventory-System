@@ -183,13 +183,14 @@
                 <StackPanel Orientation="Vertical">
                     <syncfusion:SfDataGrid x:Name="dgTarpaulin" HorizontalAlignment="Center" Height="418" VerticalAlignment="Center" Width="915" ItemsSource="{Binding}" AutoGenerateColumns="False" >
                         <syncfusion:SfDataGrid.Columns>
-                            <syncfusion:GridTextColumn MappingName="File Name" Width="125" IsReadOnly="True"/>
-                            <syncfusion:GridTextColumn MappingName="Size" Width="90"/>
-                            <syncfusion:GridTextColumn MappingName="Media" Width="100" IsReadOnly="True"/>
-                            <syncfusion:GridTextColumn MappingName="Border" Width="150" IsReadOnly="True"/>
-                            <syncfusion:GridTextColumn MappingName="I-LET" Width="150" IsReadOnly="True"/>
-                            <syncfusion:GridTextColumn MappingName="Unit Price" Width="150" IsReadOnly="True"/>
-                            <syncfusion:GridTextColumn MappingName="Amount" Width="150" IsReadOnly="True"/>
+                            <syncfusion:GridTextColumn MappingName="File Name" Width="125" IsReadOnly="True" DisplayBinding="{Binding fileName}"/>
+                            <syncfusion:GridTextColumn MappingName="Qty" Width="90" IsReadOnly="True" DisplayBinding="{Binding tarpQty}"/>
+                            <syncfusion:GridTextColumn MappingName="Size" Width="90" DisplayBinding="{Binding tarpSize}"/>
+                            <syncfusion:GridTextColumn MappingName="Media" Width="100" IsReadOnly="True" DisplayBinding="{Binding media}"/>
+                            <syncfusion:GridTextColumn MappingName="Border" Width="150" IsReadOnly="True" DisplayBinding="{Binding border}"/>
+                            <syncfusion:GridTextColumn MappingName="I-LET" Width="150" IsReadOnly="True" DisplayBinding="{Binding ILET}"/>
+                            <syncfusion:GridTextColumn MappingName="Unit Price" Width="150" IsReadOnly="True" DisplayBinding="{Binding unitPrice}"/>
+                            <syncfusion:GridTextColumn MappingName="Amount" Width="150" IsReadOnly="True" DisplayBinding="{Binding amount}"/>
                         </syncfusion:SfDataGrid.Columns>
                     </syncfusion:SfDataGrid>
                 </StackPanel>
