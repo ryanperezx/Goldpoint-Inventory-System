@@ -46,7 +46,7 @@
                     <Label Content="Deadline:" HorizontalAlignment="Left" Margin="276,33,0,0" VerticalAlignment="Top"/>
                     <syncfusion:DateTimeEdit x:Name="txtDeadline" HorizontalAlignment="Left" Height="31" Margin="358,33,0,0" TextWrapping="Wrap" Text="DateTimeEdit" VerticalAlignment="Top" Width="120" IsReadOnly="True"/>
                     <Label Content="Name:" HorizontalAlignment="Left" Margin="40,79,0,0" VerticalAlignment="Top" Width="58" />
-                    <syncfusion:SfTextBoxExt x:Name="txtCustName" HorizontalAlignment="Left" Height="31" Margin="118,79,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="168" IsReadOnly="True"/>
+                    <syncfusion:SfTextBoxExt x:Name="txtCustName" HorizontalAlignment="Left" Height="31" Margin="144,79,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="168" IsReadOnly="True"/>
                     <Label Content="Address:" HorizontalAlignment="Left" Margin="40,149,0,0" VerticalAlignment="Top" Width="73"/>
                     <RichTextBox x:Name="txtAddress" HorizontalAlignment="Left" Height="77" Margin="144,119,0,0" VerticalAlignment="Top" Width="265" IsReadOnly="True">
                         <RichTextBox.Resources>
@@ -57,16 +57,18 @@
                     </RichTextBox>
                     <Label Content="Contact No:" HorizontalAlignment="Left" Margin="40,207,0,0" VerticalAlignment="Top" Width="98"/>
                     <syncfusion:SfTextBoxExt x:Name="txtContactNo" HorizontalAlignment="Left" Height="31" Margin="144,207,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="168" IsReadOnly="True"/>
-                    <Label Content="Service:" HorizontalAlignment="Left" Margin="40,281,0,0" VerticalAlignment="Top"/>
-                    <CheckBox x:Name="chkInv" Content="Invoice" HorizontalAlignment="Left" Margin="117,286,0,0" VerticalAlignment="Top" IsEnabled="False"/>
-                    <CheckBox x:Name="chkOR"  Content="Official Receipt" HorizontalAlignment="Left" Margin="208,286,0,0" VerticalAlignment="Top" IsEnabled="False"/>
-                    <CheckBox x:Name="chkDR"  Content="Delivery Receipt" HorizontalAlignment="Left" Margin="345,286,0,0" VerticalAlignment="Top" IsEnabled="False"/>
-                    <Label Content="Invoice No:" HorizontalAlignment="Left" Margin="40,321,0,0" VerticalAlignment="Top"/>
-                    <syncfusion:SfTextBoxExt x:Name="txtInvoiceNo" HorizontalAlignment="Left" Height="31" Margin="144,321,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" IsReadOnly="True"/>
-                    <Label Content="O.R No:" HorizontalAlignment="Left" Margin="276,320,0,0" VerticalAlignment="Top"/>
-                    <syncfusion:SfTextBoxExt x:Name="txtORNo" HorizontalAlignment="Left" Height="31" Margin="345,320,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" IsReadOnly="True"/>
-                    <Label Content="D.R No:" HorizontalAlignment="Left" Margin="40,364,0,0" VerticalAlignment="Top"/>
-                    <syncfusion:SfTextBoxExt x:Name="txtDRNo" HorizontalAlignment="Left" Height="31" Margin="144,364,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" IsReadOnly="True"/>
+                    <Label Content="Remarks:" HorizontalAlignment="Left" Margin="40,249,0,0" VerticalAlignment="Top" Width="73"/>
+                    <syncfusion:SfTextBoxExt x:Name="txtRemarks" HorizontalAlignment="Left" Height="31" Margin="144,249,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="321" IsReadOnly="True"/>
+                    <Label Content="Service:" HorizontalAlignment="Left" Margin="40,290,0,0" VerticalAlignment="Top"/>
+                    <CheckBox x:Name="chkInv" Content="Invoice" HorizontalAlignment="Left" Margin="117,295,0,0" VerticalAlignment="Top" IsEnabled="False"/>
+                    <CheckBox x:Name="chkOR"  Content="Official Receipt" HorizontalAlignment="Left" Margin="208,295,0,0" VerticalAlignment="Top" IsEnabled="False"/>
+                    <CheckBox x:Name="chkDR"  Content="Delivery Receipt" HorizontalAlignment="Left" Margin="345,295,0,0" VerticalAlignment="Top" IsEnabled="False"/>
+                    <Label Content="Invoice No:" HorizontalAlignment="Left" Margin="40,330,0,0" VerticalAlignment="Top"/>
+                    <syncfusion:SfTextBoxExt x:Name="txtInvoiceNo" HorizontalAlignment="Left" Height="31" Margin="144,330,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" IsReadOnly="True"/>
+                    <Label Content="O.R No:" HorizontalAlignment="Left" Margin="276,329,0,0" VerticalAlignment="Top"/>
+                    <syncfusion:SfTextBoxExt x:Name="txtORNo" HorizontalAlignment="Left" Height="31" Margin="345,329,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" IsReadOnly="True"/>
+                    <Label Content="D.R No:" HorizontalAlignment="Left" Margin="40,373,0,0" VerticalAlignment="Top"/>
+                    <syncfusion:SfTextBoxExt x:Name="txtDRNo" HorizontalAlignment="Left" Height="31" Margin="144,373,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" IsReadOnly="True"/>
 
                 </Grid>
             </Expander>

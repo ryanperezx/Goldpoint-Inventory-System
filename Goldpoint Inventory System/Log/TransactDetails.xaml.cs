@@ -59,7 +59,7 @@ namespace Goldpoint_Inventory_System.Log
                 switch (cmbService.Text)
                 {
                     case "Official Receipt":
-                        using (SqlCommand cmd = new SqlCommand("SELECT * from TransactionDetails WHERE ORNo = @serviceNo", conn))
+                        using (SqlCommand cmd = new SqlCommand("SELECT * from TransactionDetails WHERE ORNo = @serviceNo and inaccessible = 1", conn))
                         {
                             cmd.Parameters.AddWithValue("@serviceNo", txtServiceNo.Text);
                             using (SqlDataReader reader = cmd.ExecuteReader())
@@ -89,6 +89,7 @@ namespace Goldpoint_Inventory_System.Log
                                         TextRange textRange = new TextRange(txtAddress.Document.ContentStart, txtAddress.Document.ContentEnd);
                                         textRange.Text = Convert.ToString(reader.GetValue(addressIndex));
                                         txtContactNo.Text = Convert.ToString(reader.GetValue(contactNoIndex));
+                                        txtRemarks.Text = Convert.ToString(reader.GetValue(remarksIndex));
 
                                         if (!string.IsNullOrEmpty(Convert.ToString(reader.GetValue(invoiceNoIndex))))
                                         {
@@ -306,7 +307,7 @@ namespace Goldpoint_Inventory_System.Log
 
                         break;
                     case "Delivery Receipt":
-                        using (SqlCommand cmd = new SqlCommand("SELECT * from TransactionDetails WHERE DRNo = @serviceNo", conn))
+                        using (SqlCommand cmd = new SqlCommand("SELECT * from TransactionDetails WHERE DRNo = @serviceNo and inaccessible = 1", conn))
                         {
                             cmd.Parameters.AddWithValue("@serviceNo", txtServiceNo.Text);
                             using (SqlDataReader reader = cmd.ExecuteReader())
@@ -321,7 +322,7 @@ namespace Goldpoint_Inventory_System.Log
                                         int custNameIndex = reader.GetOrdinal("customerName");
                                         int addressIndex = reader.GetOrdinal("address");
                                         int contactNoIndex = reader.GetOrdinal("contactNo");
-                                        int remarks = reader.GetOrdinal("remarks");
+                                        int remarksIndex = reader.GetOrdinal("remarks");
                                         int invoiceNoIndex = reader.GetOrdinal("invoiceNo");
                                         int orNoIndex = reader.GetOrdinal("ORNo");
                                         int statusIndex = reader.GetOrdinal("status");
@@ -335,6 +336,8 @@ namespace Goldpoint_Inventory_System.Log
                                         TextRange textRange = new TextRange(txtAddress.Document.ContentStart, txtAddress.Document.ContentEnd);
                                         textRange.Text = Convert.ToString(reader.GetValue(addressIndex));
                                         txtContactNo.Text = Convert.ToString(reader.GetValue(contactNoIndex));
+                                        txtRemarks.Text = Convert.ToString(reader.GetValue(remarksIndex));
+
                                         if (!string.IsNullOrEmpty(Convert.ToString(reader.GetValue(invoiceNoIndex))))
                                         {
                                             chkInv.IsChecked = true;
@@ -555,7 +558,7 @@ namespace Goldpoint_Inventory_System.Log
                         }
                         break;
                     case "Invoice":
-                        using (SqlCommand cmd = new SqlCommand("SELECT * from TransactionDetails WHERE invoiceNo = @serviceNo", conn))
+                        using (SqlCommand cmd = new SqlCommand("SELECT * from TransactionDetails WHERE invoiceNo = @serviceNo and inaccessible = 1", conn))
                         {
                             cmd.Parameters.AddWithValue("@serviceNo", txtServiceNo.Text);
                             using (SqlDataReader reader = cmd.ExecuteReader())
@@ -570,7 +573,7 @@ namespace Goldpoint_Inventory_System.Log
                                         int custNameIndex = reader.GetOrdinal("customerName");
                                         int addressIndex = reader.GetOrdinal("address");
                                         int contactNoIndex = reader.GetOrdinal("contactNo");
-                                        int remarks = reader.GetOrdinal("remarks");
+                                        int remarksIndex = reader.GetOrdinal("remarks");
                                         int orNoIndex = reader.GetOrdinal("ORNo");
                                         int drNoIndex = reader.GetOrdinal("DRNo");
                                         int statusIndex = reader.GetOrdinal("status");
@@ -585,6 +588,8 @@ namespace Goldpoint_Inventory_System.Log
                                         textRange.Text = Convert.ToString(reader.GetValue(addressIndex));
                                         txtDRNo.Text = Convert.ToString(reader.GetValue(drNoIndex));
                                         txtContactNo.Text = Convert.ToString(reader.GetValue(contactNoIndex));
+                                        txtRemarks.Text = Convert.ToString(reader.GetValue(remarksIndex));
+
                                         if (!string.IsNullOrEmpty(Convert.ToString(reader.GetValue(orNoIndex))))
                                         {
                                             chkOR.IsChecked = true;
@@ -800,7 +805,7 @@ namespace Goldpoint_Inventory_System.Log
                         break;
                     case "Job Order (Tarpaulin)":
                         //should be able to issue or and dr here
-                        using (SqlCommand cmd = new SqlCommand("SELECT * from TransactionDetails where jobOrderNo = @jobOrderNo and service = 'Tarpaulin'", conn))
+                        using (SqlCommand cmd = new SqlCommand("SELECT * from TransactionDetails where jobOrderNo = @jobOrderNo and service = 'Tarpaulin' and inaccessible = 1", conn))
                         {
                             cmd.Parameters.AddWithValue("@jobOrderNo", txtServiceNo.Text);
                             using (SqlDataReader reader = cmd.ExecuteReader())
@@ -830,6 +835,7 @@ namespace Goldpoint_Inventory_System.Log
                                     txtDRNo.Text = Convert.ToString(reader.GetValue(drNoIndex));
                                     txtORNo.Text = Convert.ToString(reader.GetValue(orNoIndex));
                                     txtInvoiceNo.Text = Convert.ToString(reader.GetValue(invoiceNoIndex));
+                                    txtRemarks.Text = Convert.ToString(reader.GetValue(remarksIndex));
 
                                     if (!string.IsNullOrEmpty(Convert.ToString(reader.GetValue(invoiceNoIndex))))
                                     {
@@ -929,7 +935,7 @@ namespace Goldpoint_Inventory_System.Log
                         break;
                     case "Job Order (Printing, Services, etc.)":
                         //should be able to issue or and dr here
-                        using (SqlCommand cmd = new SqlCommand("SELECT * from TransactionDetails where jobOrderNo = @jobOrderNo and service = 'Printing, Services, etc.'", conn))
+                        using (SqlCommand cmd = new SqlCommand("SELECT * from TransactionDetails where jobOrderNo = @jobOrderNo and service = 'Printing, Services, etc.' and inaccessible = 1", conn))
                         {
                             cmd.Parameters.AddWithValue("@jobOrderNo", txtServiceNo.Text);
                             using (SqlDataReader reader = cmd.ExecuteReader())
@@ -959,6 +965,7 @@ namespace Goldpoint_Inventory_System.Log
                                     txtDRNo.Text = Convert.ToString(reader.GetValue(drNoIndex));
                                     txtORNo.Text = Convert.ToString(reader.GetValue(orNoIndex));
                                     txtInvoiceNo.Text = Convert.ToString(reader.GetValue(invoiceNoIndex));
+                                    txtRemarks.Text = Convert.ToString(reader.GetValue(remarksIndex));
 
                                     if (!string.IsNullOrEmpty(Convert.ToString(reader.GetValue(invoiceNoIndex))))
                                     {
