@@ -32,21 +32,23 @@
                     <Label Content="Qty" HorizontalAlignment="Left" Margin="110,25,0,0" VerticalAlignment="Top" Grid.Column="1"/>
 
                     <Label Content="Short:" HorizontalAlignment="Left" Margin="91,62,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
-                    <syncfusion:IntegerTextBox x:Name="txtShort" HorizontalAlignment="Left" Height="30" Margin="77,63,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="135" Grid.Column="1" MinValue="0"/>
+                    <syncfusion:IntegerTextBox x:Name="txtShort" HorizontalAlignment="Left" Height="30" Margin="77,63,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="135" Grid.Column="1" MinValue="0" MaxValue="10000"/>
 
                     <Label Content="Long:" HorizontalAlignment="Left" Margin="91,100,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
-                    <syncfusion:IntegerTextBox x:Name="txtLong" HorizontalAlignment="Left" Height="31" Margin="77,100,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="135" Grid.Column="1" MinValue="0"/>
+                    <syncfusion:IntegerTextBox x:Name="txtLong" HorizontalAlignment="Left" Height="31" Margin="77,100,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="135" Grid.Column="1" MinValue="0" MaxValue="10000"/>
 
                     <Label Content="A3:" HorizontalAlignment="Left" Margin="91,136,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
-                    <syncfusion:IntegerTextBox x:Name="txtA3" HorizontalAlignment="Left" Height="31" Margin="77,136,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="135" Grid.Column="1" MinValue="0"/>
+                    <syncfusion:IntegerTextBox x:Name="txtA3" HorizontalAlignment="Left" Height="31" Margin="77,136,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="135" Grid.Column="1" MinValue="0" MaxValue="10000"/>
 
                     <Label Content="Legal:" HorizontalAlignment="Left" Margin="91,172,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
-                    <syncfusion:IntegerTextBox x:Name="txtLegal" HorizontalAlignment="Left" Height="31" Margin="77,172,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="135" Grid.Column="1" MinValue="0"/>
+                    <syncfusion:IntegerTextBox x:Name="txtLegal" HorizontalAlignment="Left" Height="31" Margin="77,172,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="135" Grid.Column="1" MinValue="0" MaxValue="10000"/>
 
                     <Label Content="A4:" HorizontalAlignment="Left" Margin="91,208,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
-                    <syncfusion:IntegerTextBox x:Name="txtA4" HorizontalAlignment="Left" Height="31" Margin="77,208,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="135" Grid.Column="1" MinValue="0"/>
+                    <syncfusion:IntegerTextBox x:Name="txtA4" HorizontalAlignment="Left" Height="31" Margin="77,208,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="135" Grid.Column="1" MinValue="0" MaxValue="10000"/>
 
-                    <syncfusion:ButtonAdv x:Name="btnAddtoList" Click="BtnAddtoList_Click" SmallIcon="{x:Null}" HorizontalAlignment="Left" Height="29" Label="Add to List" Margin="65,296,0,0" VerticalAlignment="Top" Width="135" Grid.Column="1"/>
+                    <syncfusion:ButtonAdv x:Name="btnAddtoList" Click="BtnAddtoList_Click" SmallIcon="{x:Null}" HorizontalAlignment="Left" Height="29" Label="Add to List" Margin="75,296,0,0" VerticalAlignment="Top" Width="135" Grid.ColumnSpan="2"/>
+                    <syncfusion:ButtonAdv x:Name="btnRemoveLastItem" Click="BtnRemoveLastItem_Click" SmallIcon="{x:Null}" HorizontalAlignment="Left" Height="29" Label="Remove last item " Margin="153,296,0,0" VerticalAlignment="Top" Width="135" Grid.Column="1"/>
+
                     <Label Content="D.R No:" HorizontalAlignment="Left" Margin="136,376,0,0" VerticalAlignment="Top" Width="89" Grid.Column="1"/>
                     <syncfusion:SfTextBoxExt x:Name="txtDRNo" HorizontalAlignment="Left" Height="31" Margin="242,376,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="135" Grid.Column="1" />
                     <Label Content="O.R No:" HorizontalAlignment="Left" Margin="136,417,0,0" VerticalAlignment="Top" Grid.Column="1"/>
@@ -66,7 +68,7 @@
                         <syncfusion:SfDataGrid.Columns>
                             <syncfusion:GridTextColumn MappingName="Item" Width="125" IsReadOnly="True"  DisplayBinding="{Binding item}"/>
                             <syncfusion:GridTextColumn MappingName="Price" Width="100" IsReadOnly="True"  DisplayBinding="{Binding price}"/>
-                            <syncfusion:GridTextColumn MappingName="Qty" Width="100" DisplayBinding="{Binding qty}"/>
+                            <syncfusion:GridTextColumn MappingName="Qty" Width="100" UpdateTrigger="PropertyChanged" DisplayBinding="{Binding qty}"/>
                             <syncfusion:GridTextColumn MappingName="Total per Item" Width="103" IsReadOnly="True"  DisplayBinding="{Binding totalPerItem}"/>
                         </syncfusion:SfDataGrid.Columns>
                     </syncfusion:SfDataGrid>

@@ -40,7 +40,7 @@
                     <Label Content="Size:" HorizontalAlignment="Left" Margin="38,178,0,0" VerticalAlignment="Top"/>
                     <syncfusion:SfTextBoxExt x:Name="txtSize" HorizontalAlignment="Left" Height="31" Margin="154,178,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" IsEnabled="False"/>
                     <Label Content="Qty:" HorizontalAlignment="Left" Margin="38,214,0,0" VerticalAlignment="Top"/>
-                    <syncfusion:IntegerTextBox x:Name="txtQty" HorizontalAlignment="Left" Height="31" Margin="154,214,0,0" MinWidth="100" MinValue="0" Value="0" NumberGroupSeparator="," TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="120"/>
+                    <syncfusion:IntegerTextBox x:Name="txtQty" HorizontalAlignment="Left" Height="31" Margin="154,214,0,0" MinWidth="100" MinValue="0" Value="0" MaxValue="10000" NumberGroupSeparator="," TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="120"/>
                     <Label Content="Item Price:" HorizontalAlignment="Left" Margin="38,253,0,0" VerticalAlignment="Top"/>
                     <syncfusion:DoubleTextBox x:Name="txtItemPrice" HorizontalAlignment="Left" Height="31" Margin="154,253,0,0" MinWidth="100" NumberGroupSeparator="," TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="120" IsEnabled="False" Value="0.00"/>
                     <Label Content="Total per Item:" HorizontalAlignment="Left" Margin="38,289,0,0" VerticalAlignment="Top"/>

@@ -478,23 +478,59 @@ namespace Goldpoint_Inventory_System.Transactions
                                 try
                                 {
                                     cmd.ExecuteNonQuery();
-                                    MessageBox.Show("Job Order has been cancelled successfully");
-                                    emptyFields();
-                                    emptyService();
-                                    emptyTarp();
-                                    txtJobOrder.IsEnabled = true;
-                                    btnCancelJobOrder.IsEnabled = false;
-                                    btnAddJobOrder.IsEnabled = true;
-                                    btnSaveJobOrder.IsEnabled = true;
-                                    btnAddService.IsEnabled = true;
-                                    btnRemoveLastService.IsEnabled = true;
-                                    btnAddTarp.IsEnabled = true;
                                 }
                                 catch (SqlException ex)
                                 {
                                     MessageBox.Show("An error has been encountered!" + ex);
                                 }
                             }
+                            if(cmbJobOrder.Text == "Printing, Services, etc.")
+                            {
+                                foreach(var item in services)
+                                {
+                                    using(SqlCommand cmd = new SqlCommand("UPDATE InventoryItems set qty = qty + @qty where itemCode = @itemCode", conn))
+                                    {
+                                        cmd.Parameters.AddWithValue("@qty", item.itemQty);
+                                        cmd.Parameters.AddWithValue("@itemCode", item.itemCode);
+                                        try
+                                        {
+                                            cmd.ExecuteNonQuery();
+                                        }
+                                        catch (SqlException ex)
+                                        {
+                                            MessageBox.Show("An error has been encountered!" + ex);
+                                            return;
+                                        }
+                                    }
+
+                                    using (SqlCommand cmd = new SqlCommand("DELETE from ReleasedMaterials where itemCode = @itemCode and DRNo = @drNo", conn))
+                                    {
+                                        cmd.Parameters.AddWithValue("@itemCode", item.itemCode);
+                                        cmd.Parameters.AddWithValue("@drNo", txtDRNo.Text);
+                                        try
+                                        {
+                                            cmd.ExecuteNonQuery();
+                                        }
+                                        catch (SqlException ex)
+                                        {
+                                            MessageBox.Show("An error has been encountered!" + ex);
+                                            return;
+                                        }
+                                    }
+                                }
+                            }
+                            MessageBox.Show("Job Order has been cancelled successfully");
+                            emptyFields();
+                            emptyService();
+                            emptyTarp();
+                            txtJobOrder.IsEnabled = true;
+                            btnCancelJobOrder.IsEnabled = false;
+                            btnAddJobOrder.IsEnabled = true;
+                            btnSaveJobOrder.IsEnabled = true;
+                            btnAddService.IsEnabled = true;
+                            btnRemoveLastService.IsEnabled = true;
+                            btnAddTarp.IsEnabled = true;
+
                             break;
                         case MessageBoxResult.No:
                             return;

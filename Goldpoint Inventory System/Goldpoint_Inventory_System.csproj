@@ -171,6 +171,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>D:\ThemeStudioWpf\bin\Release\Syncfusion.Compression.Base.dll</HintPath>
     </Reference>
+    <Reference Include="Syncfusion.Data.WPF, Version=18.3460.0.35, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89" />
     <Reference Include="Syncfusion.DocIO.Base, Version=18.3460.0.35, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL" />
     <Reference Include="Syncfusion.DocIO.WPF, Version=18.3460.0.35, Culture=neutral, PublicKeyToken=3d67ed1f87d44c89, processorArchitecture=MSIL" />
     <Reference Include="Syncfusion.Licensing, Version=18.3460.0.47, Culture=neutral, PublicKeyToken=632609b4d040f6b4, processorArchitecture=MSIL">

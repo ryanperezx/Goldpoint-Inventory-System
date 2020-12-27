@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Data.SqlClient;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -187,22 +188,42 @@ namespace Goldpoint_Inventory_System.Transactions
                                 return;
                             }
 
-
-                            items.Add(new ItemDataModel
+                            var found = items.FirstOrDefault(x => txtItemCode.Text == x.itemCode);
+                            if (found != null)
                             {
-                                itemCode = txtItemCode.Text,
-                                description = Convert.ToString(reader.GetValue(descriptionIndex)),
-                                type = Convert.ToString(reader.GetValue(typeIndex)),
-                                brand = Convert.ToString(reader.GetValue(brandIndex)),
-                                size = Convert.ToString(reader.GetValue(sizeIndex)),
-                                qty = (int)txtQty.Value,
-                                totalPerItem = (double)txtTotalPerItem.Value
-                            });
+                                items.Add(new ItemDataModel
+                                {
+                                    itemCode = txtItemCode.Text,
+                                    description = Convert.ToString(reader.GetValue(descriptionIndex)),
+                                    type = Convert.ToString(reader.GetValue(typeIndex)),
+                                    brand = Convert.ToString(reader.GetValue(brandIndex)),
+                                    size = Convert.ToString(reader.GetValue(sizeIndex)),
+                                    qty = Convert.ToInt32(found.qty + txtQty.Value),
+                                    totalPerItem = Convert.ToDouble(found.totalPerItem  + txtTotalPerItem.Value)
+                                });
 
+                                foreach (var item in items.Where(x => txtItemCode.Text == x.itemCode).ToList())
+                                {
+                                    items.Remove(item);
+                                    break;
+                                }
+                            }
+                            else
+                            {
+                                items.Add(new ItemDataModel
+                                {
+                                    itemCode = txtItemCode.Text,
+                                    description = Convert.ToString(reader.GetValue(descriptionIndex)),
+                                    type = Convert.ToString(reader.GetValue(typeIndex)),
+                                    brand = Convert.ToString(reader.GetValue(brandIndex)),
+                                    size = Convert.ToString(reader.GetValue(sizeIndex)),
+                                    qty = (int)txtQty.Value,
+                                    totalPerItem = (double)txtTotalPerItem.Value
+                                });
+
+                            }
                             txtTotal.Value += txtTotalPerItem.Value;
                             txtQty.Value = 0;
-
-
 
                         }
                         else
@@ -619,12 +640,15 @@ namespace Goldpoint_Inventory_System.Transactions
 
         private void BtnRemoveLastItem_Click(object sender, RoutedEventArgs e)
         {
-            if(items.Count == 0)
+            if (items.Count == 0)
             {
                 MessageBox.Show("Item list is empty");
             }
             else
             {
+                //deduct to total
+                var last = items.Last();
+                txtTotal.Value -= last.totalPerItem; 
                 items.RemoveAt(items.Count - 1);
             }
         }

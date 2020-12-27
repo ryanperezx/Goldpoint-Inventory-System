@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
+using System.Linq;
 
 namespace Goldpoint_Inventory_System.Transactions
 {
@@ -172,66 +173,162 @@ namespace Goldpoint_Inventory_System.Transactions
         private void BtnAddtoList_Click(object sender, RoutedEventArgs e)
         {
             bool isEmpty = true;
+            //does not update display but does work
             if (!string.IsNullOrEmpty(txtShort.Text) && txtShort.Value != 0)
             {
-                items.Add(new PhotocopyDataModel
+                var found = items.FirstOrDefault(x =>  x.item.Equals("Short") && x.qty > 0);
+                if(found != null)
                 {
-                    item = "Short",
-                    qty = Convert.ToInt32(txtShort.Value),
-                    price = 0.70,
-                    totalPerItem = Convert.ToInt32(txtShort.Value) * 0.70
-                });
-                total += Convert.ToInt32(txtShort.Value) * 0.70;
+                    items.Add(new PhotocopyDataModel
+                    {
+                        item = "Short",
+                        qty = Convert.ToInt32(found.qty + txtShort.Value),
+                        price = 0.70,
+                        totalPerItem = Convert.ToInt64(found.qty + txtShort.Value) * 0.70
+                    });
+
+                    foreach (var item in items.Where(x => x.item.Equals("Short")).ToList())
+                    {
+                        items.Remove(item);
+                        break;
+                    }
+                }
+                else
+                {
+                    items.Add(new PhotocopyDataModel
+                    {
+                        item = "Short",
+                        qty = Convert.ToInt32(txtShort.Value),
+                        price = 0.70,
+                        totalPerItem = Convert.ToInt64(txtShort.Value) * 0.70
+                    });
+                }
+                total += Convert.ToInt64(txtShort.Value) * 0.70;
                 isEmpty = false;
             }
             if (!string.IsNullOrEmpty(txtLong.Text) && txtLong.Value != 0)
             {
-                items.Add(new PhotocopyDataModel
+                var found = items.FirstOrDefault(x => x.item.Equals("Long") && x.qty > 0);
+                if (found != null)
                 {
-                    item = "Long",
-                    qty = Convert.ToInt32(txtLong.Value),
-                    price = 0.80,
-                    totalPerItem = Convert.ToInt32(txtLong.Value) * 0.80
-                });
-                total += Convert.ToInt32(txtLong.Value) * 0.80;
+                    items.Add(new PhotocopyDataModel
+                    {
+                        item = "Long",
+                        qty = Convert.ToInt32(found.qty + txtLong.Value),
+                        price = 0.80,
+                        totalPerItem = Convert.ToInt64(found.qty + txtLong.Value) * 0.80
+                    });
+                }
+                else
+                {
+                    items.Add(new PhotocopyDataModel
+                    {
+                        item = "Long",
+                        qty = Convert.ToInt32(txtLong.Value),
+                        price = 0.80,
+                        totalPerItem = Convert.ToInt64(txtLong.Value) * 0.80
+                    });
+                }
+
+                total += Convert.ToInt64(txtLong.Value) * 0.80;
                 isEmpty = false;
 
             }
             if (!string.IsNullOrEmpty(txtLegal.Text) && txtLegal.Value != 0)
             {
-                items.Add(new PhotocopyDataModel
+                var found = items.FirstOrDefault(x => x.item.Equals("Legal") && x.qty > 0);
+                if (found != null)
                 {
-                    item = "Legal",
-                    qty = Convert.ToInt32(txtLegal.Value),
-                    price = 1.50,
-                    totalPerItem = Convert.ToInt32(txtLegal.Value) * 1.50
-                });
-                total += Convert.ToInt32(txtLegal.Value) * 1.50;
+                    items.Add(new PhotocopyDataModel
+                    {
+                        item = "Legal",
+                        qty = Convert.ToInt32(found.qty + txtLegal.Value),
+                        price = 1.50,
+                        totalPerItem = Convert.ToInt64(found.qty + txtLegal.Value) * 1.50
+                    });
+
+                    foreach (var item in items.Where(x => x.item.Equals("Legal")).ToList())
+                    {
+                        items.Remove(item);
+                        break;
+                    }
+                }
+                else
+                {
+                    items.Add(new PhotocopyDataModel
+                    {
+                        item = "Legal",
+                        qty = Convert.ToInt32(txtLegal.Value),
+                        price = 1.50,
+                        totalPerItem = Convert.ToInt64(txtLegal.Value) * 1.50
+                    });
+                }
+
+                total += Convert.ToInt64(txtLegal.Value) * 1.50;
                 isEmpty = false;
             }
             if (!string.IsNullOrEmpty(txtA4.Text) && txtA4.Value != 0)
             {
-                items.Add(new PhotocopyDataModel
+                var found = items.FirstOrDefault(x => x.item.Equals("A4") && x.qty > 0);
+                if (found != null)
                 {
-                    item = "A4",
-                    qty = Convert.ToInt32(txtA4.Value),
-                    price = 0.90,
-                    totalPerItem = Convert.ToInt32(txtLegal.Value) * 0.90
-                });
-                total += Convert.ToInt32(txtA4.Value) * 0.90;
+                    items.Add(new PhotocopyDataModel
+                    {
+                        item = "A4",
+                        qty = Convert.ToInt32(found.qty + txtA4.Value),
+                        price = 0.90,
+                        totalPerItem = Convert.ToInt64(found.qty + txtLegal.Value) * 0.90
+                    });
+
+                    foreach (var item in items.Where(x => x.item.Equals("A4")).ToList())
+                    {
+                        items.Remove(item);
+                        break;
+                    }
+                }
+                else
+                {
+                    items.Add(new PhotocopyDataModel
+                    {
+                        item = "A4",
+                        qty = Convert.ToInt32(txtA4.Value),
+                        price = 0.90,
+                        totalPerItem = Convert.ToInt64(txtLegal.Value) * 0.90
+                    });
+                }
+                total += Convert.ToInt64(txtA4.Value) * 0.90;
                 isEmpty = false;
             }
-            //pallet is what
             if (!string.IsNullOrEmpty(txtA3.Text) && txtA3.Value != 0)
             {
-                items.Add(new PhotocopyDataModel
+                var found = items.FirstOrDefault(x => x.item.Equals("A3") && x.qty > 0);
+                if (found != null)
                 {
-                    item = "A3",
-                    qty = Convert.ToInt32(txtA3.Value),
-                    price = 0.90,
-                    totalPerItem = Convert.ToInt32(txtA3.Value) * 5.00
-                });
-                total += Convert.ToInt32(txtA3.Value) * 5.00;
+                    items.Add(new PhotocopyDataModel
+                    {
+                        item = "A3",
+                        qty = Convert.ToInt32(found.qty + txtA3.Value),
+                        price = 0.90,
+                        totalPerItem = Convert.ToInt64(found.qty + txtA3.Value) * 5.00
+                    });
+
+                    foreach (var item in items.Where(x => x.item.Equals("A3")).ToList())
+                    {
+                        items.Remove(item);
+                        break;
+                    }
+                }
+                else
+                {
+                    items.Add(new PhotocopyDataModel
+                    {
+                        item = "A3",
+                        qty = Convert.ToInt32(txtA3.Value),
+                        price = 0.90,
+                        totalPerItem = Convert.ToInt64(txtA3.Value) * 5.00
+                    });
+                }
+                total += Convert.ToInt64(txtA3.Value) * 5.00;
                 isEmpty = false;
             }
             if (isEmpty)
@@ -467,6 +564,22 @@ namespace Goldpoint_Inventory_System.Transactions
                 }
             }
 
+        }
+
+        private void BtnRemoveLastItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (items.Count == 0)
+            {
+                MessageBox.Show("Item list is empty");
+            }
+            else
+            {
+                //deduct to total
+                var last = items.Last();
+                txtCustTotal.Value -= last.totalPerItem;
+                txtItemTotal.Value -= last.totalPerItem;
+                items.RemoveAt(items.Count - 1);
+            }
         }
     }
 }
