@@ -8,11 +8,54 @@ namespace Goldpoint_Inventory_System
 {
     class UserTransactionDataModel
     {
+        public string date
+        {
+            get;
+            set;
+        }
+
         public string deadline
         {
             get;
             set;
         }
+
+        public bool isDeadline
+        {
+            get;
+            set;
+        }
+
+        public string service
+        {
+            get;
+            set;
+        }
+
+        public string address
+        {
+            get;
+            set;
+        }
+
+        public string contactNo
+        {
+            get;
+            set;
+        }
+
+        public string claimed
+        {
+            get;
+            set;
+        }
+
+        public int jobOrderNo
+        {
+            get;
+            set;
+        }
+
 
         public string receipt
         {
@@ -27,12 +70,6 @@ namespace Goldpoint_Inventory_System
         }
 
         public string status
-        {
-            get;
-            set;
-        }
-
-        public string service
         {
             get;
             set;

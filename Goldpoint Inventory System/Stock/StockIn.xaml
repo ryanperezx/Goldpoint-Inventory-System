@@ -45,7 +45,7 @@
         </syncfusion:ComboBoxAdv>
 
         <syncfusion:ButtonAdv SmallIcon="{x:Null}" x:Name="btnAddToList" Click="BtnAddToList_Click" Content="Add to list" HorizontalAlignment="Left" Height="29" Label="Add to list" Margin="123,525,0,0" VerticalAlignment="Top" Width="120"/>
-        <syncfusion:ButtonAdv SmallIcon="{x:Null}" x:Name="btnSave" Click="BtnSave_Click" Content="Save" HorizontalAlignment="Left" Height="29" Label="Save" Margin="330,525,0,0" VerticalAlignment="Top" Width="97"/>
+        <syncfusion:ButtonAdv SmallIcon="{x:Null}" x:Name="btnSave" Click="BtnSave_Click" Content="" HorizontalAlignment="Left" Height="29" Label="Add list to stock" Margin="330,525,0,0" VerticalAlignment="Top" Width="120"/>
         <syncfusion:SfDataGrid x:Name="dgStockIn" HorizontalAlignment="Right" Height="451" Margin="0,80,72,0" VerticalAlignment="Top" Width="770" AutoGenerateColumns="False" >
             <syncfusion:SfDataGrid.Columns>
                 <syncfusion:GridTextColumn MappingName="Item Code" DisplayBinding="{Binding itemCode}" Width="100"/>

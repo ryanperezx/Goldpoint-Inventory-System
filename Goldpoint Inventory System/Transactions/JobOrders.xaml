@@ -8,33 +8,45 @@
              mc:Ignorable="d"
              xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
              d:DesignHeight="600" d:DesignWidth="1350"
-        Height="600"
+        Height="625"
         Width="1350"
              FontSize="16"
              Background="White" Title="Job Orders">
+
+    <Window.Resources>
+        <Style TargetType="syncfusion:VirtualizingCellsControl">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding isDeadline}" Value="True">
+                    <Setter Property="Background" Value="IndianRed" />
+                    <Setter Property="Foreground" Value="White" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
     <Grid>
         <Label Content="Job Order No:" HorizontalAlignment="Left" Margin="82,25,0,0" VerticalAlignment="Top"/>
-        <syncfusion:SfTextBoxExt HorizontalAlignment="Left" Height="31" Margin="196,25,0,0" VerticalAlignment="Top" Width="155"/>
+        <syncfusion:SfTextBoxExt x:Name="txtJobOrder" HorizontalAlignment="Left" Height="31" Margin="196,25,0,0" VerticalAlignment="Top" Width="155"/>
         <Label Content="Service:" HorizontalAlignment="Left" Margin="377,25,0,0" VerticalAlignment="Top"/>
-        <Label VerticalAlignment="Top" HorizontalAlignment="Left" Height="30" Width="30" Cursor="Hand" Margin="650,26,0,0">
+        <Label x:Name="btnSearchJobOrder" VerticalAlignment="Top" HorizontalAlignment="Left" Height="30" Width="30" Cursor="Hand" Margin="650,26,0,0" MouseLeftButtonDown="BtnSearchJobOrder_MouseLeftButtonDown">
             <iconPacks:PackIconMaterialLight Kind="Magnify" Height="20" Width="20" Foreground="DarkGoldenrod" />
         </Label>
-        <Label Content="Customer Name:" HorizontalAlignment="Left" Margin="766,25,0,0" VerticalAlignment="Top"/>
-        <syncfusion:SfTextBoxExt HorizontalAlignment="Left" Height="31" Margin="899,25,0,0" VerticalAlignment="Top" Width="170"/>
-        <syncfusion:ComboBoxAdv HorizontalAlignment="Left" Height="31" Margin="445,25,0,0" VerticalAlignment="Top" Width="200">
-            <syncfusion:ComboBoxItemAdv>Job Order (Tarpaulin)</syncfusion:ComboBoxItemAdv>
-            <syncfusion:ComboBoxItemAdv>Job Order (Printing, Services, etc.)</syncfusion:ComboBoxItemAdv>
+        <Label Content="Customer Name:" HorizontalAlignment="Left" Margin="722,25,0,0" VerticalAlignment="Top"/>
+        <syncfusion:SfTextBoxExt x:Name="txtCustName" TextChanged="TxtCustName_TextChanged" HorizontalAlignment="Left" Height="31" Margin="855,25,0,0" VerticalAlignment="Top" Width="170"/>
+        <syncfusion:ComboBoxAdv x:Name="cmbJobOrder" HorizontalAlignment="Left" Height="31" Margin="445,25,0,0" VerticalAlignment="Top" Width="200">
+            <syncfusion:ComboBoxItemAdv>Printing, Services, etc.</syncfusion:ComboBoxItemAdv>
+            <syncfusion:ComboBoxItemAdv>Tarpaulin</syncfusion:ComboBoxItemAdv>
         </syncfusion:ComboBoxAdv>
-        <syncfusion:SfDataGrid x:Name="dgJobOrders" HorizontalAlignment="Center" Height="485" Margin="78,75,64,7" VerticalAlignment="Center" Width="1200" ItemsSource="{Binding}" AutoGenerateColumns="False">
+        <syncfusion:SfDataGrid x:Name="dgJobOrders" HorizontalAlignment="Left" Height="485" Margin="80,50 ,0,20" VerticalAlignment="Center" Width="1200" ItemsSource="{Binding}" AutoGenerateColumns="False">
             <syncfusion:SfDataGrid.Columns>
                 <syncfusion:GridTextColumn MappingName="Date" Width="100" DisplayBinding="{Binding date}"/>
                 <syncfusion:GridTextColumn MappingName="Deadline" Width="150" DisplayBinding="{Binding deadline}"/>
-                <syncfusion:GridTextColumn MappingName="Job Order No" Width="150" DisplayBinding="{Binding jobOrder}"/>
+                <syncfusion:GridTextColumn MappingName="Job Order No" Width="150" DisplayBinding="{Binding jobOrderNo}"/>
                 <syncfusion:GridTextColumn MappingName="Service" Width="150" DisplayBinding="{Binding service}"/>
                 <syncfusion:GridTextColumn MappingName="Customer Name" Width="228" DisplayBinding="{Binding customerName}"/>
-                <syncfusion:GridTextColumn MappingName="Contact No" Width="150" DisplayBinding="{Binding service}"/>
-                <syncfusion:GridTextColumn MappingName="Status" Width="150" DisplayBinding="{Binding service}"/>
-                <syncfusion:GridTextColumn MappingName="Claimed" Width="120" DisplayBinding="{Binding service}"/>
+                <syncfusion:GridTextColumn MappingName="Address" Width="200" DisplayBinding="{Binding address}"/>
+                <syncfusion:GridTextColumn MappingName="Contact No" Width="120" DisplayBinding="{Binding contactNo}"/>
+                <syncfusion:GridTextColumn MappingName="Status" Width="150" DisplayBinding="{Binding status}"/>
+                <syncfusion:GridTextColumn MappingName="Claimed" Width="120" DisplayBinding="{Binding claimed}"/>
 
             </syncfusion:SfDataGrid.Columns>
         </syncfusion:SfDataGrid>

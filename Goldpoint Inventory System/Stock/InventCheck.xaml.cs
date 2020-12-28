@@ -56,7 +56,7 @@ namespace Goldpoint_Inventory_System.Stock
                                 int fastMovingIndex = reader.GetOrdinal("fastMoving");
 
                                 bool criticalState = false;
-                                if (Convert.ToInt16(reader.GetValue(qtyIndex)) < Convert.ToInt16(reader.GetValue(criticalLevelIndex)))
+                                if (Convert.ToInt32(reader.GetValue(qtyIndex)) < Convert.ToInt32(reader.GetValue(criticalLevelIndex)))
                                 {
                                     criticalState = true;
                                 }
@@ -70,8 +70,8 @@ namespace Goldpoint_Inventory_System.Stock
                                     type = Convert.ToString(reader.GetValue(typeIndex)),
                                     brand = Convert.ToString(reader.GetValue(brandIndex)),
                                     size = Convert.ToString(reader.GetValue(sizeIndex)),
-                                    qty = Convert.ToInt16(reader.GetValue(qtyIndex)),
-                                    criticalLvl = Convert.ToInt16(reader.GetValue(criticalLevelIndex)),
+                                    qty = Convert.ToInt32(reader.GetValue(qtyIndex)),
+                                    criticalLvl = Convert.ToInt32(reader.GetValue(criticalLevelIndex)),
                                     criticalState = criticalState,
                                     msrp = Convert.ToDouble(reader.GetValue(msrpIndex)),
                                     price = Convert.ToDouble(reader.GetValue(priceIndex)),
@@ -240,7 +240,7 @@ namespace Goldpoint_Inventory_System.Stock
                                 int fastMovingIndex = reader.GetOrdinal("fastMoving");
 
                                 bool criticalState = false;
-                                if (Convert.ToInt16(reader.GetValue(qtyIndex)) < Convert.ToInt16(reader.GetValue(criticalLevelIndex)))
+                                if (Convert.ToInt32(reader.GetValue(qtyIndex)) < Convert.ToInt32(reader.GetValue(criticalLevelIndex)))
                                 {
                                     criticalState = true;
                                 }
@@ -252,8 +252,8 @@ namespace Goldpoint_Inventory_System.Stock
                                     type = Convert.ToString(reader.GetValue(typeIndex)),
                                     brand = Convert.ToString(reader.GetValue(brandIndex)),
                                     size = Convert.ToString(reader.GetValue(sizeIndex)),
-                                    qty = Convert.ToInt16(reader.GetValue(qtyIndex)),
-                                    criticalLvl = Convert.ToInt16(reader.GetValue(criticalLevelIndex)),
+                                    qty = Convert.ToInt32(reader.GetValue(qtyIndex)),
+                                    criticalLvl = Convert.ToInt32(reader.GetValue(criticalLevelIndex)),
                                     criticalState = criticalState,
                                     msrp = Convert.ToDouble(reader.GetValue(msrpIndex)),
                                     price = Convert.ToDouble(reader.GetValue(priceIndex)),
@@ -275,7 +275,6 @@ namespace Goldpoint_Inventory_System.Stock
         private void CmbType_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             string text = (sender as Syncfusion.Windows.Tools.Controls.ComboBoxAdv).SelectedItem as string;
-            //gets old value before searching
             if (text != null)
             {
                 items.Clear();
@@ -304,7 +303,7 @@ namespace Goldpoint_Inventory_System.Stock
                                 int fastMovingIndex = reader.GetOrdinal("fastMoving");
 
                                 bool criticalState = false;
-                                if (Convert.ToInt16(reader.GetValue(qtyIndex)) < Convert.ToInt16(reader.GetValue(criticalLevelIndex)))
+                                if (Convert.ToInt32(reader.GetValue(qtyIndex)) < Convert.ToInt32(reader.GetValue(criticalLevelIndex)))
                                 {
                                     criticalState = true;
                                 }
@@ -316,8 +315,8 @@ namespace Goldpoint_Inventory_System.Stock
                                     type = Convert.ToString(reader.GetValue(typeIndex)),
                                     brand = Convert.ToString(reader.GetValue(brandIndex)),
                                     size = Convert.ToString(reader.GetValue(sizeIndex)),
-                                    qty = Convert.ToInt16(reader.GetValue(qtyIndex)),
-                                    criticalLvl = Convert.ToInt16(reader.GetValue(criticalLevelIndex)),
+                                    qty = Convert.ToInt32(reader.GetValue(qtyIndex)),
+                                    criticalLvl = Convert.ToInt32(reader.GetValue(criticalLevelIndex)),
                                     criticalState = criticalState,
                                     msrp = Convert.ToDouble(reader.GetValue(msrpIndex)),
                                     price = Convert.ToDouble(reader.GetValue(priceIndex)),

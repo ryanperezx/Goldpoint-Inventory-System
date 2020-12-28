@@ -1,16 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Collections.ObjectModel;
+using System.Data.SqlClient;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace Goldpoint_Inventory_System.Transactions
 {
@@ -19,9 +11,185 @@ namespace Goldpoint_Inventory_System.Transactions
     /// </summary>
     public partial class JobOrders : Window
     {
+
+        ObservableCollection<UserTransactionDataModel> customers = new ObservableCollection<UserTransactionDataModel>();
         public JobOrders()
         {
             InitializeComponent();
+            dgJobOrders.ItemsSource = customers;
+            dgJobOrders.RowHeight = 40;
+            fillUpJobOrders();
+        }
+
+        private void TxtCustName_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (!string.IsNullOrEmpty(txtCustName.Text))
+            {
+                SqlConnection conn = DBUtils.GetDBConnection();
+                conn.Open();
+                using (SqlCommand cmd = new SqlCommand("SELECT * from TransactionDetails where TRIM(jobOrderNo) is not null AND DATALENGTH(jobOrderNo) > 0 and (service = 'Printing, Services, etc.' or service = 'Tarpaulin') and  customerName LIKE @custName and inaccessible = 1", conn))
+                {
+                    cmd.Parameters.AddWithValue("@custName", '%' + txtCustName.Text + '%');
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        customers.Clear();
+                        if (reader.HasRows)
+                        {
+                            while (reader.Read())
+                            {
+                                int dateIndex = reader.GetOrdinal("date");
+                                int deadlineIndex = reader.GetOrdinal("deadline");
+                                int jobOrderNoIndex = reader.GetOrdinal("jobOrderNo");
+                                int serviceIndex = reader.GetOrdinal("service");
+                                int customerNameIndex = reader.GetOrdinal("customerName");
+                                int addressIndex = reader.GetOrdinal("address");
+                                int contactNoIndex = reader.GetOrdinal("contactNo");
+                                int statusIndex = reader.GetOrdinal("status");
+                                int claimedIndex = reader.GetOrdinal("claimed");
+
+                                bool isDeadline = false;
+
+                                if (DateTime.Compare(Convert.ToDateTime(reader.GetValue(deadlineIndex)), DateTime.Today) >= 0)
+                                {
+                                    isDeadline = true;
+                                }
+
+                                customers.Add(new UserTransactionDataModel
+                                {
+                                    date = Convert.ToString(reader.GetValue(dateIndex)),
+                                    deadline = Convert.ToString(reader.GetValue(deadlineIndex)),
+                                    isDeadline = isDeadline,
+                                    jobOrderNo = Convert.ToInt32(reader.GetValue(jobOrderNoIndex)),
+                                    service = Convert.ToString(reader.GetValue(serviceIndex)),
+                                    customerName = Convert.ToString(reader.GetValue(customerNameIndex)),
+                                    address = Convert.ToString(reader.GetValue(addressIndex)),
+                                    contactNo = Convert.ToString(reader.GetValue(contactNoIndex)),
+                                    status = Convert.ToString(reader.GetValue(statusIndex)),
+                                    claimed = Convert.ToString(reader.GetValue(claimedIndex)),
+                                });
+                            }
+                        }
+                        else
+                        {
+                            fillUpJobOrders();
+                        }
+                    }
+                }
+            }
+        }
+
+        private void fillUpJobOrders()
+        {
+            SqlConnection conn = DBUtils.GetDBConnection();
+            conn.Open();
+            using(SqlCommand cmd = new SqlCommand("SELECT * from TransactionDetails where inaccessible = 1 and (service = 'Printing, Services, etc.' or service = 'Tarpaulin')", conn))
+            {
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    customers.Clear();
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            int dateIndex = reader.GetOrdinal("date");
+                            int deadlineIndex = reader.GetOrdinal("deadline");
+                            int jobOrderNoIndex = reader.GetOrdinal("jobOrderNo");
+                            int serviceIndex = reader.GetOrdinal("service");
+                            int customerNameIndex = reader.GetOrdinal("customerName");
+                            int addressIndex = reader.GetOrdinal("address");
+                            int contactNoIndex = reader.GetOrdinal("contactNo");
+                            int statusIndex = reader.GetOrdinal("status");
+                            int claimedIndex = reader.GetOrdinal("claimed");
+
+                            bool isDeadline = false;
+
+                            if (DateTime.Compare(Convert.ToDateTime(reader.GetValue(deadlineIndex)), DateTime.Today) >= 0)
+                            {
+                                 isDeadline = true;
+                            }
+
+                            customers.Add(new UserTransactionDataModel
+                            {
+                                date = Convert.ToString(reader.GetValue(dateIndex)),
+                                deadline = Convert.ToString(reader.GetValue(deadlineIndex)),
+                                isDeadline = isDeadline,
+                                jobOrderNo = Convert.ToInt32(reader.GetValue(jobOrderNoIndex)),
+                                service = Convert.ToString(reader.GetValue(serviceIndex)),
+                                customerName = Convert.ToString(reader.GetValue(customerNameIndex)),
+                                address = Convert.ToString(reader.GetValue(addressIndex)),
+                                contactNo = Convert.ToString(reader.GetValue(contactNoIndex)),
+                                status = Convert.ToString(reader.GetValue(statusIndex)),
+                                claimed = Convert.ToString(reader.GetValue(claimedIndex)),
+                            });
+                             
+                        }
+                    }
+                }
+            }
+        }
+
+        private void BtnSearchJobOrder_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if(string.IsNullOrEmpty(txtJobOrder.Text) || string.IsNullOrEmpty(cmbJobOrder.Text))
+            {
+                MessageBox.Show("One or more fields are empty!");
+            }
+            else
+            {
+                SqlConnection conn = DBUtils.GetDBConnection();
+                conn.Open();
+                using (SqlCommand cmd = new SqlCommand("SELECT * from TransactionDetails where jobOrderNo = @jobOrderNo and service = @service and inaccessible = 1", conn))
+                {
+                    cmd.Parameters.AddWithValue("@jobOrderNo", txtJobOrder.Text);
+                    cmd.Parameters.AddWithValue("@service", cmbJobOrder.Text);
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        customers.Clear();
+                        if (reader.HasRows)
+                        {
+                            while (reader.Read())
+                            {
+                                int dateIndex = reader.GetOrdinal("date");
+                                int deadlineIndex = reader.GetOrdinal("deadline");
+                                int jobOrderNoIndex = reader.GetOrdinal("jobOrderNo");
+                                int serviceIndex = reader.GetOrdinal("service");
+                                int customerNameIndex = reader.GetOrdinal("customerName");
+                                int addressIndex = reader.GetOrdinal("address");
+                                int contactNoIndex = reader.GetOrdinal("contactNo");
+                                int statusIndex = reader.GetOrdinal("status");
+                                int claimedIndex = reader.GetOrdinal("claimed");
+
+                                bool isDeadline = false;
+
+                                if (DateTime.Compare(Convert.ToDateTime(reader.GetValue(deadlineIndex)), DateTime.Today) >= 0)
+                                {
+                                    isDeadline = true;
+                                }
+
+                                customers.Add(new UserTransactionDataModel
+                                {
+                                    date = Convert.ToString(reader.GetValue(dateIndex)),
+                                    deadline = Convert.ToString(reader.GetValue(deadlineIndex)),
+                                    isDeadline = isDeadline,
+                                    jobOrderNo = Convert.ToInt32(reader.GetValue(jobOrderNoIndex)),
+                                    service = Convert.ToString(reader.GetValue(serviceIndex)),
+                                    customerName = Convert.ToString(reader.GetValue(customerNameIndex)),
+                                    address = Convert.ToString(reader.GetValue(addressIndex)),
+                                    contactNo = Convert.ToString(reader.GetValue(contactNoIndex)),
+                                    status = Convert.ToString(reader.GetValue(statusIndex)),
+                                    claimed = Convert.ToString(reader.GetValue(claimedIndex)),
+                                });
+                            }
+                        }
+                        else
+                        {
+                            MessageBox.Show("Job Order does not exist");
+                            fillUpJobOrders();
+                            return;
+                        }
+                    }
+                }
+            }
         }
     }
 }

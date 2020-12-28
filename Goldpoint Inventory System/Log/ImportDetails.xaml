@@ -31,7 +31,7 @@
                 <syncfusion:GridTextColumn MappingName="Qty" Width="90" DisplayBinding="{Binding qty}"/>
                 <syncfusion:GridTextColumn MappingName="Remarks" Width="170"  DisplayBinding="{Binding remarks}"/>
                 <syncfusion:GridTextColumn MappingName="Replacement" Width="100"  DisplayBinding="{Binding replacement}"/>
-                <syncfusion:GridTextColumn MappingName="Fast moving" Width="150"  DisplayBinding="{Binding criticalLvl}"/>
+                <syncfusion:GridTextColumn MappingName="Fast moving" Width="150"  DisplayBinding="{Binding fastMoving}"/>
             </syncfusion:SfDataGrid.Columns>
         </syncfusion:SfDataGrid>
     </Grid>

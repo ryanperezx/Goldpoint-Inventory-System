@@ -17,6 +17,7 @@ namespace Goldpoint_Inventory_System.Log
         {
             InitializeComponent();
             dgDetails.ItemsSource = details;
+            importedToday();
         }
 
         private void BtnRefresh_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -25,6 +26,7 @@ namespace Goldpoint_Inventory_System.Log
             txtItemCode.Text = null;
             txtDateFrom.Text = DateTime.Today.ToShortDateString();
             txtDateTo.Text = DateTime.Today.ToShortDateString();
+            importedToday();
         }
 
 
@@ -44,8 +46,6 @@ namespace Goldpoint_Inventory_System.Log
                 {
                     if (!string.IsNullOrEmpty(txtDateTo.Text))
                     {
-
-
                         using (SqlCommand cmd = new SqlCommand("SELECT id.itemCode, id.date, ii.description, id.qty, id.replacement, id.fastMoving, id.remarks from ImportDetails id LEFT JOIN InventoryItems ii on id.itemCode = ii.itemCode where CAST(id.date AS date) between @dateFrom and @dateTo", conn))
                         {
                             cmd.Parameters.AddWithValue("@dateFrom", txtDateFrom.Text);
@@ -348,6 +348,44 @@ namespace Goldpoint_Inventory_System.Log
                     }
                 }
 
+            }
+        }
+
+        private void importedToday()
+        {
+            SqlConnection conn = DBUtils.GetDBConnection();
+            conn.Open();
+            using (SqlCommand cmd = new SqlCommand("SELECT id.itemCode, id.date, ii.description, id.qty, id.replacement, id.fastMoving, id.remarks from ImportDetails id LEFT JOIN InventoryItems ii on id.itemCode = ii.itemCode where CAST(id.date AS date) = @date", conn))
+            {
+                cmd.Parameters.AddWithValue("@date", DateTime.Today.ToShortDateString());
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    details.Clear();
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            int itemCodeIndex = reader.GetOrdinal("itemCode");
+                            int dateIndex = reader.GetOrdinal("date");
+                            int descriptionIndex = reader.GetOrdinal("description");
+                            int qtyIndex = reader.GetOrdinal("qty");
+                            int replacementIndex = reader.GetOrdinal("replacement");
+                            int fastMovingIndex = reader.GetOrdinal("fastMoving");
+                            int remarksIndex = reader.GetOrdinal("remarks");
+
+                            details.Add(new ItemDataModel
+                            {
+                                date = Convert.ToString(reader.GetValue(dateIndex)),
+                                itemCode = Convert.ToString(reader.GetValue(itemCodeIndex)),
+                                description = Convert.ToString(reader.GetValue(descriptionIndex)),
+                                qty = Convert.ToInt32(reader.GetValue(qtyIndex)),
+                                replacement = Convert.ToString(reader.GetValue(replacementIndex)),
+                                fastMoving = Convert.ToString(reader.GetValue(fastMovingIndex))
+                            });
+
+                        }
+                    }
+                }
             }
         }
     }
