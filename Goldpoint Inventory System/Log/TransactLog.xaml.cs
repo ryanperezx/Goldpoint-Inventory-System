@@ -18,6 +18,8 @@ namespace Goldpoint_Inventory_System.Log
         {
             InitializeComponent();
             dgTransaction.ItemsSource = log;
+            dgTransaction.RowHeight = 50;
+
         }
 
         private void LblSearchTransact_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)

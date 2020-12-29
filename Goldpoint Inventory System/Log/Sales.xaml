@@ -13,7 +13,7 @@
              FontSize="16"
              Background="White">
     <Grid>
-        <Label VerticalAlignment="Top" HorizontalAlignment="Right" Height="40" Width="40" ToolTip="Reset" Cursor="Hand">
+        <Label x:Name="btnReset" MouseLeftButtonDown="BtnReset_MouseLeftButtonDown" VerticalAlignment="Top" HorizontalAlignment="Right" Height="40" Width="40" ToolTip="Reset" Cursor="Hand">
             <iconPacks:PackIconMaterialLight Kind="Refresh" Height="30" Width="30" Foreground="DarkGoldenrod"/>
         </Label>
         <Label x:Name="txtSearch" MouseLeftButtonDown="TxtSearch_MouseLeftButtonDown" VerticalAlignment="Top" HorizontalAlignment="Left" Height="30" Width="30" ToolTip="Search Sales" Cursor="Hand" Margin="254,79,0,0">
@@ -39,7 +39,7 @@
                     </TextBlock>
                 </Expander.Header>
                 <Grid Height="450">
-                    <syncfusion:SfDataGrid x:Name="dgDailyService"  HorizontalAlignment="Right" Height="400" VerticalAlignment="Top" Width="300" ItemsSource="{Binding}" AutoGenerateColumns="False">
+                    <syncfusion:SfDataGrid x:Name="dgDailyService" HorizontalAlignment="Right" Height="400" VerticalAlignment="Top" Width="300" ItemsSource="{Binding}" AutoGenerateColumns="False">
                         <syncfusion:SfDataGrid.Columns>
                             <syncfusion:GridTextColumn HeaderText="Service" DisplayBinding="{Binding service}"/>
                             <syncfusion:GridTextColumn HeaderText="Total" DisplayBinding="{Binding sales}"/>

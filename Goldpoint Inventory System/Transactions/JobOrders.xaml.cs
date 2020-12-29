@@ -103,9 +103,9 @@ namespace Goldpoint_Inventory_System.Transactions
 
                             bool isDeadline = false;
 
-                            if (DateTime.Compare(Convert.ToDateTime(reader.GetValue(deadlineIndex)), DateTime.Today) >= 0)
+                            if (DateTime.Compare(DateTime.Today, Convert.ToDateTime(reader.GetValue(deadlineIndex))) >= 0)
                             {
-                                 isDeadline = true;
+                                isDeadline = true;
                             }
 
                             customers.Add(new UserTransactionDataModel
@@ -161,7 +161,7 @@ namespace Goldpoint_Inventory_System.Transactions
 
                                 bool isDeadline = false;
 
-                                if (DateTime.Compare(Convert.ToDateTime(reader.GetValue(deadlineIndex)), DateTime.Today) >= 0)
+                                if (DateTime.Compare(DateTime.Today, Convert.ToDateTime(reader.GetValue(deadlineIndex))) >= 0)
                                 {
                                     isDeadline = true;
                                 }

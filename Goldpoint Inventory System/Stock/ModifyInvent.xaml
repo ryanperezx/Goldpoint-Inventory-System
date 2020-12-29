@@ -51,7 +51,7 @@
                     <syncfusion:DoubleTextBox x:Name="txtMSRP" HorizontalAlignment="Left" Height="31" Margin="668,112,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="120"  IsEnabled="False" MinValue="0"/>
                     <Label Content="Dealers Price:" HorizontalAlignment="Left" Margin="559,148,0,0" VerticalAlignment="Top"/>
                     <syncfusion:DoubleTextBox x:Name="txtDealersPrice" HorizontalAlignment="Left" Height="31" Margin="668,148,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"  IsEnabled="False" MinValue="0"/>
-                    
+
                     <Button x:Name="btnAddItem" Click="BtnAddItem_Click" Content="Add" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="225,336,0,0"/>
                     <Button x:Name="btnSaveItem" Click="BtnSaveItem_Click" Content="Save" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="355,336,0,0" IsEnabled="False"/>
                     <Button x:Name="btnUpdateItem" Click="BtnUpdateItem_Click" Content="Update" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="490,336,0,0" IsEnabled="False"/>
@@ -60,15 +60,11 @@
                 </Grid>
             </Expander>
             <Expander Header="Add/remove Type"  HorizontalAlignment="Left" VerticalAlignment="Top" Width="900" IsExpanded="{Binding SelectedExpander, ConverterParameter=2, Converter={StaticResource ExpanderToBooleanConverter}, Mode=TwoWay}" FontSize="16">
-                <Grid Height="375">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width="1*"/>
-                    </Grid.ColumnDefinitions>
-                    <Label Content="Type:"  HorizontalAlignment="Left" Margin="105,90,0,0" VerticalAlignment="Top" Grid.Column="1"/>
-                    <syncfusion:ComboBoxAdv x:Name="cmbTypeAdd" IsEditable="true" HorizontalAlignment="Left" Height="31" Margin="165,90,0,0" VerticalAlignment="Top" Width="120" Grid.Column="1"/>
-                    <Button Content="Add" x:Name="btnAddType" Click="BtnAddType_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="85,236,0,0" Grid.Column="1"/>
-                    <Button Content="Delete" x:Name="btnDeleteType" Click="BtnDeleteType_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="243,236,0,0" Grid.Column="1"/>
+                <Grid Height="200">
+                    <Label Content="Type:"  HorizontalAlignment="Left" Margin="39,50,0,0" VerticalAlignment="Top"/>
+                    <syncfusion:ComboBoxAdv x:Name="cmbTypeAdd" IsEditable="true" HorizontalAlignment="Left" Height="31" Margin="99,50,0,0" VerticalAlignment="Top" Width="145"/>
+                    <Button Content="Add" x:Name="btnAddType" Click="BtnAddType_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="39,141,0,0"/>
+                    <Button Content="Delete" x:Name="btnDeleteType" Click="BtnDeleteType_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="169,141,0,0"/>
                 </Grid>
             </Expander>
         </StackPanel>

@@ -4,8 +4,6 @@ using System.Collections.ObjectModel;
 using System.Data.SqlClient;
 using System.Windows;
 using System.Windows.Controls;
-using Syncfusion;
-using Syncfusion.UI.Xaml.Charts;
 
 namespace Goldpoint_Inventory_System.Log
 {
@@ -15,7 +13,7 @@ namespace Goldpoint_Inventory_System.Log
     public partial class Sales : UserControl
     {
         public ObservableCollection<SalesDataModel> data = new ObservableCollection<SalesDataModel>();
-        List<SalesDataModel> services = new List<SalesDataModel>();
+        ObservableCollection<SalesDataModel> services = new ObservableCollection<SalesDataModel>();
         double overallTotal = 0;
 
         public Sales()
@@ -24,12 +22,12 @@ namespace Goldpoint_Inventory_System.Log
             stack.DataContext = new ExpanderListViewModel();
             dgDailyService.ItemsSource = services;
             columnSeries.ItemsSource = data;
-            
+
         }
 
         private void BtnAddtoList_Click(object sender, RoutedEventArgs e)
         {
-            if(string.IsNullOrEmpty(txtContent.Text) || string.IsNullOrEmpty(txtDate.Text) || string.IsNullOrEmpty(txtTotal.Text))
+            if (string.IsNullOrEmpty(txtContent.Text) || string.IsNullOrEmpty(txtDate.Text) || string.IsNullOrEmpty(txtTotal.Text))
             {
                 MessageBox.Show("One or more fields are empty!");
             }
@@ -46,7 +44,7 @@ namespace Goldpoint_Inventory_System.Log
                     case MessageBoxResult.Yes:
                         SqlConnection conn = DBUtils.GetDBConnection();
                         conn.Open();
-                        using(SqlCommand cmd = new SqlCommand("INSERT into Sales VALUES (@date, @service, @total, 'paid')", conn))
+                        using (SqlCommand cmd = new SqlCommand("INSERT into Sales VALUES (@date, @service, @total, 'Paid')", conn))
                         {
                             cmd.Parameters.AddWithValue("@date", txtDate.Text);
                             cmd.Parameters.AddWithValue("@service", txtContent.Text);
@@ -59,10 +57,16 @@ namespace Goldpoint_Inventory_System.Log
                                 services.Add(new SalesDataModel
                                 {
                                     service = txtContent.Text,
-                                    sales = (double) txtTotal.Value
+                                    sales = (double)txtTotal.Value
                                 });
+                                txtContent.Text = null;
+                                txtTotal.Value = 0;
+                                txtDate.Text = DateTime.Today.ToShortDateString();
+
+                                txtOverallTotal.Value += txtTotal.Value;
+
                             }
-                            catch(SqlException ex)
+                            catch (SqlException ex)
                             {
                                 MessageBox.Show("An error has been encountered!" + ex);
                             }
@@ -74,7 +78,7 @@ namespace Goldpoint_Inventory_System.Log
                     case MessageBoxResult.Cancel:
                         return;
                 }
-                }
+            }
         }
 
         private void TxtSearch_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -180,5 +184,13 @@ namespace Goldpoint_Inventory_System.Log
             }
         }
 
+        private void BtnReset_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            txtContent.Text = null;
+            txtTotal.Value = 0;
+            txtDate.Text = DateTime.Today.ToShortDateString();
+            data.Clear();
+            services.Clear();
+        }
     }
 }
