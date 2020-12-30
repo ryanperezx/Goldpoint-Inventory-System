@@ -82,7 +82,7 @@
                     <RadioButton x:Name="rdUnpaid" Checked="radiobuttonPayment" Content="Unpaid" GroupName="Service" HorizontalAlignment="Left" Margin="139,216,0,0" VerticalAlignment="Top"/>
                     <RadioButton x:Name="rdDownpayment" Checked="radiobuttonPayment" Content="Downpayment" GroupName="Service" HorizontalAlignment="Left" Margin="139,231,0,0" VerticalAlignment="Top"/>
                     <Label Content="Discount:" HorizontalAlignment="Left" Margin="29,256,0,0" VerticalAlignment="Top"/>
-                    <syncfusion:DoubleTextBox x:Name="txtDiscount" HorizontalAlignment="Left" Height="26" Margin="139,256,0,0" MinWidth="100" NumberGroupSeparator="," TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="140" IsEnabled="False"/>
+                    <syncfusion:DoubleTextBox x:Name="txtDiscount" HorizontalAlignment="Left" Height="26" Margin="139,256,0,0" MinWidth="100" NumberGroupSeparator="," TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="140"/>
                     <Label Content="Paid amount:" HorizontalAlignment="Left" Margin="29,291,0,0" VerticalAlignment="Top"/>
                     <syncfusion:DoubleTextBox x:Name="txtDownpayment" HorizontalAlignment="Left" Height="26" Margin="139,291,0,0" MinWidth="100" NumberGroupSeparator="," TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="140" MinValue="0"  IsEnabled="False"/>
                     <Label Content="Total:" HorizontalAlignment="Left" Margin="29,340,0,0" VerticalAlignment="Top"/>

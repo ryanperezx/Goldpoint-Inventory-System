@@ -51,7 +51,14 @@ namespace Goldpoint_Inventory_System.Transactions
 
                                 if (DateTime.Compare(Convert.ToDateTime(reader.GetValue(deadlineIndex)), DateTime.Today) >= 0)
                                 {
-                                    isDeadline = true;
+                                    if (Convert.ToString(reader.GetValue(claimedIndex)) == "Claimed" && Convert.ToString(reader.GetValue(statusIndex)) == "Paid")
+                                    {
+                                        isDeadline = false;
+                                    }
+                                    else
+                                    {
+                                        isDeadline = true;
+                                    }
                                 }
 
                                 customers.Add(new UserTransactionDataModel
@@ -82,7 +89,7 @@ namespace Goldpoint_Inventory_System.Transactions
         {
             SqlConnection conn = DBUtils.GetDBConnection();
             conn.Open();
-            using(SqlCommand cmd = new SqlCommand("SELECT * from TransactionDetails where inaccessible = 1 and (service = 'Printing, Services, etc.' or service = 'Tarpaulin')", conn))
+            using (SqlCommand cmd = new SqlCommand("SELECT * from TransactionDetails where inaccessible = 1 and (service = 'Printing, Services, etc.' or service = 'Tarpaulin')", conn))
             {
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
@@ -103,7 +110,11 @@ namespace Goldpoint_Inventory_System.Transactions
 
                             bool isDeadline = false;
 
-                            if (DateTime.Compare(DateTime.Today, Convert.ToDateTime(reader.GetValue(deadlineIndex))) >= 0)
+                            if (Convert.ToString(reader.GetValue(claimedIndex)) == "Claimed" && Convert.ToString(reader.GetValue(statusIndex)) == "Paid")
+                            {
+                                isDeadline = false;
+                            }
+                            else
                             {
                                 isDeadline = true;
                             }
@@ -121,7 +132,7 @@ namespace Goldpoint_Inventory_System.Transactions
                                 status = Convert.ToString(reader.GetValue(statusIndex)),
                                 claimed = Convert.ToString(reader.GetValue(claimedIndex)),
                             });
-                             
+
                         }
                     }
                 }
@@ -130,7 +141,7 @@ namespace Goldpoint_Inventory_System.Transactions
 
         private void BtnSearchJobOrder_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            if(string.IsNullOrEmpty(txtJobOrder.Text) || string.IsNullOrEmpty(cmbJobOrder.Text))
+            if (string.IsNullOrEmpty(txtJobOrder.Text) || string.IsNullOrEmpty(cmbJobOrder.Text))
             {
                 MessageBox.Show("One or more fields are empty!");
             }
@@ -161,7 +172,11 @@ namespace Goldpoint_Inventory_System.Transactions
 
                                 bool isDeadline = false;
 
-                                if (DateTime.Compare(DateTime.Today, Convert.ToDateTime(reader.GetValue(deadlineIndex))) >= 0)
+                                if (Convert.ToString(reader.GetValue(claimedIndex)) == "Claimed" && Convert.ToString(reader.GetValue(statusIndex)) == "Paid")
+                                {
+                                    isDeadline = false;
+                                }
+                                else
                                 {
                                     isDeadline = true;
                                 }

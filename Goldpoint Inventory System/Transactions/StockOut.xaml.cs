@@ -64,6 +64,8 @@ namespace Goldpoint_Inventory_System.Transactions
                 rdPaid.IsChecked = true;
                 rdUnpaid.IsEnabled = false;
                 rdDownpayment.IsEnabled = false;
+                txtDiscount.Value = 0;
+                txtDiscount.IsEnabled = false;
                 txtAddress.IsEnabled = false;
                 txtAddress.Document.Blocks.Clear();
                 txtContactNo.IsEnabled = false;
@@ -81,6 +83,7 @@ namespace Goldpoint_Inventory_System.Transactions
                 txtContactNo.IsEnabled = true;
                 rdUnpaid.IsEnabled = true;
                 rdDownpayment.IsEnabled = true;
+                txtDiscount.IsEnabled = true;
 
                 if (chkbox.IsChecked == true && value == "Original Receipt")
                 {
@@ -223,6 +226,8 @@ namespace Goldpoint_Inventory_System.Transactions
 
                             }
                             txtTotal.Value += txtTotalPerItem.Value;
+                            txtDownpayment.MaxValue = (double)txtTotal.Value - 1;
+                            txtDiscount.MaxValue = (double)txtTotal.Value - 1;
                             txtQty.Value = 0;
 
                         }
@@ -309,6 +314,9 @@ namespace Goldpoint_Inventory_System.Transactions
             txtContactNo.Text = null;
             txtDiscount.Value = 0;
             txtDownpayment.Value = 0;
+            txtDownpayment.MaxValue = 0;
+            txtDiscount.Value = 0;
+            txtDiscount.MaxValue = 0;
             txtDRNo.Text = null;
             txtInv.Text = null;
             txtItemPrice.Value = 0;
@@ -479,7 +487,7 @@ namespace Goldpoint_Inventory_System.Transactions
                             {
                                 cmd.Parameters.AddWithValue("@DRNo", txtDRNo.Text);
                                 cmd.Parameters.AddWithValue("@date", txtDate.Text);
-                                cmd.Parameters.AddWithValue("@total", txtTotal.Value);
+                                cmd.Parameters.AddWithValue("@total", txtTotal.Value - txtDiscount.Value);
                                 if (rdPaid.IsChecked == true)
                                 {
                                     cmd.Parameters.AddWithValue("@paidAmt", txtTotal.Value);

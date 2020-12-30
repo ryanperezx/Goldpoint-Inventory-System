@@ -124,6 +124,7 @@
                                    LayoutUpdated="DockingManager_LayoutUpdated"
                                     CloseAllTabs="DockingManager_CloseAllTabs"
                                     CloseOtherTabs="DockingManager_CloseOtherTabs"
+                                   TabGroupEnabled="False"
                                     ShowTabItemContextMenu="{Binding ElementName=showtabitemcontextmenu, Path=IsChecked}"
                                     ShowTabListContextMenu="{Binding ElementName=showtablistcontextmenu, Path=IsChecked}" 
                                    IsSelectedDocument="DockingManager_IsSelectedDocument"

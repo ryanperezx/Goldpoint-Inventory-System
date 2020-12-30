@@ -857,8 +857,18 @@ namespace Goldpoint_Inventory_System.Log
                                     {
                                         rdUnpaid.IsChecked = true;
                                     }
+                                    if (Convert.ToString(reader.GetValue(claimedIndex)) == "Claimed")
+                                    {
+                                        chkClaimed.IsChecked = true;
+                                        btnClaiming.IsEnabled = false;
+                                    }
+                                    else
+                                    {
+                                        chkClaimed.IsChecked = false;
+                                        btnClaiming.IsEnabled = true;
+                                    }
 
-                                    service = Convert.ToString(reader.GetValue(serviceIndex));
+                                        service = Convert.ToString(reader.GetValue(serviceIndex));
                                     drNo = Convert.ToInt32(reader.GetValue(drNoIndex));
                                     exist = true;
                                     exJobOrderTarp.IsEnabled = true;
@@ -987,8 +997,18 @@ namespace Goldpoint_Inventory_System.Log
                                     {
                                         rdUnpaid.IsChecked = true;
                                     }
+                                    if (Convert.ToString(reader.GetValue(claimedIndex)) == "Claimed")
+                                    {
+                                        chkClaimed.IsChecked = true;
+                                        btnClaiming.IsEnabled = false;
+                                    }
+                                    else
+                                    {
+                                        chkClaimed.IsChecked = false;
+                                        btnClaiming.IsEnabled = true;
+                                    }
 
-                                    service = Convert.ToString(reader.GetValue(serviceIndex));
+                                        service = Convert.ToString(reader.GetValue(serviceIndex));
                                     drNo = Convert.ToInt32(reader.GetValue(drNoIndex));
                                     exist = true;
                                     exJobOrder.IsEnabled = true;
@@ -1257,6 +1277,7 @@ namespace Goldpoint_Inventory_System.Log
                                 cmd.ExecuteNonQuery();
                                 MessageBox.Show("Transaction updated");
                                 chkClaimed.IsChecked = true;
+                                btnClaiming.IsEnabled = false;
                             }
                             catch (SqlException ex)
                             {
