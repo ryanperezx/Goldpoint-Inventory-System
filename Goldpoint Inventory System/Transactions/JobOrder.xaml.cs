@@ -99,6 +99,25 @@ namespace Goldpoint_Inventory_System.Transactions
                 }
             }
         }
+        private void getJobOrderNo()
+        {
+            SqlConnection conn = DBUtils.GetDBConnection();
+            conn.Open();
+            using (SqlCommand cmd = new SqlCommand("SELECT TOP 1 jobOrderNo from TransactionDetails WHERE TRIM(jobOrderNo) is not null AND DATALENGTH(jobOrderNo) > 0 and service = 'Printing, Services, etc.' ORDER BY jobOrderNo DESC", conn))
+            {
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (!reader.Read())
+                        txtJobOrder.Text = "1";
+                    else
+                    {
+                        int jobOrderNoIndex = reader.GetOrdinal("jobOrderNo");
+                        int jobOrderNo = Convert.ToInt32(reader.GetValue(jobOrderNoIndex)) + 1;
+                        txtJobOrder.Text = jobOrderNo.ToString();
+                    }
+                }
+            }
+        }
         private void chkServ_Unchecked(object sender, RoutedEventArgs e)
         {
             CheckBox chkBox = (CheckBox)sender;
@@ -484,11 +503,11 @@ namespace Goldpoint_Inventory_System.Transactions
                                     MessageBox.Show("An error has been encountered!" + ex);
                                 }
                             }
-                            if(cmbJobOrder.Text == "Printing, Services, etc.")
+                            if (cmbJobOrder.Text == "Printing, Services, etc.")
                             {
-                                foreach(var item in services)
+                                foreach (var item in services)
                                 {
-                                    using(SqlCommand cmd = new SqlCommand("UPDATE InventoryItems set qty = qty + @qty where itemCode = @itemCode", conn))
+                                    using (SqlCommand cmd = new SqlCommand("UPDATE InventoryItems set qty = qty + @qty where itemCode = @itemCode", conn))
                                     {
                                         cmd.Parameters.AddWithValue("@qty", item.itemQty);
                                         cmd.Parameters.AddWithValue("@itemCode", item.itemCode);
@@ -647,6 +666,9 @@ namespace Goldpoint_Inventory_System.Transactions
                         SqlConnection conn = DBUtils.GetDBConnection();
                         conn.Open();
                         bool success = true;
+                        getJobOrderNo();
+                        getDRNo();
+
                         if (cmbJobOrder.Text == "Printing, Services, etc.")
                         {
                             foreach (var item in services)
@@ -822,7 +844,7 @@ namespace Goldpoint_Inventory_System.Transactions
                                 using (SqlCommand cmd = new SqlCommand("INSERT into Sales VALUES (@date, @service, @total, @status)", conn))
                                 {
                                     cmd.Parameters.AddWithValue("@date", txtDate.Text);
-                                    cmd.Parameters.AddWithValue("@service", "Stock Out");
+                                    cmd.Parameters.AddWithValue("@service", cmbJobOrder.Text);
                                     cmd.Parameters.AddWithValue("@total", txtDownpayment.Value);
                                     cmd.Parameters.AddWithValue("@status", "Paid");
                                     try
@@ -841,7 +863,7 @@ namespace Goldpoint_Inventory_System.Transactions
                                 using (SqlCommand cmd = new SqlCommand("INSERT into Sales VALUES (@date, @service, @total, @status)", conn))
                                 {
                                     cmd.Parameters.AddWithValue("@date", txtDate.Text);
-                                    cmd.Parameters.AddWithValue("@service", "Stock Out");
+                                    cmd.Parameters.AddWithValue("@service", cmbJobOrder.Text);
                                     cmd.Parameters.AddWithValue("@total", txtItemTotal.Value);
                                     cmd.Parameters.AddWithValue("@status", "Paid");
                                     try
@@ -910,6 +932,8 @@ namespace Goldpoint_Inventory_System.Transactions
                         emptyFields();
                         emptyService();
                         emptyTarp();
+                        services.Clear();
+                        tarp.Clear();
                         getDRNo();
                         break;
                     case MessageBoxResult.No:

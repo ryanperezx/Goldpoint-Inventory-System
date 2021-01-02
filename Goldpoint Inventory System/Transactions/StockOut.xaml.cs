@@ -35,14 +35,18 @@ namespace Goldpoint_Inventory_System.Transactions
                 case "Unpaid":
                     txtDownpayment.Text = null;
                     txtDownpayment.IsEnabled = false;
+                    txtDiscount.Value = 0;
+                    txtDiscount.IsEnabled = false;
                     break;
                 case "Downpayment":
                     txtDownpayment.Text = null;
                     txtDownpayment.IsEnabled = true;
+                    txtDiscount.IsEnabled = true;
                     break;
                 case "Paid":
                     txtDownpayment.Text = null;
                     txtDownpayment.IsEnabled = false;
+                    txtDiscount.IsEnabled = true;
                     break;
                 case "Company Use":
                     break;
@@ -153,6 +157,8 @@ namespace Goldpoint_Inventory_System.Transactions
                 txtContactNo.IsEnabled = true;
                 rdUnpaid.IsEnabled = true;
                 rdDownpayment.IsEnabled = true;
+                txtDiscount.IsEnabled = true;
+
             }
         }
 
@@ -490,7 +496,7 @@ namespace Goldpoint_Inventory_System.Transactions
                                 cmd.Parameters.AddWithValue("@total", txtTotal.Value - txtDiscount.Value);
                                 if (rdPaid.IsChecked == true)
                                 {
-                                    cmd.Parameters.AddWithValue("@paidAmt", txtTotal.Value);
+                                    cmd.Parameters.AddWithValue("@paidAmt", txtTotal.Value - txtDiscount.Value);
                                     cmd.Parameters.AddWithValue("@status", "Paid");
                                 }
                                 if (rdUnpaid.IsChecked == true)
@@ -513,7 +519,7 @@ namespace Goldpoint_Inventory_System.Transactions
                                     success = false;
                                 }
                             }
-                            using (SqlCommand cmd = new SqlCommand("INSERT into TransactionDetails (DRNo, service, date, deadline, customerName, address, contactNo, remarks, ORNo, invoiceNo, status, claimed) VALUES (@DRNo, @service, @date, @deadline, @customerName, @address, @contactNo, @remarks, @ORNo, @InvoiceNo, @status, @claimed)", conn))
+                            using (SqlCommand cmd = new SqlCommand("INSERT into TransactionDetails (DRNo, service, date, deadline, customerName, address, contactNo, remarks, ORNo, invoiceNo, status, claimed, inaccessible) VALUES (@DRNo, @service, @date, @deadline, @customerName, @address, @contactNo, @remarks, @ORNo, @InvoiceNo, @status, @claimed, 1)", conn))
                             {
                                 cmd.Parameters.AddWithValue("@DRNo", txtDRNo.Text);
                                 cmd.Parameters.AddWithValue("@date", txtDate.Text);

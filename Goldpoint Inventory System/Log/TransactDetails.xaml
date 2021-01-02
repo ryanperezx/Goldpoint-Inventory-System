@@ -15,7 +15,7 @@
             <iconPacks:PackIconMaterialLight Kind="Refresh" Height="30" Width="30" Foreground="DarkGoldenrod"/>
         </Label>
 
-        <Label Content="Service/Receipt  No:" HorizontalAlignment="Left" Margin="82,25,0,0" VerticalAlignment="Top"/>
+        <Label Content="Service/Receipt No:" HorizontalAlignment="Left" Margin="82,25,0,0" VerticalAlignment="Top"/>
         <syncfusion:SfTextBoxExt x:Name="txtServiceNo" HorizontalAlignment="Left" Height="31" Margin="238,26,0,0" VerticalAlignment="Top" Width="155"/>
         <Label Content="Service:" HorizontalAlignment="Left" Margin="442,25,0,0" VerticalAlignment="Top"/>
         <Label x:Name="btnSearchService" MouseLeftButtonDown="BtnSearchService_MouseLeftButtonDown" VerticalAlignment="Top" HorizontalAlignment="Left" Height="30" Width="30" Cursor="Hand" Margin="715,26,0,0" >
@@ -83,7 +83,6 @@
                 <Grid Width="700">
                     <Label Content="Date:" HorizontalAlignment="Left" Margin="21,39,0,0" VerticalAlignment="Top"/>
                     <syncfusion:DateTimeEdit x:Name="txtDatePayment" HorizontalAlignment="Left" Height="31" Margin="149,39,0,0" TextWrapping="Wrap" Text="DateTimeEdit" VerticalAlignment="Top" Width="120"/>
-
                     <Label Content="Amount:" HorizontalAlignment="Left" Margin="21,79,0,0" VerticalAlignment="Top"/>
                     <syncfusion:DoubleTextBox x:Name="txtAmount" Height="31" Margin="149,79,431,0" NumberGroupSeparator="," NumberDecimalDigits="2" NumberDecimalSeparator="." TextWrapping="Wrap" Text="DoubleTextBox" Value="0" MinValue="0"  VerticalAlignment="Top"/>
                     <Label Content="Unpaid Balance:" HorizontalAlignment="Left" Margin="21,119,0,0" VerticalAlignment="Top"/>
@@ -147,6 +146,27 @@
                         </syncfusion:SfDataGrid.Columns>
                     </syncfusion:SfDataGrid>
                 </StackPanel>
+            </Expander>
+            <Expander x:Name="exJobOrderTransact" ExpandDirection="Right" FontSize="16" HorizontalAlignment="Left"  Height="420" VerticalAlignment="Top" IsExpanded="{Binding SelectedExpander, ConverterParameter=4, Converter={StaticResource ExpanderToBooleanConverter}, Mode=TwoWay}" IsEnabled="False">
+                <Expander.Header>
+                    <TextBlock Text="Job Order Transaction" RenderTransformOrigin=".5,.5">
+                        <TextBlock.LayoutTransform>
+                            <RotateTransform Angle="90" />
+                        </TextBlock.LayoutTransform>
+                    </TextBlock>
+                </Expander.Header>
+                <Grid Width="500">
+                    <Label Content="Job Order No:" HorizontalAlignment="Left" Margin="34,19,0,0" VerticalAlignment="Top"/>
+                    <syncfusion:SfTextBoxExt x:Name="txtJobOrderNo" HorizontalAlignment="Left" Height="31" Margin="148,19,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" IsReadOnly="True"/>
+                    <Label Content="Job Order:" HorizontalAlignment="Left" Margin="34,64,0,0" VerticalAlignment="Top"/>
+                    <syncfusion:SfTextBoxExt x:Name="txtJobOrder" HorizontalAlignment="Left" Height="31" Margin="148,64,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="170" IsReadOnly="True"/>
+                    <syncfusion:ButtonAdv SmallIcon="{x:Null}" HorizontalAlignment="Left" Height="29" Label="Print Job Order" Margin="165,119,0,0" VerticalAlignment="Top" Width="120"/>
+                    <syncfusion:ButtonAdv SmallIcon="{x:Null}" x:Name="btnIssueOR" Click="BtnIssueOR_Click" HorizontalAlignment="Left" Height="29" Label="Issue OR" Margin="46,175,0,0" VerticalAlignment="Top" Width="97"/>
+                    <syncfusion:ButtonAdv SmallIcon="{x:Null}" x:Name="btnPrintOR" Click="BtnPrintOR_Click" HorizontalAlignment="Left" Height="29" Label="Print OR" Margin="299,175,0,0" VerticalAlignment="Top" Width="97"/>
+                    <syncfusion:ButtonAdv SmallIcon="{x:Null}" x:Name="btnIssueInvoice" Click="BtnIssueInvoice_Click" HorizontalAlignment="Left" Height="29" Label="Issue Invoice" Margin="46,230,0,0" VerticalAlignment="Top" Width="97"/>
+                    <syncfusion:ButtonAdv SmallIcon="{x:Null}" x:Name="btnPrintInvoice" Click="BtnPrintInvoice_Click" HorizontalAlignment="Left" Height="29" Label="Print Invoice" Margin="299,230,0,0" VerticalAlignment="Top" Width="97"/>
+
+                </Grid>
             </Expander>
             <Expander x:Name="exJobOrder" ExpandDirection="Right" FontSize="16" HorizontalAlignment="Left"  Height="420" VerticalAlignment="Top" IsExpanded="{Binding SelectedExpander, ConverterParameter=5, Converter={StaticResource ExpanderToBooleanConverter}, Mode=TwoWay}" IsEnabled="False">
                 <Expander.Header>
