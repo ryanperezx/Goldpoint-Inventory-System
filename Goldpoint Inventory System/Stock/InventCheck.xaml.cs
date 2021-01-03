@@ -19,7 +19,6 @@ namespace Goldpoint_Inventory_System.Stock
             fillUpType();
             dgInventory.ItemsSource = items;
             fillUpInventory();
-
         }
 
         private void BtnSearchItem_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -151,8 +150,6 @@ namespace Goldpoint_Inventory_System.Stock
             txtItemCode.Text = null;
             items.Clear();
             fillUpInventory();
-
-
         }
 
         private void fillUpInventory()

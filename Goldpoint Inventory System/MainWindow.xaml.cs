@@ -26,6 +26,7 @@ using Syncfusion.SfSkinManager;
 using Syncfusion.Windows.Tools;
 using Syncfusion.Themes.Office2019Colorful.WPF;
 using WinForms = System.Windows.Forms;
+using System.Data.SqlClient;
 
 namespace Goldpoint_Inventory_System
 {
@@ -34,7 +35,7 @@ namespace Goldpoint_Inventory_System
     /// </summary>
     public partial class MainWindow : Window
     {
-
+        string user;
         public MainWindow()
         {
             SfSkinManager.ApplyStylesOnApplication = true;
@@ -62,6 +63,10 @@ namespace Goldpoint_Inventory_System
             themeSettings.FontFamily = new FontFamily("Calibri");
             SfSkinManager.RegisterThemeSettings("Office2019Colorful", themeSettings);
             SfSkinManager.SetTheme(this, new Theme("Office2019Colorful"));
+
+            date.Content = DateTime.Now.ToString("D");
+            startTimer();
+
 
 
         }
@@ -181,6 +186,54 @@ namespace Goldpoint_Inventory_System
                 case MessageBoxResult.No:
                     break;
             }
+        }
+
+        private void getFullName()
+        {
+            SqlConnection conn = DBUtils.GetDBConnection();
+            conn.Open();
+            using (SqlCommand cmd = new SqlCommand("SELECT firstName + ' ' + lastName as fullName from Accounts where username = @username", conn))
+            {
+                cmd.Parameters.AddWithValue("@username", user);
+            }
+        }
+
+        private void startTimer()
+        {
+            System.Windows.Forms.Timer tmr = null;
+            tmr = new System.Windows.Forms.Timer();
+            tmr.Interval = 1000;
+            tmr.Tick += new EventHandler(tmr_Tick);
+            tmr.Enabled = true;
+        }
+        private void tmr_Tick(object sender, EventArgs e)
+        {
+            date.Content = DateTime.Now.ToString("F");
+        }
+
+        private void IcoExit_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            string sMessageBoxText = "Do you want to exit the application?";
+            string sCaption = "Exit";
+            MessageBoxButton btnMessageBox = MessageBoxButton.YesNoCancel;
+            MessageBoxImage icnMessageBox = MessageBoxImage.Warning;
+
+            MessageBoxResult dr = MessageBox.Show(sMessageBoxText, sCaption, btnMessageBox, icnMessageBox);
+
+            switch (dr)
+            {
+                case MessageBoxResult.Yes:
+                    this.DialogResult = true;
+                    Application.Current.Shutdown();
+                    break;
+                case MessageBoxResult.No:
+                    break;
+            }
+        }
+
+        private void BtnMinimize_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            this.WindowState = WindowState.Minimized;
         }
     }
 }
