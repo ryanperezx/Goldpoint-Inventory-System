@@ -3,7 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:syncfusion="http://schemas.syncfusion.com/wpf" 
     xmlns:self="clr-namespace:Goldpoint_Inventory_System"
-    StartupUri="MainWindow.xaml">
+    StartupUri="Login.xaml">
 	<Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

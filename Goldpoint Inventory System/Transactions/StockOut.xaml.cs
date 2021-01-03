@@ -21,6 +21,7 @@ namespace Goldpoint_Inventory_System.Transactions
             dgStockOut.ItemsSource = items;
             //to avoid null error
             txtQty.TextChanged += TxtQty_TextChanged;
+            txtDiscount.TextChanged += TxtDiscount_TextChanged;
             getDRNo();
             rdUnpaid.IsChecked = true;
 
@@ -664,6 +665,14 @@ namespace Goldpoint_Inventory_System.Transactions
                 var last = items.Last();
                 txtTotal.Value -= last.totalPerItem; 
                 items.RemoveAt(items.Count - 1);
+            }
+        }
+
+        private void TxtDiscount_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if(txtDiscount.Value > 0 && txtTotal.Value > 0)
+            {
+                txtDownpayment.MaxValue = Convert.ToDouble(txtTotal.Value - txtDiscount.Value) - 1;
             }
         }
     }

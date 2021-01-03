@@ -4,11 +4,37 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Goldpoint_Inventory_System"
+        xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+        xmlns:syncfusion="http://schemas.syncfusion.com/wpf" 
         mc:Ignorable="d"
         Closing="Window_Closing"
         WindowStartupLocation="CenterScreen"
+        WindowStyle="None"
+   
         Title="Login" Height="300" Width="500" ResizeMode="CanMinimize">
     <Grid>
-        
+        <Label Cursor="Hand" x:Name="btnExit" Margin="470,10,0,260" MouseLeftButtonDown="BtnExit_MouseLeftButtonDown" >
+            <iconPacks:PackIconMaterial Kind="ExitToApp"  Height="20" Width="20"/>
+        </Label>
+        <Label Cursor="Hand" x:Name="btnMinimize" Margin="440,10,30,260"  MouseLeftButtonDown="BtnMinimize_MouseLeftButtonDown">
+            <iconPacks:PackIconMaterial Kind="WindowMinimize" Height="20" Width="20"/>
+        </Label>
+
+        <Label Content="Goldpoint Inventory Management System" HorizontalAlignment="Left" Margin="70,53,0,0" VerticalAlignment="Top" FontWeight="Bold" FontSize="18"/>
+        <Separator Margin="35,114,45,183" HorizontalAlignment="Center" VerticalAlignment="Center" Height="3" Width="420" />
+
+        <Label Content="Please enter your credentials: " HorizontalAlignment="Left" Margin="35,122,0,0" VerticalAlignment="Top"/>
+
+        <syncfusion:SfTextBoxExt x:Name="txtUsername" HorizontalAlignment="Left" Height="30" Margin="70,153,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="385" FontStyle="Italic" FontSize="14" CaretBrush="{x:Null}" GotFocus="TxtUsername_GotFocus" LostFocus="TxtUsername_LostFocus" MaxLength="15"/>
+        <PasswordBox x:Name="txtPassword"  HorizontalAlignment="Left" Height="30" Margin="70,191,0,0" VerticalAlignment="Top" Width="385" FontStyle="Italic" FontSize="16" CaretBrush="{x:Null}" GotFocus="TxtPassword_GotFocus" LostFocus="TxtPassword_LostFocus" MaxLength="15"/>
+        <Button x:Name="btnLogin"  Content="Login" HorizontalAlignment="Left" Margin="365,233,0,0" VerticalAlignment="Top" Width="90" Height="35" Cursor="Hand" Click="BtnLogin_Click"/>
+        <Label x:Name="lblForgot" MouseLeftButtonUp="LblForgot_MouseLeftButtonUp" Foreground="Gray" Content="Forgot your password?" HorizontalAlignment="Left" Margin="229,237,0,0" VerticalAlignment="Top" Background="#01264976" Cursor="Hand"/>
+
+        <Border x:Name="brdUser" BorderThickness="1" HorizontalAlignment="Left" Height="32" Margin="35,152,0,0" VerticalAlignment="Top" Width="36" CornerRadius="5,0,0,5" Background="#FFE6E6E6">
+            <iconPacks:PackIconMaterial Kind="Account" Margin="9,6,0,0" Height="15" Width="15"/>
+        </Border>
+        <Border x:Name="brdPassword" BorderThickness="1" HorizontalAlignment="Left" Height="32" Margin="35,190,0,0" VerticalAlignment="Top" Width="36" CornerRadius="5,0,0,5" Background="#FFE6E6E6">
+            <iconPacks:PackIconMaterial Kind="Key" Margin="9,6,0,0" Height="15" Width="15"/>
+        </Border>
     </Grid>
 </Window>

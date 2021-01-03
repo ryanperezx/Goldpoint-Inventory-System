@@ -139,7 +139,6 @@ namespace Goldpoint_Inventory_System
         {
             string name = (sender as MenuItem).Tag as string;
             DockingManager.ActivateWindow(name);
-
         }
 
         private void BtnLogout_Click(object sender, RoutedEventArgs e)
