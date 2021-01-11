@@ -13,6 +13,7 @@
    
         Title="Login" Height="300" Width="500" ResizeMode="CanMinimize">
     <Grid>
+        <Image Source="gptgrad.png" Opacity="0.2" Margin="10" />
         <Label Cursor="Hand" x:Name="btnExit" Margin="470,10,0,260" MouseLeftButtonDown="BtnExit_MouseLeftButtonDown" >
             <iconPacks:PackIconMaterial Kind="ExitToApp"  Height="20" Width="20"/>
         </Label>

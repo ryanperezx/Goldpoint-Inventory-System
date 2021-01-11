@@ -93,7 +93,7 @@
             <StackPanel HorizontalAlignment="Right" VerticalAlignment="Top"  Orientation="Horizontal" FocusManager.IsFocusScope="True" 
                                 DockPanel.Dock="Right" Margin="4,0,0,0" Grid.Row="0">
                 <!--Minimize Button-->
-                <Label x:Name="date" FontSize="14 " Content="00:00:00" VerticalAlignment="Top" HorizontalAlignment="Right" Width="240"/>
+                <Label x:Name="date" FontSize="14 " Content="00:00:00" VerticalAlignment="Top" HorizontalAlignment="Right" Width="250"/>
                 <Label Cursor="Hand" x:Name="btnMinimize" MouseLeftButtonDown="BtnMinimize_MouseLeftButtonDown">
                     <iconPacks:PackIconMaterial Kind="WindowMinimize" Height="16" Width="16"/>
                 </Label>

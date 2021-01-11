@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,6 +23,11 @@ namespace Goldpoint_Inventory_System
         public Login()
         {
             InitializeComponent();
+
+            if (IsServerConnected() != true)
+            {
+                MessageBox.Show("There is no connection with the database, please check your network and see if the device is connected.");
+            }
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -65,9 +71,39 @@ namespace Goldpoint_Inventory_System
 
         private void LblForgot_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            Hide();
-            new ForgotPassword(txtUsername.Text).ShowDialog();
-            ShowDialog();
+            if (string.IsNullOrEmpty(txtUsername.Text))
+            {
+                MessageBox.Show("Please enter username before clicking forgot password");
+            }
+            else
+            {
+                SqlConnection conn = DBUtils.GetDBConnection();
+                conn.Open();
+                using (SqlCommand cmd = new SqlCommand("SELECT COUNT(1) from Account where username = @username", conn))
+                {
+                    cmd.Parameters.AddWithValue("@username", txtUsername.Text);
+                    int userCount;
+                    userCount = (int)cmd.ExecuteScalar();
+                    if (userCount > 0)
+                    {
+                        Hide();
+                        new ForgotPassword(txtUsername.Text).ShowDialog();
+                        ShowDialog();
+                        txtPassword.Password = null;
+                        txtUsername.Text = null;
+                    }
+                    else
+                    {
+                        MessageBox.Show("User does not exist!");
+
+                    }
+                }
+
+                Hide();
+                new ForgotPassword(txtUsername.Text).ShowDialog();
+                ShowDialog();
+            }
+
         }
 
         private void BtnLogin_Click(object sender, RoutedEventArgs e)
@@ -99,6 +135,22 @@ namespace Goldpoint_Inventory_System
         private void BtnMinimize_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             this.WindowState = WindowState.Minimized;
+        }
+
+        private static bool IsServerConnected()
+        {
+            using (SqlConnection connection = DBUtils.GetDBConnection())
+            {
+                try
+                {
+                    connection.Open();
+                    return true;
+                }
+                catch (SqlException)
+                {
+                    return false;
+                }
+            }
         }
     }
 }

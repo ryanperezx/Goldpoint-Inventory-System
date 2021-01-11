@@ -1267,6 +1267,7 @@ namespace Goldpoint_Inventory_System.Log
             txtJobOrder.Text = null;
             txtJobOrderNo.Text = null;
             txtRemarks.Text = null;
+            txtAddress.Document.Blocks.Clear();
         }
 
         private void BtnReset_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -1339,6 +1340,7 @@ namespace Goldpoint_Inventory_System.Log
                                     if (txtUnpaidBalancePayment.Value == 0)
                                     {
                                         btnPayment.IsEnabled = false;
+                                        rdPaid.IsChecked = true;
                                     }
                                     else
                                     {
@@ -1548,7 +1550,7 @@ namespace Goldpoint_Inventory_System.Log
 
         private void BtnPrintOR_Click(object sender, RoutedEventArgs e)
         {
-
+            
         }
 
         private void BtnPrintInvoice_Click(object sender, RoutedEventArgs e)
