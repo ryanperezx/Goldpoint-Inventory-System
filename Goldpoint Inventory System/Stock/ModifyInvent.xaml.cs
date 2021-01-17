@@ -53,7 +53,7 @@ namespace Goldpoint_Inventory_System.Stock
                                 txtSize.Text = Convert.ToString(reader.GetValue(sizeIndex));
 
                                 int qtyIndex = reader.GetOrdinal("qty");
-                                txtQty.Text = Convert.ToString(reader.GetValue(qtyIndex));
+                                txtQty.Value = Convert.ToInt32(reader.GetValue(qtyIndex));
 
                                 int criticalLevelIndex = reader.GetOrdinal("criticalLevel");
                                 txtCriticalLvl.Text = Convert.ToString(reader.GetValue(criticalLevelIndex));
@@ -62,13 +62,13 @@ namespace Goldpoint_Inventory_System.Stock
                                 txtRemarks.Text = Convert.ToString(reader.GetValue(remarksIndex));
 
                                 int priceIndex = reader.GetOrdinal("price");
-                                txtPrice.Text = Convert.ToString(reader.GetValue(priceIndex));
+                                txtPrice.Value = Convert.ToDouble(reader.GetValue(priceIndex));
 
                                 int msrpIndex = reader.GetOrdinal("MSRP");
-                                txtMSRP.Text = Convert.ToString(reader.GetValue(msrpIndex));
+                                txtMSRP.Value = Convert.ToDouble(reader.GetValue(msrpIndex));
 
                                 int dealersPriceIndex = reader.GetOrdinal("dealersPrice");
-                                txtDealersPrice.Text = Convert.ToString(reader.GetValue(dealersPriceIndex));
+                                txtDealersPrice.Value = Convert.ToDouble(reader.GetValue(dealersPriceIndex));
 
                             }
 
@@ -103,7 +103,7 @@ namespace Goldpoint_Inventory_System.Stock
 
         private void BtnSaveItem_Click(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrEmpty(txtItemCode.Text) || string.IsNullOrEmpty(txtDesc.Text) || string.IsNullOrEmpty(txtQty.Text) || string.IsNullOrEmpty(txtCriticalLvl.Text) || string.IsNullOrEmpty(txtPrice.Text) || string.IsNullOrEmpty(txtMSRP.Text) || string.IsNullOrEmpty(txtDealersPrice.Text) || string.IsNullOrEmpty(cmbType.Text))
+            if (string.IsNullOrEmpty(txtItemCode.Text) || string.IsNullOrEmpty(txtDesc.Text) || txtQty.Value == 0 || string.IsNullOrEmpty(txtCriticalLvl.Text) || txtPrice.Value == 0 || txtMSRP.Value == 0 || txtDealersPrice.Value == 0 || string.IsNullOrEmpty(cmbType.Text))
             {
                 MessageBox.Show("One or more fields are empty!");
             }
@@ -120,38 +120,54 @@ namespace Goldpoint_Inventory_System.Stock
                     case MessageBoxResult.Yes:
                         SqlConnection conn = DBUtils.GetDBConnection();
                         conn.Open();
-                        using (SqlCommand cmd = new SqlCommand("INSERT into InventoryItems VALUES (@itemCode, @desc, @type, @brand, @size, @qty, @criticalLevel, @remarks, @price, @msrp, @dealersPrice, '')", conn))
+                        //check if itemcode is already existing to avoid duplicates
+                        int count = 0;
+                        using (SqlCommand cmd = new SqlCommand("SELECT COUNT(1) from InventoryItems where itemCode = @itemCode", conn))
                         {
                             cmd.Parameters.AddWithValue("@itemCode", txtItemCode.Text);
-                            cmd.Parameters.AddWithValue("@desc", txtDesc.Text);
-                            cmd.Parameters.AddWithValue("@type", cmbType.Text);
-                            cmd.Parameters.AddWithValue("@brand", txtBrand.Text);
-                            cmd.Parameters.AddWithValue("@size", txtSize.Text);
-                            cmd.Parameters.AddWithValue("@qty", txtQty.Text.Replace(",", ""));
-                            cmd.Parameters.AddWithValue("@criticalLevel", txtCriticalLvl.Text.Replace(",", ""));
-                            cmd.Parameters.AddWithValue("@remarks", txtRemarks.Text);
-                            cmd.Parameters.AddWithValue("@price", txtPrice.Text.Replace(",", ""));
-                            cmd.Parameters.AddWithValue("@msrp", txtMSRP.Text.Replace(",", ""));
-                            cmd.Parameters.AddWithValue("@dealersPrice", txtDealersPrice.Text.Replace(",", ""));
+                            count = (int)cmd.ExecuteScalar();
+                        }
 
-                            try
+                        if (count > 0)
+                        {
+                            MessageBox.Show("Item code is already in used. Please check if the item is existing or choose another item code");
+                            return;
+                        }
+                        else
+                        {
+                            using (SqlCommand cmd = new SqlCommand("INSERT into InventoryItems VALUES (@itemCode, @desc, @type, @brand, @size, @qty, @criticalLevel, @remarks, @price, @msrp, @dealersPrice, '')", conn))
                             {
-                                cmd.ExecuteNonQuery();
-                                MessageBox.Show("Item has been added to inventory!");
-                                disableFields();
-                                emptyFields();
+                                cmd.Parameters.AddWithValue("@itemCode", txtItemCode.Text);
+                                cmd.Parameters.AddWithValue("@desc", txtDesc.Text);
+                                cmd.Parameters.AddWithValue("@type", cmbType.Text);
+                                cmd.Parameters.AddWithValue("@brand", txtBrand.Text);
+                                cmd.Parameters.AddWithValue("@size", txtSize.Text);
+                                cmd.Parameters.AddWithValue("@qty", txtQty.Value);
+                                cmd.Parameters.AddWithValue("@criticalLevel", txtCriticalLvl.Value);
+                                cmd.Parameters.AddWithValue("@remarks", txtRemarks.Text);
+                                cmd.Parameters.AddWithValue("@price", txtPrice.Value);
+                                cmd.Parameters.AddWithValue("@msrp", txtMSRP.Value);
+                                cmd.Parameters.AddWithValue("@dealersPrice", txtDealersPrice.Value);
 
-                                txtItemCode.IsEnabled = true;
-                                btnSaveItem.IsEnabled = false;
-                                btnAddItem.IsEnabled = true;
-                                btnUpdateItem.IsEnabled = false;
-                                btnDeleteItem.IsEnabled = false;
-                            }
-                            catch (SqlException ex)
-                            {
-                                MessageBox.Show("Error has been encountered" + ex);
-                            }
+                                try
+                                {
+                                    cmd.ExecuteNonQuery();
+                                    MessageBox.Show("Item has been added to inventory!");
+                                    disableFields();
+                                    emptyFields();
 
+                                    txtItemCode.IsEnabled = true;
+                                    btnSaveItem.IsEnabled = false;
+                                    btnAddItem.IsEnabled = true;
+                                    btnUpdateItem.IsEnabled = false;
+                                    btnDeleteItem.IsEnabled = false;
+                                }
+                                catch (SqlException ex)
+                                {
+                                    MessageBox.Show("Error has been encountered" + ex);
+                                }
+
+                            }
                         }
                         break;
                     case MessageBoxResult.No:
@@ -365,6 +381,8 @@ namespace Goldpoint_Inventory_System.Stock
 
         private void disableFields()
         {
+            txtItemCode.IsEnabled = true;
+
             txtDesc.IsEnabled = false;
             cmbType.IsEnabled = false;
             txtBrand.IsEnabled = false;
@@ -394,12 +412,13 @@ namespace Goldpoint_Inventory_System.Stock
         {
             txtItemCode.Text = null;
             txtDesc.Text = null;
-            cmbType.Text = null;
+            cmbType.SelectedIndex = -1;
             txtBrand.Text = null;
             txtSize.Text = null;
-            txtQty.Value = 0;
-            txtCriticalLvl.Text = null;
             txtRemarks.Text = null;
+
+            txtQty.Value = 0;
+            txtCriticalLvl.Value = 0;
             txtDealersPrice.Value = 0;
             txtPrice.Value = 0;
             txtMSRP.Value = 0;
@@ -442,14 +461,12 @@ namespace Goldpoint_Inventory_System.Stock
             }
         }
 
-        private void TxtPrice_TextChanged(object sender, TextChangedEventArgs e)
+        private void TxtPrice_ValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            //only works for integer values lol
             if (txtPrice.Value != 0)
             {
-                string placeholder1 = txtPrice.Text;
-                txtMSRP.Value = Convert.ToInt32(placeholder1.Replace(",", "").Replace(".00", "")) * 1.30;
-                txtDealersPrice.Value = Convert.ToInt32(placeholder1.Replace(",", "").Replace(".00", "")) * 1.20;
+                txtMSRP.Value = txtPrice.Value * 1.30;
+                txtDealersPrice.Value = txtPrice.Value * 1.20;
             }
             else
             {

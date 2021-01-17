@@ -99,7 +99,7 @@ namespace Goldpoint_Inventory_System.Stock
             items.Clear();
             SqlConnection conn = DBUtils.GetDBConnection();
             conn.Open();
-            using (SqlCommand cmd = new SqlCommand("SELECT * from InventoryItems where qty < criticalLevel", conn))
+            using (SqlCommand cmd = new SqlCommand("SELECT * from InventoryItems where qty < criticalLevel ORDER BY itemCode DESC", conn))
             {
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
@@ -156,7 +156,7 @@ namespace Goldpoint_Inventory_System.Stock
         {
             SqlConnection conn = DBUtils.GetDBConnection();
             conn.Open();
-            using (SqlCommand cmd = new SqlCommand("SELECT * from InventoryItems", conn))
+            using (SqlCommand cmd = new SqlCommand("SELECT * from InventoryItems ORDER BY Description ASC", conn))
             {
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {

@@ -194,7 +194,7 @@ namespace Goldpoint_Inventory_System.Transactions
         }
         private void emptyFields()
         {
-            cmbJobOrder.SelectedIndex = 0;
+            cmbJobOrder.SelectedIndex = -1;
             txtJobOrder.Text = null;
             cmbJobOrder.IsEnabled = true;
 
