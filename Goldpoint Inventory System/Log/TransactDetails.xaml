@@ -122,9 +122,8 @@
                     <Label Content="Job Order:" HorizontalAlignment="Left" Margin="22,289,0,0" VerticalAlignment="Top"/>
                     <syncfusion:SfTextBoxExt x:Name="txtJobOrder" HorizontalAlignment="Left" Height="31" Margin="136,289,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="170" IsReadOnly="True"/>
                     <syncfusion:ButtonAdv SmallIcon="{x:Null}" x:Name="btnPrintJobOrder" Click="BtnPrintJobOrder_Click" Height="35" Label="Print Job Order" Margin="34,345,546,0" VerticalAlignment="Top" IsEnabled="False"/>
-                    <syncfusion:ButtonAdv SmallIcon="{x:Null}" x:Name="btnPrintDRJobOrder" Click="BtnPrintDRJobOrder_Click" HorizontalAlignment="Left" Height="35" Label="Print DR for Job Order" Margin="194,345,0,0" VerticalAlignment="Top" Width="120" IsEnabled="False"/>
-                    <syncfusion:ButtonAdv SmallIcon="{x:Null}" x:Name="btnIssueORJobOrder" Click="BtnIssueORJobOrder_Click" HorizontalAlignment="Left" Height="35" Label="Issue OR for Job Order" Margin="354,345,0,0" VerticalAlignment="Top" Width="120" IsEnabled="False"/>
-                    <syncfusion:ButtonAdv SmallIcon="{x:Null}" x:Name="btnIssueInvoiceJobOrder" Click="BtnIssueInvoiceJobOrder_Click" HorizontalAlignment="Left" Height="35" Label="Issue Invoice for Job Order" Margin="519,345,0,0" VerticalAlignment="Top" Width="120" IsEnabled="False"/>
+                    <syncfusion:ButtonAdv SmallIcon="{x:Null}" x:Name="btnIssueORJobOrder" Click="BtnIssueORJobOrder_Click" HorizontalAlignment="Left" Height="35" Label="Issue OR for Job Order" Margin="194,345,0,0" VerticalAlignment="Top" Width="120" IsEnabled="False"/>
+                    <syncfusion:ButtonAdv SmallIcon="{x:Null}" x:Name="btnIssueInvoiceJobOrder" Click="BtnIssueInvoiceJobOrder_Click" HorizontalAlignment="Left" Height="35" Label="Issue Invoice for Job Order" Margin="354,345,0,0" VerticalAlignment="Top" Width="120" IsEnabled="False"/>
                 </Grid>
             </Expander>
             <Expander x:Name="exStockOut" ExpandDirection="Right" FontSize="16" HorizontalAlignment="Left"  Height="420" VerticalAlignment="Top" IsExpanded="{Binding SelectedExpander, ConverterParameter=4, Converter={StaticResource ExpanderToBooleanConverter}, Mode=TwoWay}" IsEnabled="False">

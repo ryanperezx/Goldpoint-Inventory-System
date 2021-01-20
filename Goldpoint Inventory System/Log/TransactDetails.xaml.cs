@@ -1,6 +1,8 @@
 ﻿using Goldpoint_Inventory_System.Transactions;
 using Syncfusion.DocIO;
 using Syncfusion.DocIO.DLS;
+using Syncfusion.DocToPDFConverter;
+using Syncfusion.Pdf;
 using System;
 using System.Collections.ObjectModel;
 using System.Data.SqlClient;
@@ -21,13 +23,12 @@ namespace Goldpoint_Inventory_System.Log
         ObservableCollection<PaymentHistoryDataModel> payHist = new ObservableCollection<PaymentHistoryDataModel>();
         ObservableCollection<JobOrderDataModel> services = new ObservableCollection<JobOrderDataModel>();
         ObservableCollection<JobOrderDataModel> tarp = new ObservableCollection<JobOrderDataModel>();
-        System.Drawing.Image[] images = null;
-        int startPageIndex = 0;
-        int endPageIndex = 0;
 
         //for payment and claiming button
         bool exist = false;
-
+        int startPageIndex = 0;
+        int endPageIndex = 0;
+        System.Drawing.Image[] images = null;
         public TransactDetails()
         {
             InitializeComponent();
@@ -60,7 +61,6 @@ namespace Goldpoint_Inventory_System.Log
                 exJobOrder.IsEnabled = false;
                 exJobOrderTarp.IsEnabled = false;
                 btnPrintJobOrder.IsEnabled = false;
-                btnPrintDRJobOrder.IsEnabled = false;
                 btnIssueORJobOrder.IsEnabled = false;
                 btnIssueInvoiceJobOrder.IsEnabled = false;
                 emptyFields();
@@ -249,7 +249,6 @@ namespace Goldpoint_Inventory_System.Log
                         {
                             exJobOrder.IsEnabled = true;
                             btnPrintJobOrder.IsEnabled = true;
-                            btnPrintDRJobOrder.IsEnabled = true;
                             txtJobOrder.Text = Convert.ToString(service);
                             using (SqlCommand cmd = new SqlCommand("SELECT * from ServiceMaterial sm INNER JOIN InventoryItems ii on sm.itemCode = ii.itemCode where JobOrderNo = @jobOrderNo and service = 'Printing, Services, etc.'", conn))
                             {
@@ -308,7 +307,6 @@ namespace Goldpoint_Inventory_System.Log
                         {
                             exJobOrderTarp.IsEnabled = true;
                             btnPrintJobOrder.IsEnabled = true;
-                            btnPrintDRJobOrder.IsEnabled = true;
                             txtJobOrder.Text = Convert.ToString(service);
                             using (SqlCommand cmd = new SqlCommand("SELECT * from TarpMaterial where JobOrderNo = @jobOrderNo", conn))
                             {
@@ -547,7 +545,6 @@ namespace Goldpoint_Inventory_System.Log
                         {
                             exJobOrder.IsEnabled = true;
                             btnPrintJobOrder.IsEnabled = true;
-                            btnPrintDRJobOrder.IsEnabled = true;
                             txtJobOrder.Text = Convert.ToString(service);
                             using (SqlCommand cmd = new SqlCommand("SELECT * from ServiceMaterial sm INNER JOIN InventoryItems ii on sm.itemCode = ii.itemCode where JobOrderNo = @jobOrderNo", conn))
                             {
@@ -588,7 +585,6 @@ namespace Goldpoint_Inventory_System.Log
                         {
                             exJobOrderTarp.IsEnabled = true;
                             btnPrintJobOrder.IsEnabled = true;
-                            btnPrintDRJobOrder.IsEnabled = true;
                             txtJobOrder.Text = Convert.ToString(service);
                             using (SqlCommand cmd = new SqlCommand("SELECT * from TarpMaterial where JobOrderNo = @jobOrderNo", conn))
                             {
@@ -819,7 +815,6 @@ namespace Goldpoint_Inventory_System.Log
                         {
                             exJobOrder.IsEnabled = true;
                             btnPrintJobOrder.IsEnabled = true;
-                            btnPrintDRJobOrder.IsEnabled = true;
                             txtJobOrder.Text = Convert.ToString(service);
                             using (SqlCommand cmd = new SqlCommand("SELECT * from ServiceMaterial sm INNER JOIN InventoryItems ii on sm.itemCode = ii.itemCode where JobOrderNo = @jobOrderNo", conn))
                             {
@@ -860,7 +855,7 @@ namespace Goldpoint_Inventory_System.Log
                         {
                             exJobOrderTarp.IsEnabled = true;
                             btnPrintJobOrder.IsEnabled = true;
-                            btnPrintDRJobOrder.IsEnabled = true;
+
                             txtJobOrder.Text = Convert.ToString(service);
                             using (SqlCommand cmd = new SqlCommand("SELECT * from TarpMaterial where JobOrderNo = @jobOrderNo", conn))
                             {
@@ -1002,7 +997,7 @@ namespace Goldpoint_Inventory_System.Log
                                     exist = true;
                                     exJobOrderTarp.IsEnabled = true;
                                     btnPrintJobOrder.IsEnabled = true;
-                                    btnPrintDRJobOrder.IsEnabled = true;
+
                                     txtJobOrder.Text = Convert.ToString(service);
 
                                 }
@@ -1165,7 +1160,7 @@ namespace Goldpoint_Inventory_System.Log
                                     exist = true;
                                     exJobOrder.IsEnabled = true;
                                     btnPrintJobOrder.IsEnabled = true;
-                                    btnPrintDRJobOrder.IsEnabled = true;
+
                                     txtJobOrder.Text = Convert.ToString(service);
                                 }
                                 else
@@ -1385,9 +1380,82 @@ namespace Goldpoint_Inventory_System.Log
                                             catch (SqlException ex)
                                             {
                                                 MessageBox.Show("An error has been encountered! " + ex);
-
                                             }
 
+                                        }
+                                        using (SqlCommand cmd1 = new SqlCommand("INSERT into Sales VALUES (@date, @service, @total, 'Paid')", conn))
+                                        {
+                                            cmd1.Parameters.AddWithValue("@date", txtDatePayment.Text);
+                                            if (stockOut.Count > 0)
+                                            {
+                                                cmd1.Parameters.AddWithValue("@service", "Stock Out");
+                                            }
+                                            else if (photocopy.Count > 0)
+                                            {
+                                                cmd1.Parameters.AddWithValue("@service", "Photocopy");
+                                            }
+                                            else if (services.Count > 0)
+                                            {
+                                                cmd1.Parameters.AddWithValue("@service", "Printing, Services, etc.");
+                                            }
+                                            else if (tarp.Count > 0)
+                                            {
+                                                cmd1.Parameters.AddWithValue("@service", "Tarpaulin");
+                                            }
+                                            cmd1.Parameters.AddWithValue("@total", txtTotal.Value);
+                                            try
+                                            {
+                                                cmd1.ExecuteNonQuery();
+                                            }
+                                            catch (SqlException ex)
+                                            {
+                                                MessageBox.Show("An error has been encountered! " + ex);
+                                            }
+                                        }
+                                        using (SqlCommand cmd1 = new SqlCommand("INSERT into TransactionLogs (date, [transaction], remarks) VALUES (@date, @transaction, '')", conn))
+                                        {
+                                            cmd1.Parameters.AddWithValue("@date", txtDate.Text);
+                                            cmd1.Parameters.AddWithValue("@transaction", "Customer: " + txtCustName.Text + ", with D.R No: " + txtDRNo.Text + ", paid Php " + txtAmount.Text + ". Current Outstanding Balance is Php " + txtTotal.Text);
+                                            try
+                                            {
+                                                cmd.ExecuteNonQuery();
+                                            }
+                                            catch (SqlException ex)
+                                            {
+                                                MessageBox.Show("An error has been encountered!" + ex);
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        using (SqlCommand cmd1 = new SqlCommand("INSERT into Sales VALUES (@date, @service, @total, 'Downpayment')", conn))
+                                        {
+                                            cmd1.Parameters.AddWithValue("@date", txtDatePayment.Text);
+                                            if (stockOut.Count > 0)
+                                            {
+                                                cmd1.Parameters.AddWithValue("@service", "Stock Out");
+                                            }
+                                            else if (photocopy.Count > 0)
+                                            {
+                                                cmd1.Parameters.AddWithValue("@service", "Photocopy");
+                                            }
+                                            else if (services.Count > 0)
+                                            {
+                                                cmd1.Parameters.AddWithValue("@service", "Printing, Services, etc.");
+                                            }
+                                            else if (tarp.Count > 0)
+                                            {
+                                                cmd1.Parameters.AddWithValue("@service", "Tarpaulin");
+                                            }
+                                            cmd1.Parameters.AddWithValue("@total", txtTotal.Value);
+                                            try
+                                            {
+                                                cmd1.ExecuteNonQuery();
+                                            }
+                                            catch (SqlException ex)
+                                            {
+                                                MessageBox.Show("An error has been encountered! " + ex);
+                                            }
                                         }
                                     }
 
@@ -1398,6 +1466,7 @@ namespace Goldpoint_Inventory_System.Log
                                 }
 
                             }
+
                             break;
                         case MessageBoxResult.No:
                             return;
@@ -1563,6 +1632,8 @@ namespace Goldpoint_Inventory_System.Log
 
         private void BtnPrintJobOrder_Click(object sender, RoutedEventArgs e)
         {
+            DocToPDFConverter converter = new DocToPDFConverter();
+            PdfDocument pdfDocument;
             //should print 2 receipts, for customer and company
             if (txtJobOrder.Text == "Printing, Services, etc.")
             {
@@ -1777,7 +1848,6 @@ namespace Goldpoint_Inventory_System.Log
                             textRange = textSelection.GetAsOneRange();
                             textRange.Text = "";
                         }
-
                         //optional
                         if (counter2 > 1)
                         {
@@ -1815,14 +1885,14 @@ namespace Goldpoint_Inventory_System.Log
                                 textRange = textSelection.GetAsOneRange();
                                 textRange.Text = "";
                             }
-                            document2.Save("Sample-2.docx", FormatType.Docx);
+                            pdfDocument = converter.ConvertToPDF(document2);
+                            pdfDocument.Save(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/Sample-2.pdf");
                             document2.Close();
+
                         }
-
-
-
-                        document.Save("Sample.docx", FormatType.Docx);
-                        document.Close();
+                        pdfDocument = converter.ConvertToPDF(document);
+                        pdfDocument.Save(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/Sample.pdf");
+                        pdfDocument.Close(true);
                     }
 
                 }
@@ -2084,12 +2154,16 @@ namespace Goldpoint_Inventory_System.Log
                                 textRange = textSelection.GetAsOneRange();
                                 textRange.Text = "";
 
-                                document2.Save("Sample-2.docx", FormatType.Docx);
+                                pdfDocument = converter.ConvertToPDF(document2);
+                                pdfDocument.Save(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/Sample-2.pdf");
                                 document2.Close();
                             }
                         }
 
-                        document.Save("Sample.docx", FormatType.Docx);
+                        pdfDocument = converter.ConvertToPDF(document);
+                        pdfDocument.Save(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/Sample.pdf");
+                        pdfDocument.Close(true);
+
                         document.Close();
 
                     }
@@ -2104,13 +2178,10 @@ namespace Goldpoint_Inventory_System.Log
 
         }
 
-        private void BtnPrintDRJobOrder_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
         private void BtnPrintDR_Click(object sender, RoutedEventArgs e)
         {
+            DocToPDFConverter converter = new DocToPDFConverter();
+            PdfDocument pdfDocument;
             //should print 2 receipts, for customer and company
             try
             {
@@ -2195,7 +2266,6 @@ namespace Goldpoint_Inventory_System.Log
                                 textRange.Text = item.amount.ToString();
                                 counter++;
                             }
-
                         }
                     }
                     else if (tarp.Count > 0)
@@ -2329,7 +2399,6 @@ namespace Goldpoint_Inventory_System.Log
                                 textSelection = document.Find("<amount" + counter + ">", false, true);
                                 textRange = textSelection.GetAsOneRange();
                                 textRange.Text = item.totalPerItem.ToString();
-
                                 counter++;
                             }
 
@@ -2356,7 +2425,7 @@ namespace Goldpoint_Inventory_System.Log
                         textRange = textSelection.GetAsOneRange();
                         textRange.Text = "";
                     }
-                    if (counter > 12)
+                    if (counter2 > 1)
                     {
                         for (int i = counter2; i <= 13; i++)
                         {
@@ -2376,13 +2445,14 @@ namespace Goldpoint_Inventory_System.Log
                             textRange = textSelection.GetAsOneRange();
                             textRange.Text = "";
                         }
-                        document.Save("Sample-2.docx", FormatType.Docx);
-                        document.Close();
+                        pdfDocument = converter.ConvertToPDF(document2);
+                        pdfDocument.Save(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/Sample-2.pdf");
+                        document2.Close();
+
                     }
-
-
-                    document.Save("Sample.docx", FormatType.Docx);
-                    document.Close();
+                    pdfDocument = converter.ConvertToPDF(document);
+                    pdfDocument.Save(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/Sample.pdf");
+                    pdfDocument.Close(true);
 
                 }
             }
@@ -2392,6 +2462,5 @@ namespace Goldpoint_Inventory_System.Log
                 return;
             }
         }
-
     }
 }

@@ -419,7 +419,7 @@ namespace Goldpoint_Inventory_System.Transactions
                                 cmd.Parameters.AddWithValue("@date", txtDate.Text);
                                 cmd.Parameters.AddWithValue("@service", "Photocopy");
                                 cmd.Parameters.AddWithValue("@total", txtDownpayment.Value);
-                                cmd.Parameters.AddWithValue("@status", "Paid");
+                                cmd.Parameters.AddWithValue("@status", "Downpayment");
                                 try
                                 {
                                     cmd.ExecuteNonQuery();

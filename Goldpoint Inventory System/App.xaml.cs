@@ -16,7 +16,7 @@ namespace Goldpoint_Inventory_System
 	{
         public App()
         {
-            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("Mzc2NzA2QDMxMzgyZTM0MmUzMFY2OHM0SFVKK05TWFhwc0wxWEtKU3VzbDUzc2VyVjVsQ0lSUksyTW83SlE9");
+            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("Mzg2MDY1QDMxMzgyZTM0MmUzMEJZUmNoeFdncVJkd2ZuK09STmo1S2VURFhXMWJtOTNiQVFhQzFpQkU3dlU9");
             SfSkinManager.ApplyStylesOnApplication = true;
 
         }
