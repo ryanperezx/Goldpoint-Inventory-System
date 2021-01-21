@@ -92,7 +92,7 @@ namespace Goldpoint_Inventory_System
                     }
                     else
                     {
-                        MessageBox.Show("Incorrect security question answer. Please try again.");
+                        MessageBox.Show("Incorrect security question answer. Please try again.")
                     }
 
                 }

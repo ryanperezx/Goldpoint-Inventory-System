@@ -236,8 +236,6 @@ namespace Goldpoint_Inventory_System.Transactions
                             txtDownpayment.MaxValue = (double)txtTotal.Value - 1;
                             txtDiscount.MaxValue = (double)txtTotal.Value - 1;
                             txtQty.Value = 0;
-                            txtItemPrice.Value = 0;
-                            ckDealersPrice.IsChecked = false;
 
                         }
                         else
@@ -284,10 +282,7 @@ namespace Goldpoint_Inventory_System.Transactions
                             txtSize.Text = Convert.ToString(reader.GetValue(sizeIndex));
 
                             int msrpIndex = reader.GetOrdinal("MSRP");
-                            txtItemPrice.Value = Convert.ToDouble(reader.GetValue(msrpIndex));
-
-                            ckDealersPrice.IsChecked = false;
-
+                            txtItemPrice.Value = Convert.ToInt32(reader.GetValue(msrpIndex));
                         }
                         else
                         {
@@ -340,7 +335,6 @@ namespace Goldpoint_Inventory_System.Transactions
             txtTotalPerItem.Value = 0;
             txtTransactRemarks.Document.Blocks.Clear();
             txtType.Text = null;
-            ckDealersPrice.IsChecked = false;
             getDRNo();
 
             chkInv.IsChecked = false;
@@ -673,67 +667,12 @@ namespace Goldpoint_Inventory_System.Transactions
                 items.RemoveAt(items.Count - 1);
             }
         }
+
         private void TxtDiscount_TextChanged(object sender, TextChangedEventArgs e)
         {
             if(txtDiscount.Value > 0 && txtTotal.Value > 0)
             {
                 txtDownpayment.MaxValue = Convert.ToDouble(txtTotal.Value - txtDiscount.Value) - 1;
-            }
-        }
-
-        private void CkDealersPrice_Checked(object sender, RoutedEventArgs e)
-        {
-            if(!string.IsNullOrEmpty(txtItemCode.Text) && !string.IsNullOrEmpty(txtDesc.Text))
-            {
-                SqlConnection conn = DBUtils.GetDBConnection();
-                conn.Open();
-                using (SqlCommand cmd = new SqlCommand("SELECT dealersPrice from Inventoryitems where itemCode = @itemCode", conn))
-                {
-                    cmd.Parameters.AddWithValue("@itemCode", txtItemCode.Text);
-                    using (SqlDataReader reader = cmd.ExecuteReader())
-                    {
-                        if (reader.Read())
-                        {
-                            int dealersPriceIndex = reader.GetOrdinal("dealersPrice");
-                            double dealersPrice = Convert.ToDouble(reader.GetValue(dealersPriceIndex));
-                            txtItemPrice.Value = dealersPrice;
-
-                            txtTotalPerItem.Value = txtItemPrice.Value * txtQty.Value;
-                        }
-                    }
-                }
-            }
-            else
-            {
-                txtItemPrice.Value = 0;
-            }
-        }
-
-        private void CkDealersPrice_Unchecked(object sender, RoutedEventArgs e)
-        {
-            if (!string.IsNullOrEmpty(txtItemCode.Text) && !string.IsNullOrEmpty(txtDesc.Text))
-            {
-                SqlConnection conn = DBUtils.GetDBConnection();
-                conn.Open();
-                using (SqlCommand cmd = new SqlCommand("SELECT msrp from Inventoryitems where itemCode = @itemCode", conn))
-                {
-                    cmd.Parameters.AddWithValue("@itemCode", txtItemCode.Text);
-                    using (SqlDataReader reader = cmd.ExecuteReader())
-                    {
-                        if (reader.Read())
-                        {
-                            int msrpIndex = reader.GetOrdinal("msrp");
-                            double msrp = Convert.ToDouble(reader.GetValue(msrpIndex));
-                            txtItemPrice.Value = msrp;
-
-                            txtTotalPerItem.Value = txtItemPrice.Value * txtQty.Value;
-                        }
-                    }
-                }
-            }
-            else
-            {
-                txtItemPrice.Value = 0;
             }
         }
     }
