@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using NLog;
 
 namespace Goldpoint_Inventory_System.Stock
 {
@@ -12,6 +13,8 @@ namespace Goldpoint_Inventory_System.Stock
     public partial class StockIn : UserControl
     {
         ObservableCollection<ItemDataModel> items = new ObservableCollection<ItemDataModel>();
+        private static Logger Log = LogManager.GetCurrentClassLogger();
+
         public StockIn()
         {
             InitializeComponent();
@@ -24,6 +27,10 @@ namespace Goldpoint_Inventory_System.Stock
             if (string.IsNullOrEmpty(txtItemCode.Text) || string.IsNullOrEmpty(txtQty.Text) || string.IsNullOrEmpty(txtDesc.Text))
             {
                 MessageBox.Show("One or more fields is empty!");
+            }
+            else if(txtQty.Value == 0)
+            {
+                MessageBox.Show("Please change quantity value to anything greater than zero.");
             }
             else
             {
@@ -119,7 +126,9 @@ namespace Goldpoint_Inventory_System.Stock
                                     }
                                     catch (SqlException ex)
                                     {
-                                        MessageBox.Show("Error has been encountered!" + ex);
+                                        MessageBox.Show("An error has been encountered! Log has been updated with the error");
+                                        Log = LogManager.GetLogger("*");
+                                        Log.Error(ex, "Query Error");
                                         return;
                                     }
                                 }
@@ -139,7 +148,9 @@ namespace Goldpoint_Inventory_System.Stock
                                     }
                                     catch (SqlException ex)
                                     {
-                                        MessageBox.Show("Error has been encountered!" + ex);
+                                        MessageBox.Show("An error has been encountered! Log has been updated with the error");
+                                        Log = LogManager.GetLogger("*");
+                                        Log.Error(ex, "Query Error");
                                         return;
 
                                     }
@@ -160,7 +171,9 @@ namespace Goldpoint_Inventory_System.Stock
                                 }
                                 catch (SqlException ex)
                                 {
-                                    MessageBox.Show("Error has been encountered!" + ex);
+                                    MessageBox.Show("An error has been encountered! Log has been updated with the error");
+                                    Log = LogManager.GetLogger("*");
+                                    Log.Error(ex, "Query Error");
                                     return;
                                 }
 

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
+using NLog;
 
 namespace Goldpoint_Inventory_System.Transactions
 {
@@ -14,6 +15,8 @@ namespace Goldpoint_Inventory_System.Transactions
     public partial class StockOut : UserControl
     {
         ObservableCollection<ItemDataModel> items = new ObservableCollection<ItemDataModel>();
+        private static Logger Log = LogManager.GetCurrentClassLogger();
+
         public StockOut()
         {
             InitializeComponent();
@@ -94,7 +97,7 @@ namespace Goldpoint_Inventory_System.Transactions
                 {
                     SqlConnection conn = DBUtils.GetDBConnection();
                     conn.Open();
-                    using (SqlCommand cmd = new SqlCommand("SELECT TOP 1 ORNo from TransactionDetails WHERE TRIM(ORNo) is not null AND DATALENGTH(ORNo) > 0  ORDER BY ORNo DESC", conn))
+                    using (SqlCommand cmd = new SqlCommand("SELECT TOP 1 ORNo from TransactionDetails WHERE ORNo is not null AND DATALENGTH(ORNo) > 0  ORDER BY ORNo DESC", conn))
                     {
                         using (SqlDataReader reader = cmd.ExecuteReader())
                         {
@@ -114,7 +117,7 @@ namespace Goldpoint_Inventory_System.Transactions
                 {
                     SqlConnection conn = DBUtils.GetDBConnection();
                     conn.Open();
-                    using (SqlCommand cmd = new SqlCommand("SELECT TOP 1 InvoiceNo from TransactionDetails WHERE TRIM(invoiceNo) is not null AND DATALENGTH(invoiceNo) > 0 ORDER BY InvoiceNo DESC", conn))
+                    using (SqlCommand cmd = new SqlCommand("SELECT TOP 1 InvoiceNo from TransactionDetails WHERE invoiceNo is not null AND DATALENGTH(invoiceNo) > 0 ORDER BY InvoiceNo DESC", conn))
                     {
                         using (SqlDataReader reader = cmd.ExecuteReader())
                         {
@@ -236,6 +239,8 @@ namespace Goldpoint_Inventory_System.Transactions
                             txtDownpayment.MaxValue = (double)txtTotal.Value - 1;
                             txtDiscount.MaxValue = (double)txtTotal.Value - 1;
                             txtQty.Value = 0;
+                            txtItemPrice.Value = 0;
+                            ckDealersPrice.IsChecked = false;
 
                         }
                         else
@@ -282,7 +287,10 @@ namespace Goldpoint_Inventory_System.Transactions
                             txtSize.Text = Convert.ToString(reader.GetValue(sizeIndex));
 
                             int msrpIndex = reader.GetOrdinal("MSRP");
-                            txtItemPrice.Value = Convert.ToInt32(reader.GetValue(msrpIndex));
+                            txtItemPrice.Value = Convert.ToDouble(reader.GetValue(msrpIndex));
+
+                            ckDealersPrice.IsChecked = false;
+
                         }
                         else
                         {
@@ -340,6 +348,7 @@ namespace Goldpoint_Inventory_System.Transactions
             chkInv.IsChecked = false;
             chkOR.IsChecked = false;
             chkCompany.IsChecked = false;
+            ckDealersPrice.IsChecked = false;
 
         }
 
@@ -354,7 +363,7 @@ namespace Goldpoint_Inventory_System.Transactions
             }
             else if (string.IsNullOrEmpty(txtDate.Text) || string.IsNullOrEmpty(txtCustName.Text))
             {
-                if (chkCompany.IsChecked == false && string.IsNullOrEmpty(txtContactNo.Text) || string.IsNullOrEmpty(address))
+                if (chkCompany.IsChecked == false || string.IsNullOrEmpty(txtContactNo.Text) || string.IsNullOrEmpty(address))
                 {
                     MessageBox.Show("One or more fields are empty!");
                 }
@@ -415,7 +424,9 @@ namespace Goldpoint_Inventory_System.Transactions
                                     }
                                     catch (SqlException ex)
                                     {
-                                        MessageBox.Show("An error has been encountered!" + ex);
+                                        MessageBox.Show("An error has been encountered! Log has been updated with the error");
+                                        Log = LogManager.GetLogger("*");
+                                        Log.Error(ex, "Query Error");
                                     }
                                 }
                             }
@@ -431,7 +442,9 @@ namespace Goldpoint_Inventory_System.Transactions
                                 }
                                 catch (SqlException ex)
                                 {
-                                    MessageBox.Show("An error has been encountered!" + ex);
+                                    MessageBox.Show("An error has been encountered! Log has been updated with the error");
+                                    Log = LogManager.GetLogger("*");
+                                    Log.Error(ex, "Query Error");
                                 }
                             }
                         }
@@ -449,7 +462,9 @@ namespace Goldpoint_Inventory_System.Transactions
                                 }
                                 catch (SqlException ex)
                                 {
-                                    MessageBox.Show("An error has been encountered!" + ex);
+                                    MessageBox.Show("An error has been encountered! Log has been updated with the error");
+                                    Log = LogManager.GetLogger("*");
+                                    Log.Error(ex, "Query Error");
                                     success = false;
                                 }
                             }
@@ -468,7 +483,9 @@ namespace Goldpoint_Inventory_System.Transactions
                                 }
                                 catch (SqlException ex)
                                 {
-                                    MessageBox.Show("An error has been encountered!" + ex);
+                                    MessageBox.Show("An error has been encountered! Log has been updated with the error");
+                                    Log = LogManager.GetLogger("*");
+                                    Log.Error(ex, "Query Error");
                                     success = false;
                                 }
                             }
@@ -486,7 +503,9 @@ namespace Goldpoint_Inventory_System.Transactions
                                 }
                                 catch (SqlException ex)
                                 {
-                                    MessageBox.Show("An error has been encountered!" + ex);
+                                    MessageBox.Show("An error has been encountered! Log has been updated with the error");
+                                    Log = LogManager.GetLogger("*");
+                                    Log.Error(ex, "Query Error");
                                     success = false;
                                 }
                             }
@@ -516,7 +535,9 @@ namespace Goldpoint_Inventory_System.Transactions
                                 }
                                 catch (SqlException ex)
                                 {
-                                    MessageBox.Show("An error has been encountered!" + ex);
+                                    MessageBox.Show("An error has been encountered! Log has been updated with the error");
+                                    Log = LogManager.GetLogger("*");
+                                    Log.Error(ex, "Query Error");
                                     success = false;
                                 }
                             }
@@ -554,7 +575,9 @@ namespace Goldpoint_Inventory_System.Transactions
                                 }
                                 catch (SqlException ex)
                                 {
-                                    MessageBox.Show("An error has been encountered!" + ex);
+                                    MessageBox.Show("An error has been encountered! Log has been updated with the error");
+                                    Log = LogManager.GetLogger("*");
+                                    Log.Error(ex, "Query Error");
                                     success = false;
 
                                 }
@@ -573,7 +596,9 @@ namespace Goldpoint_Inventory_System.Transactions
                                 }
                                 catch (SqlException ex)
                                 {
-                                    MessageBox.Show("An error has been encountered!" + ex);
+                                    MessageBox.Show("An error has been encountered! Log has been updated with the error");
+                                    Log = LogManager.GetLogger("*");
+                                    Log.Error(ex, "Query Error");
                                     success = false;
                                 }
                             }
@@ -596,7 +621,7 @@ namespace Goldpoint_Inventory_System.Transactions
         {
             SqlConnection conn = DBUtils.GetDBConnection();
             conn.Open();
-            using (SqlCommand cmd = new SqlCommand("SELECT TOP 1 DRNo from TransactionDetails WHERE TRIM(DRNo) is not null AND DATALENGTH(DRNo) > 0 ORDER BY DRNo DESC", conn))
+            using (SqlCommand cmd = new SqlCommand("SELECT TOP 1 DRNo from TransactionDetails WHERE DRNo is not null AND DATALENGTH(DRNo) > 0 ORDER BY DRNo DESC", conn))
             {
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
@@ -616,7 +641,7 @@ namespace Goldpoint_Inventory_System.Transactions
         {
             SqlConnection conn = DBUtils.GetDBConnection();
             conn.Open();
-            using (SqlCommand cmd = new SqlCommand("SELECT TOP 1 InvoiceNo from TransactionDetails WHERE TRIM(invoiceNo) is not null AND DATALENGTH(invoiceNo) > 0 ORDER BY InvoiceNo DESC", conn))
+            using (SqlCommand cmd = new SqlCommand("SELECT TOP 1 InvoiceNo from TransactionDetails WHERE invoiceNo is not null AND DATALENGTH(invoiceNo) > 0 ORDER BY InvoiceNo DESC", conn))
             {
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
@@ -636,7 +661,7 @@ namespace Goldpoint_Inventory_System.Transactions
         {
             SqlConnection conn = DBUtils.GetDBConnection();
             conn.Open();
-            using (SqlCommand cmd = new SqlCommand("SELECT TOP 1 ORNo from TransactionDetails WHERE TRIM(ORNo) is not null AND DATALENGTH(ORNo) > 0  ORDER BY ORNo DESC", conn))
+            using (SqlCommand cmd = new SqlCommand("SELECT TOP 1 ORNo from TransactionDetails WHERE ORNo is not null AND DATALENGTH(ORNo) > 0  ORDER BY ORNo DESC", conn))
             {
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
@@ -675,5 +700,62 @@ namespace Goldpoint_Inventory_System.Transactions
                 txtDownpayment.MaxValue = Convert.ToDouble(txtTotal.Value - txtDiscount.Value) - 1;
             }
         }
+
+        private void CkDealersPrice_Checked(object sender, RoutedEventArgs e)
+        {
+            if (!string.IsNullOrEmpty(txtItemCode.Text) && !string.IsNullOrEmpty(txtDesc.Text))
+            {
+                SqlConnection conn = DBUtils.GetDBConnection();
+                conn.Open();
+                using (SqlCommand cmd = new SqlCommand("SELECT dealersPrice from Inventoryitems where itemCode = @itemCode", conn))
+                {
+                    cmd.Parameters.AddWithValue("@itemCode", txtItemCode.Text);
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            int dealersPriceIndex = reader.GetOrdinal("dealersPrice");
+                            double dealersPrice = Convert.ToDouble(reader.GetValue(dealersPriceIndex));
+                            txtItemPrice.Value = dealersPrice;
+
+                            txtTotalPerItem.Value = txtItemPrice.Value * txtQty.Value;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                txtItemPrice.Value = 0;
+            }
+        }
+
+        private void CkDealersPrice_Unchecked(object sender, RoutedEventArgs e)
+        {
+            if (!string.IsNullOrEmpty(txtItemCode.Text) && !string.IsNullOrEmpty(txtDesc.Text))
+            {
+                SqlConnection conn = DBUtils.GetDBConnection();
+                conn.Open();
+                using (SqlCommand cmd = new SqlCommand("SELECT msrp from Inventoryitems where itemCode = @itemCode", conn))
+                {
+                    cmd.Parameters.AddWithValue("@itemCode", txtItemCode.Text);
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            int msrpIndex = reader.GetOrdinal("msrp");
+                            double msrp = Convert.ToDouble(reader.GetValue(msrpIndex));
+                            txtItemPrice.Value = msrp;
+
+                            txtTotalPerItem.Value = txtItemPrice.Value * txtQty.Value;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                txtItemPrice.Value = 0;
+            }
+        }
+
     }
 }

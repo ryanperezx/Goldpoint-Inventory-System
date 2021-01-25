@@ -95,7 +95,7 @@ namespace Goldpoint_Inventory_System
                     else
                     {
                         MessageBox.Show("User does not exist!");
-
+                        return;
                     }
                 }
 

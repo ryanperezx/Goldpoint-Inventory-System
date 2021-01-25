@@ -10,6 +10,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
+using NLog;
 
 namespace Goldpoint_Inventory_System.Log
 {
@@ -23,6 +24,7 @@ namespace Goldpoint_Inventory_System.Log
         ObservableCollection<PaymentHistoryDataModel> payHist = new ObservableCollection<PaymentHistoryDataModel>();
         ObservableCollection<JobOrderDataModel> services = new ObservableCollection<JobOrderDataModel>();
         ObservableCollection<JobOrderDataModel> tarp = new ObservableCollection<JobOrderDataModel>();
+        private static Logger Log = LogManager.GetCurrentClassLogger();
 
         //for payment and claiming button
         bool exist = false;
@@ -1365,8 +1367,9 @@ namespace Goldpoint_Inventory_System.Log
                                             }
                                             catch (SqlException ex)
                                             {
-                                                MessageBox.Show("An error has been encountered! " + ex);
-
+                                                MessageBox.Show("An error has been encountered! Log has been updated with the error");
+                                                Log = LogManager.GetLogger("*");
+                                                Log.Error(ex, "Query Error");
                                             }
 
                                         }
@@ -1379,7 +1382,9 @@ namespace Goldpoint_Inventory_System.Log
                                             }
                                             catch (SqlException ex)
                                             {
-                                                MessageBox.Show("An error has been encountered! " + ex);
+                                                MessageBox.Show("An error has been encountered! Log has been updated with the error");
+                                                Log = LogManager.GetLogger("*");
+                                                Log.Error(ex, "Query Error");
                                             }
 
                                         }
@@ -1409,7 +1414,9 @@ namespace Goldpoint_Inventory_System.Log
                                             }
                                             catch (SqlException ex)
                                             {
-                                                MessageBox.Show("An error has been encountered! " + ex);
+                                                MessageBox.Show("An error has been encountered! Log has been updated with the error");
+                                                Log = LogManager.GetLogger("*");
+                                                Log.Error(ex, "Query Error");
                                             }
                                         }
                                         using (SqlCommand cmd1 = new SqlCommand("INSERT into TransactionLogs (date, [transaction], remarks) VALUES (@date, @transaction, '')", conn))
@@ -1422,7 +1429,9 @@ namespace Goldpoint_Inventory_System.Log
                                             }
                                             catch (SqlException ex)
                                             {
-                                                MessageBox.Show("An error has been encountered!" + ex);
+                                                MessageBox.Show("An error has been encountered! Log has been updated with the error");
+                                                Log = LogManager.GetLogger("*");
+                                                Log.Error(ex, "Query Error");
                                             }
                                         }
                                     }
@@ -1454,7 +1463,9 @@ namespace Goldpoint_Inventory_System.Log
                                             }
                                             catch (SqlException ex)
                                             {
-                                                MessageBox.Show("An error has been encountered! " + ex);
+                                                MessageBox.Show("An error has been encountered! Log has been updated with the error");
+                                                Log = LogManager.GetLogger("*");
+                                                Log.Error(ex, "Query Error");
                                             }
                                         }
                                     }
@@ -1462,7 +1473,9 @@ namespace Goldpoint_Inventory_System.Log
                                 }
                                 catch (SqlException ex)
                                 {
-                                    MessageBox.Show("An error has been encountered! " + ex);
+                                    MessageBox.Show("An error has been encountered! Log has been updated with the error");
+                                    Log = LogManager.GetLogger("*");
+                                    Log.Error(ex, "Query Error");
                                 }
 
                             }
@@ -1481,7 +1494,6 @@ namespace Goldpoint_Inventory_System.Log
             }
 
         }
-
         private void BtnClaiming_Click(object sender, RoutedEventArgs e)
         {
             if (exist == true)
@@ -1509,7 +1521,9 @@ namespace Goldpoint_Inventory_System.Log
                             }
                             catch (SqlException ex)
                             {
-                                MessageBox.Show("An error has been encountered! " + ex);
+                                MessageBox.Show("An error has been encountered! Log has been updated with the error");
+                                Log = LogManager.GetLogger("*");
+                                Log.Error(ex, "Query Error");
                             }
                         }
                         break;
@@ -1524,7 +1538,6 @@ namespace Goldpoint_Inventory_System.Log
                 MessageBox.Show("Please search for the transaction first.");
             }
         }
-
         private void BtnIssueInvoiceJobOrder_Click(object sender, RoutedEventArgs e)
         {
 
@@ -1539,7 +1552,7 @@ namespace Goldpoint_Inventory_System.Log
                 case MessageBoxResult.Yes:
                     SqlConnection conn = DBUtils.GetDBConnection();
                     conn.Open();
-                    using (SqlCommand cmd = new SqlCommand("SELECT TOP 1 InvoiceNo from TransactionDetails WHERE TRIM(invoiceNo) is not null AND DATALENGTH(invoiceNo) > 0 ORDER BY InvoiceNo DESC", conn))
+                    using (SqlCommand cmd = new SqlCommand("SELECT TOP 1 InvoiceNo from TransactionDetails WHERE invoiceNo is not null AND DATALENGTH(invoiceNo) > 0 ORDER BY InvoiceNo DESC", conn))
                     {
                         using (SqlDataReader reader = cmd.ExecuteReader())
                         {
@@ -1563,7 +1576,9 @@ namespace Goldpoint_Inventory_System.Log
                         }
                         catch (SqlException ex)
                         {
-                            MessageBox.Show("An error has been encountered! " + ex);
+                            MessageBox.Show("An error has been encountered! Log has been updated with the error");
+                            Log = LogManager.GetLogger("*");
+                            Log.Error(ex, "Query Error");
                             return;
                         }
                     }
@@ -1590,7 +1605,7 @@ namespace Goldpoint_Inventory_System.Log
                 case MessageBoxResult.Yes:
                     SqlConnection conn = DBUtils.GetDBConnection();
                     conn.Open();
-                    using (SqlCommand cmd = new SqlCommand("SELECT TOP 1 ORNo from TransactionDetails WHERE TRIM(ORNo) is not null AND DATALENGTH(ORNo) > 0  ORDER BY ORNo DESC", conn))
+                    using (SqlCommand cmd = new SqlCommand("SELECT TOP 1 ORNo from TransactionDetails WHERE ORNo is not null AND DATALENGTH(ORNo) > 0  ORDER BY ORNo DESC", conn))
                     {
                         using (SqlDataReader reader = cmd.ExecuteReader())
                         {
@@ -1615,7 +1630,9 @@ namespace Goldpoint_Inventory_System.Log
                         }
                         catch (SqlException ex)
                         {
-                            MessageBox.Show("An error has been encountered! " + ex);
+                            MessageBox.Show("An error has been encountered! Log has been updated with the error");
+                            Log = LogManager.GetLogger("*");
+                            Log.Error(ex, "Query Error");
                             return;
                         }
                     }
@@ -1629,7 +1646,6 @@ namespace Goldpoint_Inventory_System.Log
             }
 
         }
-
         private void BtnPrintJobOrder_Click(object sender, RoutedEventArgs e)
         {
             DocToPDFConverter converter = new DocToPDFConverter();
@@ -1898,7 +1914,9 @@ namespace Goldpoint_Inventory_System.Log
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("An error has been encountered" + ex);
+                    MessageBox.Show("An error has been encountered! Log has been updated with the error");
+                    Log = LogManager.GetLogger("*");
+                    Log.Error(ex, "Query Error");
                     return;
                 }
 
@@ -2170,14 +2188,15 @@ namespace Goldpoint_Inventory_System.Log
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("An error has been encountered" + ex);
+                    MessageBox.Show("An error has been encountered! Log has been updated with the error");
+                    Log = LogManager.GetLogger("*");
+                    Log.Error(ex, "Query Error");
                     return;
                 }
 
             }
 
         }
-
         private void BtnPrintDR_Click(object sender, RoutedEventArgs e)
         {
             DocToPDFConverter converter = new DocToPDFConverter();
@@ -2458,7 +2477,9 @@ namespace Goldpoint_Inventory_System.Log
             }
             catch (Exception ex)
             {
-                MessageBox.Show("An error has been encountered" + ex);
+                MessageBox.Show("An error has been encountered! Log has been updated with the error");
+                Log = LogManager.GetLogger("*");
+                Log.Error(ex, "Query Error");
                 return;
             }
         }

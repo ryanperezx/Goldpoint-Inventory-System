@@ -9,7 +9,6 @@
         xmlns:transact="clr-namespace:Goldpoint_Inventory_System.Transactions"
         xmlns:logs="clr-namespace:Goldpoint_Inventory_System.Log"
         xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
-        xmlns:syncfusionskin ="clr-namespace:Syncfusion.SfSkinManager;assembly=Syncfusion.SfSkinManager.WPF"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
         WindowState="Maximized"
@@ -64,6 +63,11 @@
                     <MenuItem x:Name="btnJohOrder" Tag="JobOrder" Header="Job Order" Click="ActivateWindow">
                         <MenuItem.Icon>
                             <iconPacks:PackIconMaterialDesign Kind="Bookmark"  Height="15" Width="22" Foreground="DimGray" Margin="0,0,-15,0"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem x:Name="btnTransactions" Header="Transaction List" Click="BtnTransactions_Click">
+                        <MenuItem.Icon>
+                            <iconPacks:PackIconMaterialDesign Kind="Receipt"  Height="15" Width="22" Foreground="DimGray" Margin="0,0,-15,0"/>
                         </MenuItem.Icon>
                     </MenuItem>
                 </MenuItem>

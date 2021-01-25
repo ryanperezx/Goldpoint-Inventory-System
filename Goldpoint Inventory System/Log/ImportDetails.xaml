@@ -8,7 +8,6 @@
              xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
              mc:Ignorable="d"
              FontSize="16"
-             xmlns:syncfusionskin ="clr-namespace:Syncfusion.SfSkinManager;assembly=Syncfusion.SfSkinManager.WPF"
              d:DesignHeight="600" d:DesignWidth="1350">
     <Grid Background="White">
         <Label x:Name="btnRefresh" MouseLeftButtonDown="BtnRefresh_MouseLeftButtonDown" VerticalAlignment="Top" HorizontalAlignment="Right" Cursor="Hand" Height="40" Width="40" ToolTip="Refresh">
@@ -18,11 +17,11 @@
             <iconPacks:PackIconMaterialLight Kind="Magnify" Height="20" Width="20" Foreground="DarkGoldenrod" />
         </Label>
         <Label Content="Item Code:" HorizontalAlignment="Left" Margin="85,24,0,0" VerticalAlignment="Top"/>
-        <syncfusion:SfTextBoxExt x:Name="txtItemCode" HorizontalAlignment="Left" Height="31" Margin="190,24,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <syncfusion:SfTextBoxExt x:Name="txtItemCode" HorizontalAlignment="Left" Height="31" Margin="190,24,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"  FontSize="16"/>
         <Label Content="Date From:" HorizontalAlignment="Left" Margin="379,24,0,0" VerticalAlignment="Top"/>
-        <syncfusion:DateTimeEdit x:Name="txtDateFrom"  HorizontalAlignment="Left" Height="31" Margin="485,24,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="150" TextChanged="TxtDateFrom_TextChanged"/>
+        <syncfusion:DateTimeEdit x:Name="txtDateFrom"  HorizontalAlignment="Left" Height="31" Margin="485,24,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="150" TextChanged="TxtDateFrom_TextChanged"  FontSize="16"/>
         <Label Content="Date To:" HorizontalAlignment="Left" Margin="688,24,0,0" VerticalAlignment="Top"/>
-        <syncfusion:DateTimeEdit x:Name="txtDateTo"  HorizontalAlignment="Left" Height="31" Margin="760,24,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="150" TextChanged="TxtDateTo_TextChanged"/>
+        <syncfusion:DateTimeEdit x:Name="txtDateTo"  HorizontalAlignment="Left" Height="31" Margin="760,24,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="150" TextChanged="TxtDateTo_TextChanged"  FontSize="16"/>
         <syncfusion:SfDataGrid x:Name="dgDetails" HorizontalAlignment="Left" Height="500" Margin="85,25,10,5" VerticalAlignment="Center" Width="1200" ItemsSource="{Binding}" AutoGenerateColumns="False" HeaderRowHeight="30">
             <syncfusion:SfDataGrid.Columns>
                 <syncfusion:GridTextColumn MappingName="Date" Width="150"  DisplayBinding="{Binding date}"/>

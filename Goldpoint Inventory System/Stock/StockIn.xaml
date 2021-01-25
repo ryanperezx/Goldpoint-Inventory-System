@@ -8,36 +8,35 @@
              xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
              mc:Ignorable="d"
              FontSize="16"
-             xmlns:syncfusionskin ="clr-namespace:Syncfusion.SfSkinManager;assembly=Syncfusion.SfSkinManager.WPF"
              d:DesignHeight="600" d:DesignWidth="1350">
     <Grid Background="White">
         <Label x:Name="btnRefresh" MouseLeftButtonDown="BtnRefresh_MouseLeftButtonDown" VerticalAlignment="Top" HorizontalAlignment="Right" Height="40" Width="40" Cursor="Hand" ToolTip="Refresh">
             <iconPacks:PackIconMaterialLight Kind="Refresh" Height="30" Width="30" Foreground="DarkGoldenrod"/>
         </Label>
         <Label Content="Date:" HorizontalAlignment="Left" Margin="159,58,0,0" VerticalAlignment="Top"/>
-        <syncfusion:DateTimeEdit x:Name="txtDate" HorizontalAlignment="Left" Height="31" Margin="258,58,0,0" TextWrapping="Wrap" Text="DateTimeEdit" VerticalAlignment="Top" Width="120"/>
+        <syncfusion:DateTimeEdit x:Name="txtDate" HorizontalAlignment="Left" Height="31" Margin="258,58,0,0" TextWrapping="Wrap" Text="DateTimeEdit" VerticalAlignment="Top" Width="120" FontSize="16"/>
         <Label Content="Item Code:" HorizontalAlignment="Left" Margin="159,104,0,0" VerticalAlignment="Top"/>
-        <syncfusion:SfTextBoxExt x:Name="txtItemCode" HorizontalAlignment="Left" Height="31" Margin="258,104,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
-        <Label x:Name="btnSearchItem" VerticalAlignment="Top" HorizontalAlignment="Left" Height="30" Width="30" Cursor="Hand" Margin="383,104,0,0" MouseLeftButtonUp="BtnSearchItem_MouseLeftButtonUp">
+        <syncfusion:SfTextBoxExt x:Name="txtItemCode" HorizontalAlignment="Left" Height="31" Margin="258,104,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" FontSize="16"/>
+        <Label x:Name="btnSearchItem" VerticalAlignment="Top" HorizontalAlignment="Left" Height="30" Width="30" Cursor="Hand" Margin="383,104,0,0" MouseLeftButtonUp="BtnSearchItem_MouseLeftButtonUp" FontSize="16">
             <iconPacks:PackIconMaterialLight Kind="Magnify" Height="20" Width="20" Foreground="DarkGoldenrod" />
         </Label>
         <Label Content="Description:" HorizontalAlignment="Left" Margin="159,143,0,0" VerticalAlignment="Top"/>
-        <syncfusion:SfTextBoxExt x:Name="txtDesc" HorizontalAlignment="Left" Height="31" Margin="258,143,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" IsEnabled="False"/>
+        <syncfusion:SfTextBoxExt x:Name="txtDesc" HorizontalAlignment="Left" Height="31" Margin="258,143,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" IsEnabled="False" FontSize="16"/>
         <Label Content="Type:" HorizontalAlignment="Left" Margin="159,180,0,0" VerticalAlignment="Top"/>
-        <syncfusion:SfTextBoxExt x:Name="txtType" HorizontalAlignment="Left" Height="31" Margin="258,180,0,0" VerticalAlignment="Top" Width="120" IsEnabled="False"/>
+        <syncfusion:SfTextBoxExt x:Name="txtType" HorizontalAlignment="Left" Height="31" Margin="258,180,0,0" VerticalAlignment="Top" Width="120" IsEnabled="False" FontSize="16"/>
         <Label Content="Brand:" HorizontalAlignment="Left" Margin="159,219,0,0" VerticalAlignment="Top"/>
-        <syncfusion:SfTextBoxExt x:Name="txtBrand" HorizontalAlignment="Left" Height="31" Margin="258,219,0,0" VerticalAlignment="Top" Width="120" IsEnabled="False"/>
+        <syncfusion:SfTextBoxExt x:Name="txtBrand" HorizontalAlignment="Left" Height="31" Margin="258,219,0,0" VerticalAlignment="Top" Width="120" IsEnabled="False" FontSize="16"/>
         <Label Content="Size:" HorizontalAlignment="Left" Margin="159,255,0,0" VerticalAlignment="Top"/>
-        <syncfusion:SfTextBoxExt x:Name="txtSize" HorizontalAlignment="Left" Height="30" Margin="258,259,0,0" VerticalAlignment="Top" Width="120" IsEnabled="False"/>
+        <syncfusion:SfTextBoxExt x:Name="txtSize" HorizontalAlignment="Left" Height="30" Margin="258,259,0,0" VerticalAlignment="Top" Width="120" IsEnabled="False" FontSize="16"/>
         <Label Content="Qty:" HorizontalAlignment="Left" Margin="159,294,0,0" VerticalAlignment="Top"/>
-        <syncfusion:IntegerTextBox x:Name="txtQty" HorizontalAlignment="Left" Height="31" Margin="258,294,0,0" MinWidth="100" NumberGroupSeparator="," TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="120" MinValue="0"/>
-        <Label Content="Remarks:" HorizontalAlignment="Left" Margin="159,330,0,0" VerticalAlignment="Top"/>
-        <syncfusion:SfTextBoxExt x:Name="txtRemarks" HorizontalAlignment="Left" Height="31" Margin="258,330,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <syncfusion:IntegerTextBox x:Name="txtQty" HorizontalAlignment="Left" Height="31" Margin="258,294,0,0" MinWidth="100" NumberGroupSeparator="," TextWrapping="Wrap" Text="100" FontSize="16" VerticalAlignment="Top" Width="120" MinValue="0"/>
+        <Label Content="Remarks:" HorizontalAlignment="Left" Margin="159,330,0,0" VerticalAlignment="Top" FontSize="16"/>
+        <syncfusion:SfTextBoxExt x:Name="txtRemarks" HorizontalAlignment="Left" Height="31" Margin="258,330,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" FontSize="16"/>
         <Label Content="Replacement?" HorizontalAlignment="Left" Margin="222,366,0,0" VerticalAlignment="Top"/>
         <RadioButton x:Name="rdReplacementYes" GroupName="Replacement" Content="Yes" HorizontalAlignment="Left" Margin="170,402,0,0" VerticalAlignment="Top"/>
         <RadioButton x:Name="rdReplacementNo" GroupName="Replacement" IsChecked="True" Content="No" HorizontalAlignment="Left" Margin="320,402,0,0" VerticalAlignment="Top"/>
         <Label Content="Fast moving:" HorizontalAlignment="Left" Margin="133,445,0,0" VerticalAlignment="Top"/>
-        <syncfusion:ComboBoxAdv x:Name="cmbFastMoving" HorizontalAlignment="Left" Height="31" Margin="250,445,0,0" VerticalAlignment="Top" Width="128" SelectedIndex="3">
+        <syncfusion:ComboBoxAdv x:Name="cmbFastMoving" HorizontalAlignment="Left" Height="31" Margin="250,445,0,0" VerticalAlignment="Top" Width="128" SelectedIndex="3" FontSize="16">
             <syncfusion:ComboBoxItemAdv>Every 30 days</syncfusion:ComboBoxItemAdv>
             <syncfusion:ComboBoxItemAdv>Every 15 days</syncfusion:ComboBoxItemAdv>
             <syncfusion:ComboBoxItemAdv>Every 7 days</syncfusion:ComboBoxItemAdv>

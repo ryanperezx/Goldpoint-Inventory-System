@@ -25,13 +25,13 @@
     </Window.Resources>
     <Grid>
         <Label Content="Job Order No:" HorizontalAlignment="Left" Margin="82,25,0,0" VerticalAlignment="Top"/>
-        <syncfusion:SfTextBoxExt x:Name="txtJobOrder" HorizontalAlignment="Left" Height="31" Margin="196,25,0,0" VerticalAlignment="Top" Width="155"/>
+        <syncfusion:SfTextBoxExt x:Name="txtJobOrder" HorizontalAlignment="Left" Height="31" Margin="196,25,0,0" VerticalAlignment="Top" Width="155" FontSize="16"/>
         <Label Content="Service:" HorizontalAlignment="Left" Margin="377,25,0,0" VerticalAlignment="Top"/>
         <Label x:Name="btnSearchJobOrder" VerticalAlignment="Top" HorizontalAlignment="Left" Height="30" Width="30" Cursor="Hand" Margin="650,26,0,0" MouseLeftButtonDown="BtnSearchJobOrder_MouseLeftButtonDown">
             <iconPacks:PackIconMaterialLight Kind="Magnify" Height="20" Width="20" Foreground="DarkGoldenrod" />
         </Label>
         <Label Content="Customer Name:" HorizontalAlignment="Left" Margin="722,25,0,0" VerticalAlignment="Top"/>
-        <syncfusion:SfTextBoxExt x:Name="txtCustName" TextChanged="TxtCustName_TextChanged" HorizontalAlignment="Left" Height="31" Margin="855,25,0,0" VerticalAlignment="Top" Width="170"/>
+        <syncfusion:SfTextBoxExt x:Name="txtCustName" TextChanged="TxtCustName_TextChanged" HorizontalAlignment="Left" Height="31" Margin="855,25,0,0" VerticalAlignment="Top" Width="170" FontSize="16"/>
         <syncfusion:ComboBoxAdv x:Name="cmbJobOrder" HorizontalAlignment="Left" Height="31" Margin="445,25,0,0" VerticalAlignment="Top" Width="200">
             <syncfusion:ComboBoxItemAdv>Printing, Services, etc.</syncfusion:ComboBoxItemAdv>
             <syncfusion:ComboBoxItemAdv>Tarpaulin</syncfusion:ComboBoxItemAdv>

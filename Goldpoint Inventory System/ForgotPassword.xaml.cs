@@ -38,7 +38,7 @@ namespace Goldpoint_Inventory_System
 
         private void BtnConfirm_Click(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrEmpty(txtAnswer.Text))
+            if (string.IsNullOrEmpty(txtAnswer.Password))
             {
                 MessageBox.Show("Please answer the security question before changing password");
             }
@@ -50,7 +50,7 @@ namespace Goldpoint_Inventory_System
             {
                 if (txtNewPassword.Password.Equals(txtConfirmPassword.Password))
                 {
-                    if (answer.Equals(txtAnswer.Text))
+                    if (answer.Equals(txtAnswer.Password))
                     {
                         string sMessageBoxText = "Are all fields checked?";
                         string sCaption = "Confirm Change Password";
@@ -75,7 +75,9 @@ namespace Goldpoint_Inventory_System
                                     }
                                     catch (SqlException ex)
                                     {
-                                        MessageBox.Show("Error has been encountered: " + ex);
+                                        MessageBox.Show("An error has been encountered! Log has been updated with the error");
+                                        Log = LogManager.GetLogger("*");
+                                        Log.Error(ex, "Query Error");
                                     }
 
 
@@ -92,7 +94,7 @@ namespace Goldpoint_Inventory_System
                     }
                     else
                     {
-                        MessageBox.Show("Incorrect security question answer. Please try again.")
+                        MessageBox.Show("Incorrect security question answer. Please try again.");
                     }
 
                 }

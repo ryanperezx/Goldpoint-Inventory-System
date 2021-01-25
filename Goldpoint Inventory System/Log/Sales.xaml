@@ -22,9 +22,9 @@
         <Label Content="Date:" HorizontalAlignment="Left" Margin="63,78,0,0" VerticalAlignment="Top"/>
         <syncfusion:DateTimeEdit x:Name="txtDate"  HorizontalAlignment="Left" Height="31" Margin="129,78,0,0" TextWrapping="Wrap" Text="DateTimeEdit" VerticalAlignment="Top" Width="120"/>
         <Label Content="Others:" HorizontalAlignment="Left" Margin="63,125,0,0" VerticalAlignment="Top"/>
-        <syncfusion:SfTextBoxExt x:Name="txtContent" HorizontalAlignment="Left" Height="31" Margin="129,125,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="155"/>
+        <syncfusion:SfTextBoxExt x:Name="txtContent" HorizontalAlignment="Left" Height="31" Margin="129,125,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="155" FontSize="16"/>
         <Label Content="Total:" HorizontalAlignment="Left" Margin="63,170,0,0" VerticalAlignment="Top"/>
-        <syncfusion:DoubleTextBox x:Name="txtTotal" HorizontalAlignment="Left" Height="31" Margin="129,170,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="155"/>
+        <syncfusion:DoubleTextBox x:Name="txtTotal" HorizontalAlignment="Left" Height="31" Margin="129,170,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="155" FontSize="16"/>
 
         <StackPanel x:Name="stack" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,78,60,0">
             <StackPanel.Resources>
@@ -46,7 +46,7 @@
                         </syncfusion:SfDataGrid.Columns>
                     </syncfusion:SfDataGrid>
                     <Label Content="Overall total:" HorizontalAlignment="Left"  VerticalAlignment="Top" Margin="10,406,0,0"/>
-                    <syncfusion:DoubleTextBox x:Name="txtOverallTotal" IsReadOnly="True" HorizontalAlignment="Left" Height="31" TextWrapping="Wrap" VerticalAlignment="Top" Width="155" Margin="115,406,0,0"/>
+                    <syncfusion:DoubleTextBox x:Name="txtOverallTotal" IsReadOnly="True" HorizontalAlignment="Left" Height="31" TextWrapping="Wrap" VerticalAlignment="Top" Width="155" Margin="115,406,0,0" FontSize="16"/>
                 </Grid>
             </Expander>
             <Expander ExpandDirection="Left" FontSize="16" HorizontalAlignment="Left"  Height="450" VerticalAlignment="Top" IsExpanded="{Binding SelectedExpander, ConverterParameter=2, Converter={StaticResource ExpanderToBooleanConverter}, Mode=TwoWay}">
@@ -59,9 +59,9 @@
                 </Expander.Header>
                 <Grid Width="700">
                     <Label Content="Date From:" HorizontalAlignment="Left" Margin="34,20,0,0" VerticalAlignment="Top"/>
-                    <syncfusion:DateTimeEdit x:Name="txtDateFrom" HorizontalAlignment="Left" Height="31" Margin="127,20,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" TextChanged="TxtDate_TextChanged"/>
+                    <syncfusion:DateTimeEdit x:Name="txtDateFrom" HorizontalAlignment="Left" Height="31" Margin="127,20,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" TextChanged="TxtDate_TextChanged" FontSize="16"/>
                     <Label Content="Date To:" HorizontalAlignment="Left" Margin="422,20,0,0" VerticalAlignment="Top"/>
-                    <syncfusion:DateTimeEdit x:Name="txtDateTo" HorizontalAlignment="Left" Height="31" Margin="494,20,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" TextChanged="TxtDate_TextChanged"/>
+                    <syncfusion:DateTimeEdit x:Name="txtDateTo" HorizontalAlignment="Left" Height="31" Margin="494,20,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" TextChanged="TxtDate_TextChanged" FontSize="16"/>
                     <chart:SfChart x:Name="chartSales" Margin="10,56,10,35" HorizontalAlignment="Center" VerticalAlignment="Center" >
                         <syncfusion:SfChart.PrimaryAxis>
                             <syncfusion:CategoryAxis Header="Day(s)"/>
@@ -71,8 +71,8 @@
                         </syncfusion:SfChart.SecondaryAxis>
                         <syncfusion:ColumnSeries x:Name="columnSeries" ItemsSource="{Binding}" XBindingPath="date" YBindingPath="sales">
                             <syncfusion:ColumnSeries.AdornmentsInfo>
-                                <syncfusion:ChartAdornmentInfo ShowLabel="True" >
-                                </syncfusion:ChartAdornmentInfo>
+                                <chart:ChartAdornmentInfo ShowLabel="True" >
+                                </chart:ChartAdornmentInfo>
                             </syncfusion:ColumnSeries.AdornmentsInfo>
                         </syncfusion:ColumnSeries>
 

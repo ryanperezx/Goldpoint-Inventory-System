@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Data.SqlClient;
 using System.Windows;
 using System.Windows.Controls;
+using NLog;
 
 namespace Goldpoint_Inventory_System.Log
 {
@@ -14,6 +15,7 @@ namespace Goldpoint_Inventory_System.Log
     {
         public ObservableCollection<SalesDataModel> data = new ObservableCollection<SalesDataModel>();
         ObservableCollection<SalesDataModel> services = new ObservableCollection<SalesDataModel>();
+        private static Logger Log = LogManager.GetCurrentClassLogger();
         double overallTotal = 0;
 
         public Sales()
@@ -68,7 +70,9 @@ namespace Goldpoint_Inventory_System.Log
                             }
                             catch (SqlException ex)
                             {
-                                MessageBox.Show("An error has been encountered!" + ex);
+                                MessageBox.Show("An error has been encountered! Log has been updated with the error");
+                                Log = LogManager.GetLogger("*");
+                                Log.Error(ex, "Query Error");
                             }
 
                         }

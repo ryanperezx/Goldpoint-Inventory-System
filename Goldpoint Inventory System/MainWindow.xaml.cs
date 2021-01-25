@@ -27,6 +27,7 @@ using Syncfusion.Windows.Tools;
 using Syncfusion.Themes.Office2019Colorful.WPF;
 using WinForms = System.Windows.Forms;
 using System.Data.SqlClient;
+using Goldpoint_Inventory_System.Log;
 
 namespace Goldpoint_Inventory_System
 {
@@ -234,6 +235,12 @@ namespace Goldpoint_Inventory_System
         private void BtnMinimize_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             this.WindowState = WindowState.Minimized;
+        }
+
+        private void BtnTransactions_Click(object sender, RoutedEventArgs e)
+        {
+            TransactionList transact = new TransactionList();
+            transact.Show();
         }
     }
 }

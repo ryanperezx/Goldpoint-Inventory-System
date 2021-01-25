@@ -26,7 +26,7 @@
 
         <Label Content="Please enter your credentials: " HorizontalAlignment="Left" Margin="35,122,0,0" VerticalAlignment="Top"/>
 
-        <syncfusion:SfTextBoxExt x:Name="txtUsername" HorizontalAlignment="Left" Height="30" Margin="70,153,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="385" FontStyle="Italic" FontSize="14" CaretBrush="{x:Null}" GotFocus="TxtUsername_GotFocus" LostFocus="TxtUsername_LostFocus" MaxLength="15"/>
+        <syncfusion:SfTextBoxExt x:Name="txtUsername" HorizontalAlignment="Left" Height="30" Margin="70,153,0,0" TextWrapping="Wrap" VerticalContentAlignment="Bottom" HorizontalContentAlignment="Left" VerticalAlignment="Top" Width="385" FontSize="16" CaretBrush="{x:Null}" GotFocus="TxtUsername_GotFocus" LostFocus="TxtUsername_LostFocus" MaxLength="15"/>
         <PasswordBox x:Name="txtPassword"  HorizontalAlignment="Left" Height="30" Margin="70,191,0,0" VerticalAlignment="Top" Width="385" FontStyle="Italic" FontSize="16" CaretBrush="{x:Null}" GotFocus="TxtPassword_GotFocus" LostFocus="TxtPassword_LostFocus" MaxLength="15"/>
         <Button x:Name="btnLogin"  Content="Login" HorizontalAlignment="Left" Margin="365,233,0,0" VerticalAlignment="Top" Width="90" Height="35" Cursor="Hand" Click="BtnLogin_Click"/>
         <Label x:Name="lblForgot" MouseLeftButtonUp="LblForgot_MouseLeftButtonUp" Foreground="Gray" Content="Forgot your password?" HorizontalAlignment="Left" Margin="229,237,0,0" VerticalAlignment="Top" Background="#01264976" Cursor="Hand"/>

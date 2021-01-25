@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Linq;
+using NLog;
 
 namespace Goldpoint_Inventory_System.Transactions
 {
@@ -15,6 +16,8 @@ namespace Goldpoint_Inventory_System.Transactions
     public partial class Photocopy : UserControl
     {
         ObservableCollection<PhotocopyDataModel> items = new ObservableCollection<PhotocopyDataModel>();
+        private static Logger Log = LogManager.GetCurrentClassLogger();
+
         double total = 0;
         public Photocopy()
         {
@@ -29,7 +32,7 @@ namespace Goldpoint_Inventory_System.Transactions
         {
             SqlConnection conn = DBUtils.GetDBConnection();
             conn.Open();
-            using (SqlCommand cmd = new SqlCommand("SELECT TOP 1 DRNo from TransactionDetails WHERE TRIM(DRNo) is not null AND DATALENGTH(DRNo) > 0 ORDER BY DRNo DESC", conn))
+            using (SqlCommand cmd = new SqlCommand("SELECT TOP 1 DRNo from TransactionDetails WHERE DRNo is not null AND DATALENGTH(DRNo) > 0 ORDER BY DRNo DESC", conn))
             {
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
@@ -49,7 +52,7 @@ namespace Goldpoint_Inventory_System.Transactions
         {
             SqlConnection conn = DBUtils.GetDBConnection();
             conn.Open();
-            using (SqlCommand cmd = new SqlCommand("SELECT TOP 1 ORNo from TransactionDetails WHERE TRIM(ORNo) is not null AND DATALENGTH(ORNo) > 0  ORDER BY ORNo DESC", conn))
+            using (SqlCommand cmd = new SqlCommand("SELECT TOP 1 ORNo from TransactionDetails WHERE ORNo is not null AND DATALENGTH(ORNo) > 0  ORDER BY ORNo DESC", conn))
             {
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
@@ -69,7 +72,7 @@ namespace Goldpoint_Inventory_System.Transactions
         {
             SqlConnection conn = DBUtils.GetDBConnection();
             conn.Open();
-            using (SqlCommand cmd = new SqlCommand("SELECT TOP 1 InvoiceNo from TransactionDetails WHERE TRIM(invoiceNo) is not null AND DATALENGTH(invoiceNo) > 0 ORDER BY InvoiceNo DESC", conn))
+            using (SqlCommand cmd = new SqlCommand("SELECT TOP 1 InvoiceNo from TransactionDetails WHERE invoiceNo is not null AND DATALENGTH(invoiceNo) > 0 ORDER BY InvoiceNo DESC", conn))
             {
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
@@ -408,7 +411,9 @@ namespace Goldpoint_Inventory_System.Transactions
                                 }
                                 catch (SqlException ex)
                                 {
-                                    MessageBox.Show("An error has been encountered!" + ex);
+                                    MessageBox.Show("An error has been encountered! Log has been updated with the error");
+                                    Log = LogManager.GetLogger("*");
+                                    Log.Error(ex, "Query Error");
                                 }
                             }
                         }
@@ -426,7 +431,9 @@ namespace Goldpoint_Inventory_System.Transactions
                                 }
                                 catch (SqlException ex)
                                 {
-                                    MessageBox.Show("An error has been encountered!" + ex);
+                                    MessageBox.Show("An error has been encountered! Log has been updated with the error");
+                                    Log = LogManager.GetLogger("*");
+                                    Log.Error(ex, "Query Error");
                                     success = false;
                                 }
                             }
@@ -445,7 +452,9 @@ namespace Goldpoint_Inventory_System.Transactions
                                 }
                                 catch (SqlException ex)
                                 {
-                                    MessageBox.Show("An error has been encountered!" + ex);
+                                    MessageBox.Show("An error has been encountered! Log has been updated with the error");
+                                    Log = LogManager.GetLogger("*");
+                                    Log.Error(ex, "Query Error");
                                     success = false;
                                 }
                             }
@@ -462,7 +471,9 @@ namespace Goldpoint_Inventory_System.Transactions
                             }
                             catch (SqlException ex)
                             {
-                                MessageBox.Show("An error has been encountered!" + ex);
+                                MessageBox.Show("An error has been encountered! Log has been updated with the error");
+                                Log = LogManager.GetLogger("*");
+                                Log.Error(ex, "Query Error");
                                 success = false;
                             }
                         }
@@ -492,7 +503,9 @@ namespace Goldpoint_Inventory_System.Transactions
                             }
                             catch (SqlException ex)
                             {
-                                MessageBox.Show("An error has been encountered!" + ex);
+                                MessageBox.Show("An error has been encountered! Log has been updated with the error");
+                                Log = LogManager.GetLogger("*");
+                                Log.Error(ex, "Query Error");
                                 success = false;
                             }
                         }
@@ -533,7 +546,9 @@ namespace Goldpoint_Inventory_System.Transactions
                             }
                             catch (SqlException ex)
                             {
-                                MessageBox.Show("An error has been encountered!" + ex);
+                                MessageBox.Show("An error has been encountered! Log has been updated with the error");
+                                Log = LogManager.GetLogger("*");
+                                Log.Error(ex, "Query Error");
                                 success = false;
 
                             }

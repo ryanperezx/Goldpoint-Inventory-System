@@ -13,9 +13,9 @@
              Background="White">
     <Grid>
         <Label Content="Date From:" HorizontalAlignment="Left" Margin="80,25,0,0" VerticalAlignment="Top"/>
-        <syncfusion:DateTimeEdit x:Name="txtDateFrom" HorizontalAlignment="Left" Height="31" Margin="173,25,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="120"/>
+        <syncfusion:DateTimeEdit x:Name="txtDateFrom" HorizontalAlignment="Left" Height="31" Margin="173,25,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="120" FontSize="16"/>
         <Label Content="Date To:" HorizontalAlignment="Left" Margin="403,25,0,0" VerticalAlignment="Top"/>
-        <syncfusion:DateTimeEdit x:Name="txtDateTo"  HorizontalAlignment="Left" Height="31" Margin="475,25,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="120"/>
+        <syncfusion:DateTimeEdit x:Name="txtDateTo"  HorizontalAlignment="Left" Height="31" Margin="475,25,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="120" FontSize="16"/>
         <Label x:Name="lblSearchTransact" MouseLeftButtonDown="LblSearchTransact_MouseLeftButtonDown" VerticalAlignment="Top" HorizontalAlignment="Left" Height="30" Width="30" ToolTip="Search Transaction" Cursor="Hand" Margin="600,25,0,0">
             <iconPacks:PackIconMaterialLight Kind="Magnify" Height="20" Width="20" Foreground="DarkGoldenrod" />
         </Label>
