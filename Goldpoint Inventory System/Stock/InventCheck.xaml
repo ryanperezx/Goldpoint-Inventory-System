@@ -19,6 +19,18 @@
                     <Setter Property="Background" Value="IndianRed" />
                     <Setter Property="Foreground" Value="White" />
                 </DataTrigger>
+                <DataTrigger Binding="{Binding fastMoving}" Value="Every 7 days">
+                    <Setter Property="Background" Value="DarkGoldenrod" />
+                    <Setter Property="Foreground" Value="White" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding fastMoving}" Value="Every 15 days">
+                    <Setter Property="Background" Value="Goldenrod" />
+                    <Setter Property="Foreground" Value="White" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding fastMoving}" Value="Every 30 days">
+                    <Setter Property="Background" Value="PaleGoldenrod" />
+                    <Setter Property="Foreground" Value="Black" />
+                </DataTrigger>
             </Style.Triggers>
         </Style>
     </UserControl.Resources>

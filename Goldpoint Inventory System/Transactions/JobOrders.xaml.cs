@@ -89,7 +89,7 @@ namespace Goldpoint_Inventory_System.Transactions
         {
             SqlConnection conn = DBUtils.GetDBConnection();
             conn.Open();
-            using (SqlCommand cmd = new SqlCommand("SELECT * from TransactionDetails where inaccessible = 1 and (service = 'Printing, Services, etc.' or service = 'Tarpaulin') ORDER BY jobOrder ASC", conn))
+            using (SqlCommand cmd = new SqlCommand("SELECT * from TransactionDetails where inaccessible = 1 and (service = 'Printing, Services, etc.' or service = 'Tarpaulin') ORDER BY customerName ASC", conn))
             {
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {

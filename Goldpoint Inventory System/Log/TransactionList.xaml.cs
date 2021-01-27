@@ -28,7 +28,7 @@ namespace Goldpoint_Inventory_System.Log
             {
                 SqlConnection conn = DBUtils.GetDBConnection();
                 conn.Open();
-                using (SqlCommand cmd = new SqlCommand("SELECT * from TransactionDetails where customerName LIKE @custName and inaccessible = 1", conn))
+                using (SqlCommand cmd = new SqlCommand("SELECT * from TransactionDetails where customerName LIKE @custName and inaccessible = 1 ORDER BY customerName ASC", conn))
                 {
                     cmd.Parameters.AddWithValue("@custName", '%' + txtCustomerName.Text + '%');
                     using (SqlDataReader reader = cmd.ExecuteReader())
@@ -222,7 +222,7 @@ namespace Goldpoint_Inventory_System.Log
         {
             SqlConnection conn = DBUtils.GetDBConnection();
             conn.Open();
-            using (SqlCommand cmd = new SqlCommand("SELECT * from TransactionDetails where inaccessible = 1 ORDER BY drNo ASC", conn))
+            using (SqlCommand cmd = new SqlCommand("SELECT * from TransactionDetails where inaccessible = 1 ORDER BY customerName ASC", conn))
             {
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
