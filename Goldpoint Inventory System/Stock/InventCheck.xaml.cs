@@ -354,6 +354,7 @@ namespace Goldpoint_Inventory_System.Stock
         {
             txtDesc.Text = null;
             txtItemCode.Text = null;
+            cmbType.SelectedIndex = -1;
             fillUpType();
             fillUpInventory();
         }

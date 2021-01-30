@@ -113,7 +113,7 @@
                     <Label Content="Qty:" HorizontalAlignment="Left" Margin="17,288,0,0" VerticalAlignment="Top"/>
                     <syncfusion:IntegerTextBox x:Name="txtDescQty" HorizontalAlignment="Left" Height="31" Margin="133,89,0,0" MinWidth="100"  TextWrapping="Wrap"  VerticalAlignment="Top" Width="73" FontSize="16"/>
                     <Label Content="Item Code:" HorizontalAlignment="Left" Margin="17,128,0,0" VerticalAlignment="Top"/>
-                    <syncfusion:SfTextBoxExt x:Name="txtItemCode" HorizontalAlignment="Left" Height="31" Margin="133,128,0,0" MinWidth="100"  TextWrapping="Wrap"  VerticalAlignment="Top" Width="118" FontSize="16"/>
+                    <syncfusion:SfTextBoxExt x:Name="txtItemCode" HorizontalAlignment="Left" Height="31" Margin="133,128,0,0" MinWidth="100"  TextWrapping="Wrap"  VerticalAlignment="Top" Width="118" FontSize="16" TextChanged="TxtItemCode_TextChanged"/>
                     <Label x:Name="txtSearchItem" MouseLeftButtonDown="TxtSearchItem_MouseLeftButtonDown" VerticalAlignment="Top" HorizontalAlignment="Left" Height="30" Width="30" Cursor="Hand" ToolTip="Search Item" Margin="256,129,0,0">
                         <iconPacks:PackIconMaterialLight Kind="Magnify" Height="20" Width="20" Foreground="DarkGoldenrod" />
                     </Label>

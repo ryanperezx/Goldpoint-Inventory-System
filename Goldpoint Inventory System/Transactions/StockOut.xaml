@@ -27,7 +27,7 @@
             <Expander Header="Add Item" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Top" Width="400" IsExpanded="{Binding SelectedExpander, ConverterParameter=2, Converter={StaticResource ExpanderToBooleanConverter}, Mode=TwoWay}">
                 <Grid Height="400" >
                     <Label Content="Item Code:" HorizontalAlignment="Left" Margin="38,34,0,0" VerticalAlignment="Top"/>
-                    <syncfusion:SfTextBoxExt x:Name="txtItemCode" HorizontalAlignment="Left" Height="31" Margin="154,34,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+                    <syncfusion:SfTextBoxExt x:Name="txtItemCode" HorizontalAlignment="Left" Height="31" Margin="154,34,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" TextChanged="TxtItemCode_TextChanged"/>
                     <Label x:Name="btnSearchItem" MouseLeftButtonDown="BtnSearchItem_MouseLeftButtonDown" VerticalAlignment="Top" HorizontalAlignment="Left" Height="30" Width="30" ToolTip="Search Item" Margin="279,34,0,0" Cursor="Hand">
                         <iconPacks:PackIconMaterialLight Kind="Magnify" Height="20" Width="20" Foreground="DarkGoldenrod" />
                     </Label>

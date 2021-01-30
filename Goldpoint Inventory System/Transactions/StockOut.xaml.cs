@@ -290,7 +290,7 @@ namespace Goldpoint_Inventory_System.Transactions
                             txtItemPrice.Value = Convert.ToDouble(reader.GetValue(msrpIndex));
 
                             ckDealersPrice.IsChecked = false;
-
+                            searched = true;
                         }
                         else
                         {
@@ -349,7 +349,7 @@ namespace Goldpoint_Inventory_System.Transactions
             chkOR.IsChecked = false;
             chkCompany.IsChecked = false;
             ckDealersPrice.IsChecked = false;
-
+            searched = false;
         }
 
         private void BtnCheckOut_Click(object sender, RoutedEventArgs e)
@@ -757,5 +757,20 @@ namespace Goldpoint_Inventory_System.Transactions
             }
         }
 
+        bool searched = false;
+        private void TxtItemCode_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if(searched == true)
+            {
+                txtDesc.Text = null;
+                txtType.Text = null;
+                txtBrand.Text = null;
+                txtSize.Text = null;
+                txtQty.Value = 0;
+                txtItemPrice.Value = 0;
+                txtTotalPerItem.Value = 0;
+                searched = false;
+            }
+        }
     }
 }

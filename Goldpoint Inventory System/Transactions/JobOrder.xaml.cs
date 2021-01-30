@@ -211,10 +211,13 @@ namespace Goldpoint_Inventory_System.Transactions
             txtDownpayment.Value = 0;
             txtItemTotal.Value = 0;
             txtDownpayment.MaxValue = 0;
+            searched = false;
+
 
         }
         private void emptyService()
         {
+            searched = false;
             txtDesc.Text = null;
             txtDescUnit.Text = null;
             txtDescQty.Value = 0;
@@ -443,6 +446,7 @@ namespace Goldpoint_Inventory_System.Transactions
 
                             int msrpIndex = reader.GetOrdinal("MSRP");
                             txtPricePerItem.Value = Convert.ToDouble(reader.GetValue(msrpIndex));
+                            searched = true;
                         }
                         else
                         {
@@ -1075,6 +1079,21 @@ namespace Goldpoint_Inventory_System.Transactions
                 txtItemTotal.Value += (double)(txtTarpUnitPrice.Value * txtTarpQty.Value);
                 txtDownpayment.MaxValue = (double)txtItemTotal.Value;
                 emptyTarp();
+            }
+        }
+
+
+        bool searched = false;
+        private void TxtItemCode_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (searched == true)
+            {
+                txtMaterial.Text = null;
+                txtCopy.Text = null;
+                txtSize.Text = null;
+                txtItemQty.Value = 0;
+                txtPricePerItem.Value = 0;
+                searched = false;
             }
         }
     }

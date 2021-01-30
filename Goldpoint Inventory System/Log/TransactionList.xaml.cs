@@ -67,6 +67,10 @@ namespace Goldpoint_Inventory_System.Log
                     }
                 }
             }
+            else
+            {
+                fillUpTransactions();
+            }
 
         }
 
