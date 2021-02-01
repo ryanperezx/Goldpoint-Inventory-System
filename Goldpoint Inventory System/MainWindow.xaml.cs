@@ -25,7 +25,6 @@ using Syncfusion.Windows.Tools.Controls;
 using Syncfusion.SfSkinManager;
 using Syncfusion.Windows.Tools;
 using Syncfusion.Themes.Office2019Colorful.WPF;
-using WinForms = System.Windows.Forms;
 using System.Data.SqlClient;
 using Goldpoint_Inventory_System.Log;
 
@@ -37,10 +36,17 @@ namespace Goldpoint_Inventory_System
     public partial class MainWindow : Window
     {
         string user;
-        public MainWindow()
+        string fullName
+        {
+            get;
+            set;
+        }
+
+        public MainWindow(string username, string fullName)
         {
             SfSkinManager.ApplyStylesOnApplication = true;
             InitializeComponent();
+            
             DockingManager.SetState(StockIn, DockState.Hidden);
             DockingManager.SetState(Account, DockState.Hidden);
             DockingManager.SetState(ModifyInvent, DockState.Hidden);
@@ -52,6 +58,7 @@ namespace Goldpoint_Inventory_System
             DockingManager.SetState(TransactionDetails, DockState.Hidden);
             DockingManager.SetState(JobOrder, DockState.Hidden);
             DockingManager.SetState(ImportDetails, DockState.Hidden);
+            DockingManager.SetState(IssueDR, DockState.Hidden);
 
             Office2019ColorfulThemeSettings themeSettings = new Office2019ColorfulThemeSettings();
             themeSettings.PrimaryBackground = new SolidColorBrush(Colors.DarkGoldenrod);
@@ -68,7 +75,8 @@ namespace Goldpoint_Inventory_System
             date.Content = DateTime.Now.ToString("D");
             startTimer();
 
-
+            user = username;
+            this.fullName = fullName;
 
         }
 

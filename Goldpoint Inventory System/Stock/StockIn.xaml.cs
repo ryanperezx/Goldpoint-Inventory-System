@@ -14,7 +14,6 @@ namespace Goldpoint_Inventory_System.Stock
     {
         ObservableCollection<ItemDataModel> items = new ObservableCollection<ItemDataModel>();
         private static Logger Log = LogManager.GetCurrentClassLogger();
-
         public StockIn()
         {
             InitializeComponent();
@@ -80,6 +79,8 @@ namespace Goldpoint_Inventory_System.Stock
                         fastMoving = cmbFastMoving.Text
                     });
                 }
+
+                searched = false;
                 emptyFields();
 
 
@@ -231,6 +232,8 @@ namespace Goldpoint_Inventory_System.Stock
                                 int remarksIndex = reader.GetOrdinal("remarks");
                                 txtRemarks.Text = Convert.ToString(reader.GetValue(remarksIndex));
 
+                                searched = true;
+
                             }
                         }
                         else
@@ -261,6 +264,21 @@ namespace Goldpoint_Inventory_System.Stock
             txtRemarks.Text = null;
             rdReplacementNo.IsChecked = true;
             cmbFastMoving.SelectedIndex = 3;
+        }
+
+        bool searched = false;
+        private void TxtItemCode_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (searched == true)
+            {
+                txtDesc.Text = null;
+                txtType.Text = null;
+                txtBrand.Text = null;
+                txtSize.Text = null;
+                txtQty.Value = 0;
+                txtRemarks.Text = null;
+                searched = false;
+            }
         }
     }
 }

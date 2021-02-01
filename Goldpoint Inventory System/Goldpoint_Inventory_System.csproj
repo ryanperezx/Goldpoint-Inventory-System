@@ -278,6 +278,9 @@
     <Compile Include="Stock\StockIn.xaml.cs">
       <DependentUpon>StockIn.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Transactions\IssueDeliveryReceipt.xaml.cs">
+      <DependentUpon>IssueDeliveryReceipt.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Transactions\JobOrder.xaml.cs">
       <DependentUpon>JobOrder.xaml</DependentUpon>
     </Compile>
@@ -364,6 +367,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Stock\StockIn.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Transactions\IssueDeliveryReceipt.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -46,7 +46,7 @@ namespace Goldpoint_Inventory_System.Log
                 {
                     if (!string.IsNullOrEmpty(txtDateTo.Text))
                     {
-                        using (SqlCommand cmd = new SqlCommand("SELECT id.itemCode, id.date, ii.description, id.qty, id.replacement, id.fastMoving, id.remarks from ImportDetails id LEFT JOIN InventoryItems ii on id.itemCode = ii.itemCode where CAST(id.date AS date) between @dateFrom and @dateTo", conn))
+                        using (SqlCommand cmd = new SqlCommand("SELECT id.itemCode, id.date, ii.description, id.qty, id.replacement, id.fastMoving, id.remarks from ImportDetails id LEFT JOIN InventoryItems ii on id.itemCode = ii.itemCode where CAST(id.date AS date) between @dateFrom and @dateTo ORDER by CAST(id.date as date)", conn))
                         {
                             cmd.Parameters.AddWithValue("@dateFrom", txtDateFrom.Text);
                             cmd.Parameters.AddWithValue("@dateTo", txtDateTo.Text);
@@ -86,7 +86,7 @@ namespace Goldpoint_Inventory_System.Log
                 {
                     if (!string.IsNullOrEmpty(txtDateTo.Text))
                     {
-                        using (SqlCommand cmd = new SqlCommand("SELECT id.itemCode, id.date, ii.description, id.qty, id.replacement, id.fastMoving, id.remarks from ImportDetails id LEFT JOIN InventoryItems ii on id.itemCode = ii.itemCode where id.itemCode = @itemCode and CAST(id.date AS date) between @dateFrom and @dateTo", conn))
+                        using (SqlCommand cmd = new SqlCommand("SELECT id.itemCode, id.date, ii.description, id.qty, id.replacement, id.fastMoving, id.remarks from ImportDetails id LEFT JOIN InventoryItems ii on id.itemCode = ii.itemCode where id.itemCode = @itemCode and CAST(id.date AS date) between @dateFrom and @dateTo ORDER by CAST(id.date as date)", conn))
                         {
                             cmd.Parameters.AddWithValue("@itemCode", txtItemCode.Text);
                             cmd.Parameters.AddWithValue("@dateFrom", txtDateFrom.Text);
@@ -127,7 +127,7 @@ namespace Goldpoint_Inventory_System.Log
             {
                 SqlConnection conn = DBUtils.GetDBConnection();
                 conn.Open();
-                using (SqlCommand cmd = new SqlCommand("SELECT id.itemCode, id.date, ii.description, id.qty, id.replacement, id.fastMoving, id.remarks from ImportDetails id LEFT JOIN InventoryItems ii on id.itemCode = ii.itemCode where CAST(id.date AS date) between @dateFrom and @dateTo", conn))
+                using (SqlCommand cmd = new SqlCommand("SELECT id.itemCode, id.date, ii.description, id.qty, id.replacement, id.fastMoving, id.remarks from ImportDetails id LEFT JOIN InventoryItems ii on id.itemCode = ii.itemCode where CAST(id.date AS date) between @dateFrom and @dateTo ORDER by CAST(id.date as date)", conn))
                 {
                     cmd.Parameters.AddWithValue("@dateFrom", txtDateFrom.Text);
                     cmd.Parameters.AddWithValue("@dateTo", txtDateTo.Text);
@@ -181,7 +181,7 @@ namespace Goldpoint_Inventory_System.Log
                 {
                     if (!string.IsNullOrEmpty(txtDateTo.Text))
                     {
-                        using (SqlCommand cmd = new SqlCommand("SELECT id.itemCode, id.date, ii.description, id.qty, id.replacement, id.fastMoving, id.remarks from ImportDetails id LEFT JOIN InventoryItems ii on id.itemCode = ii.itemCode where CAST(id.date AS date) between @dateFrom and @dateTo", conn))
+                        using (SqlCommand cmd = new SqlCommand("SELECT id.itemCode, id.date, ii.description, id.qty, id.replacement, id.fastMoving, id.remarks from ImportDetails id LEFT JOIN InventoryItems ii on id.itemCode = ii.itemCode where CAST(id.date AS date) between @dateFrom and @dateTo ORDER by CAST(id.date as date)", conn))
                         {
                             cmd.Parameters.AddWithValue("@dateFrom", txtDateFrom.Text);
                             cmd.Parameters.AddWithValue("@dateTo", txtDateTo.Text);
@@ -221,7 +221,7 @@ namespace Goldpoint_Inventory_System.Log
                 {
                     if (!string.IsNullOrEmpty(txtDateTo.Text))
                     {
-                        using (SqlCommand cmd = new SqlCommand("SELECT id.itemCode, id.date, ii.description, id.qty, id.replacement, id.fastMoving, id.remarks from ImportDetails id LEFT JOIN InventoryItems ii on id.itemCode = ii.itemCode where id.itemCode = @itemCode and CAST(id.date AS date) between @dateFrom and @dateTo", conn))
+                        using (SqlCommand cmd = new SqlCommand("SELECT id.itemCode, id.date, ii.description, id.qty, id.replacement, id.fastMoving, id.remarks from ImportDetails id LEFT JOIN InventoryItems ii on id.itemCode = ii.itemCode where id.itemCode = @itemCode and CAST(id.date AS date) between @dateFrom and @dateTo ORDER by CAST(id.date as date)", conn))
                         {
                             cmd.Parameters.AddWithValue("@itemCode", txtItemCode.Text);
                             cmd.Parameters.AddWithValue("@dateFrom", txtDateFrom.Text);
@@ -263,7 +263,7 @@ namespace Goldpoint_Inventory_System.Log
             {
                 SqlConnection conn = DBUtils.GetDBConnection();
                 conn.Open();
-                using (SqlCommand cmd = new SqlCommand("SELECT id.itemCode, id.date, ii.description, id.qty, id.replacement, id.fastMoving, id.remarks from ImportDetails id LEFT JOIN InventoryItems ii on id.itemCode = ii.itemCode where CAST(date AS date) between @dateFrom and @dateTo", conn))
+                using (SqlCommand cmd = new SqlCommand("SELECT id.itemCode, id.date, ii.description, id.qty, id.replacement, id.fastMoving, id.remarks from ImportDetails id LEFT JOIN InventoryItems ii on id.itemCode = ii.itemCode where CAST(date AS date) between @dateFrom and @dateTo ORDER by CAST(id.date as date)", conn))
                 {
                 
                     cmd.Parameters.AddWithValue("@dateFrom", txtDateFrom.Text);

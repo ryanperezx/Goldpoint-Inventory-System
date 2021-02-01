@@ -1,12 +1,16 @@
-﻿using System;
+﻿using NLog;
+using Syncfusion.DocIO;
+using Syncfusion.DocIO.DLS;
+using Syncfusion.DocToPDFConverter;
+using Syncfusion.Pdf;
+using System;
 using System.Collections.ObjectModel;
 using System.Data.SqlClient;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
-using System.Linq;
-using NLog;
 
 namespace Goldpoint_Inventory_System.Transactions
 {
@@ -26,6 +30,7 @@ namespace Goldpoint_Inventory_System.Transactions
             dgPhotocopy.ItemsSource = items;
             getDRNo();
             chkUnpaid.IsChecked = true;
+            fillPaperPrice();
         }
 
         private void getDRNo()
@@ -179,15 +184,15 @@ namespace Goldpoint_Inventory_System.Transactions
             //does not update display but does work
             if (!string.IsNullOrEmpty(txtShort.Text) && txtShort.Value != 0)
             {
-                var found = items.FirstOrDefault(x =>  x.item.Equals("Short") && x.qty > 0);
-                if(found != null)
+                var found = items.FirstOrDefault(x => x.item.Equals("Short") && x.qty > 0);
+                if (found != null)
                 {
                     items.Add(new PhotocopyDataModel
                     {
                         item = "Short",
                         qty = Convert.ToInt32(found.qty + txtShort.Value),
-                        price = 0.70,
-                        totalPerItem = Convert.ToInt64(found.qty + txtShort.Value) * 0.70
+                        price = (double)txtShortPrice.Value,
+                        totalPerItem = (double)((found.qty + txtShort.Value) * txtShortPrice.Value)
                     });
 
                     foreach (var item in items.Where(x => x.item.Equals("Short")).ToList())
@@ -202,11 +207,11 @@ namespace Goldpoint_Inventory_System.Transactions
                     {
                         item = "Short",
                         qty = Convert.ToInt32(txtShort.Value),
-                        price = 0.70,
-                        totalPerItem = Convert.ToInt64(txtShort.Value) * 0.70
+                        price = (double)txtShortPrice.Value,
+                        totalPerItem = (double)(Convert.ToInt64(txtShort.Value) * txtShortPrice.Value)
                     });
                 }
-                total += Convert.ToInt64(txtShort.Value) * 0.70;
+                total += (double)(Convert.ToInt64(txtShort.Value) * txtShortPrice.Value);
                 isEmpty = false;
             }
             if (!string.IsNullOrEmpty(txtLong.Text) && txtLong.Value != 0)
@@ -218,9 +223,15 @@ namespace Goldpoint_Inventory_System.Transactions
                     {
                         item = "Long",
                         qty = Convert.ToInt32(found.qty + txtLong.Value),
-                        price = 0.80,
-                        totalPerItem = Convert.ToInt64(found.qty + txtLong.Value) * 0.80
+                        price = (double)txtLongPrice.Value,
+                        totalPerItem = (double)(Convert.ToInt64(found.qty + txtLong.Value) * txtLongPrice.Value)
                     });
+
+                    foreach (var item in items.Where(x => x.item.Equals("Long")).ToList())
+                    {
+                        items.Remove(item);
+                        break;
+                    }
                 }
                 else
                 {
@@ -228,12 +239,12 @@ namespace Goldpoint_Inventory_System.Transactions
                     {
                         item = "Long",
                         qty = Convert.ToInt32(txtLong.Value),
-                        price = 0.80,
-                        totalPerItem = Convert.ToInt64(txtLong.Value) * 0.80
+                        price = (double)txtLongPrice.Value,
+                        totalPerItem = (double)(Convert.ToInt64(txtLong.Value) * txtLongPrice.Value)
                     });
                 }
 
-                total += Convert.ToInt64(txtLong.Value) * 0.80;
+                total += (double)(Convert.ToInt64(txtLong.Value) * txtLongPrice.Value);
                 isEmpty = false;
 
             }
@@ -246,8 +257,8 @@ namespace Goldpoint_Inventory_System.Transactions
                     {
                         item = "Legal",
                         qty = Convert.ToInt32(found.qty + txtLegal.Value),
-                        price = 1.50,
-                        totalPerItem = Convert.ToInt64(found.qty + txtLegal.Value) * 1.50
+                        price = (double)txtLegalPrice.Value,
+                        totalPerItem = (double)(Convert.ToInt64(found.qty + txtLegal.Value) * txtLegalPrice.Value)
                     });
 
                     foreach (var item in items.Where(x => x.item.Equals("Legal")).ToList())
@@ -262,12 +273,12 @@ namespace Goldpoint_Inventory_System.Transactions
                     {
                         item = "Legal",
                         qty = Convert.ToInt32(txtLegal.Value),
-                        price = 1.50,
-                        totalPerItem = Convert.ToInt64(txtLegal.Value) * 1.50
+                        price = (double)txtLegalPrice.Value,
+                        totalPerItem = (double)(Convert.ToInt64(txtLegal.Value) * txtLegalPrice.Value)
                     });
                 }
 
-                total += Convert.ToInt64(txtLegal.Value) * 1.50;
+                total += (double)(Convert.ToInt64(txtLegal.Value) * txtLegalPrice.Value);
                 isEmpty = false;
             }
             if (!string.IsNullOrEmpty(txtA4.Text) && txtA4.Value != 0)
@@ -279,8 +290,8 @@ namespace Goldpoint_Inventory_System.Transactions
                     {
                         item = "A4",
                         qty = Convert.ToInt32(found.qty + txtA4.Value),
-                        price = 0.90,
-                        totalPerItem = Convert.ToInt64(found.qty + txtLegal.Value) * 0.90
+                        price = (double)txtA4Price.Value,
+                        totalPerItem = (double)(Convert.ToInt64(found.qty + txtA4.Value) * txtA4Price.Value)
                     });
 
                     foreach (var item in items.Where(x => x.item.Equals("A4")).ToList())
@@ -295,11 +306,11 @@ namespace Goldpoint_Inventory_System.Transactions
                     {
                         item = "A4",
                         qty = Convert.ToInt32(txtA4.Value),
-                        price = 0.90,
-                        totalPerItem = Convert.ToInt64(txtLegal.Value) * 0.90
+                        price = (double)txtA4Price.Value,
+                        totalPerItem = (double)(Convert.ToInt64(txtA4.Value) * txtA4Price.Value)
                     });
                 }
-                total += Convert.ToInt64(txtA4.Value) * 0.90;
+                total += Convert.ToInt64(txtA4.Value) * 5.00;
                 isEmpty = false;
             }
             if (!string.IsNullOrEmpty(txtA3.Text) && txtA3.Value != 0)
@@ -311,8 +322,8 @@ namespace Goldpoint_Inventory_System.Transactions
                     {
                         item = "A3",
                         qty = Convert.ToInt32(found.qty + txtA3.Value),
-                        price = 0.90,
-                        totalPerItem = Convert.ToInt64(found.qty + txtA3.Value) * 5.00
+                        price = (double)txtA3Price.Value,
+                        totalPerItem = (double)(Convert.ToInt64(found.qty + txtA3.Value) * txtA3Price.Value)
                     });
 
                     foreach (var item in items.Where(x => x.item.Equals("A3")).ToList())
@@ -327,11 +338,11 @@ namespace Goldpoint_Inventory_System.Transactions
                     {
                         item = "A3",
                         qty = Convert.ToInt32(txtA3.Value),
-                        price = 0.90,
-                        totalPerItem = Convert.ToInt64(txtA3.Value) * 5.00
+                        price = (double)txtA3Price.Value,
+                        totalPerItem = (double)(Convert.ToInt64(txtA3.Value) * txtA3Price.Value)
                     });
                 }
-                total += Convert.ToInt64(txtA3.Value) * 5.00;
+                total += (double)(Convert.ToInt64(txtA3.Value) * txtA3Price.Value);
                 isEmpty = false;
             }
             if (isEmpty)
@@ -387,11 +398,11 @@ namespace Goldpoint_Inventory_System.Transactions
                         bool success = false;
                         //update DRNo in case Stock out or Job order updated it
                         getDRNo();
-                        if(chkInv.IsChecked == true)
+                        if (chkInv.IsChecked == true)
                         {
                             getInvNo();
                         }
-                        if(chkOR.IsChecked == true)
+                        if (chkOR.IsChecked == true)
                         {
                             getORNo();
                         }
@@ -416,15 +427,12 @@ namespace Goldpoint_Inventory_System.Transactions
                                     Log.Error(ex, "Query Error");
                                 }
                             }
-                        }
-                        if (chkDownpayment.IsChecked == true)
-                        {
-                            using (SqlCommand cmd = new SqlCommand("INSERT into Sales VALUES (@date, @service, @total, @status)", conn))
+                            using (SqlCommand cmd = new SqlCommand("INSERT into Sales VALUES (@date, @desc, @qty, @total)", conn))
                             {
                                 cmd.Parameters.AddWithValue("@date", txtDate.Text);
-                                cmd.Parameters.AddWithValue("@service", "Photocopy");
-                                cmd.Parameters.AddWithValue("@total", txtDownpayment.Value);
-                                cmd.Parameters.AddWithValue("@status", "Downpayment");
+                                cmd.Parameters.AddWithValue("@desc", item.item);
+                                cmd.Parameters.AddWithValue("@qty", item.qty);
+                                cmd.Parameters.AddWithValue("@total", item.totalPerItem);
                                 try
                                 {
                                     cmd.ExecuteNonQuery();
@@ -438,28 +446,6 @@ namespace Goldpoint_Inventory_System.Transactions
                                 }
                             }
                         }
-                        else if(chkPaid.IsChecked == true)
-                        {
-                            using (SqlCommand cmd = new SqlCommand("INSERT into Sales VALUES (@date, @service, @total, @status)", conn))
-                            {
-                                cmd.Parameters.AddWithValue("@date", txtDate.Text);
-                                cmd.Parameters.AddWithValue("@service", "Photocopy");
-                                cmd.Parameters.AddWithValue("@total", txtCustTotal.Value);
-                                cmd.Parameters.AddWithValue("@status", "Paid");
-                                try
-                                {
-                                    cmd.ExecuteNonQuery();
-                                }
-                                catch (SqlException ex)
-                                {
-                                    MessageBox.Show("An error has been encountered! Log has been updated with the error");
-                                    Log = LogManager.GetLogger("*");
-                                    Log.Error(ex, "Query Error");
-                                    success = false;
-                                }
-                            }
-                        }
-
                         using (SqlCommand cmd = new SqlCommand("INSERT into TransactionLogs (date, [transaction], remarks) VALUES (@date, @transaction, @remarks)", conn))
                         {
                             cmd.Parameters.AddWithValue("@date", txtDate.Text);
@@ -555,6 +541,7 @@ namespace Goldpoint_Inventory_System.Transactions
                         }
                         if (success)
                             MessageBox.Show("Transaction has been recorded!");
+                        promptPrintDR();
                         emptyFields();
                         items.Clear();
                         getDRNo();
@@ -571,8 +558,8 @@ namespace Goldpoint_Inventory_System.Transactions
         {
             if (!string.IsNullOrEmpty(txtDownpayment.Text) && !string.IsNullOrEmpty(txtCustTotal.Text))
             {
-                double downpayment = (double) txtDownpayment.Value;
-                double total = (double) txtCustTotal.Value;
+                double downpayment = (double)txtDownpayment.Value;
+                double total = (double)txtCustTotal.Value;
                 if (downpayment > total)
                 {
                     txtDownpayment.Text = total.ToString();
@@ -596,5 +583,236 @@ namespace Goldpoint_Inventory_System.Transactions
                 items.RemoveAt(items.Count - 1);
             }
         }
+
+        private void BtnUpdatePrice_Click(object sender, RoutedEventArgs e)
+        {
+            string sMessageBoxText = "Confirming Updating Photocopy Price(s)?";
+            string sCaption = "Confirm Update?";
+            MessageBoxButton btnMessageBox = MessageBoxButton.YesNoCancel;
+            MessageBoxImage icnMessageBox = MessageBoxImage.Warning;
+
+            MessageBoxResult dr = MessageBox.Show(sMessageBoxText, sCaption, btnMessageBox, icnMessageBox);
+            switch (dr)
+            {
+                case MessageBoxResult.Yes:
+                    SqlConnection conn = DBUtils.GetDBConnection();
+                    conn.Open();
+                    using (SqlCommand cmd = new SqlCommand("UPDATE PaperPrices set short = @short, long = @long, a3 = @a3, legal = @legal, a4 = @a4", conn))
+                    {
+                        cmd.Parameters.AddWithValue("@short", txtShortPrice.Value);
+                        cmd.Parameters.AddWithValue("@long", txtLongPrice.Value);
+                        cmd.Parameters.AddWithValue("@a3", txtA3Price.Value);
+                        cmd.Parameters.AddWithValue("@legal", txtLegalPrice.Value);
+                        cmd.Parameters.AddWithValue("@a4", txtA4Price.Value);
+
+                        try
+                        {
+                            cmd.ExecuteNonQuery();
+                            MessageBox.Show("Price(s) has been updated");
+                            fillPaperPrice();
+                        }
+                        catch (SqlException ex)
+                        {
+                            MessageBox.Show("An error has been encountered! Log has been updated with the error");
+                            Log = LogManager.GetLogger("*");
+                            Log.Error(ex, "Query Error");
+                        }
+                    }
+                    break;
+                case MessageBoxResult.No:
+                    break;
+                case MessageBoxResult.Cancel:
+                    break;
+            }
+
+        }
+
+        private void fillPaperPrice()
+        {
+            SqlConnection conn = DBUtils.GetDBConnection();
+            conn.Open();
+            using (SqlCommand cmd = new SqlCommand("SELECT * from PaperPrices", conn))
+            {
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (!reader.Read())
+                    {
+                        txtShortPrice.Value = 0;
+                        txtLongPrice.Value = 0;
+                        txtA3Price.Value = 0;
+                        txtA4Price.Value = 0;
+                        txtLegalPrice.Value = 0;
+                    }
+                    else
+                    {
+                        txtShortPrice.Value = (double)(reader.GetValue(reader.GetOrdinal("short")));
+                        txtLongPrice.Value = (double)(reader.GetValue(reader.GetOrdinal("long")));
+                        txtA3Price.Value = (double)(reader.GetValue(reader.GetOrdinal("a3")));
+                        txtA4Price.Value = (double)(reader.GetValue(reader.GetOrdinal("a4")));
+                        txtLegalPrice.Value = (double)(reader.GetValue(reader.GetOrdinal("legal")));
+                    }
+
+                }
+            }
+        }
+
+        private void promptPrintDR()
+        {
+            string sMessageBoxText = "Do you want to print the Delivery Receipt?";
+            string sCaption = "Print Delivery Receipt Receipt";
+            MessageBoxButton btnMessageBox = MessageBoxButton.YesNoCancel;
+            MessageBoxImage icnMessageBox = MessageBoxImage.Warning;
+
+            MessageBoxResult dr = MessageBox.Show(sMessageBoxText, sCaption, btnMessageBox, icnMessageBox);
+            switch (dr)
+            {
+                case MessageBoxResult.Yes:
+                    DocToPDFConverter converter = new DocToPDFConverter();
+                    PdfDocument pdfDocument;
+                    //should print 2 receipts, for customer and company
+                    try
+                    {
+                        using (WordDocument document = new WordDocument("Templates/receipt-template.docx", FormatType.Docx))
+                        {
+                            Syncfusion.DocIO.DLS.TextSelection textSelection;
+                            WTextRange textRange;
+
+                            textSelection = document.Find("<dr no>", false, true);
+                            textRange = textSelection.GetAsOneRange();
+                            textRange.Text = txtDRNo.Text;
+                            textSelection = document.Find("<full name>", false, true);
+                            textRange = textSelection.GetAsOneRange();
+                            textRange.Text = txtCustName.Text;
+                            textSelection = document.Find("<printed name>", false, true);
+                            textRange = textSelection.GetAsOneRange();
+                            textRange.Text = txtCustName.Text.ToUpper();
+                            textSelection = document.Find("<j.o no>", false, true);
+                            textRange = textSelection.GetAsOneRange();
+                            textRange.Text = "";
+                            textSelection = document.Find("<date>", false, true);
+                            textRange = textSelection.GetAsOneRange();
+                            textRange.Text = txtDate.Text;
+                            textSelection = document.Find("<address>", false, true);
+                            textRange = textSelection.GetAsOneRange();
+                            TextRange address = new TextRange(txtAddress.Document.ContentStart, txtAddress.Document.ContentEnd);
+                            textRange.Text = address.Text;
+
+                            //if item exceeds 13. create another file
+                            //check if stock out, photocopy or what of the two job order is printing
+                            WordDocument document2 = new WordDocument("Templates/receipt-template.docx", FormatType.Docx);
+                            int counter = 1;
+                            int counter2 = 1;
+                            if (items.Count > 0)
+                            {
+                                foreach (var item in items)
+                                {
+                                    if (counter > 12)
+                                    {
+                                        textSelection = document2.Find("<qty" + counter2 + ">", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = item.qty.ToString();
+
+                                        textSelection = document2.Find("<description" + counter2 + ">", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = item.item;
+
+                                        textSelection = document2.Find("<price" + counter2 + ">", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = item.price.ToString();
+
+                                        textSelection = document2.Find("<amount" + counter2 + ">", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = item.totalPerItem.ToString();
+                                        counter2++;
+                                    }
+                                    else
+                                    {
+                                        textSelection = document.Find("<qty" + counter + ">", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = item.qty.ToString();
+
+                                        textSelection = document.Find("<description" + counter + ">", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = item.item;
+
+                                        textSelection = document.Find("<price" + counter + ">", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = item.price.ToString();
+
+                                        textSelection = document.Find("<amount" + counter + ">", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = item.totalPerItem.ToString();
+                                        counter++;
+                                    }
+
+                                }
+                            }
+
+                            //remove unused placeholder
+                            for (int i = counter; i <= 13; i++)
+                            {
+
+                                textSelection = document.Find("<qty" + i + ">", false, true);
+                                textRange = textSelection.GetAsOneRange();
+                                textRange.Text = "";
+
+                                textSelection = document.Find("<description" + i + ">", false, true);
+                                textRange = textSelection.GetAsOneRange();
+                                textRange.Text = "";
+
+                                textSelection = document.Find("<price" + i + ">", false, true);
+                                textRange = textSelection.GetAsOneRange();
+                                textRange.Text = "";
+
+                                textSelection = document.Find("<amount" + i + ">", false, true);
+                                textRange = textSelection.GetAsOneRange();
+                                textRange.Text = "";
+                            }
+                            if (counter2 > 1)
+                            {
+                                for (int i = counter2; i <= 13; i++)
+                                {
+                                    textSelection = document2.Find("<qty" + i + ">", false, true);
+                                    textRange = textSelection.GetAsOneRange();
+                                    textRange.Text = "";
+
+                                    textSelection = document2.Find("<description" + i + ">", false, true);
+                                    textRange = textSelection.GetAsOneRange();
+                                    textRange.Text = "";
+
+                                    textSelection = document2.Find("<price" + i + ">", false, true);
+                                    textRange = textSelection.GetAsOneRange();
+                                    textRange.Text = "";
+
+                                    textSelection = document2.Find("<amount" + i + ">", false, true);
+                                    textRange = textSelection.GetAsOneRange();
+                                    textRange.Text = "";
+                                }
+                                pdfDocument = converter.ConvertToPDF(document2);
+                                pdfDocument.Save(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/Sample-2.pdf");
+                                document2.Close();
+
+                            }
+                            pdfDocument = converter.ConvertToPDF(document);
+                            pdfDocument.Save(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/Sample.pdf");
+                            pdfDocument.Close(true);
+
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("An error has been encountered! Log has been updated with the error");
+                        Log = LogManager.GetLogger("*");
+                        Log.Error(ex, "Query Error");
+                        return;
+                    }
+                    break;
+                case MessageBoxResult.No:
+                    break;
+                case MessageBoxResult.Cancel:
+                    break;
+            }
+        }
+
     }
 }

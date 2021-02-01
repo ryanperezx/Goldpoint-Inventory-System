@@ -17,13 +17,19 @@ namespace Goldpoint_Inventory_System.Log
             set;
         }
 
-        public double sales
+        public string desc
         {
             get;
             set;
         }
 
-        public string service
+        public int qty
+        {
+            get;
+            set;
+        }
+
+        public double total
         {
             get;
             set;

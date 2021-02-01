@@ -2483,5 +2483,15 @@ namespace Goldpoint_Inventory_System.Log
                 return;
             }
         }
+
+        private void BtnIssueOR_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void BtnIssueInvoice_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

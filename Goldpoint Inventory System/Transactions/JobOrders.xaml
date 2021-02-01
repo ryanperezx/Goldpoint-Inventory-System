@@ -47,7 +47,6 @@
                 <syncfusion:GridTextColumn MappingName="Contact No" Width="120" DisplayBinding="{Binding contactNo}"/>
                 <syncfusion:GridTextColumn MappingName="Status" Width="150" DisplayBinding="{Binding status}"/>
                 <syncfusion:GridTextColumn MappingName="Claimed" Width="120" DisplayBinding="{Binding claimed}"/>
-
             </syncfusion:SfDataGrid.Columns>
         </syncfusion:SfDataGrid>
     </Grid>

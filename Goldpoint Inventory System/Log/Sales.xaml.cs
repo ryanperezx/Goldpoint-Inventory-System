@@ -46,27 +46,20 @@ namespace Goldpoint_Inventory_System.Log
                     case MessageBoxResult.Yes:
                         SqlConnection conn = DBUtils.GetDBConnection();
                         conn.Open();
-                        using (SqlCommand cmd = new SqlCommand("INSERT into Sales VALUES (@date, @service, @total, 'Paid')", conn))
+                        using (SqlCommand cmd = new SqlCommand("INSERT into Sales VALUES (@date, @desc, @qty, @total)", conn))
                         {
                             cmd.Parameters.AddWithValue("@date", txtDate.Text);
-                            cmd.Parameters.AddWithValue("@service", txtContent.Text);
+                            cmd.Parameters.AddWithValue("@desc", txtContent.Text);
+                            cmd.Parameters.AddWithValue("@qty", txtQty.Value);
                             cmd.Parameters.AddWithValue("@total", txtTotal.Text);
                             try
                             {
                                 cmd.ExecuteNonQuery();
                                 MessageBox.Show("Service successfully added!");
-
-                                services.Add(new SalesDataModel
-                                {
-                                    service = txtContent.Text,
-                                    sales = (double)txtTotal.Value
-                                });
                                 txtContent.Text = null;
+                                txtQty.Value = 0;
                                 txtTotal.Value = 0;
                                 txtDate.Text = DateTime.Today.ToShortDateString();
-
-                                txtOverallTotal.Value += txtTotal.Value;
-
                             }
                             catch (SqlException ex)
                             {
@@ -91,7 +84,7 @@ namespace Goldpoint_Inventory_System.Log
             {
                 SqlConnection conn = DBUtils.GetDBConnection();
                 conn.Open();
-                using (SqlCommand cmd = new SqlCommand("SELECT service, SUM(total) as total from Sales where date = @date and status = 'Paid' GROUP BY service", conn))
+                using (SqlCommand cmd = new SqlCommand("SELECT desc, qty, SUM(total) as total from Sales where date = @date GROUP BY desc", conn))
                 {
                     cmd.Parameters.AddWithValue("@date", txtDate.Text);
                     using (SqlDataReader reader = cmd.ExecuteReader())
@@ -102,13 +95,15 @@ namespace Goldpoint_Inventory_System.Log
                         {
                             while (reader.Read())
                             {
-                                string service = Convert.ToString(reader.GetValue(reader.GetOrdinal("service")));
-                                double total = Convert.ToInt32(reader.GetValue(reader.GetOrdinal("total")));
+                                string description = Convert.ToString(reader.GetValue(reader.GetOrdinal("desc")));
+                                int qty = Convert.ToInt32(reader.GetValue(reader.GetOrdinal("qty")));
+                                double total = Convert.ToDouble(reader.GetValue(reader.GetOrdinal("total")));
 
                                 services.Add(new SalesDataModel
                                 {
-                                    service = service,
-                                    sales = total
+                                    desc = description,
+                                    qty = qty,
+                                    total = total
                                 });
 
                                 overallTotal += total;
@@ -118,6 +113,7 @@ namespace Goldpoint_Inventory_System.Log
                         else
                         {
                             MessageBox.Show("The given date has no sales records!");
+                            txtOverallTotal.Value = 0;
                         }
 
                     }
@@ -137,7 +133,7 @@ namespace Goldpoint_Inventory_System.Log
             conn.Open();
             if (dateTime.Name == "txtDateFrom")
             {
-                using (SqlCommand cmd = new SqlCommand("SELECT cast(date as date) as date, SUM(total) as total from Sales where status = 'Paid' and CAST(date AS date) between @dateFrom and @dateTo GROUP BY cast(date as date) order by cast(date as date)", conn))
+                using (SqlCommand cmd = new SqlCommand("SELECT cast(date as date) as date, SUM(total) as total from Sales where CAST(date AS date) between @dateFrom and @dateTo GROUP BY cast(date as date) order by cast(date as date)", conn))
                 {
                     cmd.Parameters.AddWithValue("@dateFrom", dateTime.DateTime);
                     cmd.Parameters.AddWithValue("@dateTo", txtDateTo.Text);
@@ -153,7 +149,7 @@ namespace Goldpoint_Inventory_System.Log
                                 data.Add(new SalesDataModel()
                                 {
                                     date = date.ToShortDateString(),
-                                    sales = total
+                                    total = total
                                 });
                             }
                         }
@@ -163,7 +159,7 @@ namespace Goldpoint_Inventory_System.Log
             }
             else
             {
-                using (SqlCommand cmd = new SqlCommand("SELECT cast(date as date) as date, SUM(total) as total from Sales where status = 'Paid' and CAST(date AS date) between @dateFrom and @dateTo GROUP BY cast(date as date) order by cast(date as date)", conn))
+                using (SqlCommand cmd = new SqlCommand("SELECT cast(date as date) as date, SUM(total) as total from Sales where CAST(date AS date) between @dateFrom and @dateTo GROUP BY cast(date as date) order by cast(date as date)", conn))
                 {
                     cmd.Parameters.AddWithValue("@dateFrom", txtDateFrom.Text);
                     cmd.Parameters.AddWithValue("@dateTo", dateTime.DateTime);
@@ -179,7 +175,7 @@ namespace Goldpoint_Inventory_System.Log
                                 data.Add(new SalesDataModel()
                                 {
                                     date = date.ToShortDateString(),
-                                    sales = total
+                                    total = total
                                 });
                             }
                         }

@@ -12,6 +12,20 @@
              Width="1350"
              FontSize="16"
         Title="Transactions">
+    <Window.Resources>
+        <Style TargetType="syncfusion:VirtualizingCellsControl">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding isDeadline}" Value="True">
+                    <Setter Property="Background" Value="IndianRed" />
+                    <Setter Property="Foreground" Value="White" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding status}" Value="Unpaid">
+                    <Setter Property="Background" Value="IndianRed" />
+                    <Setter Property="Foreground" Value="White" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
     <Grid>
         <Label Content="Service No:" HorizontalAlignment="Left" Margin="78,24,0,0" VerticalAlignment="Top"/>
         <syncfusion:SfTextBoxExt x:Name="txtServiceNo"  HorizontalAlignment="Left" Height="31" Margin="172,24,0,0" VerticalAlignment="Top" Width="155" FontSize="16"/>

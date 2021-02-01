@@ -1,11 +1,15 @@
-﻿using System;
+﻿using NLog;
+using Syncfusion.DocIO;
+using Syncfusion.DocIO.DLS;
+using Syncfusion.DocToPDFConverter;
+using Syncfusion.Pdf;
+using System;
 using System.Collections.ObjectModel;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
-using NLog;
 
 namespace Goldpoint_Inventory_System.Transactions
 {
@@ -16,7 +20,18 @@ namespace Goldpoint_Inventory_System.Transactions
     {
         ObservableCollection<ItemDataModel> items = new ObservableCollection<ItemDataModel>();
         private static Logger Log = LogManager.GetCurrentClassLogger();
-
+        public string fullName
+        {
+            get
+            {
+                return this.GetValue(MyCustomProperty) as string;
+            }
+            set
+            {
+                this.SetValue(MyCustomProperty, value);
+            }
+        }
+        public static readonly DependencyProperty MyCustomProperty = DependencyProperty.Register("fullName", typeof(string), typeof(StockOut));
         public StockOut()
         {
             InitializeComponent();
@@ -61,12 +76,10 @@ namespace Goldpoint_Inventory_System.Transactions
         {
             if (chkCompany.IsChecked == true)
             {
-                chkDR.IsChecked = false;
                 chkInv.IsChecked = false;
                 chkOR.IsChecked = false;
 
                 txtInv.Text = null;
-                txtDRNo.Text = null;
                 txtORNo.Text = null;
 
                 rdPaid.IsChecked = true;
@@ -155,8 +168,6 @@ namespace Goldpoint_Inventory_System.Transactions
             }
             if (chkCompany.IsChecked == false)
             {
-                getDRNo();
-                chkDR.IsChecked = true;
                 txtAddress.IsEnabled = true;
                 txtContactNo.IsEnabled = true;
                 rdUnpaid.IsEnabled = true;
@@ -212,7 +223,7 @@ namespace Goldpoint_Inventory_System.Transactions
                                     brand = Convert.ToString(reader.GetValue(brandIndex)),
                                     size = Convert.ToString(reader.GetValue(sizeIndex)),
                                     qty = Convert.ToInt32(found.qty + txtQty.Value),
-                                    totalPerItem = Convert.ToDouble(found.totalPerItem  + txtTotalPerItem.Value)
+                                    totalPerItem = Convert.ToDouble(found.totalPerItem + txtTotalPerItem.Value)
                                 });
 
                                 foreach (var item in items.Where(x => txtItemCode.Text == x.itemCode).ToList())
@@ -242,6 +253,14 @@ namespace Goldpoint_Inventory_System.Transactions
                             txtItemPrice.Value = 0;
                             ckDealersPrice.IsChecked = false;
 
+                            txtItemCode.Text = null;
+                            txtDesc.Text = null;
+                            txtCustName.Text = null;
+                            txtBrand.Text = null;
+                            txtQty.Value = 0;
+                            txtSize.Text = null;
+                            txtItemPrice.Value = 0;
+                            txtTotalPerItem.Value = 0;
                         }
                         else
                         {
@@ -405,29 +424,45 @@ namespace Goldpoint_Inventory_System.Transactions
                         }
                         foreach (var item in items)
                         {
-                            if (chkCompany.IsChecked == false)
+                            using (SqlCommand cmd = new SqlCommand("INSERT into ReleasedMaterials VALUES (@DRNo, @itemCode, @desc, @type, @brand, @size, @qty, @totalPerItem)", conn))
                             {
-                                using (SqlCommand cmd = new SqlCommand("INSERT into ReleasedMaterials VALUES (@DRNo, @itemCode, @desc, @type, @brand, @size, @qty, @totalPerItem)", conn))
+                                cmd.Parameters.AddWithValue("@DRNo", txtDRNo.Text);
+                                cmd.Parameters.AddWithValue("@itemCode", item.itemCode);
+                                cmd.Parameters.AddWithValue("@desc", item.description);
+                                cmd.Parameters.AddWithValue("@type", item.type);
+                                cmd.Parameters.AddWithValue("@brand", item.brand);
+                                cmd.Parameters.AddWithValue("@size", item.size);
+                                cmd.Parameters.AddWithValue("@qty", item.qty);
+                                cmd.Parameters.AddWithValue("@totalPerItem", item.totalPerItem);
+                                try
                                 {
-                                    cmd.Parameters.AddWithValue("@DRNo", txtDRNo.Text);
-                                    cmd.Parameters.AddWithValue("@itemCode", item.itemCode);
-                                    cmd.Parameters.AddWithValue("@desc", item.description);
-                                    cmd.Parameters.AddWithValue("@type", item.type);
-                                    cmd.Parameters.AddWithValue("@brand", item.brand);
-                                    cmd.Parameters.AddWithValue("@size", item.size);
-                                    cmd.Parameters.AddWithValue("@qty", item.qty);
-                                    cmd.Parameters.AddWithValue("@totalPerItem", item.totalPerItem);
-                                    try
-                                    {
-                                        cmd.ExecuteNonQuery();
-                                        success = true;
-                                    }
-                                    catch (SqlException ex)
-                                    {
-                                        MessageBox.Show("An error has been encountered! Log has been updated with the error");
-                                        Log = LogManager.GetLogger("*");
-                                        Log.Error(ex, "Query Error");
-                                    }
+                                    cmd.ExecuteNonQuery();
+                                    success = true;
+                                }
+                                catch (SqlException ex)
+                                {
+                                    MessageBox.Show("An error has been encountered! Log has been updated with the error");
+                                    Log = LogManager.GetLogger("*");
+                                    Log.Error(ex, "Query Error");
+                                }
+                            }
+
+                            using (SqlCommand cmd = new SqlCommand("INSERT into Sales VALUES (@date, @desc, @qty, @totalPerItem)", conn))
+                            {
+                                cmd.Parameters.AddWithValue("@date", txtDate.Text);
+                                cmd.Parameters.AddWithValue("@desc", item.description);
+                                cmd.Parameters.AddWithValue("@qty", item.qty);
+                                cmd.Parameters.AddWithValue("@totalPerItem", item.totalPerItem);
+                                try
+                                {
+                                    cmd.ExecuteNonQuery();
+                                    success = true;
+                                }
+                                catch (SqlException ex)
+                                {
+                                    MessageBox.Show("An error has been encountered! Log has been updated with the error");
+                                    Log = LogManager.GetLogger("*");
+                                    Log.Error(ex, "Query Error");
                                 }
                             }
 
@@ -445,48 +480,6 @@ namespace Goldpoint_Inventory_System.Transactions
                                     MessageBox.Show("An error has been encountered! Log has been updated with the error");
                                     Log = LogManager.GetLogger("*");
                                     Log.Error(ex, "Query Error");
-                                }
-                            }
-                        }
-                        if (rdDownpayment.IsChecked == true && chkCompany.IsChecked == false)
-                        {
-                            using (SqlCommand cmd = new SqlCommand("INSERT into Sales VALUES (@date, @service, @total, @status)", conn))
-                            {
-                                cmd.Parameters.AddWithValue("@date", txtDate.Text);
-                                cmd.Parameters.AddWithValue("@service", "Stock Out");
-                                cmd.Parameters.AddWithValue("@total", txtDownpayment.Value);
-                                cmd.Parameters.AddWithValue("@status", "Paid");
-                                try
-                                {
-                                    cmd.ExecuteNonQuery();
-                                }
-                                catch (SqlException ex)
-                                {
-                                    MessageBox.Show("An error has been encountered! Log has been updated with the error");
-                                    Log = LogManager.GetLogger("*");
-                                    Log.Error(ex, "Query Error");
-                                    success = false;
-                                }
-                            }
-                        }
-                        else if (rdPaid.IsChecked == true && chkCompany.IsChecked == false)
-                        {
-                            using (SqlCommand cmd = new SqlCommand("INSERT into Sales VALUES (@date, @service, @total, @status)", conn))
-                            {
-                                cmd.Parameters.AddWithValue("@date", txtDate.Text);
-                                cmd.Parameters.AddWithValue("@service", "Stock Out");
-                                cmd.Parameters.AddWithValue("@total", txtTotal.Value);
-                                cmd.Parameters.AddWithValue("@status", "Paid");
-                                try
-                                {
-                                    cmd.ExecuteNonQuery();
-                                }
-                                catch (SqlException ex)
-                                {
-                                    MessageBox.Show("An error has been encountered! Log has been updated with the error");
-                                    Log = LogManager.GetLogger("*");
-                                    Log.Error(ex, "Query Error");
-                                    success = false;
                                 }
                             }
                         }
@@ -585,10 +578,38 @@ namespace Goldpoint_Inventory_System.Transactions
                         }
                         else
                         {
+                            using (SqlCommand cmd = new SqlCommand("INSERT into TransactionDetails (DRNo, service, date, deadline, customerName, address, contactNo, remarks, ORNo, invoiceNo, status, claimed, inaccessible) VALUES (@DRNo, @service, @date, @deadline, @customerName, @address, @contactNo, @remarks, @ORNo, @InvoiceNo, @status, @claimed, 1)", conn))
+                            {
+                                cmd.Parameters.AddWithValue("@DRNo", txtDRNo.Text);
+                                cmd.Parameters.AddWithValue("@date", txtDate.Text);
+                                cmd.Parameters.AddWithValue("@service", "Stock Out");
+                                cmd.Parameters.AddWithValue("@deadline", "N\\A");
+                                cmd.Parameters.AddWithValue("@customerName", txtCustName.Text);
+                                cmd.Parameters.AddWithValue("@address", "N\\A");
+                                cmd.Parameters.AddWithValue("@contactNo", "N\\A");
+                                cmd.Parameters.AddWithValue("@remarks", remarks);
+                                cmd.Parameters.AddWithValue("@ORNo", txtORNo.Text);
+                                cmd.Parameters.AddWithValue("@InvoiceNo", txtInv.Text);
+                                cmd.Parameters.AddWithValue("@status", "Paid");
+                                cmd.Parameters.AddWithValue("@claimed", "Claimed");
+                                try
+                                {
+                                    cmd.ExecuteNonQuery();
+                                }
+                                catch (SqlException ex)
+                                {
+                                    MessageBox.Show("An error has been encountered! Log has been updated with the error");
+                                    Log = LogManager.GetLogger("*");
+                                    Log.Error(ex, "Query Error");
+                                    success = false;
+
+                                }
+                            }
+
                             using (SqlCommand cmd = new SqlCommand("INSERT into TransactionLogs (date, [transaction], remarks) VALUES (@date, @transaction, @remarks)", conn))
                             {
                                 cmd.Parameters.AddWithValue("@date", txtDate.Text);
-                                cmd.Parameters.AddWithValue("@transaction", "Staff: " + txtCustName.Text + ", stock out materials amounting to: " + txtTotal.Text);
+                                cmd.Parameters.AddWithValue("@transaction", "Staff: " + txtCustName.Text + ", with DR No: " + txtDRNo.Text + ", stock out materials amounting to: " + txtTotal.Text);
                                 cmd.Parameters.AddWithValue("@remarks", remarks);
                                 try
                                 {
@@ -606,6 +627,7 @@ namespace Goldpoint_Inventory_System.Transactions
 
                         if (success)
                             MessageBox.Show("Transaction has been recorded!");
+                        promptPrintDR();
                         emptyFields();
                         items.Clear();
                         break;
@@ -688,14 +710,14 @@ namespace Goldpoint_Inventory_System.Transactions
             {
                 //deduct to total
                 var last = items.Last();
-                txtTotal.Value -= last.totalPerItem; 
+                txtTotal.Value -= last.totalPerItem;
                 items.RemoveAt(items.Count - 1);
             }
         }
 
         private void TxtDiscount_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if(txtDiscount.Value > 0 && txtTotal.Value > 0)
+            if (txtDiscount.Value > 0 && txtTotal.Value > 0)
             {
                 txtDownpayment.MaxValue = Convert.ToDouble(txtTotal.Value - txtDiscount.Value) - 1;
             }
@@ -760,7 +782,7 @@ namespace Goldpoint_Inventory_System.Transactions
         bool searched = false;
         private void TxtItemCode_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if(searched == true)
+            if (searched == true)
             {
                 txtDesc.Text = null;
                 txtType.Text = null;
@@ -770,6 +792,164 @@ namespace Goldpoint_Inventory_System.Transactions
                 txtItemPrice.Value = 0;
                 txtTotalPerItem.Value = 0;
                 searched = false;
+            }
+        }
+
+        private void promptPrintDR()
+        {
+            string sMessageBoxText = "Do you want to print the Delivery Receipt?";
+            string sCaption = "Print Delivery Receipt Receipt";
+            MessageBoxButton btnMessageBox = MessageBoxButton.YesNoCancel;
+            MessageBoxImage icnMessageBox = MessageBoxImage.Warning;
+
+            MessageBoxResult dr = MessageBox.Show(sMessageBoxText, sCaption, btnMessageBox, icnMessageBox);
+            switch (dr)
+            {
+                case MessageBoxResult.Yes:
+                    DocToPDFConverter converter = new DocToPDFConverter();
+                    PdfDocument pdfDocument;
+                    //should print 2 receipts, for customer and company
+                    try
+                    {
+                        using (WordDocument document = new WordDocument("Templates/receipt-template.docx", FormatType.Docx))
+                        {
+                            Syncfusion.DocIO.DLS.TextSelection textSelection;
+                            WTextRange textRange;
+
+                            textSelection = document.Find("<dr no>", false, true);
+                            textRange = textSelection.GetAsOneRange();
+                            textRange.Text = txtDRNo.Text;
+                            textSelection = document.Find("<full name>", false, true);
+                            textRange = textSelection.GetAsOneRange();
+                            textRange.Text = txtCustName.Text;
+                            textSelection = document.Find("<printed name>", false, true);
+                            textRange = textSelection.GetAsOneRange();
+                            textRange.Text = txtCustName.Text.ToUpper();
+                            textSelection = document.Find("<j.o no>", false, true);
+                            textRange = textSelection.GetAsOneRange();
+                            textRange.Text = "";
+                            textSelection = document.Find("<date>", false, true);
+                            textRange = textSelection.GetAsOneRange();
+                            textRange.Text = txtDate.Text;
+                            textSelection = document.Find("<address>", false, true);
+                            textRange = textSelection.GetAsOneRange();
+                            TextRange address = new TextRange(txtAddress.Document.ContentStart, txtAddress.Document.ContentEnd);
+                            textRange.Text = address.Text;
+
+                            //if item exceeds 13. create another file
+                            //check if stock out, photocopy or what of the two job order is printing
+                            WordDocument document2 = new WordDocument("Templates/receipt-template.docx", FormatType.Docx);
+                            int counter = 1;
+                            int counter2 = 1;
+                            if (items.Count > 0)
+                            {
+                                foreach (var item in items)
+                                {
+                                    if (counter > 12)
+                                    {
+                                        textSelection = document2.Find("<qty" + counter2 + ">", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = item.qty.ToString();
+
+                                        textSelection = document2.Find("<description" + counter2 + ">", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = item.description;
+
+                                        textSelection = document2.Find("<price" + counter2 + ">", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = (item.totalPerItem / item.qty).ToString();
+
+                                        textSelection = document2.Find("<amount" + counter2 + ">", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = item.totalPerItem.ToString();
+                                        counter2++;
+                                    }
+                                    else
+                                    {
+                                        textSelection = document.Find("<qty" + counter + ">", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = item.qty.ToString();
+
+                                        textSelection = document.Find("<description" + counter + ">", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = item.description;
+
+                                        textSelection = document.Find("<price" + counter + ">", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = (item.totalPerItem / item.qty).ToString();
+
+                                        textSelection = document.Find("<amount" + counter + ">", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = item.totalPerItem.ToString();
+                                        counter++;
+                                    }
+
+                                }
+                            }
+
+                            //remove unused placeholder
+                            for (int i = counter; i <= 13; i++)
+                            {
+
+                                textSelection = document.Find("<qty" + i + ">", false, true);
+                                textRange = textSelection.GetAsOneRange();
+                                textRange.Text = "";
+
+                                textSelection = document.Find("<description" + i + ">", false, true);
+                                textRange = textSelection.GetAsOneRange();
+                                textRange.Text = "";
+
+                                textSelection = document.Find("<price" + i + ">", false, true);
+                                textRange = textSelection.GetAsOneRange();
+                                textRange.Text = "";
+
+                                textSelection = document.Find("<amount" + i + ">", false, true);
+                                textRange = textSelection.GetAsOneRange();
+                                textRange.Text = "";
+                            }
+                            if (counter2 > 1)
+                            {
+                                for (int i = counter2; i <= 13; i++)
+                                {
+                                    textSelection = document2.Find("<qty" + i + ">", false, true);
+                                    textRange = textSelection.GetAsOneRange();
+                                    textRange.Text = "";
+
+                                    textSelection = document2.Find("<description" + i + ">", false, true);
+                                    textRange = textSelection.GetAsOneRange();
+                                    textRange.Text = "";
+
+                                    textSelection = document2.Find("<price" + i + ">", false, true);
+                                    textRange = textSelection.GetAsOneRange();
+                                    textRange.Text = "";
+
+                                    textSelection = document2.Find("<amount" + i + ">", false, true);
+                                    textRange = textSelection.GetAsOneRange();
+                                    textRange.Text = "";
+                                }
+                                pdfDocument = converter.ConvertToPDF(document2);
+                                pdfDocument.Save(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/Sample-2.pdf");
+                                document2.Close();
+
+                            }
+                            pdfDocument = converter.ConvertToPDF(document);
+                            pdfDocument.Save(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/Sample.pdf");
+                            pdfDocument.Close(true);
+
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("An error has been encountered! Log has been updated with the error");
+                        Log = LogManager.GetLogger("*");
+                        Log.Error(ex, "Query Error");
+                        return;
+                    }
+                    break;
+                case MessageBoxResult.No:
+                    break;
+                case MessageBoxResult.Cancel:
+                    break;
             }
         }
     }

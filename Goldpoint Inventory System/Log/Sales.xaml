@@ -21,10 +21,12 @@
         </Label>
         <Label Content="Date:" HorizontalAlignment="Left" Margin="63,78,0,0" VerticalAlignment="Top"/>
         <syncfusion:DateTimeEdit x:Name="txtDate"  HorizontalAlignment="Left" Height="31" Margin="129,78,0,0" TextWrapping="Wrap" Text="DateTimeEdit" VerticalAlignment="Top" Width="120"/>
-        <Label Content="Others:" HorizontalAlignment="Left" Margin="63,125,0,0" VerticalAlignment="Top"/>
+        <Label Content="Item:" HorizontalAlignment="Left" Margin="63,125,0,0" VerticalAlignment="Top"/>
         <syncfusion:SfTextBoxExt x:Name="txtContent" HorizontalAlignment="Left" Height="31" Margin="129,125,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="155" FontSize="16"/>
-        <Label Content="Total:" HorizontalAlignment="Left" Margin="63,170,0,0" VerticalAlignment="Top"/>
-        <syncfusion:DoubleTextBox x:Name="txtTotal" HorizontalAlignment="Left" Height="31" Margin="129,170,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="155" FontSize="16"/>
+        <Label Content="Qty:" HorizontalAlignment="Left" Margin="63,171,0,0" VerticalAlignment="Top"/>
+        <syncfusion:IntegerTextBox x:Name="txtQty" HorizontalAlignment="Left" Height="31" Margin="129,171,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="155" FontSize="16"/>
+        <Label Content="Total:" HorizontalAlignment="Left" Margin="63,219,0,0" VerticalAlignment="Top"/>
+        <syncfusion:DoubleTextBox x:Name="txtTotal" HorizontalAlignment="Left" Height="31" Margin="129,219,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="155" FontSize="16"/>
 
         <StackPanel x:Name="stack" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,78,60,0">
             <StackPanel.Resources>
@@ -38,11 +40,12 @@
                         </TextBlock.LayoutTransform>
                     </TextBlock>
                 </Expander.Header>
-                <Grid Height="450">
-                    <syncfusion:SfDataGrid x:Name="dgDailyService" HorizontalAlignment="Right" Height="400" VerticalAlignment="Top" Width="300" ItemsSource="{Binding}" AutoGenerateColumns="False">
+                <Grid Height="450" Width="800">
+                    <syncfusion:SfDataGrid x:Name="dgDailyService" HorizontalAlignment="Right" Height="400" VerticalAlignment="Top" Width="451" ItemsSource="{Binding}" AutoGenerateColumns="False">
                         <syncfusion:SfDataGrid.Columns>
-                            <syncfusion:GridTextColumn HeaderText="Service" DisplayBinding="{Binding service}"/>
-                            <syncfusion:GridTextColumn HeaderText="Total" DisplayBinding="{Binding sales}"/>
+                            <syncfusion:GridTextColumn HeaderText="Item" DisplayBinding="{Binding desc}"/>
+                            <syncfusion:GridTextColumn HeaderText="Qty" DisplayBinding="{Binding qty}"/>
+                            <syncfusion:GridTextColumn HeaderText="Total" DisplayBinding="{Binding totalPerItem}"/>
                         </syncfusion:SfDataGrid.Columns>
                     </syncfusion:SfDataGrid>
                     <Label Content="Overall total:" HorizontalAlignment="Left"  VerticalAlignment="Top" Margin="10,406,0,0"/>
@@ -80,7 +83,7 @@
                 </Grid>
             </Expander>
         </StackPanel>
-        <syncfusion:ButtonAdv x:Name="btnAddtoList" Click="BtnAddtoList_Click" SmallIcon="{x:Null}" HorizontalAlignment="Left" Height="29" Label="Add to list" Margin="129,240,0,0" VerticalAlignment="Top" Width="155"/>
+        <syncfusion:ButtonAdv x:Name="btnAddtoList" Click="BtnAddtoList_Click" SmallIcon="{x:Null}" HorizontalAlignment="Left" Height="29" Label="Add to list" Margin="129,290,0,0" VerticalAlignment="Top" Width="155"/>
 
     </Grid>
 </UserControl>

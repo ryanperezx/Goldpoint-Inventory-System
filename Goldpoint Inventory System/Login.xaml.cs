@@ -109,7 +109,7 @@ namespace Goldpoint_Inventory_System
         private void BtnLogin_Click(object sender, RoutedEventArgs e)
         {
             Hide();
-            new MainWindow().ShowDialog();
+            new MainWindow("admin", "Admin").ShowDialog();
             ShowDialog();
         }
 

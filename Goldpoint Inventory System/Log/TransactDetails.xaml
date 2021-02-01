@@ -114,7 +114,9 @@
                     </TextBlock>
                 </Expander.Header>
                 <Grid Width="700">
-                    <syncfusion:ButtonAdv SmallIcon="{x:Null}" x:Name="btnPrintDR" Click="BtnPrintDR_Click" HorizontalAlignment="Left" Height="29" Label="Print DR" Margin="22,74,0,0" VerticalAlignment="Top" Width="120"/>
+                    <syncfusion:ButtonAdv SmallIcon="{x:Null}" x:Name="btnPrintDR" Click="BtnPrintDR_Click" HorizontalAlignment="Left" Height="35" Label="Print DR" Margin="22,68,0,0" VerticalAlignment="Top" Width="120"/>
+                    <syncfusion:ButtonAdv SmallIcon="{x:Null}" x:Name="btnIssueOR" Click="BtnIssueOR_Click" HorizontalAlignment="Left" Height="35" Label="Issue OR" Margin="194,68,0,0" VerticalAlignment="Top" Width="120" IsEnabled="False"/>
+                    <syncfusion:ButtonAdv SmallIcon="{x:Null}" x:Name="btnIssueInvoice" Click="BtnIssueInvoice_Click" HorizontalAlignment="Left" Height="35" Label="Issue Invoice" Margin="354,68,0,0" VerticalAlignment="Top" Width="120" IsEnabled="False"/>
                     <TextBlock HorizontalAlignment="Left" Margin="22,193,0,0" TextWrapping="Wrap" Text="For Job Orders, if applicable:" VerticalAlignment="Top"/>
 
                     <Label Content="Job Order No:" HorizontalAlignment="Left" Margin="22,244,0,0" VerticalAlignment="Top"/>

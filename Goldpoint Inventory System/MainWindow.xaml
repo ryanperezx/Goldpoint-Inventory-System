@@ -65,9 +65,14 @@
                             <iconPacks:PackIconMaterialDesign Kind="Bookmark"  Height="15" Width="22" Foreground="DimGray" Margin="0,0,-15,0"/>
                         </MenuItem.Icon>
                     </MenuItem>
-                    <MenuItem x:Name="btnTransactions" Header="Transaction List" Click="BtnTransactions_Click">
+                    <MenuItem Tag="IssueDR" Header="Issue Delivery Receipt" Click="ActivateWindow">
                         <MenuItem.Icon>
                             <iconPacks:PackIconMaterialDesign Kind="Receipt"  Height="15" Width="22" Foreground="DimGray" Margin="0,0,-15,0"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem x:Name="btnTransactions" Header="Transaction List" Click="BtnTransactions_Click">
+                        <MenuItem.Icon>
+                            <iconPacks:PackIconMaterialDesign Kind="List"  Height="15" Width="22" Foreground="DimGray" Margin="0,0,-15,0"/>
                         </MenuItem.Icon>
                     </MenuItem>
                 </MenuItem>
@@ -160,7 +165,7 @@
                     syncfusion:DockingManager.CanFloat="False"
                     syncfusion:DockingManager.CanDragTab="False"
                     >
-                <transact:StockOut />
+                <transact:StockOut/>
 
             </ContentControl>
             <ContentControl x:Name="InventCheck" 
@@ -179,7 +184,7 @@
                     syncfusion:DockingManager.CanFloat="False"
                     syncfusion:DockingManager.CanDragTab="False"
                     >
-                <transact:Photocopy />
+                <transact:Photocopy/>
             </ContentControl>
             <ContentControl x:Name="JobOrder" 
                     syncfusion:DockingManager.Header="Job Order"
@@ -188,7 +193,7 @@
                     syncfusion:DockingManager.CanFloat="False"
                     syncfusion:DockingManager.CanDragTab="False"
                     >
-                <transact:JobOrder />
+                <transact:JobOrder/>
             </ContentControl>
             <ContentControl x:Name="Sales" 
                     syncfusion:DockingManager.Header="Sales"
@@ -225,6 +230,16 @@
                     syncfusion:DockingManager.CanDragTab="False"
                     >
                 <logs:ImportDetails />
+            </ContentControl>
+            <ContentControl x:Name="IssueDR" 
+                    syncfusion:DockingManager.Header="Issue Delivery Receipt"
+                    syncfusion:DockingManager.State="Document"
+                    syncfusion:DockingManager.CanDock="False"
+                    syncfusion:DockingManager.CanFloat="False"
+                    syncfusion:DockingManager.CanDragTab="False"
+                    >
+                <transact:IssueDeliveryReceipt />
+
             </ContentControl>
         </syncfusion:DockingManager>
     </Grid>
