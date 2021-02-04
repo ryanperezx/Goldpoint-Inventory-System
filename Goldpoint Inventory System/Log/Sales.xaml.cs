@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using NLog;
+using System;
 using System.Collections.ObjectModel;
 using System.Data.SqlClient;
 using System.Windows;
 using System.Windows.Controls;
-using NLog;
 
 namespace Goldpoint_Inventory_System.Log
 {
@@ -13,8 +12,10 @@ namespace Goldpoint_Inventory_System.Log
     /// </summary>
     public partial class Sales : UserControl
     {
-        public ObservableCollection<SalesDataModel> data = new ObservableCollection<SalesDataModel>();
-        ObservableCollection<SalesDataModel> services = new ObservableCollection<SalesDataModel>();
+        ObservableCollection<SalesDataModel> data = new ObservableCollection<SalesDataModel>();
+        ObservableCollection<SalesDataModel> soldMaterials = new ObservableCollection<SalesDataModel>();
+        ObservableCollection<SalesDataModel> sales = new ObservableCollection<SalesDataModel>();
+
         private static Logger Log = LogManager.GetCurrentClassLogger();
         double overallTotal = 0;
 
@@ -22,16 +23,22 @@ namespace Goldpoint_Inventory_System.Log
         {
             InitializeComponent();
             stack.DataContext = new ExpanderListViewModel();
-            dgDailyService.ItemsSource = services;
+            dgSoldMaterials.ItemsSource = soldMaterials;
+            dgSales.ItemsSource = sales;
             columnSeries.ItemsSource = data;
 
         }
 
         private void BtnAddtoList_Click(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrEmpty(txtContent.Text) || string.IsNullOrEmpty(txtDate.Text) || string.IsNullOrEmpty(txtTotal.Text))
+            if (string.IsNullOrEmpty(txtDesc.Text) || string.IsNullOrEmpty(txtDate.Text) || string.IsNullOrEmpty(txtTotal.Text) || string.IsNullOrEmpty(txtAmount.Text))
             {
                 MessageBox.Show("One or more fields are empty!");
+            }
+            else if (txtAmount.Value > txtTotal.Value)
+            {
+                MessageBox.Show("Amount paid can't be greater than the total amount.");
+
             }
             else
             {
@@ -46,18 +53,19 @@ namespace Goldpoint_Inventory_System.Log
                     case MessageBoxResult.Yes:
                         SqlConnection conn = DBUtils.GetDBConnection();
                         conn.Open();
-                        using (SqlCommand cmd = new SqlCommand("INSERT into Sales VALUES (@date, @desc, @qty, @total)", conn))
+                        using (SqlCommand cmd = new SqlCommand("INSERT into Sales VALUES (@date, @desc, @amount, @total, @status)", conn))
                         {
                             cmd.Parameters.AddWithValue("@date", txtDate.Text);
-                            cmd.Parameters.AddWithValue("@desc", txtContent.Text);
-                            cmd.Parameters.AddWithValue("@qty", txtQty.Value);
-                            cmd.Parameters.AddWithValue("@total", txtTotal.Text);
+                            cmd.Parameters.AddWithValue("@desc", txtDesc.Text);
+                            cmd.Parameters.AddWithValue("@amount", txtAmount.Value);
+                            cmd.Parameters.AddWithValue("@total", txtTotal.Value);
+                            cmd.Parameters.AddWithValue("@status", "Paid");
                             try
                             {
                                 cmd.ExecuteNonQuery();
                                 MessageBox.Show("Service successfully added!");
-                                txtContent.Text = null;
-                                txtQty.Value = 0;
+                                txtDesc.Text = null;
+                                txtAmount.Value = 0;
                                 txtTotal.Value = 0;
                                 txtDate.Text = DateTime.Today.ToShortDateString();
                             }
@@ -65,9 +73,8 @@ namespace Goldpoint_Inventory_System.Log
                             {
                                 MessageBox.Show("An error has been encountered! Log has been updated with the error");
                                 Log = LogManager.GetLogger("*");
-                                Log.Error(ex, "Query Error");
+                                Log.Error(ex);
                             }
-
                         }
                         break;
                     case MessageBoxResult.No:
@@ -84,22 +91,26 @@ namespace Goldpoint_Inventory_System.Log
             {
                 SqlConnection conn = DBUtils.GetDBConnection();
                 conn.Open();
-                using (SqlCommand cmd = new SqlCommand("SELECT desc, qty, SUM(total) as total from Sales where date = @date GROUP BY desc", conn))
+                soldMaterials.Clear();
+                sales.Clear();
+                txtSoldMaterialTotal.Value = 0;
+                txtAccountReceivable.Value = 0;
+                txtCashOnHand.Value = 0;
+                using (SqlCommand cmd = new SqlCommand("SELECT item, SUM(qty) as qty, SUM(total) as total from SoldMaterials where date = @date GROUP BY item", conn))
                 {
                     cmd.Parameters.AddWithValue("@date", txtDate.Text);
                     using (SqlDataReader reader = cmd.ExecuteReader())
                     {
-                        services.Clear();
                         overallTotal = 0;
                         if (reader.HasRows)
                         {
                             while (reader.Read())
                             {
-                                string description = Convert.ToString(reader.GetValue(reader.GetOrdinal("desc")));
+                                string description = Convert.ToString(reader.GetValue(reader.GetOrdinal("item")));
                                 int qty = Convert.ToInt32(reader.GetValue(reader.GetOrdinal("qty")));
                                 double total = Convert.ToDouble(reader.GetValue(reader.GetOrdinal("total")));
 
-                                services.Add(new SalesDataModel
+                                soldMaterials.Add(new SalesDataModel
                                 {
                                     desc = description,
                                     qty = qty,
@@ -108,12 +119,49 @@ namespace Goldpoint_Inventory_System.Log
 
                                 overallTotal += total;
                             }
-                            txtOverallTotal.Value = overallTotal;
+                            txtSoldMaterialTotal.Value = overallTotal;
                         }
                         else
                         {
                             MessageBox.Show("The given date has no sales records!");
-                            txtOverallTotal.Value = 0;
+                            return;
+                        }
+
+                    }
+                }
+
+                using (SqlCommand cmd = new SqlCommand("SELECT [desc], amount, total, status from Sales where date = @date", conn))
+                {
+                    cmd.Parameters.AddWithValue("@date", txtDate.Text);
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            while (reader.Read())
+                            {
+                                string description = Convert.ToString(reader.GetValue(reader.GetOrdinal("desc")));
+                                double amount = Convert.ToInt32(reader.GetValue(reader.GetOrdinal("amount")));
+                                double total = Convert.ToDouble(reader.GetValue(reader.GetOrdinal("total")));
+                                string status = Convert.ToString(reader.GetValue(reader.GetOrdinal("status")));
+
+                                sales.Add(new SalesDataModel
+                                {
+                                    desc = description,
+                                    amount = amount,
+                                    total = total,
+                                    status = status
+                                });
+
+                                txtAccountReceivable.Value += total - amount;
+                                txtCashOnHand.Value += amount;
+
+                            }
+                        }
+                        else
+                        {
+                            MessageBox.Show("The given date has no sales records!");
+                            return;
+
                         }
 
                     }
@@ -133,7 +181,7 @@ namespace Goldpoint_Inventory_System.Log
             conn.Open();
             if (dateTime.Name == "txtDateFrom")
             {
-                using (SqlCommand cmd = new SqlCommand("SELECT cast(date as date) as date, SUM(total) as total from Sales where CAST(date AS date) between @dateFrom and @dateTo GROUP BY cast(date as date) order by cast(date as date)", conn))
+                using (SqlCommand cmd = new SqlCommand("SELECT cast(date as date) as date, SUM(amount) as amount from Sales where CAST(date AS date) between @dateFrom and @dateTo GROUP BY cast(date as date) order by cast(date as date)", conn))
                 {
                     cmd.Parameters.AddWithValue("@dateFrom", dateTime.DateTime);
                     cmd.Parameters.AddWithValue("@dateTo", txtDateTo.Text);
@@ -144,7 +192,7 @@ namespace Goldpoint_Inventory_System.Log
                         {
                             while (reader.Read())
                             {
-                                double total = Convert.ToInt32(reader.GetValue(reader.GetOrdinal("total")));
+                                double total = Convert.ToInt32(reader.GetValue(reader.GetOrdinal("amount")));
                                 DateTime date = Convert.ToDateTime(reader.GetValue(reader.GetOrdinal("date")));
                                 data.Add(new SalesDataModel()
                                 {
@@ -159,7 +207,7 @@ namespace Goldpoint_Inventory_System.Log
             }
             else
             {
-                using (SqlCommand cmd = new SqlCommand("SELECT cast(date as date) as date, SUM(total) as total from Sales where CAST(date AS date) between @dateFrom and @dateTo GROUP BY cast(date as date) order by cast(date as date)", conn))
+                using (SqlCommand cmd = new SqlCommand("SELECT cast(date as date) as date, SUM(amount) as amount from Sales where CAST(date AS date) between @dateFrom and @dateTo GROUP BY cast(date as date) order by cast(date as date)", conn))
                 {
                     cmd.Parameters.AddWithValue("@dateFrom", txtDateFrom.Text);
                     cmd.Parameters.AddWithValue("@dateTo", dateTime.DateTime);
@@ -170,7 +218,7 @@ namespace Goldpoint_Inventory_System.Log
                         {
                             while (reader.Read())
                             {
-                                double total = Convert.ToInt32(reader.GetValue(reader.GetOrdinal("total")));
+                                double total = Convert.ToInt32(reader.GetValue(reader.GetOrdinal("amount")));
                                 DateTime date = Convert.ToDateTime(reader.GetValue(reader.GetOrdinal("date")));
                                 data.Add(new SalesDataModel()
                                 {
@@ -186,11 +234,16 @@ namespace Goldpoint_Inventory_System.Log
 
         private void BtnReset_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            txtContent.Text = null;
-            txtTotal.Value = 0;
             txtDate.Text = DateTime.Today.ToShortDateString();
+            txtDesc.Text = null;
+            txtAmount.Value = 0;
+            txtTotal.Value = 0;
+            txtSoldMaterialTotal.Value = 0;
+            txtAccountReceivable.Value = 0;
+            txtCashOnHand.Value = 0;
             data.Clear();
-            services.Clear();
+            soldMaterials.Clear();
+            sales.Clear();
         }
     }
 }

@@ -29,10 +29,23 @@ namespace Goldpoint_Inventory_System.Log
             set;
         }
 
+        public double amount
+        {
+            get;
+            set;
+        }
+
         public double total
         {
             get;
             set;
         }
+
+        public string status
+        {
+            get;
+            set;
+        }
+
     }
 }

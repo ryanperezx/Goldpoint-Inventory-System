@@ -43,7 +43,8 @@
         <syncfusion:SfDataGrid x:Name="dgTransactions" HorizontalAlignment="Center" Height="485" Margin="78,76,64,8" VerticalAlignment="Center" Width="1200" ItemsSource="{Binding}" AutoGenerateColumns="False" Grid.ColumnSpan="2">
             <syncfusion:SfDataGrid.Columns>
                 <syncfusion:GridTextColumn MappingName="Date" Width="100" DisplayBinding="{Binding date}"/>
-                <syncfusion:GridTextColumn MappingName="Deadline" Width="150" DisplayBinding="{Binding service}"/>
+                <syncfusion:GridTextColumn MappingName="Deadline" Width="150" DisplayBinding="{Binding deadline}"/>
+                <syncfusion:GridTextColumn MappingName="Service" Width="150" DisplayBinding="{Binding service}"/>
                 <syncfusion:GridTextColumn MappingName="Delivery Receipt No" Width="228" DisplayBinding="{Binding drNo}"/>
                 <syncfusion:GridTextColumn MappingName="Customer Name" Width="228" DisplayBinding="{Binding customerName}"/>
                 <syncfusion:GridTextColumn MappingName="Address" Width="228" DisplayBinding="{Binding address}"/>
@@ -51,5 +52,6 @@
                 <syncfusion:GridTextColumn MappingName="Status" Width="150" DisplayBinding="{Binding status}"/>
             </syncfusion:SfDataGrid.Columns>
         </syncfusion:SfDataGrid>
+        <CheckBox x:Name="chkCompany" Content="Company Use" Checked="ChkCompany_Checked" Unchecked="ChkCompany_Unchecked" HorizontalAlignment="Left" Margin="1090,30,0,0" VerticalAlignment="Top"/>
     </Grid>
 </Window>

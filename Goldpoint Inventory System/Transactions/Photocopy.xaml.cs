@@ -424,10 +424,10 @@ namespace Goldpoint_Inventory_System.Transactions
                                 {
                                     MessageBox.Show("An error has been encountered! Log has been updated with the error");
                                     Log = LogManager.GetLogger("*");
-                                    Log.Error(ex, "Query Error");
+                                    Log.Error(ex);
                                 }
                             }
-                            using (SqlCommand cmd = new SqlCommand("INSERT into Sales VALUES (@date, @desc, @qty, @total)", conn))
+                            using (SqlCommand cmd = new SqlCommand("INSERT into SoldMaterials VALUES (@date, @desc, @qty, @total)", conn))
                             {
                                 cmd.Parameters.AddWithValue("@date", txtDate.Text);
                                 cmd.Parameters.AddWithValue("@desc", item.item);
@@ -441,7 +441,7 @@ namespace Goldpoint_Inventory_System.Transactions
                                 {
                                     MessageBox.Show("An error has been encountered! Log has been updated with the error");
                                     Log = LogManager.GetLogger("*");
-                                    Log.Error(ex, "Query Error");
+                                    Log.Error(ex);
                                     success = false;
                                 }
                             }
@@ -459,7 +459,7 @@ namespace Goldpoint_Inventory_System.Transactions
                             {
                                 MessageBox.Show("An error has been encountered! Log has been updated with the error");
                                 Log = LogManager.GetLogger("*");
-                                Log.Error(ex, "Query Error");
+                                Log.Error(ex);
                                 success = false;
                             }
                         }
@@ -481,7 +481,7 @@ namespace Goldpoint_Inventory_System.Transactions
                             if (chkDownpayment.IsChecked == true)
                             {
                                 cmd.Parameters.AddWithValue("@paidAmt", txtDownpayment.Value);
-                                cmd.Parameters.AddWithValue("@status", "Downpayment");
+                                cmd.Parameters.AddWithValue("@status", "Unpaid");
                             }
                             try
                             {
@@ -491,7 +491,40 @@ namespace Goldpoint_Inventory_System.Transactions
                             {
                                 MessageBox.Show("An error has been encountered! Log has been updated with the error");
                                 Log = LogManager.GetLogger("*");
-                                Log.Error(ex, "Query Error");
+                                Log.Error(ex);
+                                success = false;
+                            }
+                        }
+                        using (SqlCommand cmd = new SqlCommand("INSERT into Sales VALUES (@date, @desc, @paidAmt, @total, @status)", conn))
+                        {
+                            cmd.Parameters.AddWithValue("@date", txtDate.Text);
+                            cmd.Parameters.AddWithValue("@desc", "DR[Photocopy]: " + txtDRNo.Text);
+                            if (chkPaid.IsChecked == true)
+                            {
+                                cmd.Parameters.AddWithValue("@paidAmt", txtCustTotal.Value);
+                                cmd.Parameters.AddWithValue("@status", "Paid");
+                            }
+                            if (chkUnpaid.IsChecked == true)
+                            {
+                                cmd.Parameters.AddWithValue("@paidAmt", 0);
+                                cmd.Parameters.AddWithValue("@status", "Unpaid");
+                            }
+                            if (chkDownpayment.IsChecked == true)
+                            {
+                                cmd.Parameters.AddWithValue("@paidAmt", txtDownpayment.Value);
+                                cmd.Parameters.AddWithValue("@status", "Unpaid");
+                            }
+                            cmd.Parameters.AddWithValue("@total", txtCustTotal.Value);
+
+                            try
+                            {
+                                cmd.ExecuteNonQuery();
+                            }
+                            catch (SqlException ex)
+                            {
+                                MessageBox.Show("An error has been encountered! Log has been updated with the error");
+                                Log = LogManager.GetLogger("*");
+                                Log.Error(ex);
                                 success = false;
                             }
                         }
@@ -505,8 +538,22 @@ namespace Goldpoint_Inventory_System.Transactions
                             cmd.Parameters.AddWithValue("@address", address);
                             cmd.Parameters.AddWithValue("@contactNo", txtContactNo.Text);
                             cmd.Parameters.AddWithValue("@remarks", txtRemarks.Text);
-                            cmd.Parameters.AddWithValue("@ORNo", txtORNo.Text);
-                            cmd.Parameters.AddWithValue("@InvoiceNo", txtInvoice.Text);
+                            if (string.IsNullOrEmpty(txtORNo.Text))
+                            {
+                                cmd.Parameters.AddWithValue("@ORNo", DBNull.Value);
+                            }
+                            else
+                            {
+                                cmd.Parameters.AddWithValue("@ORNo", txtORNo.Text);
+                            }
+                            if (string.IsNullOrEmpty(txtInvoice.Text))
+                            {
+                                cmd.Parameters.AddWithValue("@InvoiceNo", DBNull.Value);
+                            }
+                            else
+                            {
+                                cmd.Parameters.AddWithValue("@InvoiceNo", txtInvoice.Text);
+                            }
 
                             if (chkPaid.IsChecked == true)
                             {
@@ -534,7 +581,7 @@ namespace Goldpoint_Inventory_System.Transactions
                             {
                                 MessageBox.Show("An error has been encountered! Log has been updated with the error");
                                 Log = LogManager.GetLogger("*");
-                                Log.Error(ex, "Query Error");
+                                Log.Error(ex);
                                 success = false;
 
                             }
@@ -615,7 +662,7 @@ namespace Goldpoint_Inventory_System.Transactions
                         {
                             MessageBox.Show("An error has been encountered! Log has been updated with the error");
                             Log = LogManager.GetLogger("*");
-                            Log.Error(ex, "Query Error");
+                            Log.Error(ex);
                         }
                     }
                     break;
@@ -803,7 +850,7 @@ namespace Goldpoint_Inventory_System.Transactions
                     {
                         MessageBox.Show("An error has been encountered! Log has been updated with the error");
                         Log = LogManager.GetLogger("*");
-                        Log.Error(ex, "Query Error");
+                        Log.Error(ex);
                         return;
                     }
                     break;

@@ -128,7 +128,26 @@
                     <syncfusion:ButtonAdv SmallIcon="{x:Null}" x:Name="btnIssueInvoiceJobOrder" Click="BtnIssueInvoiceJobOrder_Click" HorizontalAlignment="Left" Height="35" Label="Issue Invoice for Job Order" Margin="354,345,0,0" VerticalAlignment="Top" Width="120" IsEnabled="False"/>
                 </Grid>
             </Expander>
-            <Expander x:Name="exStockOut" ExpandDirection="Right" FontSize="16" HorizontalAlignment="Left"  Height="420" VerticalAlignment="Top" IsExpanded="{Binding SelectedExpander, ConverterParameter=4, Converter={StaticResource ExpanderToBooleanConverter}, Mode=TwoWay}" IsEnabled="False">
+            <Expander x:Name="exIssueDR" ExpandDirection="Right" FontSize="16" HorizontalAlignment="Left"  Height="420" VerticalAlignment="Top" IsExpanded="{Binding SelectedExpander, ConverterParameter=4, Converter={StaticResource ExpanderToBooleanConverter}, Mode=TwoWay}" IsEnabled="False">
+                <Expander.Header>
+                    <TextBlock Text="Issued Delivery Rceipt" RenderTransformOrigin=".5,.5">
+                        <TextBlock.LayoutTransform>
+                            <RotateTransform Angle="90" />
+                        </TextBlock.LayoutTransform>
+                    </TextBlock>
+                </Expander.Header>
+                <StackPanel Width="500">
+                    <syncfusion:SfDataGrid x:Name="dgItems" HorizontalAlignment="Center" Height="418" VerticalAlignment="Center" Width="500" ItemsSource="{Binding}" AutoGenerateColumns="False">
+                        <syncfusion:SfDataGrid.Columns>
+                            <syncfusion:GridTextColumn MappingName="Qty" Width="90" IsReadOnly="True" DisplayBinding="{Binding qty}"/>
+                            <syncfusion:GridTextColumn MappingName="Description" Width="125" IsReadOnly="True" DisplayBinding="{Binding description}"/>
+                            <syncfusion:GridTextColumn MappingName="Unit Price" Width="150" IsReadOnly="True" DisplayBinding="{Binding unitPrice}"/>
+                            <syncfusion:GridTextColumn MappingName="Amount" Width="150" IsReadOnly="True" DisplayBinding="{Binding amount}"/>
+                        </syncfusion:SfDataGrid.Columns>
+                    </syncfusion:SfDataGrid>
+                </StackPanel>
+            </Expander>
+            <Expander x:Name="exStockOut" ExpandDirection="Right" FontSize="16" HorizontalAlignment="Left"  Height="420" VerticalAlignment="Top" IsExpanded="{Binding SelectedExpander, ConverterParameter=5, Converter={StaticResource ExpanderToBooleanConverter}, Mode=TwoWay}" IsEnabled="False">
                 <Expander.Header>
                     <TextBlock Text="Item List" RenderTransformOrigin=".5,.5">
                         <TextBlock.LayoutTransform>
@@ -151,7 +170,7 @@
                     </syncfusion:SfDataGrid>
                 </StackPanel>
             </Expander>
-            <Expander x:Name="exPhotocopy" ExpandDirection="Right" FontSize="16" HorizontalAlignment="Left"  Height="420" VerticalAlignment="Top" IsExpanded="{Binding SelectedExpander, ConverterParameter=5, Converter={StaticResource ExpanderToBooleanConverter}, Mode=TwoWay}" IsEnabled="False">
+            <Expander x:Name="exPhotocopy" ExpandDirection="Right" FontSize="16" HorizontalAlignment="Left"  Height="420" VerticalAlignment="Top" IsExpanded="{Binding SelectedExpander, ConverterParameter=6, Converter={StaticResource ExpanderToBooleanConverter}, Mode=TwoWay}" IsEnabled="False">
                 <Expander.Header>
                     <TextBlock Text="Photocopy" RenderTransformOrigin=".5,.5">
                         <TextBlock.LayoutTransform>

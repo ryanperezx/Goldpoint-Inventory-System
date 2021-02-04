@@ -16,17 +16,17 @@
         <Label x:Name="btnReset" MouseLeftButtonDown="BtnReset_MouseLeftButtonDown" VerticalAlignment="Top" HorizontalAlignment="Right" Height="40" Width="40" ToolTip="Reset" Cursor="Hand">
             <iconPacks:PackIconMaterialLight Kind="Refresh" Height="30" Width="30" Foreground="DarkGoldenrod"/>
         </Label>
-        <Label x:Name="txtSearch" MouseLeftButtonDown="TxtSearch_MouseLeftButtonDown" VerticalAlignment="Top" HorizontalAlignment="Left" Height="30" Width="30" ToolTip="Search Sales" Cursor="Hand" Margin="254,79,0,0">
+        <Label x:Name="txtSearch" MouseLeftButtonDown="TxtSearch_MouseLeftButtonDown" VerticalAlignment="Top" HorizontalAlignment="Left" Height="30" Width="30" ToolTip="Search Sales" Cursor="Hand" Margin="287,79,0,0">
             <iconPacks:PackIconMaterialLight Kind="Magnify" Height="20" Width="20" Foreground="DarkGoldenrod" />
         </Label>
         <Label Content="Date:" HorizontalAlignment="Left" Margin="63,78,0,0" VerticalAlignment="Top"/>
-        <syncfusion:DateTimeEdit x:Name="txtDate"  HorizontalAlignment="Left" Height="31" Margin="129,78,0,0" TextWrapping="Wrap" Text="DateTimeEdit" VerticalAlignment="Top" Width="120"/>
-        <Label Content="Item:" HorizontalAlignment="Left" Margin="63,125,0,0" VerticalAlignment="Top"/>
-        <syncfusion:SfTextBoxExt x:Name="txtContent" HorizontalAlignment="Left" Height="31" Margin="129,125,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="155" FontSize="16"/>
-        <Label Content="Qty:" HorizontalAlignment="Left" Margin="63,171,0,0" VerticalAlignment="Top"/>
-        <syncfusion:IntegerTextBox x:Name="txtQty" HorizontalAlignment="Left" Height="31" Margin="129,171,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="155" FontSize="16"/>
-        <Label Content="Total:" HorizontalAlignment="Left" Margin="63,219,0,0" VerticalAlignment="Top"/>
-        <syncfusion:DoubleTextBox x:Name="txtTotal" HorizontalAlignment="Left" Height="31" Margin="129,219,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="155" FontSize="16"/>
+        <syncfusion:DateTimeEdit x:Name="txtDate"  HorizontalAlignment="Left" Height="31" Margin="162,78,0,0" TextWrapping="Wrap" Text="DateTimeEdit" VerticalAlignment="Top" Width="120"/>
+        <Label Content="Description:" HorizontalAlignment="Left" Margin="63,125,0,0" VerticalAlignment="Top"/>
+        <syncfusion:SfTextBoxExt x:Name="txtDesc" HorizontalAlignment="Left" Height="31" Margin="162,125,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="155" FontSize="16"/>
+        <Label Content="Amount:" HorizontalAlignment="Left" Margin="63,171,0,0" VerticalAlignment="Top"/>
+        <syncfusion:DoubleTextBox x:Name="txtAmount" HorizontalAlignment="Left" Height="31" Margin="162,171,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="155" FontSize="16"/>
+        <Label Content="Total:" HorizontalAlignment="Left" Margin="63,218,0,0" VerticalAlignment="Top"/>
+        <syncfusion:DoubleTextBox x:Name="txtTotal" HorizontalAlignment="Left" Height="31" Margin="162,218,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="155" FontSize="16"/>
 
         <StackPanel x:Name="stack" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,78,60,0">
             <StackPanel.Resources>
@@ -34,25 +34,48 @@
             </StackPanel.Resources>
             <Expander ExpandDirection="Left" Height="450" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Top" IsExpanded="{Binding SelectedExpander, ConverterParameter=1, Converter={StaticResource ExpanderToBooleanConverter}, Mode=TwoWay}">
                 <Expander.Header>
-                    <TextBlock Text="Daily" RenderTransformOrigin=".5,.5">
+                    <TextBlock Text="Daily Released Materials" RenderTransformOrigin=".5,.5">
                         <TextBlock.LayoutTransform>
                             <RotateTransform Angle="90" />
                         </TextBlock.LayoutTransform>
                     </TextBlock>
                 </Expander.Header>
-                <Grid Height="450" Width="800">
-                    <syncfusion:SfDataGrid x:Name="dgDailyService" HorizontalAlignment="Right" Height="400" VerticalAlignment="Top" Width="451" ItemsSource="{Binding}" AutoGenerateColumns="False">
+                <Grid Height="450" >
+                    <syncfusion:SfDataGrid x:Name="dgSoldMaterials" HorizontalAlignment="Right" Height="400" VerticalAlignment="Top" Width="405" ItemsSource="{Binding}" AutoGenerateColumns="False">
                         <syncfusion:SfDataGrid.Columns>
                             <syncfusion:GridTextColumn HeaderText="Item" DisplayBinding="{Binding desc}"/>
-                            <syncfusion:GridTextColumn HeaderText="Qty" DisplayBinding="{Binding qty}"/>
-                            <syncfusion:GridTextColumn HeaderText="Total" DisplayBinding="{Binding totalPerItem}"/>
+                            <syncfusion:GridTextColumn HeaderText="Qty" Width="100" DisplayBinding="{Binding qty}"/>
+                            <syncfusion:GridTextColumn HeaderText="Total" Width="155" DisplayBinding="{Binding total}"/>
                         </syncfusion:SfDataGrid.Columns>
                     </syncfusion:SfDataGrid>
-                    <Label Content="Overall total:" HorizontalAlignment="Left"  VerticalAlignment="Top" Margin="10,406,0,0"/>
-                    <syncfusion:DoubleTextBox x:Name="txtOverallTotal" IsReadOnly="True" HorizontalAlignment="Left" Height="31" TextWrapping="Wrap" VerticalAlignment="Top" Width="155" Margin="115,406,0,0" FontSize="16"/>
+                    <Label Content="Released Materials Total:" HorizontalAlignment="Left"  VerticalAlignment="Top" Margin="9,409,0,0"/>
+                    <syncfusion:DoubleTextBox x:Name="txtSoldMaterialTotal" IsReadOnly="True" HorizontalAlignment="Left" Height="31" TextWrapping="Wrap" VerticalAlignment="Top" Width="155" Margin="197,409,0,0" FontSize="16"/>
                 </Grid>
             </Expander>
-            <Expander ExpandDirection="Left" FontSize="16" HorizontalAlignment="Left"  Height="450" VerticalAlignment="Top" IsExpanded="{Binding SelectedExpander, ConverterParameter=2, Converter={StaticResource ExpanderToBooleanConverter}, Mode=TwoWay}">
+            <Expander ExpandDirection="Left" Height="450" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Top" IsExpanded="{Binding SelectedExpander, ConverterParameter=2, Converter={StaticResource ExpanderToBooleanConverter}, Mode=TwoWay}">
+                <Expander.Header>
+                    <TextBlock Text="Daily Report" RenderTransformOrigin=".5,.5">
+                        <TextBlock.LayoutTransform>
+                            <RotateTransform Angle="90" />
+                        </TextBlock.LayoutTransform>
+                    </TextBlock>
+                </Expander.Header>
+                <Grid Width="750">
+                    <syncfusion:SfDataGrid x:Name="dgSales" HorizontalAlignment="Right" Height="400" VerticalAlignment="Top" Width="750" ItemsSource="{Binding}" AutoGenerateColumns="False">
+                        <syncfusion:SfDataGrid.Columns>
+                            <syncfusion:GridTextColumn HeaderText="Description" Width="200" DisplayBinding="{Binding desc}"/>
+                            <syncfusion:GridTextColumn HeaderText="Amount" Width="200" DisplayBinding="{Binding amount}"/>
+                            <syncfusion:GridTextColumn HeaderText="Total" Width="200" DisplayBinding="{Binding total}"/>
+                            <syncfusion:GridTextColumn HeaderText="Status" Width="150" DisplayBinding="{Binding status}"/>
+                        </syncfusion:SfDataGrid.Columns>
+                    </syncfusion:SfDataGrid>
+                    <Label Content="Total Cash on Hand:" HorizontalAlignment="Left"  VerticalAlignment="Top" Margin="9,409,0,0"/>
+                    <syncfusion:DoubleTextBox x:Name="txtCashOnHand" IsReadOnly="True" HorizontalAlignment="Left" Height="31" TextWrapping="Wrap" VerticalAlignment="Top" Width="155" Margin="165,409,0,0" FontSize="16"/>
+                    <Label Content="Account Receivable:" HorizontalAlignment="Left"  VerticalAlignment="Top" Margin="429,409,0,0"/>
+                    <syncfusion:DoubleTextBox x:Name="txtAccountReceivable" IsReadOnly="True" HorizontalAlignment="Left" Height="31" TextWrapping="Wrap" VerticalAlignment="Top" Width="155" Margin="585,409,0,0" FontSize="16"/>
+                </Grid>
+            </Expander>
+            <Expander ExpandDirection="Left" FontSize="16" HorizontalAlignment="Left"  Height="450" VerticalAlignment="Top" IsExpanded="{Binding SelectedExpander, ConverterParameter=3, Converter={StaticResource ExpanderToBooleanConverter}, Mode=TwoWay}">
                 <Expander.Header>
                     <TextBlock Text="Date Range" RenderTransformOrigin=".5,.5">
                         <TextBlock.LayoutTransform>
@@ -66,18 +89,18 @@
                     <Label Content="Date To:" HorizontalAlignment="Left" Margin="422,20,0,0" VerticalAlignment="Top"/>
                     <syncfusion:DateTimeEdit x:Name="txtDateTo" HorizontalAlignment="Left" Height="31" Margin="494,20,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" TextChanged="TxtDate_TextChanged" FontSize="16"/>
                     <chart:SfChart x:Name="chartSales" Margin="10,56,10,35" HorizontalAlignment="Center" VerticalAlignment="Center" >
-                        <syncfusion:SfChart.PrimaryAxis>
-                            <syncfusion:CategoryAxis Header="Day(s)"/>
-                        </syncfusion:SfChart.PrimaryAxis>
-                        <syncfusion:SfChart.SecondaryAxis>
-                            <syncfusion:NumericalAxis Header="Sales"/>
-                        </syncfusion:SfChart.SecondaryAxis>
-                        <syncfusion:ColumnSeries x:Name="columnSeries" ItemsSource="{Binding}" XBindingPath="date" YBindingPath="sales">
-                            <syncfusion:ColumnSeries.AdornmentsInfo>
+                        <chart:SfChart.PrimaryAxis>
+                            <chart:CategoryAxis Header="Day(s)"/>
+                        </chart:SfChart.PrimaryAxis>
+                        <chart:SfChart.SecondaryAxis>
+                            <chart:NumericalAxis Header="Sales"/>
+                        </chart:SfChart.SecondaryAxis>
+                        <chart:ColumnSeries x:Name="columnSeries" ItemsSource="{Binding}" XBindingPath="date" YBindingPath="total" >
+                            <chart:ColumnSeries.AdornmentsInfo>
                                 <chart:ChartAdornmentInfo ShowLabel="True" >
                                 </chart:ChartAdornmentInfo>
-                            </syncfusion:ColumnSeries.AdornmentsInfo>
-                        </syncfusion:ColumnSeries>
+                            </chart:ColumnSeries.AdornmentsInfo>
+                        </chart:ColumnSeries>
 
                     </chart:SfChart>
                 </Grid>

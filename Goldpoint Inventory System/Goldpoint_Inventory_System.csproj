@@ -278,6 +278,7 @@
     <Compile Include="Stock\StockIn.xaml.cs">
       <DependentUpon>StockIn.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Transactions\DeliveryReceiptDataModel.cs" />
     <Compile Include="Transactions\IssueDeliveryReceipt.xaml.cs">
       <DependentUpon>IssueDeliveryReceipt.xaml</DependentUpon>
     </Compile>

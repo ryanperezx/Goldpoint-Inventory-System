@@ -72,15 +72,15 @@ namespace Goldpoint_Inventory_System.Transactions
             switch (value)
             {
                 case "Unpaid":
-                    txtDownpayment.Text = null;
+                    txtDownpayment.Value = null;
                     txtDownpayment.IsEnabled = false;
                     break;
                 case "Downpayment":
-                    txtDownpayment.Text = null;
+                    txtDownpayment.Value = null;
                     txtDownpayment.IsEnabled = true;
                     break;
                 case "Paid":
-                    txtDownpayment.Text = null;
+                    txtDownpayment.Value = null;
                     txtDownpayment.IsEnabled = false;
                     break;
             }
@@ -331,7 +331,7 @@ namespace Goldpoint_Inventory_System.Transactions
                     if (service == "Printing, Services, etc.")
                     {
                         services.Clear();
-                        using (SqlCommand cmd = new SqlCommand("SELECT * from ServiceMaterial sm INNER JOIN InventoryItems ii on sm.itemCode = ii.itemCode where JobOrderNo = @jobOrderNo", conn))
+                        using (SqlCommand cmd = new SqlCommand("SELECT * from ServiceMaterial where JobOrderNo = @jobOrderNo", conn))
                         {
                             cmd.Parameters.AddWithValue("@jobOrderNo", txtJobOrder.Text);
                             using (SqlDataReader reader = cmd.ExecuteReader())
@@ -341,7 +341,6 @@ namespace Goldpoint_Inventory_System.Transactions
                                     int descriptionIndex = reader.GetOrdinal("description");
                                     int unitIndex = reader.GetOrdinal("unit");
                                     int qtyIndex = reader.GetOrdinal("qty");
-                                    int itemCodeIndex = reader.GetOrdinal("itemCode");
                                     int materialIndex = reader.GetOrdinal("material");
                                     int copyIndex = reader.GetOrdinal("copy");
                                     int sizeIndex = reader.GetOrdinal("size");
@@ -353,7 +352,6 @@ namespace Goldpoint_Inventory_System.Transactions
                                         Description = Convert.ToString(reader.GetValue(descriptionIndex)),
                                         unit = Convert.ToString(reader.GetValue(unitIndex)),
                                         qty = Convert.ToInt32(reader.GetValue(qtyIndex)),
-                                        itemCode = Convert.ToString(reader.GetValue(itemCodeIndex)),
                                         material = Convert.ToString(reader.GetValue(materialIndex)),
                                         copy = Convert.ToString(reader.GetValue(copyIndex)),
                                         size = Convert.ToString(reader.GetValue(sizeIndex)),
@@ -416,7 +414,6 @@ namespace Goldpoint_Inventory_System.Transactions
                 }
             }
         }
-
         private void BtnCancelJobOrder_Click(object sender, RoutedEventArgs e)
         {
             //should return materials if cancelled
@@ -469,7 +466,7 @@ namespace Goldpoint_Inventory_System.Transactions
                                 {
                                     MessageBox.Show("An error has been encountered! Log has been updated with the error");
                                     Log = LogManager.GetLogger("*");
-                                    Log.Error(ex, "Query Error");
+                                    Log.Error(ex);
                                 }
                             }
                             MessageBox.Show("Job Order has been cancelled successfully");
@@ -607,31 +604,13 @@ namespace Goldpoint_Inventory_System.Transactions
                         {
                             foreach (var item in services)
                             {
-                                using (SqlCommand cmd = new SqlCommand("UPDATE InventoryItems set qty = qty - @qty where itemCode = @itemCode", conn))
-                                {
-                                    cmd.Parameters.AddWithValue("@itemCode", item.itemCode);
-                                    cmd.Parameters.AddWithValue("@qty", item.itemQty);
-                                    try
-                                    {
-                                        cmd.ExecuteNonQuery();
-                                    }
-                                    catch (SqlException ex)
-                                    {
-                                        MessageBox.Show("An error has been encountered! Log has been updated with the error");
-                                        Log = LogManager.GetLogger("*");
-                                        Log.Error(ex, "Query Error");
-                                        success = false;
-                                        return;
-                                    }
-                                }
 
-                                using (SqlCommand cmd = new SqlCommand("INSERT into ServiceMaterial VALUES (@jobOrderNo, @description, @unit, @qty, @itemCode, @material, @copy, @size, @itemQty, @totalPerItem)", conn))
+                                using (SqlCommand cmd = new SqlCommand("INSERT into ServiceMaterial VALUES (@jobOrderNo, @description, @unit, @qty, @material, @copy, @size, @itemQty, @totalPerItem)", conn))
                                 {
                                     cmd.Parameters.AddWithValue("@jobOrderNo", txtJobOrder.Text);
                                     cmd.Parameters.AddWithValue("@description", item.Description);
                                     cmd.Parameters.AddWithValue("@unit", item.unit);
                                     cmd.Parameters.AddWithValue("@qty", item.qty);
-                                    cmd.Parameters.AddWithValue("@itemCode", item.itemCode);
                                     cmd.Parameters.AddWithValue("@material", item.material);
                                     cmd.Parameters.AddWithValue("@copy", item.copy);
                                     cmd.Parameters.AddWithValue("@size", item.size);
@@ -645,31 +624,7 @@ namespace Goldpoint_Inventory_System.Transactions
                                     {
                                         MessageBox.Show("An error has been encountered! Log has been updated with the error");
                                         Log = LogManager.GetLogger("*");
-                                        Log.Error(ex, "Query Error");
-                                        success = false;
-                                        return;
-                                    }
-                                }
-
-                                using (SqlCommand cmd = new SqlCommand("INSERT into ReleasedMaterials VALUES (@DRNo, @itemCode, @desc, @type, @brand, @size, @qty, @totalPerItem)", conn))
-                                {
-                                    cmd.Parameters.AddWithValue("@DRNo", txtDRNo.Text);
-                                    cmd.Parameters.AddWithValue("@itemCode", item.itemCode);
-                                    cmd.Parameters.AddWithValue("@desc", item.material);
-                                    cmd.Parameters.AddWithValue("@type", item.type);
-                                    cmd.Parameters.AddWithValue("@brand", item.brand);
-                                    cmd.Parameters.AddWithValue("@size", item.size);
-                                    cmd.Parameters.AddWithValue("@qty", item.itemQty);
-                                    cmd.Parameters.AddWithValue("@totalPerItem", item.amount);
-                                    try
-                                    {
-                                        cmd.ExecuteNonQuery();
-                                    }
-                                    catch (SqlException ex)
-                                    {
-                                        MessageBox.Show("An error has been encountered! Log has been updated with the error");
-                                        Log = LogManager.GetLogger("*");
-                                        Log.Error(ex, "Query Error");
+                                        Log.Error(ex);
                                         success = false;
                                         return;
                                     }
@@ -710,7 +665,8 @@ namespace Goldpoint_Inventory_System.Transactions
                                 {
                                     MessageBox.Show("An error has been encountered! Log has been updated with the error");
                                     Log = LogManager.GetLogger("*");
-                                    Log.Error(ex, "Query Error"); success = false;
+                                    Log.Error(ex);
+                                    success = false;
                                     return;
                                 }
                             }
@@ -738,7 +694,7 @@ namespace Goldpoint_Inventory_System.Transactions
                                     {
                                         MessageBox.Show("An error has been encountered! Log has been updated with the error");
                                         Log = LogManager.GetLogger("*");
-                                        Log.Error(ex, "Query Error");
+                                        Log.Error(ex);
                                         success = false;
                                     }
                                 }
@@ -776,7 +732,7 @@ namespace Goldpoint_Inventory_System.Transactions
                                 {
                                     MessageBox.Show("An error has been encountered! Log has been updated with the error");
                                     Log = LogManager.GetLogger("*");
-                                    Log.Error(ex, "Query Error");
+                                    Log.Error(ex);
                                     success = false;
                                 }
                             }
@@ -795,48 +751,42 @@ namespace Goldpoint_Inventory_System.Transactions
                             {
                                 jobOrder = "Tarpaulin";
                             }
-                            if (rdDownpayment.IsChecked == true)
+
+                            using (SqlCommand cmd = new SqlCommand("INSERT into Sales VALUES (@date, @desc, @amount, @total, @status)", conn))
                             {
-                                using (SqlCommand cmd = new SqlCommand("INSERT into Sales VALUES (@date, @desc, @qty, @total)", conn))
+                                cmd.Parameters.AddWithValue("@date", txtDate.Text);
+                                cmd.Parameters.AddWithValue("@desc", "JO[" + jobOrder + "]: " + txtJobOrder.Text);
+                                if (rdDownpayment.IsChecked == true)
                                 {
-                                    cmd.Parameters.AddWithValue("@date", txtDate.Text);
-                                    cmd.Parameters.AddWithValue("@desc", "JO[" + jobOrder + "] " + txtJobOrder.Text);
-                                    cmd.Parameters.AddWithValue("@qty", "1");
-                                    cmd.Parameters.AddWithValue("@total", txtDownpayment.Value);
-                                    try
-                                    {
-                                        cmd.ExecuteNonQuery();
-                                    }
-                                    catch (SqlException ex)
-                                    {
-                                        MessageBox.Show("An error has been encountered! Log has been updated with the error");
-                                        Log = LogManager.GetLogger("*");
-                                        Log.Error(ex, "Query Error");
-                                        success = false;
-                                    }
+                                    cmd.Parameters.AddWithValue("@amount", txtDownpayment.Value);
+                                    cmd.Parameters.AddWithValue("@status", "Unpaid");
+
+                                }
+                                else if (rdPaid.IsChecked == true)
+                                {
+                                    cmd.Parameters.AddWithValue("@amount", txtItemTotal.Value);
+                                    cmd.Parameters.AddWithValue("@status", "Paid");
+                                }
+                                else if (rdUnpaid.IsChecked == true)
+                                {
+                                    cmd.Parameters.AddWithValue("@amount", 0);
+                                    cmd.Parameters.AddWithValue("@status", "Unpaid");
+                                }
+                                cmd.Parameters.AddWithValue("@total", txtItemTotal.Value);
+
+                                try
+                                {
+                                    cmd.ExecuteNonQuery();
+                                }
+                                catch (SqlException ex)
+                                {
+                                    MessageBox.Show("An error has been encountered! Log has been updated with the error");
+                                    Log = LogManager.GetLogger("*");
+                                    Log.Error(ex);
+                                    success = false;
                                 }
                             }
-                            else if (rdPaid.IsChecked == true)
-                            {
-                                using (SqlCommand cmd = new SqlCommand("INSERT into Sales VALUES (@date, @desc, @qty, @total)", conn))
-                                {
-                                    cmd.Parameters.AddWithValue("@date", txtDate.Text);
-                                    cmd.Parameters.AddWithValue("@desc", "JO[" + jobOrder + "] " + txtJobOrder.Text);
-                                    cmd.Parameters.AddWithValue("@qty", "1");
-                                    cmd.Parameters.AddWithValue("@total", txtItemTotal.Value);
-                                    try
-                                    {
-                                        cmd.ExecuteNonQuery();
-                                    }
-                                    catch (SqlException ex)
-                                    {
-                                        MessageBox.Show("An error has been encountered! Log has been updated with the error");
-                                        Log = LogManager.GetLogger("*");
-                                        Log.Error(ex, "Query Error");
-                                        success = false;
-                                    }
-                                }
-                            }
+
 
                             using (SqlCommand cmd = new SqlCommand("INSERT into TransactionLogs (date, [transaction], remarks) VALUES (@date, @transaction, @remarks)", conn))
                             {
@@ -851,7 +801,7 @@ namespace Goldpoint_Inventory_System.Transactions
                                 {
                                     MessageBox.Show("An error has been encountered! Log has been updated with the error");
                                     Log = LogManager.GetLogger("*");
-                                    Log.Error(ex, "Query Error");
+                                    Log.Error(ex);
                                     success = false;
                                 }
                             }
@@ -874,7 +824,7 @@ namespace Goldpoint_Inventory_System.Transactions
                                 if (rdDownpayment.IsChecked == true)
                                 {
                                     cmd.Parameters.AddWithValue("@paidAmt", txtDownpayment.Value);
-                                    cmd.Parameters.AddWithValue("@status", "Downpayment");
+                                    cmd.Parameters.AddWithValue("@status", "Unpaid");
                                 }
                                 try
                                 {
@@ -884,7 +834,7 @@ namespace Goldpoint_Inventory_System.Transactions
                                 {
                                     MessageBox.Show("An error has been encountered! Log has been updated with the error");
                                     Log = LogManager.GetLogger("*");
-                                    Log.Error(ex, "Query Error");
+                                    Log.Error(ex);
                                 }
                             }
                             MessageBox.Show("Job Order has been added");
@@ -934,6 +884,7 @@ namespace Goldpoint_Inventory_System.Transactions
                     amount = (double)(txtPricePerItem.Value * txtDescQty.Value)
                 });
 
+                txtItemTotal.Value += (double)(txtPricePerItem.Value * txtDescQty.Value);
                 txtDownpayment.MaxValue = (double)txtItemTotal.Value;
 
                 txtMaterial.Text = null;
@@ -1191,7 +1142,7 @@ namespace Goldpoint_Inventory_System.Transactions
                     {
                         MessageBox.Show("An error has been encountered! Log has been updated with the error");
                         Log = LogManager.GetLogger("*");
-                        Log.Error(ex, "Query Error");
+                        Log.Error(ex);
                         return;
                     }
                     break;
@@ -1304,19 +1255,19 @@ namespace Goldpoint_Inventory_System.Transactions
                                         textRange.Text = txtItemTotal.Text;
                                         if ((txtItemTotal.Value - txtDownpayment.Value) > 0)
                                         {
-                                            textSelection = document.Find("<balance>", false, true);
+                                            textSelection = document2.Find("<balance>", false, true);
                                             textRange = textSelection.GetAsOneRange();
                                             textRange.Text = (txtItemTotal.Value - txtDownpayment.Value).ToString();
-                                            textSelection = document.Find("<downpayment>", false, true);
+                                            textSelection = document2.Find("<downpayment>", false, true);
                                             textRange = textSelection.GetAsOneRange();
                                             textRange.Text = "0";
                                         }
                                         else
                                         {
-                                            textSelection = document.Find("<balance>", false, true);
+                                            textSelection = document2.Find("<balance>", false, true);
                                             textRange = textSelection.GetAsOneRange();
                                             textRange.Text = "0";
-                                            textSelection = document.Find("<downpayment>", false, true);
+                                            textSelection = document2.Find("<downpayment>", false, true);
                                             textRange = textSelection.GetAsOneRange();
                                             textRange.Text = "0";
                                         }
@@ -1481,7 +1432,7 @@ namespace Goldpoint_Inventory_System.Transactions
                         {
                             MessageBox.Show("An error has been encountered! Log has been updated with the error");
                             Log = LogManager.GetLogger("*");
-                            Log.Error(ex, "Query Error");
+                            Log.Error(ex);
                             return;
                         }
 
@@ -1574,19 +1525,19 @@ namespace Goldpoint_Inventory_System.Transactions
                                         textRange.Text = txtItemTotal.Text;
                                         if ((txtItemTotal.Value - txtDownpayment.Value) > 0)
                                         {
-                                            textSelection = document.Find("<balance>", false, true);
+                                            textSelection = document2.Find("<balance>", false, true);
                                             textRange = textSelection.GetAsOneRange();
                                             textRange.Text = (txtItemTotal.Value - txtDownpayment.Value).ToString();
-                                            textSelection = document.Find("<downpayment>", false, true);
+                                            textSelection = document2.Find("<downpayment>", false, true);
                                             textRange = textSelection.GetAsOneRange();
                                             textRange.Text = "0";
                                         }
                                         else
                                         {
-                                            textSelection = document.Find("<balance>", false, true);
+                                            textSelection = document2.Find("<balance>", false, true);
                                             textRange = textSelection.GetAsOneRange();
                                             textRange.Text = "0";
-                                            textSelection = document.Find("<downpayment>", false, true);
+                                            textSelection = document2.Find("<downpayment>", false, true);
                                             textRange = textSelection.GetAsOneRange();
                                             textRange.Text = "0";
                                         }
@@ -1755,7 +1706,7 @@ namespace Goldpoint_Inventory_System.Transactions
                         {
                             MessageBox.Show("An error has been encountered! Log has been updated with the error");
                             Log = LogManager.GetLogger("*");
-                            Log.Error(ex, "Query Error");
+                            Log.Error(ex);
                             return;
                         }
                     }

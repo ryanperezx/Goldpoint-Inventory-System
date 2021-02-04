@@ -88,7 +88,9 @@ namespace Goldpoint_Inventory_System
                                     }
                                     catch (Exception ex)
                                     {
-                                        MessageBox.Show("Error: " + ex);
+                                        MessageBox.Show("An error has been encountered! Log has been updated with the error");
+                                        Log = LogManager.GetLogger("*");
+                                        Log.Error(ex);
                                     }
 
                                 }
@@ -159,9 +161,9 @@ namespace Goldpoint_Inventory_System
                                         }
                                         catch (SqlException ex)
                                         {
-                                            MessageBox.Show("Error! Log has been updated with the error." + ex);
+                                            MessageBox.Show("An error has been encountered! Log has been updated with the error");
                                             Log = LogManager.GetLogger("*");
-                                            Log.Error(ex, "Query Error");
+                                            Log.Error(ex);
                                         }
                                     }
                                     break;
@@ -217,9 +219,9 @@ namespace Goldpoint_Inventory_System
                                     }
                                     catch (SqlException ex)
                                     {
-                                        MessageBox.Show("Error! Log has been updated with the error.");
+                                        MessageBox.Show("An error has been encountered! Log has been updated with the error");
                                         Log = LogManager.GetLogger("*");
-                                        Log.Error(ex, "Query Error");
+                                        Log.Error(ex);
                                     }
 
                                 }

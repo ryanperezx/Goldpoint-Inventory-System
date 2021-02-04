@@ -7,7 +7,6 @@
              xmlns:syncfusion="http://schemas.syncfusion.com/wpf" 
              xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
              mc:Ignorable="d"
-             xmlns:syncfusionskin ="clr-namespace:Syncfusion.SfSkinManager;assembly=Syncfusion.SfSkinManager.WPF"
              d:DesignHeight="600" d:DesignWidth="1350"             
              FontSize="16"
              Background="White">
@@ -112,14 +111,14 @@
                     <syncfusion:SfTextBoxExt x:Name="txtDescUnit" HorizontalAlignment="Left" Height="31" Margin="133,49,0,0" MinWidth="100"  TextWrapping="Wrap"  VerticalAlignment="Top" Width="135" FontSize="16"/>
                     <syncfusion:IntegerTextBox x:Name="txtDescQty" HorizontalAlignment="Left" Height="31" Margin="133,89,0,0" MinWidth="100"  TextWrapping="Wrap"  VerticalAlignment="Top" Width="73" FontSize="16"/>
                     <Label Content="Material:" HorizontalAlignment="Left" Margin="17,129,0,0" VerticalAlignment="Top"/>
-                    <syncfusion:SfTextBoxExt x:Name="txtMaterial" IsReadOnly="True" HorizontalAlignment="Left" Height="31" Margin="133,129,0,0" MinWidth="100"  TextWrapping="Wrap"  VerticalAlignment="Top" Width="118" FontSize="16"/>
+                    <syncfusion:SfTextBoxExt x:Name="txtMaterial" HorizontalAlignment="Left" Height="31" Margin="133,129,0,0" MinWidth="100"  TextWrapping="Wrap"  VerticalAlignment="Top" Width="118" FontSize="16"/>
                     <Label Content="Copy:" HorizontalAlignment="Left" Margin="17,169,0,0" VerticalAlignment="Top"/>
                     <syncfusion:SfTextBoxExt x:Name="txtCopy" HorizontalAlignment="Left" Height="31" Margin="133,169,0,0" MinWidth="100"  TextWrapping="Wrap"  VerticalAlignment="Top" Width="118" FontSize="16"/>
                     <Label Content="Size:" HorizontalAlignment="Left" Margin="17,209,0,0" VerticalAlignment="Top"/>
                     <syncfusion:SfTextBoxExt x:Name="txtSize" HorizontalAlignment="Left" Height="31" Margin="133,209,0,0" MinWidth="100"  TextWrapping="Wrap"  VerticalAlignment="Top" Width="118" FontSize="16"/>
                     <Label Content="Qty:" HorizontalAlignment="Left" Margin="17,89,0,0" VerticalAlignment="Top"/>
                     <Label Content="Price per item:" HorizontalAlignment="Left" Margin="17,249,0,0" VerticalAlignment="Top"/>
-                    <syncfusion:DoubleTextBox x:Name="txtPricePerItem" IsReadOnly="True" HorizontalAlignment="Left" Height="31" Margin="133,249,0,0" MinWidth="100"  TextWrapping="Wrap"  VerticalAlignment="Top" Width="118" FontSize="16"/>
+                    <syncfusion:DoubleTextBox x:Name="txtPricePerItem" HorizontalAlignment="Left" Height="31" Margin="133,249,0,0" MinWidth="100"  TextWrapping="Wrap"  VerticalAlignment="Top" Width="118" FontSize="16"/>
                     <syncfusion:SfDataGrid x:Name="dgService" HorizontalAlignment="Right"  Height="418" VerticalAlignment="Center" Width="444" ItemsSource="{Binding}" AutoGenerateColumns="False" Margin="0,0,0,0" AutoExpandGroups="True">
                         <syncfusion:SfDataGrid.GroupColumnDescriptions>
                             <syncfusion:GroupColumnDescription ColumnName="Description" />
@@ -152,7 +151,7 @@
                     <Label Content="File Name:" HorizontalAlignment="Left" Margin="30,35,0,0" VerticalAlignment="Top"/>
                     <syncfusion:SfTextBoxExt x:Name="txtFileName" HorizontalAlignment="Left" Height="31" Margin="119,35,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="168" FontSize="16"/>
                     <Label Content="Qty:" HorizontalAlignment="Left" Margin="30,78,0,0" VerticalAlignment="Top"/>
-                    <syncfusion:IntegerTextBox x:Name="txtTarpQty" HorizontalAlignment="Left" Height="31" Margin="119,78,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" FontSize="16"/>
+                    <syncfusion:IntegerTextBox x:Name="txtTarpQty" HorizontalAlignment="Left" Height="31" Margin="119,78,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" FontSize="16" ValueChanged="TxtMediaPrice_ValueChanged"/>
                     <Label Content="Size:" HorizontalAlignment="Left" Margin="30,119,0,0" VerticalAlignment="Top"/>
                     <Label Content="x" HorizontalAlignment="Left" Margin="173,119,0,0" VerticalAlignment="Top"/>
                     <syncfusion:IntegerTextBox x:Name="txtTarpX" HorizontalAlignment="Left" Height="31"  Margin="119,119,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="42" FontSize="16" MinValue="0"/>

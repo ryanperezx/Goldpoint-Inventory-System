@@ -129,7 +129,7 @@ namespace Goldpoint_Inventory_System.Stock
                                     {
                                         MessageBox.Show("An error has been encountered! Log has been updated with the error");
                                         Log = LogManager.GetLogger("*");
-                                        Log.Error(ex, "Query Error");
+                                        Log.Error(ex);
                                         return;
                                     }
                                 }
@@ -151,7 +151,7 @@ namespace Goldpoint_Inventory_System.Stock
                                     {
                                         MessageBox.Show("An error has been encountered! Log has been updated with the error");
                                         Log = LogManager.GetLogger("*");
-                                        Log.Error(ex, "Query Error");
+                                        Log.Error(ex);
                                         return;
 
                                     }
@@ -174,7 +174,7 @@ namespace Goldpoint_Inventory_System.Stock
                                 {
                                     MessageBox.Show("An error has been encountered! Log has been updated with the error");
                                     Log = LogManager.GetLogger("*");
-                                    Log.Error(ex, "Query Error");
+                                    Log.Error(ex);
                                     return;
                                 }
 
