@@ -91,5 +91,17 @@ namespace Goldpoint_Inventory_System
             get;
             set;
         }
+
+        public string issuedBy
+        {
+            get;
+            set;
+        }
+
+        public string remarks
+        {
+            get;
+            set;
+        }
     }
 }

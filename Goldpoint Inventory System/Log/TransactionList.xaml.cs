@@ -226,7 +226,7 @@ namespace Goldpoint_Inventory_System.Log
         {
             SqlConnection conn = DBUtils.GetDBConnection();
             conn.Open();
-            using (SqlCommand cmd = new SqlCommand("SELECT * from TransactionDetails where inaccessible = 1 ORDER BY customerName ASC", conn))
+            using (SqlCommand cmd = new SqlCommand("SELECT * from TransactionDetails where inaccessible = 1 ORDER BY CAST([date] as date) ASC", conn))
             {
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
@@ -263,6 +263,7 @@ namespace Goldpoint_Inventory_System.Log
 
         private void ChkCompany_Checked(object sender, RoutedEventArgs e)
         {
+            chkUnpaid.IsChecked = false;
             SqlConnection conn = DBUtils.GetDBConnection();
             conn.Open();
             using (SqlCommand cmd = new SqlCommand("SELECT td.date, td.deadline, td.drNo, td.service, td.customerName, td.address, td.contactNo, td.status from TransactionDetails td LEFT JOIN PaymentHist ph on ph.DRNo = td.DRNo where ph.DRNo IS null", conn))
@@ -301,6 +302,51 @@ namespace Goldpoint_Inventory_System.Log
         }
 
         private void ChkCompany_Unchecked(object sender, RoutedEventArgs e)
+        {
+            fillUpTransactions();
+        }
+
+        private void ChkUnpaid_Checked(object sender, RoutedEventArgs e)
+        {
+            chkCompany.IsChecked = false;
+            SqlConnection conn = DBUtils.GetDBConnection();
+            conn.Open();
+            using (SqlCommand cmd = new SqlCommand("SELECT * from TransactionDetails where inaccessible = 1 WHERE status = 'Unpaid'", conn))
+            {
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    customers.Clear();
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            int dateIndex = reader.GetOrdinal("date");
+                            int deadlineIndex = reader.GetOrdinal("deadline");
+                            int drNoindex = reader.GetOrdinal("drNo");
+                            int serviceIndex = reader.GetOrdinal("service");
+                            int customerNameIndex = reader.GetOrdinal("customerName");
+                            int addressIndex = reader.GetOrdinal("address");
+                            int contactNoIndex = reader.GetOrdinal("contactNo");
+                            int statusIndex = reader.GetOrdinal("status");
+
+                            customers.Add(new UserTransactionDataModel
+                            {
+                                date = Convert.ToString(reader.GetValue(dateIndex)),
+                                deadline = Convert.ToString(reader.GetValue(deadlineIndex)),
+                                drNo = Convert.ToInt32(reader.GetValue(drNoindex)),
+                                service = Convert.ToString(reader.GetValue(serviceIndex)),
+                                customerName = Convert.ToString(reader.GetValue(customerNameIndex)),
+                                address = Convert.ToString(reader.GetValue(addressIndex)),
+                                contactNo = Convert.ToString(reader.GetValue(contactNoIndex)),
+                                status = Convert.ToString(reader.GetValue(statusIndex)),
+                            });
+                        }
+                    }
+                }
+            }
+        }
+
+        private void ChkUnpaid_Unchecked(object sender, RoutedEventArgs e)
         {
             fillUpTransactions();
         }

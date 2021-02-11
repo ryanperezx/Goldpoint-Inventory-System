@@ -26,19 +26,25 @@ namespace Goldpoint_Inventory_System
     {
         ObservableCollection<ItemDataModel> items = new ObservableCollection<ItemDataModel>();
         ObservableCollection<UserTransactionDataModel> customer = new ObservableCollection<UserTransactionDataModel>();
+        ObservableCollection<UserTransactionDataModel> pendings = new ObservableCollection<UserTransactionDataModel>();
+
         public StartPage()
         {
             InitializeComponent();
             dgCritical.ItemsSource = items;
             dgRecentTransact.ItemsSource = customer;
+            dgPending.ItemsSource = pendings;
             fillUpItems();
             fillUpRecentTransact();
+            forClaiming();
+
         }
 
         private void BtnRefresh_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             fillUpItems();
             fillUpRecentTransact();
+            forClaiming();
         }
 
         private void fillUpItems()
@@ -75,12 +81,51 @@ namespace Goldpoint_Inventory_System
                 }
             }
         }
-        
+        private void forClaiming()
+        {
+            SqlConnection conn = DBUtils.GetDBConnection();
+            conn.Open();
+            //get all non company use
+            using (SqlCommand cmd = new SqlCommand("SELECT DISTINCT td.service, td.deadline, td.customerName, td.DRNo, td.status, td.claimed, td.issuedBy from TransactionDetails td INNER JOIN PaymentHist ph on td.DRNo = ph.DRNo WHERE (td.claimed = 'Unclaimed' AND TRY_CAST(td.deadline as date) >= CONVERT(VARCHAR(10), getdate(), 23)) AND jobOrderNo > 0", conn))
+            {
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    pendings.Clear();
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            int serviceIndex = reader.GetOrdinal("service");
+                            int deadlineIndex = reader.GetOrdinal("deadline");
+                            int custNameIndex = reader.GetOrdinal("customerName");
+                            int drNoIndex = reader.GetOrdinal("DRNo");
+                            int statusIndex = reader.GetOrdinal("status");
+                            int claimedIndex = reader.GetOrdinal("claimed");
+                            int issuedByIndex = reader.GetOrdinal("issuedBy");
+
+                            pendings.Add(new UserTransactionDataModel
+                            {
+                                deadline = Convert.ToString(reader.GetValue(deadlineIndex)),
+                                customerName = Convert.ToString(reader.GetValue(custNameIndex)),
+                                service = Convert.ToString(reader.GetValue(serviceIndex)),
+                                receiptNo = Convert.ToString(reader.GetValue(drNoIndex)),
+                                status = Convert.ToString(reader.GetValue(statusIndex)),
+                                claimed = Convert.ToString(reader.GetValue(claimedIndex)),
+                                issuedBy = Convert.ToString(reader.GetValue(issuedByIndex))
+                            });
+
+                        }
+                    }
+
+                }
+            }
+        }      
         private void fillUpRecentTransact()
         {
             SqlConnection conn = DBUtils.GetDBConnection();
             conn.Open();
-            using (SqlCommand cmd = new SqlCommand("SELECT td.service, td.deadline, td.customerName, td.DRNo, td.status, ph.total from TransactionDetails td INNER JOIN PaymentHist ph on td.DRNo = ph.DRNo WHERE ph.date = @date", conn))
+            //get all non company use
+            using (SqlCommand cmd = new SqlCommand("SELECT DISTINCT td.service, td.deadline, td.customerName, td.DRNo, td.status, td.remarks, td.issuedBy, ph.total from TransactionDetails td INNER JOIN PaymentHist ph on td.DRNo = ph.DRNo WHERE ph.date = @date", conn))
             {
                 cmd.Parameters.AddWithValue("@date", DateTime.Today.ToShortDateString());
                 using (SqlDataReader reader = cmd.ExecuteReader())
@@ -96,6 +141,8 @@ namespace Goldpoint_Inventory_System
                             int drNoIndex = reader.GetOrdinal("DRNo");
                             int statusIndex = reader.GetOrdinal("status");
                             int totalIndex = reader.GetOrdinal("total");
+                            int remarksIndex = reader.GetOrdinal("remarks");
+                            int issuedByIndex = reader.GetOrdinal("issuedBy");
 
                             customer.Add(new UserTransactionDataModel
                             {
@@ -104,7 +151,39 @@ namespace Goldpoint_Inventory_System
                                 service = Convert.ToString(reader.GetValue(serviceIndex)),
                                 receiptNo = Convert.ToString(reader.GetValue(drNoIndex)),
                                 status = Convert.ToString(reader.GetValue(statusIndex)),
-                                total = Convert.ToDouble(reader.GetValue(totalIndex))
+                                total = Convert.ToDouble(reader.GetValue(totalIndex)),
+                                remarks = Convert.ToString(reader.GetValue(remarksIndex)),
+                                issuedBy = Convert.ToString(reader.GetValue(issuedByIndex))
+                            });
+
+                        }
+                    }
+
+                }
+            }
+            //get all company use
+            using (SqlCommand cmd = new SqlCommand("SELECT td.date, td.deadline, td.drNo, td.service, td.customerName, td.address, td.contactNo, td.status from TransactionDetails td LEFT JOIN PaymentHist ph on ph.DRNo = td.DRNo where ph.DRNo IS null and td.date = @date", conn))
+            {
+                cmd.Parameters.AddWithValue("@date", DateTime.Today.ToShortDateString());
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            int serviceIndex = reader.GetOrdinal("service");
+                            int deadlineIndex = reader.GetOrdinal("deadline");
+                            int custNameIndex = reader.GetOrdinal("customerName");
+                            int drNoIndex = reader.GetOrdinal("DRNo");
+                            int statusIndex = reader.GetOrdinal("status");
+
+                            customer.Add(new UserTransactionDataModel
+                            {
+                                deadline = Convert.ToString(reader.GetValue(deadlineIndex)),
+                                customerName = Convert.ToString(reader.GetValue(custNameIndex)),
+                                service = Convert.ToString(reader.GetValue(serviceIndex)),
+                                receiptNo = Convert.ToString(reader.GetValue(drNoIndex)),
+                                status = Convert.ToString(reader.GetValue(statusIndex)),
                             });
 
                         }

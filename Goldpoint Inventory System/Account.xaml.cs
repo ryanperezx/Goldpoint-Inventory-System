@@ -31,18 +31,6 @@ namespace Goldpoint_Inventory_System
         public Account()
         {
             InitializeComponent();
-
-            Office2019ColorfulThemeSettings themeSettings = new Office2019ColorfulThemeSettings();
-            themeSettings.PrimaryBackground = new SolidColorBrush(Colors.DarkGoldenrod);
-            themeSettings.PrimaryForeground = new SolidColorBrush(Colors.White);
-            themeSettings.BodyFontSize = 16;
-            themeSettings.HeaderFontSize = 14;
-            themeSettings.SubHeaderFontSize = 14;
-            themeSettings.TitleFontSize = 14;
-            themeSettings.SubTitleFontSize = 14;
-            themeSettings.FontFamily = new FontFamily("Calibri");
-            SfSkinManager.RegisterThemeSettings("Office2019Colorful", themeSettings);
-            SfSkinManager.SetTheme(this, new Theme("Office2019Colorful"));
         }
 
         private void BtnSearchUsername_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -85,6 +73,10 @@ namespace Goldpoint_Inventory_System
                                         txtFirstName.Text = firstName;
                                         txtLastName.Text = lastName;
                                         cmbQuestion.Text = securityQuestion;
+
+                                        btnSave.IsEnabled = false;
+                                        btnUpdate.IsEnabled = true;
+                                        btnDelete.IsEnabled = false;
                                     }
                                     catch (Exception ex)
                                     {
@@ -100,6 +92,8 @@ namespace Goldpoint_Inventory_System
                     else
                     {
                         MessageBox.Show("User does not exist!");
+                        emptyFields();
+
                     }
                 }
             }
@@ -158,6 +152,10 @@ namespace Goldpoint_Inventory_System
                                             Log.Info("Account " + txtUser.Text + " has been registered!");
                                             emptyFields();
 
+                                            btnSave.IsEnabled = true;
+                                            btnUpdate.IsEnabled = false;
+                                            btnDelete.IsEnabled = true;
+
                                         }
                                         catch (SqlException ex)
                                         {
@@ -190,7 +188,7 @@ namespace Goldpoint_Inventory_System
             {
                 SqlConnection conn = DBUtils.GetDBConnection();
                 conn.Open();
-                using (SqlCommand cmd = new SqlCommand("Select COUNT(1) from Account where username = @username", conn))
+                using (SqlCommand cmd = new SqlCommand("SELECT COUNT(1) from Account where username = @username", conn))
                 {
                     cmd.Parameters.AddWithValue("@username", txtUser.Text);
                     int userCount;
@@ -216,6 +214,10 @@ namespace Goldpoint_Inventory_System
                                         Log = LogManager.GetLogger("deleteAccount");
                                         Log.Info("Account " + txtUser.Text + " has been deleted!");
                                         emptyFields();
+
+                                        btnSave.IsEnabled = true;
+                                        btnUpdate.IsEnabled = false;
+                                        btnDelete.IsEnabled = true;
                                     }
                                     catch (SqlException ex)
                                     {
@@ -242,6 +244,9 @@ namespace Goldpoint_Inventory_System
         private void BtnReset_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             emptyFields();
+            btnSave.IsEnabled = true;
+            btnUpdate.IsEnabled = false;
+            btnDelete.IsEnabled = true;
         }
 
         private void emptyFields()
@@ -254,6 +259,71 @@ namespace Goldpoint_Inventory_System
             cmbQuestion.SelectedIndex = -1;
             cmbUserLevel.SelectedIndex = -1;
             txtAns.Password = null;
+
+        }
+
+        private void BtnUpdate_Click(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrEmpty(txtUser.Text))
+            {
+                MessageBox.Show("Username field is empty!");
+            }
+            else
+            {
+                SqlConnection conn = DBUtils.GetDBConnection();
+                conn.Open();
+                using (SqlCommand cmd = new SqlCommand("SELECT COUNT(1) from Account where username = @username", conn))
+                {
+                    cmd.Parameters.AddWithValue("@username", txtUser.Text);
+                    int userCount;
+                    userCount = (int)cmd.ExecuteScalar();
+                    if (userCount > 0)
+                    {
+                        string sMessageBoxText = "Do you want to update your account?";
+                        string sCaption = "Update Account";
+                        MessageBoxButton btnMessageBox = MessageBoxButton.YesNoCancel;
+                        MessageBoxImage icnMessageBox = MessageBoxImage.Warning;
+
+                        MessageBoxResult dr = MessageBox.Show(sMessageBoxText, sCaption, btnMessageBox, icnMessageBox);
+                        switch (dr)
+                        {
+                            case MessageBoxResult.Yes:
+                                using (SqlCommand cmd1 = new SqlCommand("UPDATE Account set firstName = @firstname, lastName = @lastName, password = @password, securityQuestion = @securityQuestion, answer = @answer where username= @username", conn))
+                                {
+                                    cmd1.Parameters.AddWithValue("@firstName", txtFirstName.Text);
+                                    cmd1.Parameters.AddWithValue("@lastName", txtLastName.Text);
+                                    cmd1.Parameters.AddWithValue("@password", txtPass.Password);
+                                    cmd1.Parameters.AddWithValue("@securityQuestion", cmbQuestion.Text);
+                                    cmd1.Parameters.AddWithValue("@answer", txtAns.Password);
+                                    cmd1.Parameters.AddWithValue("@username", txtUser.Text);
+                                    try
+                                    {
+                                        cmd1.ExecuteNonQuery();
+                                        MessageBox.Show("Account has been updated!");
+                                        Log = LogManager.GetLogger("registerAccount");
+                                        Log.Info("Account " + txtUser.Text + " has been updated!");
+                                        emptyFields();
+                                    }
+                                    catch (SqlException ex)
+                                    {
+                                        MessageBox.Show("An error has been encountered! Log has been updated with the error");
+                                        Log = LogManager.GetLogger("*");
+                                        Log.Error(ex);
+                                    }
+
+                                }
+                                break;
+                            case MessageBoxResult.No:
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("User does not exist!");
+
+                    }
+                }
+            }
         }
     }
 }

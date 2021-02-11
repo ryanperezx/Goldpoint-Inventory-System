@@ -19,6 +19,8 @@ namespace Goldpoint_Inventory_System.Transactions
     public partial class StockOut : UserControl
     {
         ObservableCollection<ItemDataModel> items = new ObservableCollection<ItemDataModel>();
+        ObservableCollection<PhotocopyDataModel> photocopy = new ObservableCollection<PhotocopyDataModel>();
+
         private static Logger Log = LogManager.GetCurrentClassLogger();
         public StockOut()
         {
@@ -28,6 +30,7 @@ namespace Goldpoint_Inventory_System.Transactions
             //to avoid null error
             txtQty.TextChanged += TxtQty_TextChanged;
             txtDiscount.TextChanged += TxtDiscount_TextChanged;
+            dgPhotocopy.ItemsSource = photocopy;
             getDRNo();
             rdUnpaid.IsChecked = true;
 
@@ -258,7 +261,6 @@ namespace Goldpoint_Inventory_System.Transactions
                 }
             }
         }
-
         private void BtnSearchItem_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             if (string.IsNullOrEmpty(txtItemCode.Text))
@@ -308,7 +310,6 @@ namespace Goldpoint_Inventory_System.Transactions
                 }
             }
         }
-
         private void TxtQty_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (txtItemPrice.Value > 0 && txtQty.Value > 0)
@@ -320,13 +321,12 @@ namespace Goldpoint_Inventory_System.Transactions
                 txtTotalPerItem.Value = 0;
             }
         }
-
         private void BtnReset_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             items.Clear();
+            photocopy.Clear();
             emptyFields();
         }
-
         private void emptyFields()
         {
             txtItemCode.Text = null;
@@ -350,6 +350,7 @@ namespace Goldpoint_Inventory_System.Transactions
             txtTotalPerItem.Value = 0;
             txtTransactRemarks.Document.Blocks.Clear();
             txtType.Text = null;
+            txtIssuedBy.Text = null;
             getDRNo();
 
             chkInv.IsChecked = false;
@@ -357,6 +358,12 @@ namespace Goldpoint_Inventory_System.Transactions
             chkCompany.IsChecked = false;
             ckDealersPrice.IsChecked = false;
             searched = false;
+
+            txtShort.Value = null;
+            txtLong.Value = null;
+            txtLegal.Value = null;
+            txtA4.Value = null;
+            txtA3.Value = null;
         }
 
         private void BtnCheckOut_Click(object sender, RoutedEventArgs e)
@@ -364,20 +371,17 @@ namespace Goldpoint_Inventory_System.Transactions
             string address = new TextRange(txtAddress.Document.ContentStart, txtAddress.Document.ContentEnd).Text;
             string remarks = new TextRange(txtTransactRemarks.Document.ContentStart, txtTransactRemarks.Document.ContentEnd).Text;
 
-            if (items.Count == 0)
+            if (items.Count == 0 && photocopy.Count == 0)
             {
                 MessageBox.Show("Item list is empty");
             }
             else if (string.IsNullOrEmpty(txtDate.Text) || string.IsNullOrEmpty(txtCustName.Text))
             {
-                if (chkCompany.IsChecked == false || string.IsNullOrEmpty(txtContactNo.Text) || string.IsNullOrEmpty(address))
-                {
-                    MessageBox.Show("One or more fields are empty!");
-                }
-                else
-                {
-                    MessageBox.Show("One or more fields are empty!");
-                }
+                MessageBox.Show("One or more fields are empty!");
+            }
+            else if (chkCompany.IsChecked == false && (string.IsNullOrEmpty(txtContactNo.Text) || string.IsNullOrEmpty(address) || string.IsNullOrEmpty(txtIssuedBy.Text)))
+            {
+                MessageBox.Show("One or more fields are empty!");
             }
             else if (rdDownpayment.IsChecked == true && txtDownpayment.Value == 0)
             {
@@ -406,6 +410,46 @@ namespace Goldpoint_Inventory_System.Transactions
                         {
                             getORNo();
                         }
+                        foreach (var item in photocopy)
+                        {
+                            using (SqlCommand cmd = new SqlCommand("INSERT into PhotocopyDetails VALUES (@DRNo, @item, @price, @qty, @totalPerItem)", conn))
+                            {
+                                cmd.Parameters.AddWithValue("@DRNo", txtDRNo.Text);
+                                cmd.Parameters.AddWithValue("@item", item.item);
+                                cmd.Parameters.AddWithValue("@qty", item.qty);
+                                cmd.Parameters.AddWithValue("@price", item.price);
+                                cmd.Parameters.AddWithValue("@totalPerItem", item.totalPerItem);
+                                try
+                                {
+                                    cmd.ExecuteNonQuery();
+                                    success = true;
+                                }
+                                catch (SqlException ex)
+                                {
+                                    MessageBox.Show("An error has been encountered! Log has been updated with the error");
+                                    Log = LogManager.GetLogger("*");
+                                    Log.Error(ex);
+                                }
+                            }
+                            using (SqlCommand cmd = new SqlCommand("INSERT into SoldMaterials VALUES (@date, @desc, @qty, @total)", conn))
+                            {
+                                cmd.Parameters.AddWithValue("@date", txtDate.Text);
+                                cmd.Parameters.AddWithValue("@desc", item.item);
+                                cmd.Parameters.AddWithValue("@qty", item.qty);
+                                cmd.Parameters.AddWithValue("@total", item.totalPerItem);
+                                try
+                                {
+                                    cmd.ExecuteNonQuery();
+                                }
+                                catch (SqlException ex)
+                                {
+                                    MessageBox.Show("An error has been encountered! Log has been updated with the error");
+                                    Log = LogManager.GetLogger("*");
+                                    Log.Error(ex);
+                                    success = false;
+                                }
+                            }
+                        }
                         foreach (var item in items)
                         {
                             using (SqlCommand cmd = new SqlCommand("INSERT into ReleasedMaterials VALUES (@DRNo, @itemCode, @desc, @type, @brand, @size, @qty, @totalPerItem)", conn))
@@ -431,25 +475,22 @@ namespace Goldpoint_Inventory_System.Transactions
                                 }
                             }
 
-                            if(chkCompany.IsChecked == false)
+                            using (SqlCommand cmd = new SqlCommand("INSERT into SoldMaterials VALUES (@date, @desc, @qty, @totalPerItem)", conn))
                             {
-                                using (SqlCommand cmd = new SqlCommand("INSERT into SoldMaterials VALUES (@date, @desc, @qty, @totalPerItem)", conn))
+                                cmd.Parameters.AddWithValue("@date", txtDate.Text);
+                                cmd.Parameters.AddWithValue("@desc", item.description);
+                                cmd.Parameters.AddWithValue("@qty", item.qty);
+                                cmd.Parameters.AddWithValue("@totalPerItem", item.totalPerItem);
+                                try
                                 {
-                                    cmd.Parameters.AddWithValue("@date", txtDate.Text);
-                                    cmd.Parameters.AddWithValue("@desc", item.description);
-                                    cmd.Parameters.AddWithValue("@qty", item.qty);
-                                    cmd.Parameters.AddWithValue("@totalPerItem", item.totalPerItem);
-                                    try
-                                    {
-                                        cmd.ExecuteNonQuery();
-                                        success = true;
-                                    }
-                                    catch (SqlException ex)
-                                    {
-                                        MessageBox.Show("An error has been encountered! Log has been updated with the error");
-                                        Log = LogManager.GetLogger("*");
-                                        Log.Error(ex);
-                                    }
+                                    cmd.ExecuteNonQuery();
+                                    success = true;
+                                }
+                                catch (SqlException ex)
+                                {
+                                    MessageBox.Show("An error has been encountered! Log has been updated with the error");
+                                    Log = LogManager.GetLogger("*");
+                                    Log.Error(ex);
                                 }
                             }
 
@@ -511,7 +552,7 @@ namespace Goldpoint_Inventory_System.Transactions
                             using (SqlCommand cmd = new SqlCommand("INSERT into TransactionLogs (date, [transaction], remarks) VALUES (@date, @transaction, @remarks)", conn))
                             {
                                 cmd.Parameters.AddWithValue("@date", txtDate.Text);
-                                cmd.Parameters.AddWithValue("@transaction", "Customer: " + txtCustName.Text + ", with D.R No: " + txtDRNo.Text + ", had a stock out transaction amounting to Php " + txtTotal.Text);
+                                cmd.Parameters.AddWithValue("@transaction", "Customer: " + txtCustName.Text + ", with D.R No: " + txtDRNo.Text + ", had a transaction amounting to Php " + txtTotal.Text);
                                 cmd.Parameters.AddWithValue("@remarks", remarks);
                                 try
                                 {
@@ -543,7 +584,7 @@ namespace Goldpoint_Inventory_System.Transactions
                                 if (rdDownpayment.IsChecked == true)
                                 {
                                     cmd.Parameters.AddWithValue("@paidAmt", txtDownpayment.Value);
-                                    cmd.Parameters.AddWithValue("@status", "Downpayment");
+                                    cmd.Parameters.AddWithValue("@status", "Unpaid");
                                 }
                                 try
                                 {
@@ -557,13 +598,14 @@ namespace Goldpoint_Inventory_System.Transactions
                                     success = false;
                                 }
                             }
-                            using (SqlCommand cmd = new SqlCommand("INSERT into TransactionDetails (DRNo, service, date, deadline, customerName, address, contactNo, remarks, ORNo, invoiceNo, status, claimed, inaccessible) VALUES (@DRNo, @service, @date, @deadline, @customerName, @address, @contactNo, @remarks, @ORNo, @InvoiceNo, @status, @claimed, 1)", conn))
+                            using (SqlCommand cmd = new SqlCommand("INSERT into TransactionDetails (DRNo, service, date, deadline, customerName, issuedBy, address, contactNo, remarks, ORNo, invoiceNo, status, claimed, inaccessible) VALUES (@DRNo, @service, @date, @deadline, @customerName, @issuedBy, @address, @contactNo, @remarks, @ORNo, @InvoiceNo, @status, @claimed, 1)", conn))
                             {
                                 cmd.Parameters.AddWithValue("@DRNo", txtDRNo.Text);
                                 cmd.Parameters.AddWithValue("@date", txtDate.Text);
                                 cmd.Parameters.AddWithValue("@service", "Stock Out");
                                 cmd.Parameters.AddWithValue("@deadline", "N\\A");
                                 cmd.Parameters.AddWithValue("@customerName", txtCustName.Text);
+                                cmd.Parameters.AddWithValue("@issuedBy", txtIssuedBy.Text);
                                 cmd.Parameters.AddWithValue("@address", address);
                                 cmd.Parameters.AddWithValue("@contactNo", txtContactNo.Text);
                                 cmd.Parameters.AddWithValue("@remarks", remarks);
@@ -596,7 +638,7 @@ namespace Goldpoint_Inventory_System.Transactions
                                 }
                                 if (rdDownpayment.IsChecked == true)
                                 {
-                                    cmd.Parameters.AddWithValue("@status", "Downpayment");
+                                    cmd.Parameters.AddWithValue("@status", "Unpaid");
                                     cmd.Parameters.AddWithValue("@claimed", "Claimed");
                                 }
                                 try
@@ -615,13 +657,14 @@ namespace Goldpoint_Inventory_System.Transactions
                         }
                         else
                         {
-                            using (SqlCommand cmd = new SqlCommand("INSERT into TransactionDetails (DRNo, service, date, deadline, customerName, address, contactNo, remarks, ORNo, invoiceNo, status, claimed, inaccessible) VALUES (@DRNo, @service, @date, @deadline, @customerName, @address, @contactNo, @remarks, 0, 0, @status, @claimed, 1)", conn))
+                            using (SqlCommand cmd = new SqlCommand("INSERT into TransactionDetails (DRNo, service, date, deadline, customerName, issuedBy, address, contactNo, remarks, ORNo, invoiceNo, status, claimed, inaccessible) VALUES (@DRNo, @service, @date, @deadline, @customerName, @issuedBy, @address, @contactNo, @remarks, 0, 0, @status, @claimed, 1)", conn))
                             {
                                 cmd.Parameters.AddWithValue("@DRNo", txtDRNo.Text);
                                 cmd.Parameters.AddWithValue("@date", txtDate.Text);
                                 cmd.Parameters.AddWithValue("@service", "Stock Out");
                                 cmd.Parameters.AddWithValue("@deadline", "N\\A");
                                 cmd.Parameters.AddWithValue("@customerName", txtCustName.Text);
+                                cmd.Parameters.AddWithValue("@issuedBy", txtCustName.Text);
                                 cmd.Parameters.AddWithValue("@address", "N\\A");
                                 cmd.Parameters.AddWithValue("@contactNo", "N\\A");
                                 cmd.Parameters.AddWithValue("@remarks", remarks);
@@ -665,6 +708,7 @@ namespace Goldpoint_Inventory_System.Transactions
                         promptPrintDR();
                         emptyFields();
                         items.Clear();
+                        photocopy.Clear();
                         break;
                     case MessageBoxResult.No:
                         return;
@@ -880,8 +924,27 @@ namespace Goldpoint_Inventory_System.Transactions
                             {
                                 foreach (var item in items)
                                 {
-                                    if (counter > 12)
+                                    if (counter > 13)
                                     {
+                                        textSelection = document2.Find("<dr no>", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = txtDRNo.Text;
+                                        textSelection = document2.Find("<full name>", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = txtCustName.Text;
+                                        textSelection = document2.Find("<printed name>", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = txtCustName.Text.ToUpper();
+                                        textSelection = document2.Find("<j.o no>", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = "";
+                                        textSelection = document2.Find("<date>", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = txtDate.Text;
+                                        textSelection = document2.Find("<address>", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = address.Text;
+
                                         textSelection = document2.Find("<qty" + counter2 + ">", false, true);
                                         textRange = textSelection.GetAsOneRange();
                                         textRange.Text = item.qty.ToString();
@@ -921,7 +984,69 @@ namespace Goldpoint_Inventory_System.Transactions
 
                                 }
                             }
+                            if (photocopy.Count > 0)
+                            {
+                                foreach (var item in photocopy)
+                                {
+                                    if (counter > 13)
+                                    {
+                                        textSelection = document2.Find("<dr no>", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = txtDRNo.Text;
+                                        textSelection = document2.Find("<full name>", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = txtCustName.Text;
+                                        textSelection = document2.Find("<printed name>", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = txtCustName.Text.ToUpper();
+                                        textSelection = document2.Find("<j.o no>", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = "";
+                                        textSelection = document2.Find("<date>", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = txtDate.Text;
+                                        textSelection = document2.Find("<address>", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = address.Text;
 
+                                        textSelection = document2.Find("<qty" + counter2 + ">", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = item.qty.ToString();
+
+                                        textSelection = document2.Find("<description" + counter2 + ">", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = item.item;
+
+                                        textSelection = document2.Find("<price" + counter2 + ">", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = item.price.ToString();
+
+                                        textSelection = document2.Find("<amount" + counter2 + ">", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = item.totalPerItem.ToString();
+                                        counter2++;
+                                    }
+                                    else
+                                    {
+                                        textSelection = document.Find("<qty" + counter + ">", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = item.qty.ToString();
+
+                                        textSelection = document.Find("<description" + counter + ">", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = item.item;
+
+                                        textSelection = document.Find("<price" + counter + ">", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = item.price.ToString();
+
+                                        textSelection = document.Find("<amount" + counter + ">", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = item.totalPerItem.ToString();
+                                        counter++;
+                                    }
+                                }
+                            }
                             //remove unused placeholder
                             for (int i = counter; i <= 13; i++)
                             {
@@ -985,6 +1110,218 @@ namespace Goldpoint_Inventory_System.Transactions
                     break;
                 case MessageBoxResult.Cancel:
                     break;
+            }
+        }
+
+        private void BtnPhotocopyAddToList_Click(object sender, RoutedEventArgs e)
+        {
+            double shortPrice, longPrice, a4Price, a3Price, legalPrice;
+            SqlConnection conn = DBUtils.GetDBConnection();
+            conn.Open();
+            using (SqlCommand cmd = new SqlCommand("SELECT * from PaperPrices", conn))
+            {
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    reader.Read();
+                    shortPrice = Convert.ToDouble(reader.GetValue(reader.GetOrdinal("short")));
+                    longPrice = Convert.ToDouble(reader.GetValue(reader.GetOrdinal("long")));
+                    a4Price = Convert.ToDouble(reader.GetValue(reader.GetOrdinal("a4")));
+                    a3Price = Convert.ToDouble(reader.GetValue(reader.GetOrdinal("a3")));
+                    legalPrice = Convert.ToDouble(reader.GetValue(reader.GetOrdinal("legal")));
+                }
+            }
+            bool isEmpty = true;
+            //does not update display but does work
+            if (!string.IsNullOrEmpty(txtShort.Text) && txtShort.Value != 0)
+            {
+                var found = photocopy.FirstOrDefault(x => x.item.Equals("Short") && x.qty > 0);
+                if (found != null)
+                {
+                    photocopy.Add(new PhotocopyDataModel
+                    {
+                        item = "Short",
+                        qty = Convert.ToInt32(found.qty + txtShort.Value),
+                        price = (double)shortPrice,
+                        totalPerItem = (double)((found.qty + txtShort.Value) * shortPrice)
+                    });
+
+                    foreach (var item in photocopy.Where(x => x.item.Equals("Short")).ToList())
+                    {
+                        photocopy.Remove(item);
+                        break;
+                    }
+                }
+                else
+                {
+                    photocopy.Add(new PhotocopyDataModel
+                    {
+                        item = "Short",
+                        qty = Convert.ToInt32(txtShort.Value),
+                        price = (double)shortPrice,
+                        totalPerItem = (double)(Convert.ToInt64(txtShort.Value) * shortPrice)
+                    });
+                }
+                txtTotal.Value += (double)(Convert.ToInt64(txtShort.Value) * shortPrice);
+                isEmpty = false;
+            }
+            if (!string.IsNullOrEmpty(txtLong.Text) && txtLong.Value != 0)
+            {
+                var found = photocopy.FirstOrDefault(x => x.item.Equals("Long") && x.qty > 0);
+                if (found != null)
+                {
+                    photocopy.Add(new PhotocopyDataModel
+                    {
+                        item = "Long",
+                        qty = Convert.ToInt32(found.qty + txtLong.Value),
+                        price = (double)longPrice,
+                        totalPerItem = (double)(Convert.ToInt64(found.qty + txtLong.Value) * longPrice)
+                    });
+
+                    foreach (var item in photocopy.Where(x => x.item.Equals("Long")).ToList())
+                    {
+                        photocopy.Remove(item);
+                        break;
+                    }
+                }
+                else
+                {
+                    photocopy.Add(new PhotocopyDataModel
+                    {
+                        item = "Long",
+                        qty = Convert.ToInt32(txtLong.Value),
+                        price = (double)longPrice,
+                        totalPerItem = (double)(Convert.ToInt64(txtLong.Value) * longPrice)
+                    });
+                }
+
+                txtTotal.Value += (double)(Convert.ToInt64(txtLong.Value) * longPrice);
+                isEmpty = false;
+
+            }
+            if (!string.IsNullOrEmpty(txtLegal.Text) && txtLegal.Value != 0)
+            {
+                var found = photocopy.FirstOrDefault(x => x.item.Equals("Legal") && x.qty > 0);
+                if (found != null)
+                {
+                    photocopy.Add(new PhotocopyDataModel
+                    {
+                        item = "Legal",
+                        qty = Convert.ToInt32(found.qty + txtLegal.Value),
+                        price = (double)legalPrice,
+                        totalPerItem = (double)(Convert.ToInt64(found.qty + txtLegal.Value) * legalPrice)
+                    });
+
+                    foreach (var item in photocopy.Where(x => x.item.Equals("Legal")).ToList())
+                    {
+                        photocopy.Remove(item);
+                        break;
+                    }
+                }
+                else
+                {
+                    photocopy.Add(new PhotocopyDataModel
+                    {
+                        item = "Legal",
+                        qty = Convert.ToInt32(txtLegal.Value),
+                        price = (double)legalPrice,
+                        totalPerItem = (double)(Convert.ToInt64(txtLegal.Value) * legalPrice)
+                    });
+                }
+
+                txtTotal.Value += (double)(Convert.ToInt64(txtLegal.Value) * legalPrice);
+                isEmpty = false;
+            }
+            if (!string.IsNullOrEmpty(txtA4.Text) && txtA4.Value != 0)
+            {
+                var found = photocopy.FirstOrDefault(x => x.item.Equals("A4") && x.qty > 0);
+                if (found != null)
+                {
+                    photocopy.Add(new PhotocopyDataModel
+                    {
+                        item = "A4",
+                        qty = Convert.ToInt32(found.qty + txtA4.Value),
+                        price = (double)a4Price,
+                        totalPerItem = (double)(Convert.ToInt64(found.qty + txtA4.Value) * a4Price)
+                    });
+
+                    foreach (var item in photocopy.Where(x => x.item.Equals("A4")).ToList())
+                    {
+                        photocopy.Remove(item);
+                        break;
+                    }
+                }
+                else
+                {
+                    photocopy.Add(new PhotocopyDataModel
+                    {
+                        item = "A4",
+                        qty = Convert.ToInt32(txtA4.Value),
+                        price = (double)a4Price,
+                        totalPerItem = (double)(Convert.ToInt64(txtA4.Value) * a4Price)
+                    });
+                }
+                txtTotal.Value += Convert.ToInt64(txtA4.Value) * 5.00;
+                isEmpty = false;
+            }
+            if (!string.IsNullOrEmpty(txtA3.Text) && txtA3.Value != 0)
+            {
+                var found = photocopy.FirstOrDefault(x => x.item.Equals("A3") && x.qty > 0);
+                if (found != null)
+                {
+                    photocopy.Add(new PhotocopyDataModel
+                    {
+                        item = "A3",
+                        qty = Convert.ToInt32(found.qty + txtA3.Value),
+                        price = (double)a3Price,
+                        totalPerItem = (double)(Convert.ToInt64(found.qty + txtA3.Value) * a3Price)
+                    });
+
+                    foreach (var item in photocopy.Where(x => x.item.Equals("A3")).ToList())
+                    {
+                        photocopy.Remove(item);
+                        break;
+                    }
+                }
+                else
+                {
+                    photocopy.Add(new PhotocopyDataModel
+                    {
+                        item = "A3",
+                        qty = Convert.ToInt32(txtA3.Value),
+                        price = (double)a3Price,
+                        totalPerItem = (double)(Convert.ToInt64(txtA3.Value) * a3Price)
+                    });
+                }
+                txtTotal.Value += (double)(Convert.ToInt64(txtA3.Value) * a3Price);
+                isEmpty = false;
+            }
+            if (isEmpty)
+            {
+                MessageBox.Show("There is nothing to add to list");
+            }
+            else
+            {
+                txtShort.Value = 0;
+                txtLong.Value = 0;
+                txtLegal.Value = 0;
+                txtA4.Value = 0;
+                txtA3.Value = 0;
+
+            }
+        }
+
+        private void BtnPhotocopyRemoveLastItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (photocopy.Count == 0)
+            {
+                MessageBox.Show("Item list is empty");
+            }
+            else
+            {
+                //deduct to total
+                var last = photocopy.Last();
+                txtTotal.Value -= last.totalPerItem;
+                photocopy.RemoveAt(photocopy.Count - 1);
             }
         }
     }

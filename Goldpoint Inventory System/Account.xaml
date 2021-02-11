@@ -49,6 +49,7 @@
         <PasswordBox x:Name="txtAns" HorizontalAlignment="Left" VerticalAlignment="Top" Width="295" Margin="910,175,0,0" MaxLength="20" Height="31"/>
 
         <Button x:Name="btnSave" Click="BtnSave_Click" Content="Save" HorizontalAlignment="Left" Margin="860,399,0,0" VerticalAlignment="Top" Height="50" Width="100"/>
+        <Button x:Name="btnUpdate" Click="BtnUpdate_Click" Content="Update" HorizontalAlignment="Left" Margin="985,399,0,0" VerticalAlignment="Top" Height="50" Width="100" IsEnabled="False"/>
         <Button x:Name="btnDelete" Click="BtnDelete_Click" Content="Delete" HorizontalAlignment="Left" Margin="1105,399,0,0" VerticalAlignment="Top" Height="50" Width="100" />
 
     </Grid>

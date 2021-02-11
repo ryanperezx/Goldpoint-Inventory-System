@@ -38,20 +38,23 @@
         <Label x:Name="lblSearchTransact" VerticalAlignment="Top" HorizontalAlignment="Left" Height="30" Width="30" Cursor="Hand" Margin="646,25,0,0" MouseLeftButtonDown="LblSearchTransact_MouseLeftButtonDown">
             <iconPacks:PackIconMaterialLight Kind="Magnify" Height="20" Width="20" Foreground="DarkGoldenrod" />
         </Label>
-        <Label Content="Customer Name:" HorizontalAlignment="Left" Margin="762,24,0,0" VerticalAlignment="Top"/>
-        <syncfusion:SfTextBoxExt x:Name="txtCustomerName" HorizontalAlignment="Left" Height="31" Margin="895,24,0,0" VerticalAlignment="Top" Width="170" TextChanged="TxtCustomerName_TextChanged" FontSize="16"/>
-        <syncfusion:SfDataGrid x:Name="dgTransactions" HorizontalAlignment="Center" Height="485" Margin="78,76,64,8" VerticalAlignment="Center" Width="1200" ItemsSource="{Binding}" AutoGenerateColumns="False" Grid.ColumnSpan="2">
+        <Label Content="Customer Name:" HorizontalAlignment="Left" Margin="697,24,0,0" VerticalAlignment="Top"/>
+        <syncfusion:SfTextBoxExt x:Name="txtCustomerName" HorizontalAlignment="Left" Height="31" Margin="830,24,0,0" VerticalAlignment="Top" Width="170" TextChanged="TxtCustomerName_TextChanged" FontSize="16"/>
+        <syncfusion:SfDataGrid x:Name="dgTransactions" HorizontalAlignment="Left" Height="476" VerticalAlignment="Center" Width="1200" ItemsSource="{Binding}" AutoGenerateColumns="False" Margin="69,75,0,18" AutoGenerateColumnsMode="RetainOld" AllowDraggingColumns="True" AllowResizingColumns="True">
             <syncfusion:SfDataGrid.Columns>
                 <syncfusion:GridTextColumn MappingName="Date" Width="100" DisplayBinding="{Binding date}"/>
                 <syncfusion:GridTextColumn MappingName="Deadline" Width="150" DisplayBinding="{Binding deadline}"/>
                 <syncfusion:GridTextColumn MappingName="Service" Width="150" DisplayBinding="{Binding service}"/>
-                <syncfusion:GridTextColumn MappingName="Delivery Receipt No" Width="228" DisplayBinding="{Binding drNo}"/>
+                <syncfusion:GridTextColumn MappingName="Delivery Receipt No" Width="150" DisplayBinding="{Binding drNo}"/>
                 <syncfusion:GridTextColumn MappingName="Customer Name" Width="228" DisplayBinding="{Binding customerName}"/>
+                <syncfusion:GridTextColumn MappingName="Issued by" Width="228" DisplayBinding="{Binding issuedBy}"/>
                 <syncfusion:GridTextColumn MappingName="Address" Width="228" DisplayBinding="{Binding address}"/>
                 <syncfusion:GridTextColumn MappingName="Contact No" Width="150" DisplayBinding="{Binding contactNo}"/>
                 <syncfusion:GridTextColumn MappingName="Status" Width="150" DisplayBinding="{Binding status}"/>
             </syncfusion:SfDataGrid.Columns>
         </syncfusion:SfDataGrid>
-        <CheckBox x:Name="chkCompany" Content="Company Use" Checked="ChkCompany_Checked" Unchecked="ChkCompany_Unchecked" HorizontalAlignment="Left" Margin="1090,30,0,0" VerticalAlignment="Top"/>
+        <CheckBox x:Name="chkCompany" Content="Company Use" Checked="ChkCompany_Checked" Unchecked="ChkCompany_Unchecked" HorizontalAlignment="Left" Margin="1017,30,0,0" VerticalAlignment="Top"/>
+        <CheckBox x:Name="chkUnpaid" Content="Unpaid" Checked="ChkUnpaid_Checked" Unchecked="ChkUnpaid_Unchecked" HorizontalAlignment="Left" Margin="1155,30,0,0" VerticalAlignment="Top"/>
+
     </Grid>
 </Window>

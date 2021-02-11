@@ -24,7 +24,7 @@
             <syncfusion:ComboBoxItemAdv>Tarpaulin</syncfusion:ComboBoxItemAdv>
         </syncfusion:ComboBoxAdv>
         <Label Content="J.O No:" HorizontalAlignment="Left" Margin="37,167,0,0" VerticalAlignment="Top"/>
-        <syncfusion:SfTextBoxExt x:Name="txtJobOrder" HorizontalAlignment="Left" VerticalAlignment="Top" Width="143" Height="31" Margin="125,167,0,0" FontSize="16"/>
+        <syncfusion:IntegerTextBox x:Name="txtJobOrder" HorizontalAlignment="Left" VerticalAlignment="Top" Width="143" Height="31" Margin="125,167,0,0" FontSize="16"/>
         <Label x:Name="btnSearchJO" MouseLeftButtonDown="BtnSearchJO_MouseLeftButtonDown" VerticalAlignment="Top" HorizontalAlignment="Left" Height="30" Width="30" Cursor="Hand" ToolTip="Search Job Order" Margin="273,167,0,0">
             <iconPacks:PackIconMaterialLight Kind="Magnify" Height="20" Width="20" Foreground="DarkGoldenrod" />
         </Label>
@@ -46,6 +46,8 @@
                     </TextBlock>
                 </Expander.Header>
                 <Grid Width="700">
+                    <Label Content="Issued By:" HorizontalAlignment="Left" Margin="44,69,0,0" VerticalAlignment="Top"/>
+                    <syncfusion:SfTextBoxExt x:Name="txtIssuedBy" HorizontalAlignment="Left" Height="31" Margin="129,69,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" FontSize="16"/>
                     <Label Content="D.R No:" HorizontalAlignment="Left" Margin="383,144,0,0" VerticalAlignment="Top"/>
                     <syncfusion:SfTextBoxExt x:Name="txtDRNo" HorizontalAlignment="Left" Height="31" Margin="512,144,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="129" IsEnabled="False" FontSize="16"/>
                     <Label Content="Receipt:" HorizontalAlignment="Left" Margin="42,144,0,0" VerticalAlignment="Top"/>
@@ -71,13 +73,13 @@
                 <Grid Width="700">
                     <Label Content="Date:" HorizontalAlignment="Left" Margin="28,34,0,0" VerticalAlignment="Top"/>
                     <syncfusion:DateTimeEdit x:Name="txtDate" HorizontalAlignment="Left" Height="31" Margin="116,34,0,0" TextWrapping="Wrap" Text="DateTimeEdit" VerticalAlignment="Top" Width="120" FontSize="16"/>
-                    <Label Content="Deadline:" HorizontalAlignment="Left" Margin="323,34,0,0" VerticalAlignment="Top"/>
-                    <syncfusion:DateTimeEdit x:Name="txtDateDeadline" HorizontalAlignment="Left" Height="31" Margin="426,34,0,0" TextWrapping="Wrap" Text="DateTimeEdit" VerticalAlignment="Top" Width="120" FontSize="16"/>
+                    <Label Content="Deadline:" HorizontalAlignment="Left" Margin="383,34,0,0" VerticalAlignment="Top"/>
+                    <syncfusion:DateTimeEdit x:Name="txtDateDeadline" HorizontalAlignment="Left" Height="31" Margin="486,34,0,0" TextWrapping="Wrap" Text="DateTimeEdit" VerticalAlignment="Top" Width="120" FontSize="16"/>
 
                     <Label Content="Name:" HorizontalAlignment="Left" Margin="28,81,0,0" VerticalAlignment="Top" Width="58"/>
                     <syncfusion:SfTextBoxExt x:Name="txtCustName" HorizontalAlignment="Left" Height="31" Margin="116,81,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="168" FontSize="16"/>
-                    <Label Content="Contact No:" HorizontalAlignment="Left" Margin="323,81,0,0" VerticalAlignment="Top" Width="98"/>
-                    <syncfusion:SfTextBoxExt x:Name="txtContactNo" HorizontalAlignment="Left" Height="31" Margin="426,81,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="168" FontSize="16"/>
+                    <Label Content="Contact No:" HorizontalAlignment="Left" Margin="383,81,0,0" VerticalAlignment="Top" Width="98"/>
+                    <syncfusion:SfTextBoxExt x:Name="txtContactNo" HorizontalAlignment="Left" Height="31" Margin="486,81,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="168" FontSize="16"/>
                     <Label Content="Address:" HorizontalAlignment="Left" Margin="28,137,0,0" VerticalAlignment="Top" Width="73"/>
                     <RichTextBox x:Name="txtAddress" HorizontalAlignment="Left" Height="77" Margin="116,137,0,0" VerticalAlignment="Top" Width="265">
                         <RichTextBox.Resources>
@@ -108,7 +110,11 @@
                     <Label Content="Description:" HorizontalAlignment="Left" Margin="17,10,0,0" VerticalAlignment="Top"/>
                     <syncfusion:SfTextBoxExt x:Name="txtDesc" HorizontalAlignment="Left" Height="31" Margin="133,10,0,0" MinWidth="100"  TextWrapping="Wrap"  VerticalAlignment="Top" Width="135" FontSize="16"/>
                     <Label Content="Unit:" HorizontalAlignment="Left" Margin="17,49,0,0" VerticalAlignment="Top"/>
-                    <syncfusion:SfTextBoxExt x:Name="txtDescUnit" HorizontalAlignment="Left" Height="31" Margin="133,49,0,0" MinWidth="100"  TextWrapping="Wrap"  VerticalAlignment="Top" Width="135" FontSize="16"/>
+                    <syncfusion:ComboBoxAdv x:Name="txtDescUnit" HorizontalAlignment="Left" Height="31" Margin="133,49,0,0" MinWidth="100" IsEditable="True" VerticalAlignment="Top" Width="135" FontSize="16">
+                        <syncfusion:ComboBoxItemAdv>Pcs</syncfusion:ComboBoxItemAdv>
+                        <syncfusion:ComboBoxItemAdv>Pads</syncfusion:ComboBoxItemAdv>
+                        <syncfusion:ComboBoxItemAdv>Booklets</syncfusion:ComboBoxItemAdv>
+                    </syncfusion:ComboBoxAdv>
                     <syncfusion:IntegerTextBox x:Name="txtDescQty" HorizontalAlignment="Left" Height="31" Margin="133,89,0,0" MinWidth="100"  TextWrapping="Wrap"  VerticalAlignment="Top" Width="73" FontSize="16"/>
                     <Label Content="Material:" HorizontalAlignment="Left" Margin="17,129,0,0" VerticalAlignment="Top"/>
                     <syncfusion:SfTextBoxExt x:Name="txtMaterial" HorizontalAlignment="Left" Height="31" Margin="133,129,0,0" MinWidth="100"  TextWrapping="Wrap"  VerticalAlignment="Top" Width="118" FontSize="16"/>
@@ -120,9 +126,6 @@
                     <Label Content="Price per item:" HorizontalAlignment="Left" Margin="17,249,0,0" VerticalAlignment="Top"/>
                     <syncfusion:DoubleTextBox x:Name="txtPricePerItem" HorizontalAlignment="Left" Height="31" Margin="133,249,0,0" MinWidth="100"  TextWrapping="Wrap"  VerticalAlignment="Top" Width="118" FontSize="16"/>
                     <syncfusion:SfDataGrid x:Name="dgService" HorizontalAlignment="Right"  Height="418" VerticalAlignment="Center" Width="444" ItemsSource="{Binding}" AutoGenerateColumns="False" Margin="0,0,0,0" AutoExpandGroups="True">
-                        <syncfusion:SfDataGrid.GroupColumnDescriptions>
-                            <syncfusion:GroupColumnDescription ColumnName="Description" />
-                        </syncfusion:SfDataGrid.GroupColumnDescriptions>
                         <syncfusion:SfDataGrid.Columns>
                             <syncfusion:GridTextColumn MappingName="Description"  Width="0" IsReadOnly="True" DisplayBinding="{Binding Description}"/>
                             <syncfusion:GridTextColumn MappingName="Qty" Width="80" IsReadOnly="True" DisplayBinding="{Binding qty}"/>
@@ -154,8 +157,8 @@
                     <syncfusion:IntegerTextBox x:Name="txtTarpQty" HorizontalAlignment="Left" Height="31" Margin="119,78,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" FontSize="16" ValueChanged="TxtMediaPrice_ValueChanged"/>
                     <Label Content="Size:" HorizontalAlignment="Left" Margin="30,119,0,0" VerticalAlignment="Top"/>
                     <Label Content="x" HorizontalAlignment="Left" Margin="173,119,0,0" VerticalAlignment="Top"/>
-                    <syncfusion:IntegerTextBox x:Name="txtTarpX" HorizontalAlignment="Left" Height="31"  Margin="119,119,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="42" FontSize="16" MinValue="0"/>
-                    <syncfusion:IntegerTextBox x:Name="txtTarpY" HorizontalAlignment="Left" Height="31"  Margin="201,119,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="38" FontSize="16" MinValue="0"/>
+                    <syncfusion:DoubleTextBox x:Name="txtTarpX" HorizontalAlignment="Left" Height="31"  Margin="119,119,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="42" FontSize="16" MinValue="0"/>
+                    <syncfusion:DoubleTextBox x:Name="txtTarpY" HorizontalAlignment="Left" Height="31"  Margin="201,119,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="38" FontSize="16" MinValue="0"/>
                     <Label Content="Media:" HorizontalAlignment="Left" Margin="30,159,0,0" VerticalAlignment="Top"/>
                     <syncfusion:SfTextBoxExt x:Name="txtTarpMedia" HorizontalAlignment="Left" Height="31" Margin="119,159,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" FontSize="16"/>
                     <Label Content="Price:" HorizontalAlignment="Left" Margin="30,199,0,0" VerticalAlignment="Top"/>

@@ -121,11 +121,6 @@ namespace Goldpoint_Inventory_System.Log
                             }
                             txtSoldMaterialTotal.Value = overallTotal;
                         }
-                        else
-                        {
-                            MessageBox.Show("The given date has no sales records!");
-                            return;
-                        }
 
                     }
                 }
@@ -156,12 +151,6 @@ namespace Goldpoint_Inventory_System.Log
                                 txtCashOnHand.Value += amount;
 
                             }
-                        }
-                        else
-                        {
-                            MessageBox.Show("The given date has no sales records!");
-                            return;
-
                         }
 
                     }

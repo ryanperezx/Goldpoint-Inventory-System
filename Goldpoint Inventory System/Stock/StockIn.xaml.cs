@@ -86,7 +86,6 @@ namespace Goldpoint_Inventory_System.Stock
 
             }
         }
-
         private void BtnSave_Click(object sender, RoutedEventArgs e)
         {
             if (string.IsNullOrEmpty(txtDate.Text))
@@ -195,7 +194,6 @@ namespace Goldpoint_Inventory_System.Stock
                 }
             }
         }
-
         private void BtnSearchItem_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             if (string.IsNullOrEmpty(txtItemCode.Text))
@@ -246,13 +244,11 @@ namespace Goldpoint_Inventory_System.Stock
 
             }
         }
-
         private void BtnRefresh_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             emptyFields();
             items.Clear();
         }
-
         private void emptyFields()
         {
             txtItemCode.Text = null;
@@ -265,7 +261,6 @@ namespace Goldpoint_Inventory_System.Stock
             rdReplacementNo.IsChecked = true;
             cmbFastMoving.SelectedIndex = 3;
         }
-
         bool searched = false;
         private void TxtItemCode_TextChanged(object sender, TextChangedEventArgs e)
         {

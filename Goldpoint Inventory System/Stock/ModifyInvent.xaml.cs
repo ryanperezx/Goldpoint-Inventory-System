@@ -19,7 +19,7 @@ namespace Goldpoint_Inventory_System.Stock
             InitializeComponent();
             stack.DataContext = new ExpanderListViewModel();
             fillUpType();
-
+            fillPaperPrice();
         }
 
         private void LblSearchItem_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -94,7 +94,6 @@ namespace Goldpoint_Inventory_System.Stock
 
             }
         }
-
         private void BtnAddItem_Click(object sender, RoutedEventArgs e)
         {
             enableFields();
@@ -103,7 +102,6 @@ namespace Goldpoint_Inventory_System.Stock
             btnUpdateItem.IsEnabled = false;
             btnDeleteItem.IsEnabled = false;
         }
-
         private void BtnSaveItem_Click(object sender, RoutedEventArgs e)
         {
             if (string.IsNullOrEmpty(txtItemCode.Text) || string.IsNullOrEmpty(txtDesc.Text) || string.IsNullOrEmpty(txtQty.Text) || string.IsNullOrEmpty(txtCriticalLvl.Text) || string.IsNullOrEmpty(txtPrice.Text) || string.IsNullOrEmpty(txtMSRP.Text) || string.IsNullOrEmpty(txtDealersPrice.Text) || string.IsNullOrEmpty(cmbType.Text))
@@ -183,7 +181,6 @@ namespace Goldpoint_Inventory_System.Stock
             }
 
         }
-
         private void BtnUpdateItem_Click(object sender, RoutedEventArgs e)
         {
             if (string.IsNullOrEmpty(txtDesc.Text) || string.IsNullOrEmpty(txtCriticalLvl.Text) || string.IsNullOrEmpty(txtPrice.Text) || string.IsNullOrEmpty(txtMSRP.Text) || string.IsNullOrEmpty(txtDealersPrice.Text) || string.IsNullOrEmpty(cmbType.Text))
@@ -246,7 +243,6 @@ namespace Goldpoint_Inventory_System.Stock
             }
             disableFields();
         }
-
         private void BtnDeleteItem_Click(object sender, RoutedEventArgs e)
         {
             if (string.IsNullOrEmpty(txtItemCode.Text))
@@ -299,7 +295,7 @@ namespace Goldpoint_Inventory_System.Stock
             }
 
         }
-
+    
         private void BtnAddType_Click(object sender, RoutedEventArgs e)
         {
             if (string.IsNullOrEmpty(cmbTypeAdd.Text))
@@ -345,7 +341,6 @@ namespace Goldpoint_Inventory_System.Stock
                 }
             }
         }
-
         private void BtnDeleteType_Click(object sender, RoutedEventArgs e)
         {
             if (string.IsNullOrEmpty(cmbTypeAdd.Text))
@@ -420,7 +415,6 @@ namespace Goldpoint_Inventory_System.Stock
             txtPrice.IsEnabled = true;
             txtMSRP.IsEnabled = true;
         }
-
         private void emptyFields()
         {
             txtItemCode.Text = null;
@@ -486,6 +480,78 @@ namespace Goldpoint_Inventory_System.Stock
                 txtMSRP.Value = 0;
                 txtDealersPrice.Value = 0;
             }
+        }
+
+        private void fillPaperPrice()
+        {
+            SqlConnection conn = DBUtils.GetDBConnection();
+            conn.Open();
+            using (SqlCommand cmd = new SqlCommand("SELECT * from PaperPrices", conn))
+            {
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (!reader.Read())
+                    {
+                        txtShortPrice.Value = 0;
+                        txtLongPrice.Value = 0;
+                        txtA3Price.Value = 0;
+                        txtA4Price.Value = 0;
+                        txtLegalPrice.Value = 0;
+                    }
+                    else
+                    {
+                        txtShortPrice.Value = (double)(reader.GetValue(reader.GetOrdinal("short")));
+                        txtLongPrice.Value = (double)(reader.GetValue(reader.GetOrdinal("long")));
+                        txtA3Price.Value = (double)(reader.GetValue(reader.GetOrdinal("a3")));
+                        txtA4Price.Value = (double)(reader.GetValue(reader.GetOrdinal("a4")));
+                        txtLegalPrice.Value = (double)(reader.GetValue(reader.GetOrdinal("legal")));
+                    }
+
+                }
+            }
+        }
+
+        private void BtnUpdatePrice_Click(object sender, RoutedEventArgs e)
+        {
+            string sMessageBoxText = "Confirming Updating Photocopy Price(s)?";
+            string sCaption = "Confirm Update?";
+            MessageBoxButton btnMessageBox = MessageBoxButton.YesNoCancel;
+            MessageBoxImage icnMessageBox = MessageBoxImage.Warning;
+
+            MessageBoxResult dr = MessageBox.Show(sMessageBoxText, sCaption, btnMessageBox, icnMessageBox);
+            switch (dr)
+            {
+                case MessageBoxResult.Yes:
+                    SqlConnection conn = DBUtils.GetDBConnection();
+                    conn.Open();
+                    using (SqlCommand cmd = new SqlCommand("UPDATE PaperPrices set short = @short, long = @long, a3 = @a3, legal = @legal, a4 = @a4", conn))
+                    {
+                        cmd.Parameters.AddWithValue("@short", txtShortPrice.Value);
+                        cmd.Parameters.AddWithValue("@long", txtLongPrice.Value);
+                        cmd.Parameters.AddWithValue("@a3", txtA3Price.Value);
+                        cmd.Parameters.AddWithValue("@legal", txtLegalPrice.Value);
+                        cmd.Parameters.AddWithValue("@a4", txtA4Price.Value);
+
+                        try
+                        {
+                            cmd.ExecuteNonQuery();
+                            MessageBox.Show("Price(s) has been updated");
+                            fillPaperPrice();
+                        }
+                        catch (SqlException ex)
+                        {
+                            MessageBox.Show("An error has been encountered! Log has been updated with the error");
+                            Log = LogManager.GetLogger("*");
+                            Log.Error(ex);
+                        }
+                    }
+                    break;
+                case MessageBoxResult.No:
+                    break;
+                case MessageBoxResult.Cancel:
+                    break;
+            }
+
         }
     }
 }

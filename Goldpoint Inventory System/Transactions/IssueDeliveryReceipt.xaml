@@ -16,14 +16,16 @@
             <iconPacks:PackIconMaterialLight Kind="Refresh" Height="30" Width="30" Foreground="DarkGoldenrod"/>
         </Label>
         <Label Content="D.R No:" HorizontalAlignment="Left" Margin="37,167,0,0" VerticalAlignment="Top"/>
-        <syncfusion:SfTextBoxExt IsEnabled="False" x:Name="txtDRNo" HorizontalAlignment="Left" VerticalAlignment="Top" Width="135" Height="31" Margin="131,167,0,0" FontSize="16"/>
+        <syncfusion:SfTextBoxExt IsEnabled="False" x:Name="txtDRNo" HorizontalAlignment="Left" VerticalAlignment="Top" Width="135" Height="31" Margin="133,167,0,0" FontSize="16"/>
         <Label Content="Invoice No:" HorizontalAlignment="Left" Margin="37,210,0,0" VerticalAlignment="Top"/>
-        <syncfusion:SfTextBoxExt x:Name="txtInv" HorizontalAlignment="Left" Height="31" Margin="131,210,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="135" FontSize="16" IsEnabled="False"/>
-        <Label Content="O.R No:" HorizontalAlignment="Left" Margin="37,252,0,0" VerticalAlignment="Top"/>
-        <syncfusion:SfTextBoxExt x:Name="txtORNo" HorizontalAlignment="Left" Height="26" Margin="131,252,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="135" FontSize="16" IsEnabled="False"/>
+        <syncfusion:SfTextBoxExt x:Name="txtInv" HorizontalAlignment="Left" Height="31" Margin="133,210,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="135" FontSize="16" IsEnabled="False"/>
         <CheckBox x:Name="chkInv" Checked="checkboxService" Unchecked="unCheckBoxService" Content="Invoice" HorizontalAlignment="Left" Margin="280,216,0,0" VerticalAlignment="Top"/>
+        <Label Content="O.R No:" HorizontalAlignment="Left" Margin="37,252,0,0" VerticalAlignment="Top"/>
+        <syncfusion:SfTextBoxExt x:Name="txtORNo" HorizontalAlignment="Left" Height="31" Margin="133,252,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="135" FontSize="16" IsEnabled="False"/>
         <CheckBox x:Name="chkOR" Checked="checkboxService" Unchecked="unCheckBoxService" Content="Original Receipt" HorizontalAlignment="Left" Margin="280,258,0,0" VerticalAlignment="Top"/>
-        <syncfusion:ButtonAdv x:Name="btnSaveDeliveryReceipt" Click="BtnSaveDeliveryReceipt_Click" SmallIcon="{x:Null}"  HorizontalAlignment="Left" Height="29" Label="Issue Delivery Receipt" Margin="110,325,0,0" VerticalAlignment="Top" Width="170"/>
+        <Label Content="P.O/J.O No:" HorizontalAlignment="Left" Margin="37,295,0,0" VerticalAlignment="Top"/>
+        <syncfusion:SfTextBoxExt x:Name="txtPOJO" HorizontalAlignment="Left" Height="31" Margin="133,295,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="135" FontSize="16"/>
+        <syncfusion:ButtonAdv x:Name="btnSaveDeliveryReceipt" Click="BtnSaveDeliveryReceipt_Click" SmallIcon="{x:Null}"  HorizontalAlignment="Left" Height="29" Label="Issue Delivery Receipt" Margin="110,406,0,0" VerticalAlignment="Top" Width="170"/>
 
         <StackPanel x:Name="stack" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="82,90,50,0">
             <StackPanel.Resources>
@@ -38,6 +40,8 @@
                     </TextBlock>
                 </Expander.Header>
                 <Grid Width="700">
+                    <Label Content="Issued by:" HorizontalAlignment="Left" Margin="32,54,0,0" VerticalAlignment="Top"/>
+                    <syncfusion:SfTextBoxExt x:Name="txtIssuedBy" HorizontalAlignment="Left" Height="31" Margin="117,54,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" FontSize="16"/>
                     <Label Content="Status:" HorizontalAlignment="Left" Margin="32,162,0,0" VerticalAlignment="Top"/>
                     <RadioButton x:Name="rdUnpaid" IsChecked="True" Content="Unpaid" HorizontalAlignment="Left" Margin="119,139,0,0" VerticalAlignment="Top" Click="radiobuttonPayment"/>
                     <RadioButton x:Name="rdPaid" Content="Paid" HorizontalAlignment="Left" Margin="119,169,0,0" VerticalAlignment="Top" Click="radiobuttonPayment"/>
@@ -59,13 +63,13 @@
                 <Grid Width="700">
                     <Label Content="Date:" HorizontalAlignment="Left" Margin="28,34,0,0" VerticalAlignment="Top"/>
                     <syncfusion:DateTimeEdit x:Name="txtDate" HorizontalAlignment="Left" Height="31" Margin="116,34,0,0" TextWrapping="Wrap" Text="DateTimeEdit" VerticalAlignment="Top" Width="120" FontSize="16"/>
-                    <Label Content="Deadline:" HorizontalAlignment="Left" Margin="323,34,0,0" VerticalAlignment="Top"/>
-                    <syncfusion:DateTimeEdit x:Name="txtDateDeadline" HorizontalAlignment="Left" Height="31" Margin="426,34,0,0" TextWrapping="Wrap" Text="DateTimeEdit" VerticalAlignment="Top" Width="120" FontSize="16"/>
+                    <Label Content="Deadline:" HorizontalAlignment="Left" Margin="391,34,0,0" VerticalAlignment="Top"/>
+                    <syncfusion:DateTimeEdit x:Name="txtDateDeadline" HorizontalAlignment="Left" Height="31" Margin="494,34,0,0" TextWrapping="Wrap" Text="DateTimeEdit" VerticalAlignment="Top" Width="120" FontSize="16"/>
 
                     <Label Content="Name:" HorizontalAlignment="Left" Margin="28,81,0,0" VerticalAlignment="Top" Width="58"/>
                     <syncfusion:SfTextBoxExt x:Name="txtCustName" HorizontalAlignment="Left" Height="31" Margin="116,81,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="168" FontSize="16"/>
-                    <Label Content="Contact No:" HorizontalAlignment="Left" Margin="323,81,0,0" VerticalAlignment="Top" Width="98"/>
-                    <syncfusion:SfTextBoxExt x:Name="txtContactNo" HorizontalAlignment="Left" Height="31" Margin="426,81,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="168" FontSize="16"/>
+                    <Label Content="Contact No:" HorizontalAlignment="Left" Margin="391,81,0,0" VerticalAlignment="Top" Width="98"/>
+                    <syncfusion:SfTextBoxExt x:Name="txtContactNo" HorizontalAlignment="Left" Height="31" Margin="494,81,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="168" FontSize="16"/>
                     <Label Content="Address:" HorizontalAlignment="Left" Margin="28,137,0,0" VerticalAlignment="Top" Width="73"/>
                     <RichTextBox x:Name="txtAddress" HorizontalAlignment="Left" Height="77" Margin="116,137,0,0" VerticalAlignment="Top" Width="265">
                         <RichTextBox.Resources>
@@ -102,10 +106,10 @@
                     <syncfusion:ButtonAdv x:Name="btnAddItem" SmallIcon="{x:Null}"  HorizontalAlignment="Left" Height="29" Label="Add Item" Margin="119,354,0,0" VerticalAlignment="Top" Width="120" Click="BtnAddItem_Click"/>
                     <syncfusion:SfDataGrid x:Name="dgItems" HorizontalAlignment="Center" Height="418" VerticalAlignment="Center" Width="434" ItemsSource="{Binding}" AutoGenerateColumns="False" Margin="366,0,0,0">
                         <syncfusion:SfDataGrid.Columns>
-                            <syncfusion:GridTextColumn MappingName="Qty" Width="90" IsReadOnly="True" DisplayBinding="{Binding qty}"/>
-                            <syncfusion:GridTextColumn MappingName="Description" Width="125" IsReadOnly="True" DisplayBinding="{Binding description}"/>
-                            <syncfusion:GridTextColumn MappingName="Unit Price" Width="150" IsReadOnly="True" DisplayBinding="{Binding unitPrice}"/>
-                            <syncfusion:GridTextColumn MappingName="Amount" Width="150" IsReadOnly="True" DisplayBinding="{Binding amount}"/>
+                            <syncfusion:GridTextColumn MappingName="Qty" Width="80" IsReadOnly="True" DisplayBinding="{Binding qty}"/>
+                            <syncfusion:GridTextColumn MappingName="Description" Width="200" IsReadOnly="True" DisplayBinding="{Binding description}"/>
+                            <syncfusion:GridTextColumn MappingName="Unit Price" Width="100" IsReadOnly="True" DisplayBinding="{Binding unitPrice}"/>
+                            <syncfusion:GridTextColumn MappingName="Amount" Width="100" IsReadOnly="True" DisplayBinding="{Binding amount}"/>
                         </syncfusion:SfDataGrid.Columns>
                     </syncfusion:SfDataGrid>
                 </Grid>

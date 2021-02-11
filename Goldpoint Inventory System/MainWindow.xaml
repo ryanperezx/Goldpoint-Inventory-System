@@ -55,11 +55,6 @@
                             <iconPacks:PackIconMaterialDesign Kind="AddShoppingCart"  Height="15" Width="22" Foreground="DimGray" Margin="0,0,-15,0"/>
                         </MenuItem.Icon>
                     </MenuItem>
-                    <MenuItem x:Name="btnPhotocopy" Tag="Photocopy" Header="Photocopy" Click="ActivateWindow">
-                        <MenuItem.Icon>
-                            <iconPacks:PackIconMaterialDesign Kind="Print"  Height="15" Width="22" Foreground="DimGray" Margin="0,0,-15,0"/>
-                        </MenuItem.Icon>
-                    </MenuItem>
                     <MenuItem x:Name="btnJohOrder" Tag="JobOrder" Header="Job Order" Click="ActivateWindow">
                         <MenuItem.Icon>
                             <iconPacks:PackIconMaterialDesign Kind="Bookmark"  Height="15" Width="22" Foreground="DimGray" Margin="0,0,-15,0"/>
@@ -176,15 +171,6 @@
                     syncfusion:DockingManager.CanDragTab="False"
                     >
                 <stock:InventCheck />
-            </ContentControl>
-            <ContentControl x:Name="Photocopy" 
-                    syncfusion:DockingManager.Header="Photocopy"
-                    syncfusion:DockingManager.State="Document"
-                    syncfusion:DockingManager.CanDock="False"
-                    syncfusion:DockingManager.CanFloat="False"
-                    syncfusion:DockingManager.CanDragTab="False"
-                    >
-                <transact:Photocopy/>
             </ContentControl>
             <ContentControl x:Name="JobOrder" 
                     syncfusion:DockingManager.Header="Job Order"

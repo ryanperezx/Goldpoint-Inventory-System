@@ -56,13 +56,13 @@ namespace Goldpoint_Inventory_System.Transactions
                     expTarp.IsEnabled = true;
                     emptyService();
                 }
-                else
-                {
-                    expServ.IsEnabled = false;
-                    expTarp.IsEnabled = false;
-                    emptyService();
-                    emptyTarp();
-                }
+            }
+            else
+            {
+                expServ.IsEnabled = false;
+                expTarp.IsEnabled = false;
+                emptyService();
+                emptyTarp();
             }
         }
         private void radiobuttonPayment(object sender, System.Windows.RoutedEventArgs e)
@@ -203,6 +203,7 @@ namespace Goldpoint_Inventory_System.Transactions
             txtDate.Text = DateTime.Today.ToShortDateString();
             txtDateDeadline.Text = DateTime.Today.ToShortDateString();
             txtCustName.Text = null;
+            txtIssuedBy.Text = null;
             txtContactNo.Text = null;
             txtAddress.Document.Blocks.Clear();
             txtRemarks.Document.Blocks.Clear();
@@ -216,7 +217,8 @@ namespace Goldpoint_Inventory_System.Transactions
         private void emptyService()
         {
             txtDesc.Text = null;
-            txtDescUnit.Text = null;
+            txtDescUnit.Text = "";
+            txtDescUnit.SelectedIndex = -1;
             txtDescQty.Value = 0;
             txtMaterial.Text = null;
             txtCopy.Text = null;
@@ -227,8 +229,8 @@ namespace Goldpoint_Inventory_System.Transactions
         {
             txtFileName.Text = null;
             txtTarpQty.Value = 0;
-            txtTarpX.Text = null;
-            txtTarpY.Text = null;
+            txtTarpX.Value = 0;
+            txtTarpY.Value = 0;
             txtTarpMedia.Text = null;
             txtTarpBorder.Text = null;
             txtTarpILET.Text = null;
@@ -344,7 +346,6 @@ namespace Goldpoint_Inventory_System.Transactions
                                     int materialIndex = reader.GetOrdinal("material");
                                     int copyIndex = reader.GetOrdinal("copy");
                                     int sizeIndex = reader.GetOrdinal("size");
-                                    int itemQtyIndex = reader.GetOrdinal("itemQty");
                                     int totalPerItemIndex = reader.GetOrdinal("totalPerItem");
 
                                     services.Add(new JobOrderDataModel
@@ -355,12 +356,11 @@ namespace Goldpoint_Inventory_System.Transactions
                                         material = Convert.ToString(reader.GetValue(materialIndex)),
                                         copy = Convert.ToString(reader.GetValue(copyIndex)),
                                         size = Convert.ToString(reader.GetValue(sizeIndex)),
-                                        itemQty = Convert.ToInt32(reader.GetValue(itemQtyIndex)),
                                         unitPrice = Convert.ToDouble(reader.GetValue(totalPerItemIndex)),
-                                        amount = Convert.ToDouble(reader.GetValue(totalPerItemIndex)) / Convert.ToInt32(reader.GetValue(itemQtyIndex))
+                                        amount = Convert.ToDouble(reader.GetValue(totalPerItemIndex))
                                     });
 
-                                    txtItemTotal.Value += Convert.ToDouble(reader.GetValue(totalPerItemIndex)) / Convert.ToInt32(reader.GetValue(itemQtyIndex));
+                                    txtItemTotal.Value += Convert.ToDouble(reader.GetValue(totalPerItemIndex));
                                 }
                             }
                         }
@@ -571,7 +571,7 @@ namespace Goldpoint_Inventory_System.Transactions
             {
                 MessageBox.Show("Item list is empty!");
             }
-            else if (string.IsNullOrEmpty(txtCustName.Text) || string.IsNullOrEmpty(txtContactNo.Text) || string.IsNullOrEmpty(txtDate.Text) || string.IsNullOrEmpty(txtDateDeadline.Text) || string.IsNullOrEmpty(address))
+            else if (string.IsNullOrEmpty(txtCustName.Text) || string.IsNullOrEmpty(txtContactNo.Text) || string.IsNullOrEmpty(txtDate.Text) || string.IsNullOrEmpty(txtDateDeadline.Text) || string.IsNullOrEmpty(address) || string.IsNullOrEmpty(txtIssuedBy.Text))
             {
                 MessageBox.Show("One or more fields are empty");
             }
@@ -605,16 +605,15 @@ namespace Goldpoint_Inventory_System.Transactions
                             foreach (var item in services)
                             {
 
-                                using (SqlCommand cmd = new SqlCommand("INSERT into ServiceMaterial VALUES (@jobOrderNo, @description, @unit, @qty, @material, @copy, @size, @itemQty, @totalPerItem)", conn))
+                                using (SqlCommand cmd = new SqlCommand("INSERT into ServiceMaterial VALUES (@jobOrderNo, @description, @unit, @qty, @material, @copy, @size, @totalPerItem)", conn))
                                 {
-                                    cmd.Parameters.AddWithValue("@jobOrderNo", txtJobOrder.Text);
+                                    cmd.Parameters.AddWithValue("@jobOrderNo", txtJobOrder.Value);
                                     cmd.Parameters.AddWithValue("@description", item.Description);
                                     cmd.Parameters.AddWithValue("@unit", item.unit);
                                     cmd.Parameters.AddWithValue("@qty", item.qty);
                                     cmd.Parameters.AddWithValue("@material", item.material);
                                     cmd.Parameters.AddWithValue("@copy", item.copy);
                                     cmd.Parameters.AddWithValue("@size", item.size);
-                                    cmd.Parameters.AddWithValue("@itemQty", item.itemQty);
                                     cmd.Parameters.AddWithValue("@totalPerItem", item.amount);
                                     try
                                     {
@@ -633,7 +632,7 @@ namespace Goldpoint_Inventory_System.Transactions
                             }
 
 
-                            using (SqlCommand cmd = new SqlCommand("INSERT into TransactionDetails (drNo, jobOrderNo, service, date, deadline, customerName, contactNo, address, remarks, status, claimed, inaccessible) VALUES (@drNo, @jobOrderNo, @service, @date, @deadline, @customerName, @contactNo, @address, @remarks, @status, 'Unclaimed', 1)", conn))
+                            using (SqlCommand cmd = new SqlCommand("INSERT into TransactionDetails (drNo, jobOrderNo, service, date, deadline, customerName, issuedBy, contactNo, address, remarks, status, claimed, inaccessible) VALUES (@drNo, @jobOrderNo, @service, @date, @deadline, @customerName, @issuedBy, @contactNo, @address, @remarks, @status, 'Unclaimed', 1)", conn))
                             {
                                 cmd.Parameters.AddWithValue("@drNo", txtDRNo.Text);
                                 cmd.Parameters.AddWithValue("@jobOrderNo", txtJobOrder.Text);
@@ -641,6 +640,7 @@ namespace Goldpoint_Inventory_System.Transactions
                                 cmd.Parameters.AddWithValue("@date", txtDate.Text);
                                 cmd.Parameters.AddWithValue("@deadline", txtDateDeadline.Text);
                                 cmd.Parameters.AddWithValue("@customerName", txtCustName.Text);
+                                cmd.Parameters.AddWithValue("@issuedBy", txtIssuedBy.Text);
                                 cmd.Parameters.AddWithValue("@contactNo", txtContactNo.Text);
                                 cmd.Parameters.AddWithValue("@address", address);
                                 cmd.Parameters.AddWithValue("@remarks", remarks);
@@ -655,7 +655,7 @@ namespace Goldpoint_Inventory_System.Transactions
                                 }
                                 if (rdDownpayment.IsChecked == true)
                                 {
-                                    cmd.Parameters.AddWithValue("@status", "Downpayment");
+                                    cmd.Parameters.AddWithValue("@status", "Unpaid");
                                 }
                                 try
                                 {
@@ -700,7 +700,7 @@ namespace Goldpoint_Inventory_System.Transactions
                                 }
                             }
 
-                            using (SqlCommand cmd = new SqlCommand("INSERT into TransactionDetails (drNo, jobOrderNo, service, date, deadline, customerName, contactNo, address, remarks, status, claimed, inaccessible) VALUES (@drNo, @jobOrderNo, @service, @date, @deadline, @customerName, @contactNo, @address, @remarks, @status, 'Unclaimed', 1)", conn))
+                            using (SqlCommand cmd = new SqlCommand("INSERT into TransactionDetails (drNo, jobOrderNo, service, date, deadline, customerName, issuedBy, contactNo, address, remarks, status, claimed, inaccessible) VALUES (@drNo, @jobOrderNo, @service, @date, @deadline, @customerName, @issuedBy, @contactNo, @address, @remarks, @status, 'Unclaimed', 1)", conn))
                             {
                                 cmd.Parameters.AddWithValue("@drNo", txtDRNo.Text);
                                 cmd.Parameters.AddWithValue("@jobOrderNo", txtJobOrder.Text);
@@ -708,6 +708,7 @@ namespace Goldpoint_Inventory_System.Transactions
                                 cmd.Parameters.AddWithValue("@date", txtDate.Text);
                                 cmd.Parameters.AddWithValue("@deadline", txtDateDeadline.Text);
                                 cmd.Parameters.AddWithValue("@customerName", txtCustName.Text);
+                                cmd.Parameters.AddWithValue("@issuedBy", txtIssuedBy.Text);
                                 cmd.Parameters.AddWithValue("@contactNo", txtContactNo.Text);
                                 cmd.Parameters.AddWithValue("@address", address);
                                 cmd.Parameters.AddWithValue("@remarks", remarks);
@@ -722,7 +723,7 @@ namespace Goldpoint_Inventory_System.Transactions
                                 }
                                 if (rdDownpayment.IsChecked == true)
                                 {
-                                    cmd.Parameters.AddWithValue("@status", "Downpayment");
+                                    cmd.Parameters.AddWithValue("@status", "Unpaid");
                                 }
                                 try
                                 {
@@ -858,7 +859,6 @@ namespace Goldpoint_Inventory_System.Transactions
             }
         }
 
-
         private void BtnAddService_Click(object sender, RoutedEventArgs e)
         {
             if (string.IsNullOrEmpty(txtDesc.Text) || string.IsNullOrEmpty(txtDescQty.Text) || string.IsNullOrEmpty(txtDescUnit.Text))
@@ -901,6 +901,8 @@ namespace Goldpoint_Inventory_System.Transactions
             }
             else
             {
+                double amount = services[services.Count - 1].amount;
+                txtItemTotal.Value -= amount;
                 services.RemoveAt(services.Count - 1);
             }
         }
@@ -916,7 +918,7 @@ namespace Goldpoint_Inventory_System.Transactions
                 {
                     fileName = txtFileName.Text,
                     tarpQty = (int)txtTarpQty.Value,
-                    tarpSize = txtTarpX.Text + " x " + txtTarpY.Text,
+                    tarpSize = txtTarpX.Value.ToString() + " x " + txtTarpY.Value.ToString(),
                     media = txtTarpMedia.Text,
                     border = txtTarpBorder.Text,
                     ILET = txtTarpILET.Text,
@@ -1000,15 +1002,44 @@ namespace Goldpoint_Inventory_System.Transactions
                             {
                                 foreach (var item in services)
                                 {
-                                    if (counter > 12)
+                                    if (counter > 13)
                                     {
+                                        textSelection = document2.Find("<dr no>", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = txtDRNo.Text;
+                                        textSelection = document2.Find("<full name>", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = txtCustName.Text;
+                                        textSelection = document2.Find("<printed name>", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = txtCustName.Text.ToUpper();
+                                        if (string.IsNullOrEmpty(txtJobOrder.Text) || txtJobOrder.Text.Equals("0"))
+                                        {
+                                            textSelection = document2.Find("<j.o no>", false, true);
+                                            textRange = textSelection.GetAsOneRange();
+                                            textRange.Text = "";
+                                        }
+                                        else
+                                        {
+                                            textSelection = document.Find("<j.o no>", false, true);
+                                            textRange = textSelection.GetAsOneRange();
+                                            textRange.Text = txtJobOrder.Text;
+                                        }
+                                        textSelection = document2.Find("<date>", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = txtDate.Text;
+                                        textSelection = document2.Find("<address>", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = address.Text;
+
+
                                         textSelection = document2.Find("<qty" + counter2 + ">", false, true);
                                         textRange = textSelection.GetAsOneRange();
                                         textRange.Text = item.qty.ToString();
 
                                         textSelection = document2.Find("<description" + counter2 + ">", false, true);
                                         textRange = textSelection.GetAsOneRange();
-                                        textRange.Text = item.Description;
+                                        textRange.Text = item.material;
 
                                         textSelection = document2.Find("<price" + counter2 + ">", false, true);
                                         textRange = textSelection.GetAsOneRange();
@@ -1027,7 +1058,7 @@ namespace Goldpoint_Inventory_System.Transactions
 
                                         textSelection = document.Find("<description" + counter + ">", false, true);
                                         textRange = textSelection.GetAsOneRange();
-                                        textRange.Text = item.Description;
+                                        textRange.Text = item.material;
 
                                         textSelection = document.Find("<price" + counter + ">", false, true);
                                         textRange = textSelection.GetAsOneRange();
@@ -1044,8 +1075,36 @@ namespace Goldpoint_Inventory_System.Transactions
                             {
                                 foreach (var item in tarp)
                                 {
-                                    if (counter > 12)
+                                    if (counter > 13)
                                     {
+                                        textSelection = document2.Find("<dr no>", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = txtDRNo.Text;
+                                        textSelection = document2.Find("<full name>", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = txtCustName.Text;
+                                        textSelection = document2.Find("<printed name>", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = txtCustName.Text.ToUpper();
+                                        if (string.IsNullOrEmpty(txtJobOrder.Text) || txtJobOrder.Text.Equals("0"))
+                                        {
+                                            textSelection = document2.Find("<j.o no>", false, true);
+                                            textRange = textSelection.GetAsOneRange();
+                                            textRange.Text = "";
+                                        }
+                                        else
+                                        {
+                                            textSelection = document.Find("<j.o no>", false, true);
+                                            textRange = textSelection.GetAsOneRange();
+                                            textRange.Text = txtJobOrder.Text;
+                                        }
+                                        textSelection = document2.Find("<date>", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = txtDate.Text;
+                                        textSelection = document2.Find("<address>", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = address.Text;
+
                                         textSelection = document2.Find("<qty" + counter2 + ">", false, true);
                                         textRange = textSelection.GetAsOneRange();
                                         textRange.Text = item.tarpQty.ToString();
@@ -1152,7 +1211,6 @@ namespace Goldpoint_Inventory_System.Transactions
                     break;
             }
         }
-
         private void promptPrintJobOrder()
         {
             string sMessageBoxText = "Do you want to print the Job Order Receipt?";

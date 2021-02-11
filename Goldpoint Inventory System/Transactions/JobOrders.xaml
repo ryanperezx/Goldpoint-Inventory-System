@@ -30,13 +30,13 @@
         <Label x:Name="btnSearchJobOrder" VerticalAlignment="Top" HorizontalAlignment="Left" Height="30" Width="30" Cursor="Hand" Margin="650,26,0,0" MouseLeftButtonDown="BtnSearchJobOrder_MouseLeftButtonDown">
             <iconPacks:PackIconMaterialLight Kind="Magnify" Height="20" Width="20" Foreground="DarkGoldenrod" />
         </Label>
-        <Label Content="Customer Name:" HorizontalAlignment="Left" Margin="722,25,0,0" VerticalAlignment="Top"/>
-        <syncfusion:SfTextBoxExt x:Name="txtCustName" TextChanged="TxtCustName_TextChanged" HorizontalAlignment="Left" Height="31" Margin="855,25,0,0" VerticalAlignment="Top" Width="170" FontSize="16"/>
+        <Label Content="Customer Name:" HorizontalAlignment="Left" Margin="692,25,0,0" VerticalAlignment="Top"/>
+        <syncfusion:SfTextBoxExt x:Name="txtCustName" TextChanged="TxtCustName_TextChanged" HorizontalAlignment="Left" Height="31" Margin="825,25,0,0" VerticalAlignment="Top" Width="170" FontSize="16"/>
         <syncfusion:ComboBoxAdv x:Name="cmbJobOrder" HorizontalAlignment="Left" Height="31" Margin="445,25,0,0" VerticalAlignment="Top" Width="200">
             <syncfusion:ComboBoxItemAdv>Printing, Services, etc.</syncfusion:ComboBoxItemAdv>
             <syncfusion:ComboBoxItemAdv>Tarpaulin</syncfusion:ComboBoxItemAdv>
         </syncfusion:ComboBoxAdv>
-        <syncfusion:SfDataGrid x:Name="dgJobOrders" HorizontalAlignment="Left" Height="485" Margin="80,50 ,0,20" VerticalAlignment="Center" Width="1200" ItemsSource="{Binding}" AutoGenerateColumns="False">
+        <syncfusion:SfDataGrid x:Name="dgJobOrders" HorizontalAlignment="Left" Height="485" Margin="80,50,0,20" VerticalAlignment="Center" Width="1200" ItemsSource="{Binding}" AutoGenerateColumns="False">
             <syncfusion:SfDataGrid.Columns>
                 <syncfusion:GridTextColumn MappingName="Date" Width="100" DisplayBinding="{Binding date}"/>
                 <syncfusion:GridTextColumn MappingName="Deadline" Width="150" DisplayBinding="{Binding deadline}"/>
@@ -49,5 +49,8 @@
                 <syncfusion:GridTextColumn MappingName="Claimed" Width="120" DisplayBinding="{Binding claimed}"/>
             </syncfusion:SfDataGrid.Columns>
         </syncfusion:SfDataGrid>
+        <CheckBox x:Name="chkCancelled" Checked="ChkCancelled_Checked" Unchecked="ChkCancelled_Unchecked" Content="Cancelled Job Orders" HorizontalAlignment="Left" Margin="1005,31,0,0" VerticalAlignment="Top"/>
+        <CheckBox x:Name="chkUnclaimed" Checked="ChkUnclaimed_Checked" Unchecked="ChkUnclaimed_Unchecked" Content="Unclaimed" HorizontalAlignment="Left" Margin="1195,31,0,0" VerticalAlignment="Top"/>
+
     </Grid>
 </Window>

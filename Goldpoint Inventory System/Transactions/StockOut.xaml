@@ -25,7 +25,7 @@
                 <local:ExpanderToBooleanConverter x:Key="ExpanderToBooleanConverter" />
             </StackPanel.Resources>
             <Expander Header="Add Item" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Top" Width="400" IsExpanded="{Binding SelectedExpander, ConverterParameter=2, Converter={StaticResource ExpanderToBooleanConverter}, Mode=TwoWay}">
-                <Grid Height="400" >
+                <Grid Height="390" >
                     <Label Content="Item Code:" HorizontalAlignment="Left" Margin="38,34,0,0" VerticalAlignment="Top"/>
                     <syncfusion:SfTextBoxExt x:Name="txtItemCode" HorizontalAlignment="Left" Height="31" Margin="154,34,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" TextChanged="TxtItemCode_TextChanged"/>
                     <Label x:Name="btnSearchItem" MouseLeftButtonDown="BtnSearchItem_MouseLeftButtonDown" VerticalAlignment="Top" HorizontalAlignment="Left" Height="30" Width="30" ToolTip="Search Item" Margin="279,34,0,0" Cursor="Hand">
@@ -42,12 +42,40 @@
                     <Label Content="Qty:" HorizontalAlignment="Left" Margin="38,214,0,0" VerticalAlignment="Top"/>
                     <syncfusion:IntegerTextBox x:Name="txtQty" HorizontalAlignment="Left" Height="31" Margin="154,214,0,0" MinWidth="100" MinValue="0" Value="0" MaxValue="10000" NumberGroupSeparator="," TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="120"/>
                     <Label Content="Item Price:" HorizontalAlignment="Left" Margin="38,253,0,0" VerticalAlignment="Top"/>
-                    <syncfusion:DoubleTextBox x:Name="txtItemPrice" HorizontalAlignment="Left" Height="31" Margin="154,253,0,0" MinWidth="100" NumberGroupSeparator="," TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="120" IsEnabled="False" Value="0.00"/>
+                    <syncfusion:DoubleTextBox x:Name="txtItemPrice" HorizontalAlignment="Left" Height="31" Margin="154,253,0,0" MinWidth="100" NumberGroupSeparator="," TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="120" IsReadOnly="True" Value="0.00"/>
                     <Label Content="Total per Item:" HorizontalAlignment="Left" Margin="38,289,0,0" VerticalAlignment="Top"/>
-                    <syncfusion:DoubleTextBox x:Name="txtTotalPerItem"  HorizontalAlignment="Left" Height="31" Margin="154,289,0,0" MinWidth="100" NumberGroupSeparator="," TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="120" IsEnabled="False" Value="0.00"/>
+                    <syncfusion:DoubleTextBox x:Name="txtTotalPerItem"  HorizontalAlignment="Left" Height="31" Margin="154,289,0,0" MinWidth="100" NumberGroupSeparator="," TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="120"  IsReadOnly="True"  Value="0.00"/>
                     <syncfusion:ButtonAdv x:Name="btnAddtoList" Click="BtnAddtoList_Click " SmallIcon="{x:Null}" HorizontalAlignment="Left" Height="29" Label="Add to list" Margin="34,341,0,0" VerticalAlignment="Top" Width="140"/>
                     <syncfusion:ButtonAdv x:Name="btnRemoveLastItem" Click="BtnRemoveLastItem_Click" SmallIcon="{x:Null}" HorizontalAlignment="Left" Height="29" Label="Remove last item" Margin="224,341,0,0" VerticalAlignment="Top" Width="140"/>
                     <CheckBox x:Name="ckDealersPrice" Checked="CkDealersPrice_Checked" Unchecked="CkDealersPrice_Unchecked" Content="Dealer's Price" HorizontalAlignment="Left" Margin="279,259,0,0" VerticalAlignment="Top"/>
+                </Grid>
+            </Expander>
+            <Expander Header="Photocopy Transaction" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Top" Width="400" IsExpanded="{Binding SelectedExpander, ConverterParameter=2, Converter={StaticResource ExpanderToBooleanConverter}, Mode=TwoWay}">
+                <Grid Height="350">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="189*"/>
+                        <ColumnDefinition Width="209*"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Content="Qty" HorizontalAlignment="Left" Margin="175,46,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2"/>
+
+                    <Label Content="Short:" HorizontalAlignment="Left" Margin="47,81,0,0" VerticalAlignment="Top"/>
+                    <syncfusion:IntegerTextBox x:Name="txtShort" HorizontalAlignment="Left" Height="30" Margin="135,82,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="135"  MinValue="0" MaxValue="10000" FontSize="16" RenderTransformOrigin="0.415,0.633" Grid.ColumnSpan="2"/>
+
+                    <Label Content="Long:" HorizontalAlignment="Left" Margin="47,119,0,0" VerticalAlignment="Top"/>
+                    <syncfusion:IntegerTextBox x:Name="txtLong" HorizontalAlignment="Left" Height="31" Margin="135,119,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="135" MinValue="0" MaxValue="10000" FontSize="16" Grid.ColumnSpan="2"/>
+
+                    <Label Content="A3:" HorizontalAlignment="Left" Margin="47,155,0,0" VerticalAlignment="Top"/>
+                    <syncfusion:IntegerTextBox x:Name="txtA3" HorizontalAlignment="Left" Height="31" Margin="135,155,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="135" MinValue="0" MaxValue="10000" FontSize="16" Grid.ColumnSpan="2"/>
+
+                    <Label Content="Legal:" HorizontalAlignment="Left" Margin="47,191,0,0" VerticalAlignment="Top"/>
+                    <syncfusion:IntegerTextBox x:Name="txtLegal" HorizontalAlignment="Left" Height="31" Margin="135,191,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="135" MinValue="0" MaxValue="10000" FontSize="16" Grid.ColumnSpan="2"/>
+
+                    <Label Content="A4:" HorizontalAlignment="Left" Margin="47,227,0,0" VerticalAlignment="Top"/>
+                    <syncfusion:IntegerTextBox x:Name="txtA4" HorizontalAlignment="Left" Height="31" Margin="135,227,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="135" MinValue="0" MaxValue="10000" FontSize="16" Grid.ColumnSpan="2"/>
+
+                    <syncfusion:ButtonAdv x:Name="btnPhotocopyAddToList" Click="BtnPhotocopyAddToList_Click" SmallIcon="{x:Null}" HorizontalAlignment="Left" Height="29" Label="Add to list" Margin="24,301,0,0" VerticalAlignment="Top" Width="135"/>
+                    <syncfusion:ButtonAdv x:Name="btnPhotocopyRemoveLastItem" Click="BtnPhotocopyRemoveLastItem_Click" SmallIcon="{x:Null}" HorizontalAlignment="Left" Height="29" Label="Remove last item " Margin="21,301,0,0" VerticalAlignment="Top" Width="135" Grid.Column="1"/>
+
                 </Grid>
             </Expander>
             <Expander Header="Transaction" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Top" Width="400" IsExpanded="{Binding SelectedExpander, ConverterParameter=2, Converter={StaticResource ExpanderToBooleanConverter}, Mode=TwoWay}">
@@ -63,7 +91,7 @@
                             <Setter Property="FontSize" Value="12" />
                         </Style>
                     </Grid.Resources>
-                    <Label Content="Receipt:" HorizontalAlignment="Left" Margin="29,40,0,0" VerticalAlignment="Top"/>
+                    <Label Content="Receipt:" HorizontalAlignment="Left" Margin="29,37,0,0" VerticalAlignment="Top"/>
                     <CheckBox x:Name="chkCompany" Checked="checkboxService" Unchecked="unCheckBoxService" Content="Company Use" HorizontalAlignment="Left" Margin="139,15,0,0" VerticalAlignment="Top"/>
                     <CheckBox x:Name="chkDR" IsChecked="True" IsEnabled="False" Content="Delivery Receipt" HorizontalAlignment="Left" Margin="139,35,0,0" VerticalAlignment="Top"/>
                     <CheckBox x:Name="chkInv" Checked="checkboxService" Unchecked="unCheckBoxService" Content="Invoice" HorizontalAlignment="Left" Margin="139,55,0,0" VerticalAlignment="Top"/>
@@ -85,9 +113,10 @@
                     <syncfusion:DoubleTextBox x:Name="txtDiscount" HorizontalAlignment="Left" Height="26" Margin="139,256,0,0" MinWidth="100" NumberGroupSeparator="," TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="140" MinValue="0"/>
                     <Label Content="Paid amount:" HorizontalAlignment="Left" Margin="29,291,0,0" VerticalAlignment="Top"/>
                     <syncfusion:DoubleTextBox x:Name="txtDownpayment" HorizontalAlignment="Left" Height="26" Margin="139,291,0,0" MinWidth="100" NumberGroupSeparator="," TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="140" MinValue="0"  IsEnabled="False"/>
-                    <Label Content="Total:" HorizontalAlignment="Left" Margin="29,340,0,0" VerticalAlignment="Top"/>
-                    <syncfusion:DoubleTextBox x:Name="txtTotal" HorizontalAlignment="Left" Height="26" Margin="139,340,0,0" MinWidth="100" NumberGroupSeparator="," TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="140" IsEnabled="False"/>
-
+                    <Label Content="Total:" HorizontalAlignment="Left" Margin="29,326,0,0" VerticalAlignment="Top"/>
+                    <syncfusion:DoubleTextBox x:Name="txtTotal" HorizontalAlignment="Left" Height="26" Margin="139,326,0,0" MinWidth="100" NumberGroupSeparator="," TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="140" IsEnabled="False"/>
+                    <Label Content="Issuer:" HorizontalAlignment="Left" Margin="29,364,0,0" VerticalAlignment="Top"/>
+                    <syncfusion:SfTextBoxExt x:Name="txtIssuedBy" HorizontalAlignment="Left" Height="26" Margin="139,364,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
 
                 </Grid>
             </Expander>
@@ -119,7 +148,17 @@
                 </Grid>
             </Expander>
         </StackPanel>
-        <syncfusion:SfDataGrid x:Name="dgStockOut"  HorizontalAlignment="Left" Height="451" Margin="215,80,0,0" VerticalAlignment="Top" Width="770" Grid.ColumnSpan="3" Grid.Column="1" ItemsSource="{Binding}" AutoGenerateColumns="False">
+        <TextBlock FontSize="24" HorizontalAlignment="Left" Margin="215,328,0,0" TextWrapping="Wrap" Text="Photocopy" VerticalAlignment="Top" Grid.Column="1"/>
+        <syncfusion:SfDataGrid x:Name="dgPhotocopy" HorizontalAlignment="Left" Height="215" Margin="215,365,0,0" VerticalAlignment="Top" Width="427" ItemsSource="{Binding}" AutoGenerateColumns="False" Grid.ColumnSpan="2" Grid.Column="1">
+            <syncfusion:SfDataGrid.Columns>
+                <syncfusion:GridTextColumn MappingName="Item" Width="125" IsReadOnly="True"  DisplayBinding="{Binding item}"/>
+                <syncfusion:GridTextColumn MappingName="Price" Width="100" IsReadOnly="True"  DisplayBinding="{Binding price}"/>
+                <syncfusion:GridTextColumn MappingName="Qty" Width="100" UpdateTrigger="PropertyChanged" DisplayBinding="{Binding qty}"/>
+                <syncfusion:GridTextColumn MappingName="Total per Item" Width="103" IsReadOnly="True"  DisplayBinding="{Binding totalPerItem}"/>
+            </syncfusion:SfDataGrid.Columns>
+        </syncfusion:SfDataGrid>
+        <TextBlock FontSize="24" HorizontalAlignment="Left" Margin="215,43,0,0" TextWrapping="Wrap" Text="Material/Supplies" VerticalAlignment="Top" Grid.ColumnSpan="2" Grid.Column="1"/>
+        <syncfusion:SfDataGrid x:Name="dgStockOut"  HorizontalAlignment="Left" Height="235" Margin="215,80,0,0" VerticalAlignment="Top" Width="770" Grid.ColumnSpan="3" Grid.Column="1" ItemsSource="{Binding}" AutoGenerateColumns="False">
             <syncfusion:SfDataGrid.Columns>
                 <syncfusion:GridTextColumn MappingName="Item Code" DisplayBinding="{Binding itemCode}" Width="110"/>
                 <syncfusion:GridTextColumn MappingName="Description" DisplayBinding="{Binding description}" Width="190"/>

@@ -67,6 +67,28 @@
                     <Button Content="Delete" x:Name="btnDeleteType" Click="BtnDeleteType_Click" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="169,141,0,0"/>
                 </Grid>
             </Expander>
+            <Expander Header="Photocopy Prices" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Top" Width="900" IsExpanded="{Binding SelectedExpander, ConverterParameter=3, Converter={StaticResource ExpanderToBooleanConverter}, Mode=TwoWay}">
+                <Grid Height="375">
+                    <Label Content="Price" HorizontalAlignment="Left" Margin="478,51,0,0" VerticalAlignment="Top"/>
+
+                    <Label Content="Short:" HorizontalAlignment="Left" Margin="279,87,0,0" VerticalAlignment="Top"/>
+                    <syncfusion:DoubleTextBox x:Name="txtShortPrice" HorizontalAlignment="Left" Height="30" Margin="437,87,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="135" MinValue="0" MaxValue="10000" FontSize="16"/>
+
+                    <Label Content="Long:" HorizontalAlignment="Left" Margin="279,132,0,0" VerticalAlignment="Top"/>
+                    <syncfusion:DoubleTextBox x:Name="txtLongPrice" HorizontalAlignment="Left" Height="31" Margin="437,132,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="135" MinValue="0" MaxValue="10000" FontSize="16"/>
+
+                    <Label Content="A3:" HorizontalAlignment="Left" Margin="279,177,0,0" VerticalAlignment="Top"/>
+                    <syncfusion:DoubleTextBox x:Name="txtA3Price" HorizontalAlignment="Left" Height="31" Margin="437,177,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="135" MinValue="0" MaxValue="10000" FontSize="16"/>
+
+                    <Label Content="Legal:" HorizontalAlignment="Left" Margin="279,222,0,0" VerticalAlignment="Top"/>
+                    <syncfusion:DoubleTextBox x:Name="txtLegalPrice" HorizontalAlignment="Left" Height="31" Margin="437,222,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="135" MinValue="0" MaxValue="10000" FontSize="16"/>
+
+                    <Label Content="A4:" HorizontalAlignment="Left" Margin="279,266,0,0" VerticalAlignment="Top"/>
+                    <syncfusion:DoubleTextBox x:Name="txtA4Price" HorizontalAlignment="Left" Height="31" Margin="437,266,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="135" MinValue="0" MaxValue="10000" FontSize="16"/>
+
+                    <syncfusion:ButtonAdv x:Name="btnUpdatePrice" SmallIcon="{x:Null}" Click="BtnUpdatePrice_Click" HorizontalAlignment="Left" Height="29" Label="Update Price" Margin="442,317,0,0" VerticalAlignment="Top" Width="118"/>
+                </Grid>
+            </Expander>
         </StackPanel>
     </Grid>
 </UserControl>

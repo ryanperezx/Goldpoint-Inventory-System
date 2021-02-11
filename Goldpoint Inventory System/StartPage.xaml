@@ -16,26 +16,39 @@
         </Label>
         <TextBlock FontSize="64" HorizontalAlignment="Left" Margin="37,45,0,0" TextWrapping="Wrap" Text="Start Page" VerticalAlignment="Top"/>
         <TextBlock FontSize="32" HorizontalAlignment="Left" Margin="37,147,0,0" TextWrapping="Wrap" Text="Recent Transactions" VerticalAlignment="Top"/>
-        <syncfusion:SfDataGrid x:Name="dgRecentTransact"  HorizontalAlignment="Left" Height="451" Margin="37,195,0,0" VerticalAlignment="Top" Width="770" ItemsSource="{Binding}" AutoGenerateColumns="False">
+        <syncfusion:SfDataGrid x:Name="dgRecentTransact" AllowSorting="False" HorizontalAlignment="Left" Height="451" Margin="37,195,0,0" VerticalAlignment="Top" Width="770" ItemsSource="{Binding}" AutoGenerateColumns="False">
             <syncfusion:SfDataGrid.Columns>
                 <syncfusion:GridTextColumn MappingName="Deadline" DisplayBinding="{Binding deadline}" Width="120"/>
                 <syncfusion:GridTextColumn MappingName="Customer Name" DisplayBinding="{Binding customerName}" Width="170"/>
                 <syncfusion:GridTextColumn MappingName="Service" DisplayBinding="{Binding service}" Width="120"/>
-                <syncfusion:GridTextColumn MappingName="Delivery Receipt No" DisplayBinding="{Binding receiptNo}"/>
-                <syncfusion:GridTextColumn MappingName="Status" DisplayBinding="{Binding status}"/>
+                <syncfusion:GridTextColumn MappingName="D.R No" Width="100" DisplayBinding="{Binding receiptNo}"/>
+                <syncfusion:GridTextColumn MappingName="Status"  Width="120" DisplayBinding="{Binding status}"/>
                 <syncfusion:GridTextColumn MappingName="Total" DisplayBinding="{Binding total}" Width="120"/>
+                <syncfusion:GridTextColumn MappingName="Issued by" DisplayBinding="{Binding issuedBy}" Width="120"/>
+                <syncfusion:GridTextColumn MappingName="Remarks" DisplayBinding="{Binding remarks}" Width="120"/>
 
             </syncfusion:SfDataGrid.Columns>
         </syncfusion:SfDataGrid>
-        <syncfusion:SfDataGrid x:Name="dgCritical"  HorizontalAlignment="Left" Height="451" Margin="910,195,0,0" VerticalAlignment="Top" Width="415" ItemsSource="{Binding}" AutoGenerateColumns="False">
+        <TextBlock FontSize="32" HorizontalAlignment="Left" Margin="855,147,0,0" TextWrapping="Wrap" Text="For claiming" VerticalAlignment="Top"/>
+        <syncfusion:SfDataGrid x:Name="dgPending" HorizontalAlignment="Left" Height="257" Margin="855,195,0,0" VerticalAlignment="Top" Width="470" ItemsSource="{Binding}" AutoGenerateColumns="False">
+            <syncfusion:SfDataGrid.Columns>
+                <syncfusion:GridTextColumn MappingName="Deadline" Width="100" DisplayBinding="{Binding deadline}"/>
+                <syncfusion:GridTextColumn MappingName="D.R No" DisplayBinding="{Binding receiptNo}" Width="120"/>
+                <syncfusion:GridTextColumn MappingName="Customer Name" DisplayBinding="{Binding customerName}" Width="170"/>
+                <syncfusion:GridTextColumn MappingName="Issued by" DisplayBinding="{Binding issuedBy}" Width="120"/>
+                <syncfusion:GridTextColumn MappingName="Service" DisplayBinding="{Binding service}" Width="120"/>
+                <syncfusion:GridTextColumn MappingName="Claim Status" DisplayBinding="{Binding claimed}"/>
+            </syncfusion:SfDataGrid.Columns>
+        </syncfusion:SfDataGrid>
+        <TextBlock FontSize="32" HorizontalAlignment="Left" Margin="855,457,0,0" TextWrapping="Wrap" Text="Critical level items" VerticalAlignment="Top"/>
+        <syncfusion:SfDataGrid x:Name="dgCritical"  HorizontalAlignment="Left" Height="141" Margin="855,505,0,0" VerticalAlignment="Top" Width="470" ItemsSource="{Binding}" AutoGenerateColumns="False">
             <syncfusion:SfDataGrid.Columns>
                 <syncfusion:GridTextColumn MappingName="Item Code" DisplayBinding="{Binding itemCode}" Width="120"/>
                 <syncfusion:GridTextColumn MappingName="Description" DisplayBinding="{Binding description}"/>
-                <syncfusion:GridTextColumn MappingName="Qty" DisplayBinding="{Binding qty}"/>
+                <syncfusion:GridTextColumn MappingName="Qty" Width="100" DisplayBinding="{Binding qty}"/>
                 <syncfusion:GridTextColumn MappingName="Critical Level" DisplayBinding="{Binding criticalLvl}"/>
                 <syncfusion:GridTextColumn MappingName="Fast moving" DisplayBinding="{Binding fastMoving}"/>
             </syncfusion:SfDataGrid.Columns>
         </syncfusion:SfDataGrid>
-        <TextBlock FontSize="32" HorizontalAlignment="Left" Margin="910,147,0,0" TextWrapping="Wrap" Text="Critical level items" VerticalAlignment="Top"/>
     </Grid>
 </UserControl>

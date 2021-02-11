@@ -51,7 +51,6 @@ namespace Goldpoint_Inventory_System
             DockingManager.SetState(Account, DockState.Hidden);
             DockingManager.SetState(ModifyInvent, DockState.Hidden);
             DockingManager.SetState(InventCheck, DockState.Hidden);
-            DockingManager.SetState(Photocopy, DockState.Hidden);
             DockingManager.SetState(StockOut, DockState.Hidden);
             DockingManager.SetState(Sales, DockState.Hidden);
             DockingManager.SetState(TransactionLog, DockState.Hidden);

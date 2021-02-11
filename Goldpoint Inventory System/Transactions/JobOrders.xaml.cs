@@ -89,7 +89,7 @@ namespace Goldpoint_Inventory_System.Transactions
         {
             SqlConnection conn = DBUtils.GetDBConnection();
             conn.Open();
-            using (SqlCommand cmd = new SqlCommand("SELECT * from TransactionDetails where inaccessible = 1 and (service = 'Printing, Services, etc.' or service = 'Tarpaulin') ORDER BY customerName ASC", conn))
+            using (SqlCommand cmd = new SqlCommand("SELECT * from TransactionDetails where inaccessible = 1 and (service = 'Printing, Services, etc.' or service = 'Tarpaulin') ORDER BY TRY_CAST(deadline as date) ASC", conn))
             {
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
@@ -205,6 +205,127 @@ namespace Goldpoint_Inventory_System.Transactions
                     }
                 }
             }
+        }
+
+        private void ChkCancelled_Checked(object sender, RoutedEventArgs e)
+        {
+            chkUnclaimed.IsChecked = false;
+            SqlConnection conn = DBUtils.GetDBConnection();
+            conn.Open();
+            using (SqlCommand cmd = new SqlCommand("SELECT * from TransactionDetails where inaccessible = 0 and (service = 'Printing, Services, etc.' or service = 'Tarpaulin') ORDER BY customerName ASC", conn))
+            {
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    customers.Clear();
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            int dateIndex = reader.GetOrdinal("date");
+                            int deadlineIndex = reader.GetOrdinal("deadline");
+                            int jobOrderNoIndex = reader.GetOrdinal("jobOrderNo");
+                            int serviceIndex = reader.GetOrdinal("service");
+                            int customerNameIndex = reader.GetOrdinal("customerName");
+                            int addressIndex = reader.GetOrdinal("address");
+                            int contactNoIndex = reader.GetOrdinal("contactNo");
+                            int statusIndex = reader.GetOrdinal("status");
+                            int claimedIndex = reader.GetOrdinal("claimed");
+
+                            bool isDeadline = false;
+
+                            if (Convert.ToString(reader.GetValue(claimedIndex)) == "Claimed" && Convert.ToString(reader.GetValue(statusIndex)) == "Paid")
+                            {
+                                isDeadline = false;
+                            }
+                            else
+                            {
+                                isDeadline = true;
+                            }
+
+                            customers.Add(new UserTransactionDataModel
+                            {
+                                date = Convert.ToString(reader.GetValue(dateIndex)),
+                                deadline = Convert.ToString(reader.GetValue(deadlineIndex)),
+                                isDeadline = isDeadline,
+                                jobOrderNo = Convert.ToInt32(reader.GetValue(jobOrderNoIndex)),
+                                service = Convert.ToString(reader.GetValue(serviceIndex)),
+                                customerName = Convert.ToString(reader.GetValue(customerNameIndex)),
+                                address = Convert.ToString(reader.GetValue(addressIndex)),
+                                contactNo = Convert.ToString(reader.GetValue(contactNoIndex)),
+                                status = Convert.ToString(reader.GetValue(statusIndex)),
+                                claimed = Convert.ToString(reader.GetValue(claimedIndex)),
+                            });
+
+                        }
+                    }
+                }
+            }
+        }
+
+        private void ChkCancelled_Unchecked(object sender, RoutedEventArgs e)
+        {
+            fillUpJobOrders();
+        }
+
+        private void ChkUnclaimed_Checked(object sender, RoutedEventArgs e)
+        {
+            chkCancelled.IsChecked = false;
+            SqlConnection conn = DBUtils.GetDBConnection();
+            conn.Open();
+            using (SqlCommand cmd = new SqlCommand("SELECT * from TransactionDetails where inaccessible = 1 and (service = 'Printing, Services, etc.' or service = 'Tarpaulin') and claimed = 'Unclaimed'", conn))
+            {
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    customers.Clear();
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            int dateIndex = reader.GetOrdinal("date");
+                            int deadlineIndex = reader.GetOrdinal("deadline");
+                            int jobOrderNoIndex = reader.GetOrdinal("jobOrderNo");
+                            int serviceIndex = reader.GetOrdinal("service");
+                            int customerNameIndex = reader.GetOrdinal("customerName");
+                            int addressIndex = reader.GetOrdinal("address");
+                            int contactNoIndex = reader.GetOrdinal("contactNo");
+                            int statusIndex = reader.GetOrdinal("status");
+                            int claimedIndex = reader.GetOrdinal("claimed");
+
+                            bool isDeadline = false;
+
+                            if (Convert.ToString(reader.GetValue(claimedIndex)) == "Claimed" && Convert.ToString(reader.GetValue(statusIndex)) == "Paid")
+                            {
+                                isDeadline = false;
+                            }
+                            else
+                            {
+                                isDeadline = true;
+                            }
+
+                            customers.Add(new UserTransactionDataModel
+                            {
+                                date = Convert.ToString(reader.GetValue(dateIndex)),
+                                deadline = Convert.ToString(reader.GetValue(deadlineIndex)),
+                                isDeadline = isDeadline,
+                                jobOrderNo = Convert.ToInt32(reader.GetValue(jobOrderNoIndex)),
+                                service = Convert.ToString(reader.GetValue(serviceIndex)),
+                                customerName = Convert.ToString(reader.GetValue(customerNameIndex)),
+                                address = Convert.ToString(reader.GetValue(addressIndex)),
+                                contactNo = Convert.ToString(reader.GetValue(contactNoIndex)),
+                                status = Convert.ToString(reader.GetValue(statusIndex)),
+                                claimed = Convert.ToString(reader.GetValue(claimedIndex)),
+                            });
+
+                        }
+                    }
+                }
+            }
+        }
+
+        private void ChkUnclaimed_Unchecked(object sender, RoutedEventArgs e)
+        {
+            fillUpJobOrders();
+
         }
     }
 }
