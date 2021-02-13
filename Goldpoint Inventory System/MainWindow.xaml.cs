@@ -27,6 +27,7 @@ using Syncfusion.Windows.Tools;
 using Syncfusion.Themes.Office2019Colorful.WPF;
 using System.Data.SqlClient;
 using Goldpoint_Inventory_System.Log;
+using Goldpoint_Inventory_System.Transactions;
 
 namespace Goldpoint_Inventory_System
 {
@@ -35,29 +36,35 @@ namespace Goldpoint_Inventory_System
     /// </summary>
     public partial class MainWindow : Window
     {
-        string user;
-        string fullName
-        {
-            get;
-            set;
-        }
+        string fullName;
 
-        public MainWindow(string username, string fullName)
+        public MainWindow(string adminLevel, string fullName)
         {
             SfSkinManager.ApplyStylesOnApplication = true;
             InitializeComponent();
-            
+
+            StartPage sp = new StartPage(fullName);
+            StockOut so = new StockOut(fullName, adminLevel);
+            JobOrder jo = new JobOrder(fullName);
+            Account ac = new Account(adminLevel);
+            IssueDeliveryReceipt idr = new IssueDeliveryReceipt(fullName);
+            ccStockOut.Content = so;
+            ccStartPage.Content = sp;
+            ccJobOrder.Content = jo;
+            ccIssueDR.Content = idr;
+            ccAccount.Content = ac;
+
             DockingManager.SetState(StockIn, DockState.Hidden);
-            DockingManager.SetState(Account, DockState.Hidden);
+            DockingManager.SetState(ccAccount, DockState.Hidden);
             DockingManager.SetState(ModifyInvent, DockState.Hidden);
             DockingManager.SetState(InventCheck, DockState.Hidden);
-            DockingManager.SetState(StockOut, DockState.Hidden);
+            DockingManager.SetState(ccStockOut, DockState.Hidden);
             DockingManager.SetState(Sales, DockState.Hidden);
             DockingManager.SetState(TransactionLog, DockState.Hidden);
             DockingManager.SetState(TransactionDetails, DockState.Hidden);
-            DockingManager.SetState(JobOrder, DockState.Hidden);
+            DockingManager.SetState(ccJobOrder, DockState.Hidden);
             DockingManager.SetState(ImportDetails, DockState.Hidden);
-            DockingManager.SetState(IssueDR, DockState.Hidden);
+            DockingManager.SetState(ccIssueDR, DockState.Hidden);
 
             Office2019ColorfulThemeSettings themeSettings = new Office2019ColorfulThemeSettings();
             themeSettings.PrimaryBackground = new SolidColorBrush(Colors.DarkGoldenrod);
@@ -74,7 +81,6 @@ namespace Goldpoint_Inventory_System
             date.Content = DateTime.Now.ToString("D");
             startTimer();
 
-            user = username;
             this.fullName = fullName;
 
         }
@@ -193,16 +199,6 @@ namespace Goldpoint_Inventory_System
                     break;
                 case MessageBoxResult.No:
                     break;
-            }
-        }
-
-        private void getFullName()
-        {
-            SqlConnection conn = DBUtils.GetDBConnection();
-            conn.Open();
-            using (SqlCommand cmd = new SqlCommand("SELECT firstName + ' ' + lastName as fullName from Accounts where username = @username", conn))
-            {
-                cmd.Parameters.AddWithValue("@username", user);
             }
         }
 

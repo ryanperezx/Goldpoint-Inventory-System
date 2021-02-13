@@ -21,12 +21,13 @@ namespace Goldpoint_Inventory_System.Transactions
         ObservableCollection<JobOrderDataModel> services = new ObservableCollection<JobOrderDataModel>();
         ObservableCollection<JobOrderDataModel> tarp = new ObservableCollection<JobOrderDataModel>();
         private static Logger Log = LogManager.GetCurrentClassLogger();
-        public JobOrder()
+        public JobOrder(string fullName)
         {
             InitializeComponent();
             stack.DataContext = new ExpanderListViewModel();
             dgService.ItemsSource = services;
             dgTarpaulin.ItemsSource = tarp;
+            txtIssuedBy.Text = fullName;
             getDRNo();
         }
 
@@ -887,6 +888,11 @@ namespace Goldpoint_Inventory_System.Transactions
                 txtItemTotal.Value += (double)(txtPricePerItem.Value * txtDescQty.Value);
                 txtDownpayment.MaxValue = (double)txtItemTotal.Value;
 
+
+                txtDesc.Text = null;
+                txtDescUnit.SelectedIndex = -1;
+                txtDescUnit.Text = null;
+                txtDescQty.Value = 0;
                 txtMaterial.Text = null;
                 txtCopy.Text = null;
                 txtSize.Text = null;

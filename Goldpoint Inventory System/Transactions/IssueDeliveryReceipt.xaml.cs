@@ -22,11 +22,11 @@ namespace Goldpoint_Inventory_System.Transactions
     {
         private static Logger Log = LogManager.GetCurrentClassLogger();
         ObservableCollection<DeliveryReceiptDataModel> items = new ObservableCollection<DeliveryReceiptDataModel>();
-        public IssueDeliveryReceipt()
+        public IssueDeliveryReceipt(string fullName)
         {
             InitializeComponent();
             stack.DataContext = new ExpanderListViewModel();
-
+            txtIssuedBy.Text = fullName;
             dgItems.ItemsSource = items;
             getDRNo();
         }

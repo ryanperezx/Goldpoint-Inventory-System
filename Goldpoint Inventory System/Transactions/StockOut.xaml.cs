@@ -22,9 +22,11 @@ namespace Goldpoint_Inventory_System.Transactions
         ObservableCollection<PhotocopyDataModel> photocopy = new ObservableCollection<PhotocopyDataModel>();
 
         private static Logger Log = LogManager.GetCurrentClassLogger();
-        public StockOut()
+
+        public StockOut(string fullName, string adminLevel)
         {
             InitializeComponent();
+            txtIssuedBy.Text = fullName;
             stack.DataContext = new ExpanderListViewModel();
             dgStockOut.ItemsSource = items;
             //to avoid null error
@@ -33,6 +35,14 @@ namespace Goldpoint_Inventory_System.Transactions
             dgPhotocopy.ItemsSource = photocopy;
             getDRNo();
             rdUnpaid.IsChecked = true;
+            if(adminLevel == "Administrator")
+            {
+                txtDiscount.IsEnabled = true;
+            }
+            else
+            {
+                txtDiscount.IsEnabled = false;
+            }
 
         }
 

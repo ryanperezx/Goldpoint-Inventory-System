@@ -28,7 +28,7 @@ namespace Goldpoint_Inventory_System
         ObservableCollection<UserTransactionDataModel> customer = new ObservableCollection<UserTransactionDataModel>();
         ObservableCollection<UserTransactionDataModel> pendings = new ObservableCollection<UserTransactionDataModel>();
 
-        public StartPage()
+        public StartPage(string fullname)
         {
             InitializeComponent();
             dgCritical.ItemsSource = items;
@@ -37,7 +37,6 @@ namespace Goldpoint_Inventory_System
             fillUpItems();
             fillUpRecentTransact();
             forClaiming();
-
         }
 
         private void BtnRefresh_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)

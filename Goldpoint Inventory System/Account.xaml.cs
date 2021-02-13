@@ -27,10 +27,23 @@ namespace Goldpoint_Inventory_System
     {
         public string passwordStatus;
         private static Logger Log = LogManager.GetCurrentClassLogger();
-
-        public Account()
+        private string adminLevel;
+        public Account(string adminLevel)
         {
             InitializeComponent();
+            this.adminLevel = adminLevel;
+        }
+
+        private void adminRights()
+        {
+            if (adminLevel == "Administrator")
+            {
+                btnSave.IsEnabled = true;
+            }
+            else
+            {
+                btnSave.IsEnabled = false;
+            }
         }
 
         private void BtnSearchUsername_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -77,6 +90,7 @@ namespace Goldpoint_Inventory_System
                                         btnSave.IsEnabled = false;
                                         btnUpdate.IsEnabled = true;
                                         btnDelete.IsEnabled = false;
+                                        adminRights();
                                     }
                                     catch (Exception ex)
                                     {
@@ -155,6 +169,7 @@ namespace Goldpoint_Inventory_System
                                             btnSave.IsEnabled = true;
                                             btnUpdate.IsEnabled = false;
                                             btnDelete.IsEnabled = true;
+                                            adminRights();
 
                                         }
                                         catch (SqlException ex)
@@ -218,6 +233,7 @@ namespace Goldpoint_Inventory_System
                                         btnSave.IsEnabled = true;
                                         btnUpdate.IsEnabled = false;
                                         btnDelete.IsEnabled = true;
+                                        adminRights();
                                     }
                                     catch (SqlException ex)
                                     {

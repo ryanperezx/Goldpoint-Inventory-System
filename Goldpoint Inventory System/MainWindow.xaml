@@ -19,12 +19,12 @@
         <Grid x:Name="GridMenu" VerticalAlignment="Top" HorizontalAlignment="Stretch" Grid.Row="0">
             <Menu SnapsToDevicePixels="True" VerticalAlignment="Top" HorizontalContentAlignment="Stretch" Height="25" >
                 <MenuItem Header="File">
-                    <MenuItem x:Name="btnStartPage" Tag="StartPage" Header="Start Page" Click="ActivateWindow">
+                    <MenuItem x:Name="btnStartPage" Tag="ccStartPage" Header="Start Page" Click="ActivateWindow">
                         <MenuItem.Icon>
                             <iconPacks:PackIconMaterialDesign Kind="Home"  Height="15" Width="22" Foreground="DimGray" Margin="0,0,-15,0"/>
                         </MenuItem.Icon>
                     </MenuItem>
-                    <MenuItem x:Name="btnAccount" Tag="Account" Header="Account" Click="ActivateWindow">
+                    <MenuItem x:Name="btnAccount" Tag="ccAccount" Header="Account" Click="ActivateWindow">
                         <MenuItem.Icon>
                             <iconPacks:PackIconMaterialDesign Kind="AccountCircle"  Height="15" Width="21" Foreground="DimGray" Margin="0,0,-15,0"/>
                         </MenuItem.Icon>
@@ -50,17 +50,17 @@
                     </MenuItem>
                 </MenuItem>
                 <MenuItem Header="Transactions">
-                    <MenuItem x:Name="btnStockOut" Tag="StockOut" Header="Stock Out" Click="ActivateWindow">
+                    <MenuItem x:Name="btnStockOut" Tag="ccStockOut" Header="Stock Out" Click="ActivateWindow">
                         <MenuItem.Icon>
                             <iconPacks:PackIconMaterialDesign Kind="AddShoppingCart"  Height="15" Width="22" Foreground="DimGray" Margin="0,0,-15,0"/>
                         </MenuItem.Icon>
                     </MenuItem>
-                    <MenuItem x:Name="btnJohOrder" Tag="JobOrder" Header="Job Order" Click="ActivateWindow">
+                    <MenuItem x:Name="btnJohOrder" Tag="ccJobOrder" Header="Job Order" Click="ActivateWindow">
                         <MenuItem.Icon>
                             <iconPacks:PackIconMaterialDesign Kind="Bookmark"  Height="15" Width="22" Foreground="DimGray" Margin="0,0,-15,0"/>
                         </MenuItem.Icon>
                     </MenuItem>
-                    <MenuItem Tag="IssueDR" Header="Issue Delivery Receipt" Click="ActivateWindow">
+                    <MenuItem Tag="ccIssueDR" Header="Issue Delivery Receipt" Click="ActivateWindow">
                         <MenuItem.Icon>
                             <iconPacks:PackIconMaterialDesign Kind="Receipt"  Height="15" Width="22" Foreground="DimGray" Margin="0,0,-15,0"/>
                         </MenuItem.Icon>
@@ -116,23 +116,21 @@
                                     ShowTabListContextMenu="{Binding ElementName=showtablistcontextmenu, Path=IsChecked}" 
                                    IsSelectedDocument="DockingManager_IsSelectedDocument" Margin="0,25,0,0"
                                    >
-            <ContentControl x:Name="StartPage" 
+            <ContentControl x:Name="ccStartPage" 
                     syncfusion:DockingManager.Header="Start Page"
                     syncfusion:DockingManager.State="Document"
                     syncfusion:DockingManager.CanDock="False"
                     syncfusion:DockingManager.CanFloat="False"
                     syncfusion:DockingManager.CanDragTab="False"
                     >
-                <local:StartPage/>
             </ContentControl>
-            <ContentControl x:Name="Account" 
+            <ContentControl x:Name="ccAccount" 
                     syncfusion:DockingManager.Header="Account"
                     syncfusion:DockingManager.State="Document"
                     syncfusion:DockingManager.CanDock="False"
                     syncfusion:DockingManager.CanFloat="False"
                     syncfusion:DockingManager.CanDragTab="False"
                     >
-                <local:Account/>
             </ContentControl>
             <ContentControl x:Name="StockIn" 
                     syncfusion:DockingManager.Header="Stock In"
@@ -153,15 +151,13 @@
                     >
                 <stock:ModifyInvent />
             </ContentControl>
-            <ContentControl x:Name="StockOut" 
+            <ContentControl x:Name="ccStockOut" 
                     syncfusion:DockingManager.Header="Stock Out"
                     syncfusion:DockingManager.State="Document"
                     syncfusion:DockingManager.CanDock="False"
                     syncfusion:DockingManager.CanFloat="False"
                     syncfusion:DockingManager.CanDragTab="False"
                     >
-                <transact:StockOut/>
-
             </ContentControl>
             <ContentControl x:Name="InventCheck" 
                     syncfusion:DockingManager.Header="Inventory Check"
@@ -172,14 +168,13 @@
                     >
                 <stock:InventCheck />
             </ContentControl>
-            <ContentControl x:Name="JobOrder" 
+            <ContentControl x:Name="ccJobOrder" 
                     syncfusion:DockingManager.Header="Job Order"
                     syncfusion:DockingManager.State="Document"
                     syncfusion:DockingManager.CanDock="False"
                     syncfusion:DockingManager.CanFloat="False"
                     syncfusion:DockingManager.CanDragTab="False"
                     >
-                <transact:JobOrder/>
             </ContentControl>
             <ContentControl x:Name="Sales" 
                     syncfusion:DockingManager.Header="Sales"
@@ -217,15 +212,13 @@
                     >
                 <logs:ImportDetails />
             </ContentControl>
-            <ContentControl x:Name="IssueDR" 
+            <ContentControl x:Name="ccIssueDR" 
                     syncfusion:DockingManager.Header="Issue Delivery Receipt"
                     syncfusion:DockingManager.State="Document"
                     syncfusion:DockingManager.CanDock="False"
                     syncfusion:DockingManager.CanFloat="False"
                     syncfusion:DockingManager.CanDragTab="False"
                     >
-                <transact:IssueDeliveryReceipt />
-
             </ContentControl>
         </syncfusion:DockingManager>
     </Grid>

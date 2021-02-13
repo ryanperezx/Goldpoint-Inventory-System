@@ -41,7 +41,7 @@
                 </Expander.Header>
                 <Grid Width="700">
                     <Label Content="Issued by:" HorizontalAlignment="Left" Margin="32,54,0,0" VerticalAlignment="Top"/>
-                    <syncfusion:SfTextBoxExt x:Name="txtIssuedBy" HorizontalAlignment="Left" Height="31" Margin="117,54,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" FontSize="16"/>
+                    <syncfusion:SfTextBoxExt x:Name="txtIssuedBy" HorizontalAlignment="Left" Height="31" Margin="117,54,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" FontSize="16" IsReadOnly="True"/>
                     <Label Content="Status:" HorizontalAlignment="Left" Margin="32,162,0,0" VerticalAlignment="Top"/>
                     <RadioButton x:Name="rdUnpaid" IsChecked="True" Content="Unpaid" HorizontalAlignment="Left" Margin="119,139,0,0" VerticalAlignment="Top" Click="radiobuttonPayment"/>
                     <RadioButton x:Name="rdPaid" Content="Paid" HorizontalAlignment="Left" Margin="119,169,0,0" VerticalAlignment="Top" Click="radiobuttonPayment"/>

@@ -196,6 +196,7 @@ namespace Goldpoint_Inventory_System.Log
                         }
                         txtUnpaidBalancePayment.Value = Math.Abs(Convert.ToDouble(txtTotal.Value - unpaidBalance));
                         txtAmount.MaxValue = (double)txtUnpaidBalancePayment.Value;
+                        txtAmount.Value = (double)txtUnpaidBalancePayment.Value;
 
                         if (service == "Stock Out")
                         {
@@ -494,8 +495,10 @@ namespace Goldpoint_Inventory_System.Log
                                 }
                             }
                         }
+
                         txtUnpaidBalancePayment.Value = txtTotal.Value - unpaidBalance;
                         txtAmount.MaxValue = (double)txtUnpaidBalancePayment.Value;
+                        txtAmount.Value = (double)txtUnpaidBalancePayment.Value;
 
                         if (service == "Stock Out")
                         {
@@ -785,8 +788,10 @@ namespace Goldpoint_Inventory_System.Log
                                 }
                             }
                         }
+
                         txtUnpaidBalancePayment.Value = Math.Abs(Convert.ToDouble(txtTotal.Value - unpaidBalance));
                         txtAmount.MaxValue = (double)txtUnpaidBalancePayment.Value;
+                        txtAmount.Value = (double)txtUnpaidBalancePayment.Value;
 
                         if (service == "Stock Out")
                         {
@@ -1065,8 +1070,10 @@ namespace Goldpoint_Inventory_System.Log
                                 }
                             }
                         }
+
                         txtUnpaidBalancePayment.Value = Math.Abs(Convert.ToDouble(txtTotal.Value - unpaidBalance));
                         txtAmount.MaxValue = (double)txtUnpaidBalancePayment.Value;
+                        txtAmount.Value = (double)txtUnpaidBalancePayment.Value;
 
                         using (SqlCommand cmd = new SqlCommand("SELECT * from TarpMaterial where JobOrderNo = @jobOrderNo", conn))
                         {
@@ -1207,8 +1214,10 @@ namespace Goldpoint_Inventory_System.Log
                                 }
                             }
                         }
+
                         txtUnpaidBalancePayment.Value = Math.Abs(Convert.ToDouble(txtTotal.Value - unpaidBalance));
                         txtAmount.MaxValue = (double)txtUnpaidBalancePayment.Value;
+                        txtAmount.Value = (double)txtUnpaidBalancePayment.Value;
 
                         using (SqlCommand cmd = new SqlCommand("SELECT * from ServiceMaterial where JobOrderNo = @jobOrderNo", conn))
                         {
@@ -1242,7 +1251,7 @@ namespace Goldpoint_Inventory_System.Log
                         }
                         break;
                 }
-                if (txtUnpaidBalancePayment.Value == 0)
+                if (txtUnpaidBalancePayment.Value <= 0)
                 {
                     btnPayment.IsEnabled = false;
                 }
@@ -1266,6 +1275,7 @@ namespace Goldpoint_Inventory_System.Log
         private void emptyFields()
         {
             txtAmount.Value = 0;
+            txtAmount.MaxValue = 0;
             txtCustName.Text = null;
             txtDate.Text = DateTime.Today.ToShortDateString();
             txtDatePayment.Text = DateTime.Today.ToShortDateString();

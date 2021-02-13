@@ -47,7 +47,7 @@
                 </Expander.Header>
                 <Grid Width="700">
                     <Label Content="Issued By:" HorizontalAlignment="Left" Margin="44,69,0,0" VerticalAlignment="Top"/>
-                    <syncfusion:SfTextBoxExt x:Name="txtIssuedBy" HorizontalAlignment="Left" Height="31" Margin="129,69,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" FontSize="16"/>
+                    <syncfusion:SfTextBoxExt x:Name="txtIssuedBy" HorizontalAlignment="Left" Height="31" Margin="129,69,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" FontSize="16" IsReadOnly="True"/>
                     <Label Content="D.R No:" HorizontalAlignment="Left" Margin="383,144,0,0" VerticalAlignment="Top"/>
                     <syncfusion:SfTextBoxExt x:Name="txtDRNo" HorizontalAlignment="Left" Height="31" Margin="512,144,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="129" IsEnabled="False" FontSize="16"/>
                     <Label Content="Receipt:" HorizontalAlignment="Left" Margin="42,144,0,0" VerticalAlignment="Top"/>
