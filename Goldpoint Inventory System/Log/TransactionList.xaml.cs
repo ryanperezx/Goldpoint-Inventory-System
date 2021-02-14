@@ -43,6 +43,7 @@ namespace Goldpoint_Inventory_System.Log
                                 int drNoindex = reader.GetOrdinal("drNo");
                                 int serviceIndex = reader.GetOrdinal("service");
                                 int customerNameIndex = reader.GetOrdinal("customerName");
+                                int issuedByIndex = reader.GetOrdinal("issuedBy");
                                 int addressIndex = reader.GetOrdinal("address");
                                 int contactNoIndex = reader.GetOrdinal("contactNo");
                                 int statusIndex = reader.GetOrdinal("status");
@@ -54,15 +55,12 @@ namespace Goldpoint_Inventory_System.Log
                                     drNo = Convert.ToInt32(reader.GetValue(drNoindex)),
                                     service = Convert.ToString(reader.GetValue(serviceIndex)),
                                     customerName = Convert.ToString(reader.GetValue(customerNameIndex)),
+                                    issuedBy = Convert.ToString(reader.GetValue(issuedByIndex)),
                                     address = Convert.ToString(reader.GetValue(addressIndex)),
                                     contactNo = Convert.ToString(reader.GetValue(contactNoIndex)),
                                     status = Convert.ToString(reader.GetValue(statusIndex)),
                                 });
                             }
-                        }
-                        else
-                        {
-                            fillUpTransactions();
                         }
                     }
                 }
@@ -102,6 +100,7 @@ namespace Goldpoint_Inventory_System.Log
                                         int drNoindex = reader.GetOrdinal("drNo");
                                         int serviceIndex = reader.GetOrdinal("service");
                                         int customerNameIndex = reader.GetOrdinal("customerName");
+                                        int issuedByIndex = reader.GetOrdinal("issuedBy");
                                         int addressIndex = reader.GetOrdinal("address");
                                         int contactNoIndex = reader.GetOrdinal("contactNo");
                                         int statusIndex = reader.GetOrdinal("status");
@@ -113,6 +112,7 @@ namespace Goldpoint_Inventory_System.Log
                                             drNo = Convert.ToInt32(reader.GetValue(drNoindex)),
                                             service = Convert.ToString(reader.GetValue(serviceIndex)),
                                             customerName = Convert.ToString(reader.GetValue(customerNameIndex)),
+                                            issuedBy = Convert.ToString(reader.GetValue(issuedByIndex)),
                                             address = Convert.ToString(reader.GetValue(addressIndex)),
                                             contactNo = Convert.ToString(reader.GetValue(contactNoIndex)),
                                             status = Convert.ToString(reader.GetValue(statusIndex)),
@@ -123,13 +123,12 @@ namespace Goldpoint_Inventory_System.Log
                                 {
                                     MessageBox.Show("Transaction does not exist");
                                     fillUpTransactions();
-                                    return;
                                 }
                             }
                         }
 
                         break;
-                    case "Official Receipt":
+                    case "Original Receipt":
                         using (SqlCommand cmd = new SqlCommand("SELECT * from TransactionDetails where orNo = @orNo and inaccessible = 1", conn))
                         {
                             cmd.Parameters.AddWithValue("@orNo", txtServiceNo.Text);
@@ -145,6 +144,7 @@ namespace Goldpoint_Inventory_System.Log
                                         int drNoindex = reader.GetOrdinal("drNo");
                                         int serviceIndex = reader.GetOrdinal("service");
                                         int customerNameIndex = reader.GetOrdinal("customerName");
+                                        int issuedByIndex = reader.GetOrdinal("issuedBy");
                                         int addressIndex = reader.GetOrdinal("address");
                                         int contactNoIndex = reader.GetOrdinal("contactNo");
                                         int statusIndex = reader.GetOrdinal("status");
@@ -156,6 +156,7 @@ namespace Goldpoint_Inventory_System.Log
                                             drNo = Convert.ToInt32(reader.GetValue(drNoindex)),
                                             service = Convert.ToString(reader.GetValue(serviceIndex)),
                                             customerName = Convert.ToString(reader.GetValue(customerNameIndex)),
+                                            issuedBy = Convert.ToString(reader.GetValue(issuedByIndex)),
                                             address = Convert.ToString(reader.GetValue(addressIndex)),
                                             contactNo = Convert.ToString(reader.GetValue(contactNoIndex)),
                                             status = Convert.ToString(reader.GetValue(statusIndex)),
@@ -166,7 +167,6 @@ namespace Goldpoint_Inventory_System.Log
                                 {
                                     MessageBox.Show("Transaction does not exist");
                                     fillUpTransactions();
-                                    return;
                                 }
                             }
                         }
@@ -188,6 +188,7 @@ namespace Goldpoint_Inventory_System.Log
                                         int drNoindex = reader.GetOrdinal("drNo");
                                         int serviceIndex = reader.GetOrdinal("service");
                                         int customerNameIndex = reader.GetOrdinal("customerName");
+                                        int issuedByIndex = reader.GetOrdinal("issuedBy");
                                         int addressIndex = reader.GetOrdinal("address");
                                         int contactNoIndex = reader.GetOrdinal("contactNo");
                                         int statusIndex = reader.GetOrdinal("status");
@@ -199,6 +200,7 @@ namespace Goldpoint_Inventory_System.Log
                                             drNo = Convert.ToInt32(reader.GetValue(drNoindex)),
                                             service = Convert.ToString(reader.GetValue(serviceIndex)),
                                             customerName = Convert.ToString(reader.GetValue(customerNameIndex)),
+                                            issuedBy = Convert.ToString(reader.GetValue(issuedByIndex)),
                                             address = Convert.ToString(reader.GetValue(addressIndex)),
                                             contactNo = Convert.ToString(reader.GetValue(contactNoIndex)),
                                             status = Convert.ToString(reader.GetValue(statusIndex)),
@@ -209,7 +211,6 @@ namespace Goldpoint_Inventory_System.Log
                                 {
                                     MessageBox.Show("Transaction does not exist");
                                     fillUpTransactions();
-                                    return;
                                 }
                             }
                         }
@@ -240,6 +241,7 @@ namespace Goldpoint_Inventory_System.Log
                             int drNoindex = reader.GetOrdinal("drNo");
                             int serviceIndex = reader.GetOrdinal("service");
                             int customerNameIndex = reader.GetOrdinal("customerName");
+                            int issuedByIndex = reader.GetOrdinal("issuedBy");
                             int addressIndex = reader.GetOrdinal("address");
                             int contactNoIndex = reader.GetOrdinal("contactNo");
                             int statusIndex = reader.GetOrdinal("status");
@@ -251,6 +253,7 @@ namespace Goldpoint_Inventory_System.Log
                                 drNo = Convert.ToInt32(reader.GetValue(drNoindex)),
                                 service = Convert.ToString(reader.GetValue(serviceIndex)),
                                 customerName = Convert.ToString(reader.GetValue(customerNameIndex)),
+                                issuedBy = Convert.ToString(reader.GetValue(issuedByIndex)),
                                 address = Convert.ToString(reader.GetValue(addressIndex)),
                                 contactNo = Convert.ToString(reader.GetValue(contactNoIndex)),
                                 status = Convert.ToString(reader.GetValue(statusIndex)),
@@ -280,6 +283,7 @@ namespace Goldpoint_Inventory_System.Log
                             int drNoindex = reader.GetOrdinal("drNo");
                             int serviceIndex = reader.GetOrdinal("service");
                             int customerNameIndex = reader.GetOrdinal("customerName");
+                            int issuedByIndex = reader.GetOrdinal("issuedBy");
                             int addressIndex = reader.GetOrdinal("address");
                             int contactNoIndex = reader.GetOrdinal("contactNo");
                             int statusIndex = reader.GetOrdinal("status");
@@ -291,6 +295,7 @@ namespace Goldpoint_Inventory_System.Log
                                 drNo = Convert.ToInt32(reader.GetValue(drNoindex)),
                                 service = Convert.ToString(reader.GetValue(serviceIndex)),
                                 customerName = Convert.ToString(reader.GetValue(customerNameIndex)),
+                                issuedBy = Convert.ToString(reader.GetValue(issuedByIndex)),
                                 address = Convert.ToString(reader.GetValue(addressIndex)),
                                 contactNo = Convert.ToString(reader.GetValue(contactNoIndex)),
                                 status = Convert.ToString(reader.GetValue(statusIndex)),
@@ -311,7 +316,7 @@ namespace Goldpoint_Inventory_System.Log
             chkCompany.IsChecked = false;
             SqlConnection conn = DBUtils.GetDBConnection();
             conn.Open();
-            using (SqlCommand cmd = new SqlCommand("SELECT * from TransactionDetails where inaccessible = 1 WHERE status = 'Unpaid'", conn))
+            using (SqlCommand cmd = new SqlCommand("SELECT * from TransactionDetails where inaccessible = 1 and status = 'Unpaid'", conn))
             {
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
@@ -325,6 +330,7 @@ namespace Goldpoint_Inventory_System.Log
                             int drNoindex = reader.GetOrdinal("drNo");
                             int serviceIndex = reader.GetOrdinal("service");
                             int customerNameIndex = reader.GetOrdinal("customerName");
+                            int issuedByIndex = reader.GetOrdinal("issuedBy");
                             int addressIndex = reader.GetOrdinal("address");
                             int contactNoIndex = reader.GetOrdinal("contactNo");
                             int statusIndex = reader.GetOrdinal("status");
@@ -336,6 +342,7 @@ namespace Goldpoint_Inventory_System.Log
                                 drNo = Convert.ToInt32(reader.GetValue(drNoindex)),
                                 service = Convert.ToString(reader.GetValue(serviceIndex)),
                                 customerName = Convert.ToString(reader.GetValue(customerNameIndex)),
+                                issuedBy = Convert.ToString(reader.GetValue(issuedByIndex)),
                                 address = Convert.ToString(reader.GetValue(addressIndex)),
                                 contactNo = Convert.ToString(reader.GetValue(contactNoIndex)),
                                 status = Convert.ToString(reader.GetValue(statusIndex)),

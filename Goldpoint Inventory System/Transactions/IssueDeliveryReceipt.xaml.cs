@@ -610,5 +610,19 @@ namespace Goldpoint_Inventory_System.Transactions
                 txtUnitPrice.Value = 0;
             }
         }
+
+        private void BtnRemoveLastItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (items.Count == 0)
+            {
+                MessageBox.Show("Item list is empty");
+            }
+            else
+            {
+                double amount = items[items.Count - 1].amount;
+                txtTotal.Value -= amount;
+                items.RemoveAt(items.Count - 1);
+            }
+        }
     }
 }

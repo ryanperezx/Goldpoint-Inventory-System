@@ -42,6 +42,7 @@ namespace Goldpoint_Inventory_System.Transactions
                                 int jobOrderNoIndex = reader.GetOrdinal("jobOrderNo");
                                 int serviceIndex = reader.GetOrdinal("service");
                                 int customerNameIndex = reader.GetOrdinal("customerName");
+                                int issuedByIndex = reader.GetOrdinal("issuedBy");
                                 int addressIndex = reader.GetOrdinal("address");
                                 int contactNoIndex = reader.GetOrdinal("contactNo");
                                 int statusIndex = reader.GetOrdinal("status");
@@ -69,6 +70,7 @@ namespace Goldpoint_Inventory_System.Transactions
                                     jobOrderNo = Convert.ToInt32(reader.GetValue(jobOrderNoIndex)),
                                     service = Convert.ToString(reader.GetValue(serviceIndex)),
                                     customerName = Convert.ToString(reader.GetValue(customerNameIndex)),
+                                    issuedBy = Convert.ToString(reader.GetValue(issuedByIndex)),
                                     address = Convert.ToString(reader.GetValue(addressIndex)),
                                     contactNo = Convert.ToString(reader.GetValue(contactNoIndex)),
                                     status = Convert.ToString(reader.GetValue(statusIndex)),
@@ -76,12 +78,12 @@ namespace Goldpoint_Inventory_System.Transactions
                                 });
                             }
                         }
-                        else
-                        {
-                            fillUpJobOrders();
-                        }
                     }
                 }
+            }
+            else
+            {
+                fillUpJobOrders();
             }
         }
 
@@ -103,6 +105,7 @@ namespace Goldpoint_Inventory_System.Transactions
                             int jobOrderNoIndex = reader.GetOrdinal("jobOrderNo");
                             int serviceIndex = reader.GetOrdinal("service");
                             int customerNameIndex = reader.GetOrdinal("customerName");
+                            int issuedByIndex = reader.GetOrdinal("issuedBy");
                             int addressIndex = reader.GetOrdinal("address");
                             int contactNoIndex = reader.GetOrdinal("contactNo");
                             int statusIndex = reader.GetOrdinal("status");
@@ -127,6 +130,7 @@ namespace Goldpoint_Inventory_System.Transactions
                                 jobOrderNo = Convert.ToInt32(reader.GetValue(jobOrderNoIndex)),
                                 service = Convert.ToString(reader.GetValue(serviceIndex)),
                                 customerName = Convert.ToString(reader.GetValue(customerNameIndex)),
+                                issuedBy = Convert.ToString(reader.GetValue(issuedByIndex)),
                                 address = Convert.ToString(reader.GetValue(addressIndex)),
                                 contactNo = Convert.ToString(reader.GetValue(contactNoIndex)),
                                 status = Convert.ToString(reader.GetValue(statusIndex)),
@@ -165,6 +169,7 @@ namespace Goldpoint_Inventory_System.Transactions
                                 int jobOrderNoIndex = reader.GetOrdinal("jobOrderNo");
                                 int serviceIndex = reader.GetOrdinal("service");
                                 int customerNameIndex = reader.GetOrdinal("customerName");
+                                int issuedByIndex = reader.GetOrdinal("issuedBy");
                                 int addressIndex = reader.GetOrdinal("address");
                                 int contactNoIndex = reader.GetOrdinal("contactNo");
                                 int statusIndex = reader.GetOrdinal("status");
@@ -183,16 +188,17 @@ namespace Goldpoint_Inventory_System.Transactions
 
                                 customers.Add(new UserTransactionDataModel
                                 {
-                                    date = Convert.ToString(reader.GetValue(dateIndex)),
-                                    deadline = Convert.ToString(reader.GetValue(deadlineIndex)),
-                                    isDeadline = isDeadline,
-                                    jobOrderNo = Convert.ToInt32(reader.GetValue(jobOrderNoIndex)),
-                                    service = Convert.ToString(reader.GetValue(serviceIndex)),
-                                    customerName = Convert.ToString(reader.GetValue(customerNameIndex)),
-                                    address = Convert.ToString(reader.GetValue(addressIndex)),
-                                    contactNo = Convert.ToString(reader.GetValue(contactNoIndex)),
-                                    status = Convert.ToString(reader.GetValue(statusIndex)),
-                                    claimed = Convert.ToString(reader.GetValue(claimedIndex)),
+                                date = Convert.ToString(reader.GetValue(dateIndex)),
+                                deadline = Convert.ToString(reader.GetValue(deadlineIndex)),
+                                isDeadline = isDeadline,
+                                jobOrderNo = Convert.ToInt32(reader.GetValue(jobOrderNoIndex)),
+                                service = Convert.ToString(reader.GetValue(serviceIndex)),
+                                customerName = Convert.ToString(reader.GetValue(customerNameIndex)),
+                                issuedBy = Convert.ToString(reader.GetValue(issuedByIndex)),
+                                address = Convert.ToString(reader.GetValue(addressIndex)),
+                                contactNo = Convert.ToString(reader.GetValue(contactNoIndex)),
+                                status = Convert.ToString(reader.GetValue(statusIndex)),
+                                claimed = Convert.ToString(reader.GetValue(claimedIndex)),
                                 });
                             }
                         }
@@ -226,6 +232,7 @@ namespace Goldpoint_Inventory_System.Transactions
                             int jobOrderNoIndex = reader.GetOrdinal("jobOrderNo");
                             int serviceIndex = reader.GetOrdinal("service");
                             int customerNameIndex = reader.GetOrdinal("customerName");
+                            int issuedByIndex = reader.GetOrdinal("issuedBy");
                             int addressIndex = reader.GetOrdinal("address");
                             int contactNoIndex = reader.GetOrdinal("contactNo");
                             int statusIndex = reader.GetOrdinal("status");
@@ -250,6 +257,7 @@ namespace Goldpoint_Inventory_System.Transactions
                                 jobOrderNo = Convert.ToInt32(reader.GetValue(jobOrderNoIndex)),
                                 service = Convert.ToString(reader.GetValue(serviceIndex)),
                                 customerName = Convert.ToString(reader.GetValue(customerNameIndex)),
+                                issuedBy = Convert.ToString(reader.GetValue(issuedByIndex)),
                                 address = Convert.ToString(reader.GetValue(addressIndex)),
                                 contactNo = Convert.ToString(reader.GetValue(contactNoIndex)),
                                 status = Convert.ToString(reader.GetValue(statusIndex)),
@@ -286,6 +294,7 @@ namespace Goldpoint_Inventory_System.Transactions
                             int jobOrderNoIndex = reader.GetOrdinal("jobOrderNo");
                             int serviceIndex = reader.GetOrdinal("service");
                             int customerNameIndex = reader.GetOrdinal("customerName");
+                            int issuedByIndex = reader.GetOrdinal("issuedBy");
                             int addressIndex = reader.GetOrdinal("address");
                             int contactNoIndex = reader.GetOrdinal("contactNo");
                             int statusIndex = reader.GetOrdinal("status");
@@ -310,6 +319,7 @@ namespace Goldpoint_Inventory_System.Transactions
                                 jobOrderNo = Convert.ToInt32(reader.GetValue(jobOrderNoIndex)),
                                 service = Convert.ToString(reader.GetValue(serviceIndex)),
                                 customerName = Convert.ToString(reader.GetValue(customerNameIndex)),
+                                issuedBy = Convert.ToString(reader.GetValue(issuedByIndex)),
                                 address = Convert.ToString(reader.GetValue(addressIndex)),
                                 contactNo = Convert.ToString(reader.GetValue(contactNoIndex)),
                                 status = Convert.ToString(reader.GetValue(statusIndex)),
@@ -325,7 +335,6 @@ namespace Goldpoint_Inventory_System.Transactions
         private void ChkUnclaimed_Unchecked(object sender, RoutedEventArgs e)
         {
             fillUpJobOrders();
-
         }
     }
 }

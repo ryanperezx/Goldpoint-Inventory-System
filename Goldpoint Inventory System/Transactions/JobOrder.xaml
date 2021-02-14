@@ -169,7 +169,8 @@
                     <syncfusion:SfTextBoxExt x:Name="txtTarpILET" HorizontalAlignment="Left" Height="31" Margin="119,278,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" FontSize="16"/>
                     <Label Content="Unit Price:" HorizontalAlignment="Left" Margin="30,318,0,0" VerticalAlignment="Top"/>
                     <syncfusion:DoubleTextBox x:Name="txtTarpUnitPrice" HorizontalAlignment="Left" Height="31" Margin="119,318,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" FontSize="16" MinValue="0"/>
-                    <syncfusion:ButtonAdv x:Name="btnAddTarp" SmallIcon="{x:Null}"  HorizontalAlignment="Left" Height="29" Label="Add Tarpaulin" Margin="119,354,0,0" VerticalAlignment="Top" Width="120" Click="BtnAddTarp_Click"/>
+                    <syncfusion:ButtonAdv x:Name="btnAddTarp" SmallIcon="{x:Null}"  HorizontalAlignment="Left" Height="29" Label="Add Tarpaulin" Margin="41,369,0,0" VerticalAlignment="Top" Width="120" Click="BtnAddTarp_Click"/>
+                    <syncfusion:ButtonAdv x:Name="btnRemoveTarp" SmallIcon="{x:Null}"  HorizontalAlignment="Left" Height="29" Label="Remove Tarpaulin" Margin="41,369,0,0" VerticalAlignment="Top" Width="120" Click="BtnRemoveTarp_Click"/>
                     <syncfusion:SfDataGrid x:Name="dgTarpaulin" HorizontalAlignment="Center" Height="418" VerticalAlignment="Center" Width="444" ItemsSource="{Binding}" AutoGenerateColumns="False" Margin="356,0,0,0">
                         <syncfusion:SfDataGrid.Columns>
                             <syncfusion:GridTextColumn MappingName="File Name" Width="125" IsReadOnly="True" DisplayBinding="{Binding fileName}"/>

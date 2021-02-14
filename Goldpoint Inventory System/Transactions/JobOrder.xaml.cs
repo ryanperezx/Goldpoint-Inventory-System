@@ -251,6 +251,7 @@ namespace Goldpoint_Inventory_System.Transactions
             btnSaveJobOrder.IsEnabled = false;
             btnAddService.IsEnabled = true;
             btnRemoveLastService.IsEnabled = true;
+            btnRemoveTarp.IsEnabled = true;
             btnAddTarp.IsEnabled = true;
             cmbJobOrder.SelectedIndex = -1;
             expServ.IsEnabled = false;
@@ -411,6 +412,7 @@ namespace Goldpoint_Inventory_System.Transactions
                     btnAddService.IsEnabled = false;
                     btnRemoveLastService.IsEnabled = false;
                     btnAddTarp.IsEnabled = false;
+                    btnRemoveTarp.IsEnabled = false;
                     disableFields();
                 }
             }
@@ -481,6 +483,7 @@ namespace Goldpoint_Inventory_System.Transactions
                             btnAddService.IsEnabled = true;
                             btnRemoveLastService.IsEnabled = true;
                             btnAddTarp.IsEnabled = true;
+                            btnRemoveTarp.IsEnabled = true;
 
                             break;
                         case MessageBoxResult.No:
@@ -936,7 +939,19 @@ namespace Goldpoint_Inventory_System.Transactions
                 emptyTarp();
             }
         }
-
+        private void BtnRemoveTarp_Click(object sender, RoutedEventArgs e)
+        {
+            if (tarp.Count == 0)
+            {
+                MessageBox.Show("Tarpaulin list is empty");
+            }
+            else
+            {
+                double amount = tarp[tarp.Count - 1].amount;
+                txtItemTotal.Value -= amount;
+                tarp.RemoveAt(tarp.Count - 1);
+            }
+        }
         private void TxtMediaPrice_ValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (txtTarpX.Value != 0 && txtTarpY.Value != 0)

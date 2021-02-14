@@ -85,7 +85,7 @@ namespace Goldpoint_Inventory_System
             SqlConnection conn = DBUtils.GetDBConnection();
             conn.Open();
             //get all non company use
-            using (SqlCommand cmd = new SqlCommand("SELECT DISTINCT td.service, td.deadline, td.customerName, td.DRNo, td.status, td.claimed, td.issuedBy from TransactionDetails td INNER JOIN PaymentHist ph on td.DRNo = ph.DRNo WHERE (td.claimed = 'Unclaimed' AND TRY_CAST(td.deadline as date) >= CONVERT(VARCHAR(10), getdate(), 23)) AND jobOrderNo > 0", conn))
+            using (SqlCommand cmd = new SqlCommand("SELECT DISTINCT td.service, td.deadline, td.customerName, td.DRNo, td.status, td.claimed, td.issuedBy from TransactionDetails td INNER JOIN PaymentHist ph on td.DRNo = ph.DRNo WHERE (td.claimed = 'Unclaimed' AND TRY_CAST(td.deadline as date) >= CONVERT(VARCHAR(10), getdate(), 23)) AND jobOrderNo > 0 AND inaccessible = 1", conn))
             {
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {

@@ -7,8 +7,9 @@
              xmlns:syncfusion="http://schemas.syncfusion.com/wpf" 
              mc:Ignorable="d"
              xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
-             d:DesignHeight="600" d:DesignWidth="1350"
-             Height="600"
+             d:DesignHeight="650" d:DesignWidth="1350"
+             WindowStartupLocation="CenterScreen"
+             Height="650"
              Width="1350"
              FontSize="16"
         Title="Transactions">

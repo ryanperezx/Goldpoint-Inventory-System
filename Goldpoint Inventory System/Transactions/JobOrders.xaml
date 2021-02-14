@@ -8,9 +8,11 @@
              mc:Ignorable="d"
              xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
              d:DesignHeight="600" d:DesignWidth="1350"
-        Height="625"
+        Height="650"
         Width="1350"
              FontSize="16"
+                     WindowStartupLocation="CenterScreen"
+
              Background="White" Title="Job Orders">
 
     <Window.Resources>
@@ -39,10 +41,11 @@
         <syncfusion:SfDataGrid x:Name="dgJobOrders" HorizontalAlignment="Left" Height="485" Margin="80,50,0,20" VerticalAlignment="Center" Width="1200" ItemsSource="{Binding}" AutoGenerateColumns="False">
             <syncfusion:SfDataGrid.Columns>
                 <syncfusion:GridTextColumn MappingName="Date" Width="100" DisplayBinding="{Binding date}"/>
-                <syncfusion:GridTextColumn MappingName="Deadline" Width="150" DisplayBinding="{Binding deadline}"/>
-                <syncfusion:GridTextColumn MappingName="Job Order No" Width="150" DisplayBinding="{Binding jobOrderNo}"/>
+                <syncfusion:GridTextColumn MappingName="Deadline" Width="100" DisplayBinding="{Binding deadline}"/>
+                <syncfusion:GridTextColumn MappingName="Job Order No" Width="120" DisplayBinding="{Binding jobOrderNo}"/>
                 <syncfusion:GridTextColumn MappingName="Service" Width="150" DisplayBinding="{Binding service}"/>
-                <syncfusion:GridTextColumn MappingName="Customer Name" Width="228" DisplayBinding="{Binding customerName}"/>
+                <syncfusion:GridTextColumn MappingName="Customer Name" Width="230" DisplayBinding="{Binding customerName}"/>
+                <syncfusion:GridTextColumn MappingName="Issued by" Width="120" DisplayBinding="{Binding issuedBy}"/>
                 <syncfusion:GridTextColumn MappingName="Address" Width="200" DisplayBinding="{Binding address}"/>
                 <syncfusion:GridTextColumn MappingName="Contact No" Width="120" DisplayBinding="{Binding contactNo}"/>
                 <syncfusion:GridTextColumn MappingName="Status" Width="150" DisplayBinding="{Binding status}"/>
