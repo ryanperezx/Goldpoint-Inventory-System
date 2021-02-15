@@ -101,11 +101,11 @@ namespace Goldpoint_Inventory_System.Log
                                         {
                                             jobOrderNo = Convert.ToString(reader.GetValue(jobOrderNoIndex));
                                         }
-                                        else if(reader.GetValue(pojoNoIndex) != DBNull.Value)
+                                        else if (reader.GetValue(pojoNoIndex) != DBNull.Value)
                                         {
                                             jobOrderNo = Convert.ToString(reader.GetValue(pojoNoIndex));
                                         }
-                                        if(reader.GetValue(issuedByIndex) != DBNull.Value)
+                                        if (reader.GetValue(issuedByIndex) != DBNull.Value)
                                         {
                                             txtIssuedBy.Text = Convert.ToString(reader.GetValue(issuedByIndex));
                                         }
@@ -247,6 +247,7 @@ namespace Goldpoint_Inventory_System.Log
                                             int sizeIndex = reader.GetOrdinal("size");
                                             int qtyIndex = reader.GetOrdinal("qty");
                                             int totalPerItemIndex = reader.GetOrdinal("totalPerItem");
+                                            int remarksIndex = reader.GetOrdinal("remarks");
 
                                             stockOut.Add(new ItemDataModel
                                             {
@@ -257,6 +258,7 @@ namespace Goldpoint_Inventory_System.Log
                                                 size = Convert.ToString(reader.GetValue(sizeIndex)),
                                                 qty = Convert.ToInt32(reader.GetValue(qtyIndex)),
                                                 totalPerItem = Convert.ToDouble(reader.GetValue(totalPerItemIndex)),
+                                                remarks = Convert.ToString(reader.GetValue(remarksIndex)),
                                             });
 
                                         }
@@ -549,6 +551,7 @@ namespace Goldpoint_Inventory_System.Log
                                             int sizeIndex = reader.GetOrdinal("size");
                                             int qtyIndex = reader.GetOrdinal("qty");
                                             int totalPerItemIndex = reader.GetOrdinal("totalPerItem");
+                                            int remarksIndex = reader.GetOrdinal("remarks");
 
                                             stockOut.Add(new ItemDataModel
                                             {
@@ -559,6 +562,7 @@ namespace Goldpoint_Inventory_System.Log
                                                 size = Convert.ToString(reader.GetValue(sizeIndex)),
                                                 qty = Convert.ToInt32(reader.GetValue(qtyIndex)),
                                                 totalPerItem = Convert.ToDouble(reader.GetValue(totalPerItemIndex)),
+                                                remarks = Convert.ToString(reader.GetValue(remarksIndex)),
                                             });
 
                                         }
@@ -842,6 +846,7 @@ namespace Goldpoint_Inventory_System.Log
                                             int sizeIndex = reader.GetOrdinal("size");
                                             int qtyIndex = reader.GetOrdinal("qty");
                                             int totalPerItemIndex = reader.GetOrdinal("totalPerItem");
+                                            int remarksIndex = reader.GetOrdinal("remarks");
 
                                             stockOut.Add(new ItemDataModel
                                             {
@@ -852,6 +857,7 @@ namespace Goldpoint_Inventory_System.Log
                                                 size = Convert.ToString(reader.GetValue(sizeIndex)),
                                                 qty = Convert.ToInt32(reader.GetValue(qtyIndex)),
                                                 totalPerItem = Convert.ToDouble(reader.GetValue(totalPerItemIndex)),
+                                                remarks = Convert.ToString(reader.GetValue(remarksIndex)),
                                             });
 
                                         }
@@ -978,6 +984,7 @@ namespace Goldpoint_Inventory_System.Log
                                     int dateIndex = reader.GetOrdinal("date");
                                     int deadlineIndex = reader.GetOrdinal("deadline");
                                     int customerNameIndex = reader.GetOrdinal("customerName");
+                                    int issuedByIndex = reader.GetOrdinal("issuedBy");
                                     int addressIndex = reader.GetOrdinal("address");
                                     int contactNoIndex = reader.GetOrdinal("contactNo");
                                     int remarksIndex = reader.GetOrdinal("remarks");
@@ -995,6 +1002,11 @@ namespace Goldpoint_Inventory_System.Log
                                     txtInvoiceNo.Text = Convert.ToString(reader.GetValue(invoiceNoIndex));
                                     txtRemarks.Text = Convert.ToString(reader.GetValue(remarksIndex));
                                     txtJobOrderNo.Text = txtServiceNo.Text;
+
+                                    if (reader.GetValue(issuedByIndex) != DBNull.Value)
+                                    {
+                                        txtIssuedBy.Text = Convert.ToString(reader.GetValue(issuedByIndex));
+                                    }
 
                                     if (!string.IsNullOrEmpty(Convert.ToString(reader.GetValue(invoiceNoIndex))))
                                     {
@@ -1123,6 +1135,7 @@ namespace Goldpoint_Inventory_System.Log
                                     int dateIndex = reader.GetOrdinal("date");
                                     int deadlineIndex = reader.GetOrdinal("deadline");
                                     int customerNameIndex = reader.GetOrdinal("customerName");
+                                    int issuedByIndex = reader.GetOrdinal("issuedBy");
                                     int addressIndex = reader.GetOrdinal("address");
                                     int contactNoIndex = reader.GetOrdinal("contactNo");
                                     int remarksIndex = reader.GetOrdinal("remarks");
@@ -1140,6 +1153,11 @@ namespace Goldpoint_Inventory_System.Log
                                     txtInvoiceNo.Text = Convert.ToString(reader.GetValue(invoiceNoIndex));
                                     txtRemarks.Text = Convert.ToString(reader.GetValue(remarksIndex));
                                     txtJobOrderNo.Text = txtServiceNo.Text;
+
+                                    if (reader.GetValue(issuedByIndex) != DBNull.Value)
+                                    {
+                                        txtIssuedBy.Text = Convert.ToString(reader.GetValue(issuedByIndex));
+                                    }
 
                                     if (!string.IsNullOrEmpty(Convert.ToString(reader.GetValue(invoiceNoIndex))))
                                     {
@@ -1335,135 +1353,14 @@ namespace Goldpoint_Inventory_System.Log
                             conn.Open();
                             //if fully paid or not, update all if fully paid, if not, normal add
                             bool fullyPaid = false;
-                            using (SqlCommand cmd = new SqlCommand("INSERT into PaymentHist VALUES (@DRNo, @date, @paidAmount, @total, @status)", conn))
+                            int count = 0;
+                            using (SqlCommand cmd = new SqlCommand("SELECT COUNT(1) from TransactionDetails WHERE drNo = @DRNo and date = @date", conn))
                             {
                                 cmd.Parameters.AddWithValue("@DRNo", txtDRNo.Text);
                                 cmd.Parameters.AddWithValue("@date", txtDatePayment.Text);
-                                cmd.Parameters.AddWithValue("@paidAmount", txtAmount.Value);
-                                cmd.Parameters.AddWithValue("@total", txtTotal.Value);
-                                if (txtAmount.Value == txtUnpaidBalancePayment.Value)
-                                {
-                                    cmd.Parameters.AddWithValue("@status", "Paid");
-                                    fullyPaid = true;
-                                }
-                                else
-                                {
-                                    cmd.Parameters.AddWithValue("@status", "Unpaid");
-                                }
                                 try
                                 {
-                                    cmd.ExecuteNonQuery();
-                                    MessageBox.Show("Payment history updated");
-                                    payHist.Add(new PaymentHistoryDataModel
-                                    {
-                                        date = txtDatePayment.Text,
-                                        amount = (double)txtAmount.Value
-                                    });
-
-
-                                    using (SqlCommand cmd1 = new SqlCommand("INSERT into TransactionLogs (date, [transaction], remarks) VALUES (@date, @transaction, '')", conn))
-                                    {
-                                        cmd1.Parameters.AddWithValue("@date", txtDate.Text);
-                                        cmd1.Parameters.AddWithValue("@transaction", "Customer: " + txtCustName.Text + ", with D.R No: " + txtDRNo.Text + ", paid Php " + txtAmount.Text + ". Current Outstanding Balance is Php " + txtTotal.Text);
-                                        try
-                                        {
-                                            cmd.ExecuteNonQuery();
-                                        }
-                                        catch (SqlException ex)
-                                        {
-                                            MessageBox.Show("An error has been encountered! Log has been updated with the error");
-                                            Log = LogManager.GetLogger("*");
-                                            Log.Error(ex);
-                                        }
-                                    }
-
-                                    using (SqlCommand cmd1 = new SqlCommand("INSERT into Sales VALUES (@date, @desc, @amount, @total, @status)", conn))
-                                    {
-                                        cmd1.Parameters.AddWithValue("@date", txtDatePayment.Text);
-                                        if (stockOut.Count > 0 || photocopy.Count > 0)
-                                        {
-                                            cmd1.Parameters.AddWithValue("@desc", "DR[Stock Out]: " + txtDRNo.Text);
-                                        }
-                                        else if (services.Count > 0)
-                                        {
-                                            cmd1.Parameters.AddWithValue("@desc", "JO[Services]:" + txtJobOrderNo.Text);
-                                        }
-                                        else if (tarp.Count > 0)
-                                        {
-                                            cmd1.Parameters.AddWithValue("@desc", "JO[Tarpaulin]: " + txtJobOrderNo.Text);
-                                        }
-                                        else if (items.Count > 0)
-                                        {
-                                            cmd1.Parameters.AddWithValue("@desc", "DR[Manual]: " + txtDRNo.Text);
-                                        }
-                                        cmd1.Parameters.AddWithValue("@amount", txtAmount.Value);
-                                        cmd1.Parameters.AddWithValue("@total", txtTotal.Value);
-                                        if (txtTotal.Value > txtAmount.Value)
-                                        {
-                                            cmd1.Parameters.AddWithValue("@status", "Unpaid");
-                                        }
-                                        else
-                                        {
-                                            cmd1.Parameters.AddWithValue("@status", "Paid");
-                                        }
-                                        try
-                                        {
-                                            cmd1.ExecuteNonQuery();
-                                        }
-                                        catch (SqlException ex)
-                                        {
-                                            MessageBox.Show("An error has been encountered! Log has been updated with the error");
-                                            Log = LogManager.GetLogger("*");
-                                            Log.Error(ex);
-                                        }
-                                    }
-
-                                    txtUnpaidBalancePayment.Value -= txtAmount.Value;
-                                    txtAmount.MaxValue = (double)txtUnpaidBalancePayment.Value;
-                                    if (txtUnpaidBalancePayment.Value == 0)
-                                    {
-                                        btnPayment.IsEnabled = false;
-                                        rdPaid.IsChecked = true;
-                                    }
-                                    else
-                                    {
-                                        btnPayment.IsEnabled = true;
-                                    }
-                                    if (fullyPaid)
-                                    {
-                                        using (SqlCommand cmd1 = new SqlCommand("UPDATE PaymentHist set status = 'Paid' where DRNo = @DRNo", conn))
-                                        {
-                                            cmd1.Parameters.AddWithValue("@DRNo", txtDRNo.Text);
-                                            try
-                                            {
-                                                cmd1.ExecuteNonQuery();
-                                            }
-                                            catch (SqlException ex)
-                                            {
-                                                MessageBox.Show("An error has been encountered! Log has been updated with the error");
-                                                Log = LogManager.GetLogger("*");
-                                                Log.Error(ex);
-                                            }
-
-                                        }
-                                        using (SqlCommand cmd1 = new SqlCommand("UPDATE TransactionDetails set status = 'Paid' where DRNo = @DRNo", conn))
-                                        {
-                                            cmd1.Parameters.AddWithValue("@DRNo", txtDRNo.Text);
-                                            try
-                                            {
-                                                cmd1.ExecuteNonQuery();
-                                            }
-                                            catch (SqlException ex)
-                                            {
-                                                MessageBox.Show("An error has been encountered! Log has been updated with the error");
-                                                Log = LogManager.GetLogger("*");
-                                                Log.Error(ex);
-                                            }
-
-                                        }
-                                    }
-
-
+                                    count = (int)cmd.ExecuteScalar();
                                 }
                                 catch (SqlException ex)
                                 {
@@ -1471,9 +1368,206 @@ namespace Goldpoint_Inventory_System.Log
                                     Log = LogManager.GetLogger("*");
                                     Log.Error(ex);
                                 }
+                            }
+                            if (count == 0)
+                            {
+                                using (SqlCommand cmd = new SqlCommand("INSERT into PaymentHist VALUES (@DRNo, @date, @paidAmount, @total, @status)", conn))
+                                {
+                                    cmd.Parameters.AddWithValue("@DRNo", txtDRNo.Text);
+                                    cmd.Parameters.AddWithValue("@date", txtDatePayment.Text);
+                                    cmd.Parameters.AddWithValue("@paidAmount", txtAmount.Value);
+                                    cmd.Parameters.AddWithValue("@total", txtTotal.Value);
+                                    if (txtAmount.Value == txtUnpaidBalancePayment.Value)
+                                    {
+                                        cmd.Parameters.AddWithValue("@status", "Paid");
+                                        fullyPaid = true;
+                                    }
+                                    else
+                                    {
+                                        cmd.Parameters.AddWithValue("@status", "Unpaid");
+                                    }
+                                    try
+                                    {
+                                        cmd.ExecuteNonQuery();
+                                        MessageBox.Show("Payment history updated");
+                                        payHist.Add(new PaymentHistoryDataModel
+                                        {
+                                            date = txtDatePayment.Text,
+                                            amount = (double)txtAmount.Value
+                                        });
 
+
+                                        using (SqlCommand cmd1 = new SqlCommand("INSERT into TransactionLogs (date, [transaction], remarks) VALUES (@date, @transaction, '')", conn))
+                                        {
+                                            cmd1.Parameters.AddWithValue("@date", txtDate.Text);
+                                            cmd1.Parameters.AddWithValue("@transaction", "Customer: " + txtCustName.Text + ", with D.R No: " + txtDRNo.Text + ", paid Php " + txtAmount.Text + ". Current Outstanding Balance is Php " + txtTotal.Text);
+                                            try
+                                            {
+                                                cmd.ExecuteNonQuery();
+                                            }
+                                            catch (SqlException ex)
+                                            {
+                                                MessageBox.Show("An error has been encountered! Log has been updated with the error");
+                                                Log = LogManager.GetLogger("*");
+                                                Log.Error(ex);
+                                            }
+                                        }
+
+                                        using (SqlCommand cmd1 = new SqlCommand("INSERT into Sales VALUES (@date, @desc, @amount, @total, @status)", conn))
+                                        {
+                                            cmd1.Parameters.AddWithValue("@date", txtDatePayment.Text);
+                                            if (stockOut.Count > 0 || photocopy.Count > 0)
+                                            {
+                                                cmd1.Parameters.AddWithValue("@desc", "DR[Stock Out]: " + txtDRNo.Text);
+                                            }
+                                            else if (services.Count > 0)
+                                            {
+                                                cmd1.Parameters.AddWithValue("@desc", "JO[Services]:" + txtJobOrderNo.Text);
+                                            }
+                                            else if (tarp.Count > 0)
+                                            {
+                                                cmd1.Parameters.AddWithValue("@desc", "JO[Tarpaulin]: " + txtJobOrderNo.Text);
+                                            }
+                                            else if (items.Count > 0)
+                                            {
+                                                cmd1.Parameters.AddWithValue("@desc", "DR[Manual]: " + txtDRNo.Text);
+                                            }
+                                            cmd1.Parameters.AddWithValue("@amount", txtAmount.Value);
+                                            cmd1.Parameters.AddWithValue("@total", txtTotal.Value);
+                                            if (txtTotal.Value > txtAmount.Value)
+                                            {
+                                                cmd1.Parameters.AddWithValue("@status", "Unpaid");
+                                            }
+                                            else
+                                            {
+                                                cmd1.Parameters.AddWithValue("@status", "Paid");
+                                            }
+                                            try
+                                            {
+                                                cmd1.ExecuteNonQuery();
+                                            }
+                                            catch (SqlException ex)
+                                            {
+                                                MessageBox.Show("An error has been encountered! Log has been updated with the error");
+                                                Log = LogManager.GetLogger("*");
+                                                Log.Error(ex);
+                                            }
+                                        }
+                                    }
+                                    catch (SqlException ex)
+                                    {
+                                        MessageBox.Show("An error has been encountered! Log has been updated with the error");
+                                        Log = LogManager.GetLogger("*");
+                                        Log.Error(ex);
+                                    }
+
+                                }
+                            }
+                            else
+                            {
+                                using (SqlCommand cmd = new SqlCommand("UPDATE PaymentHist set paidAmount = @paidAmount where DRNo = @DRNo and date = @date", conn))
+                                {
+                                    cmd.Parameters.AddWithValue("@paidAmount", txtAmount.Value);
+                                    cmd.Parameters.AddWithValue("@DRNo", txtDRNo.Text);
+                                    cmd.Parameters.AddWithValue("@date", txtDatePayment.Text);
+                                    try
+                                    {
+                                        MessageBox.Show("Payment history updated");
+                                        cmd.ExecuteNonQuery();
+                                    }
+                                    catch (SqlException ex)
+                                    {
+                                        MessageBox.Show("An error has been encountered! Log has been updated with the error");
+                                        Log = LogManager.GetLogger("*");
+                                        Log.Error(ex);
+                                    }
+                                }
+
+                                using (SqlCommand cmd1 = new SqlCommand("UPDATE Sales set amount = @amount, status = @status where date = @date and [desc] = @desc", conn))
+                                {
+                                    cmd1.Parameters.AddWithValue("@date", txtDatePayment.Text);
+                                    if (stockOut.Count > 0 || photocopy.Count > 0)
+                                    {
+                                        cmd1.Parameters.AddWithValue("@desc", "DR[Stock Out]: " + txtDRNo.Text);
+                                    }
+                                    else if (services.Count > 0)
+                                    {
+                                        cmd1.Parameters.AddWithValue("@desc", "JO[Services]:" + txtJobOrderNo.Text);
+                                    }
+                                    else if (tarp.Count > 0)
+                                    {
+                                        cmd1.Parameters.AddWithValue("@desc", "JO[Tarpaulin]: " + txtJobOrderNo.Text);
+                                    }
+                                    else if (items.Count > 0)
+                                    {
+                                        cmd1.Parameters.AddWithValue("@desc", "DR[Manual]: " + txtDRNo.Text);
+                                    }
+                                    cmd1.Parameters.AddWithValue("@amount", txtAmount.Value);
+                                    if (txtTotal.Value > txtAmount.Value)
+                                    {
+                                        cmd1.Parameters.AddWithValue("@status", "Unpaid");
+                                    }
+                                    else
+                                    {
+                                        cmd1.Parameters.AddWithValue("@status", "Paid");
+                                    }
+                                    try
+                                    {
+                                        cmd1.ExecuteNonQuery();
+                                    }
+                                    catch (SqlException ex)
+                                    {
+                                        MessageBox.Show("An error has been encountered! Log has been updated with the error");
+                                        Log = LogManager.GetLogger("*");
+                                        Log.Error(ex);
+                                    }
+                                }
                             }
 
+                            txtUnpaidBalancePayment.Value -= txtAmount.Value;
+                            txtAmount.MaxValue = (double)txtUnpaidBalancePayment.Value;
+                            if (txtUnpaidBalancePayment.Value == 0)
+                            {
+                                btnPayment.IsEnabled = false;
+                                rdPaid.IsChecked = true;
+                            }
+                            else
+                            {
+                                btnPayment.IsEnabled = true;
+                            }
+                            if (fullyPaid)
+                            {
+                                using (SqlCommand cmd1 = new SqlCommand("UPDATE PaymentHist set status = 'Paid' where DRNo = @DRNo", conn))
+                                {
+                                    cmd1.Parameters.AddWithValue("@DRNo", txtDRNo.Text);
+                                    try
+                                    {
+                                        cmd1.ExecuteNonQuery();
+                                    }
+                                    catch (SqlException ex)
+                                    {
+                                        MessageBox.Show("An error has been encountered! Log has been updated with the error");
+                                        Log = LogManager.GetLogger("*");
+                                        Log.Error(ex);
+                                    }
+
+                                }
+                                using (SqlCommand cmd1 = new SqlCommand("UPDATE TransactionDetails set status = 'Paid' where DRNo = @DRNo", conn))
+                                {
+                                    cmd1.Parameters.AddWithValue("@DRNo", txtDRNo.Text);
+                                    try
+                                    {
+                                        cmd1.ExecuteNonQuery();
+                                    }
+                                    catch (SqlException ex)
+                                    {
+                                        MessageBox.Show("An error has been encountered! Log has been updated with the error");
+                                        Log = LogManager.GetLogger("*");
+                                        Log.Error(ex);
+                                    }
+
+                                }
+                            }
                             break;
                         case MessageBoxResult.No:
                             return;
@@ -2672,7 +2766,6 @@ namespace Goldpoint_Inventory_System.Log
                             }
                         }
                         MessageBox.Show("Transaction has been updated");
-                        btnIssueInvoice.IsEnabled = false;
                         break;
                     case MessageBoxResult.No:
                         return;

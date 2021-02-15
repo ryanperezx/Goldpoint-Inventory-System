@@ -224,7 +224,8 @@ namespace Goldpoint_Inventory_System.Transactions
                                     brand = Convert.ToString(reader.GetValue(brandIndex)),
                                     size = Convert.ToString(reader.GetValue(sizeIndex)),
                                     qty = Convert.ToInt32(found.qty + txtQty.Value),
-                                    totalPerItem = Convert.ToDouble(found.totalPerItem + txtTotalPerItem.Value)
+                                    totalPerItem = Convert.ToDouble(found.totalPerItem + txtTotalPerItem.Value),
+                                    remarks = txtRemarks.Text
                                 });
 
                                 foreach (var item in items.Where(x => txtItemCode.Text == x.itemCode).ToList())
@@ -243,7 +244,8 @@ namespace Goldpoint_Inventory_System.Transactions
                                     brand = Convert.ToString(reader.GetValue(brandIndex)),
                                     size = Convert.ToString(reader.GetValue(sizeIndex)),
                                     qty = (int)txtQty.Value,
-                                    totalPerItem = (double)txtTotalPerItem.Value
+                                    totalPerItem = (double)txtTotalPerItem.Value,
+                                    remarks = txtRemarks.Text
                                 });
 
                             }
@@ -260,6 +262,7 @@ namespace Goldpoint_Inventory_System.Transactions
                             txtBrand.Text = null;
                             txtQty.Value = 0;
                             txtSize.Text = null;
+                            txtRemarks.Text = null;
                             txtItemPrice.Value = 0;
                             txtTotalPerItem.Value = 0;
                         }
@@ -341,6 +344,7 @@ namespace Goldpoint_Inventory_System.Transactions
         {
             txtItemCode.Text = null;
             txtDesc.Text = null;
+            txtRemarks.Text = null;
             txtCustName.Text = null;
             txtAddress.Document.Blocks.Clear();
             txtContactNo.Text = null;
@@ -471,6 +475,7 @@ namespace Goldpoint_Inventory_System.Transactions
                                 cmd.Parameters.AddWithValue("@size", item.size);
                                 cmd.Parameters.AddWithValue("@qty", item.qty);
                                 cmd.Parameters.AddWithValue("@totalPerItem", item.totalPerItem);
+                                cmd.Parameters.AddWithValue("@remarks", item.remarks);
                                 try
                                 {
                                     cmd.ExecuteNonQuery();

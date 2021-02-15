@@ -126,6 +126,9 @@
                     <Label Content="Price per item:" HorizontalAlignment="Left" Margin="17,249,0,0" VerticalAlignment="Top"/>
                     <syncfusion:DoubleTextBox x:Name="txtPricePerItem" HorizontalAlignment="Left" Height="31" Margin="133,249,0,0" MinWidth="100"  TextWrapping="Wrap"  VerticalAlignment="Top" Width="118" FontSize="16"/>
                     <syncfusion:SfDataGrid x:Name="dgService" HorizontalAlignment="Right"  Height="418" VerticalAlignment="Center" Width="444" ItemsSource="{Binding}" AutoGenerateColumns="False" Margin="0,0,0,0" AutoExpandGroups="True">
+                        <syncfusion:SfDataGrid.GroupColumnDescriptions>
+                            <syncfusion:GroupColumnDescription ColumnName="Description"/>
+                        </syncfusion:SfDataGrid.GroupColumnDescriptions>
                         <syncfusion:SfDataGrid.Columns>
                             <syncfusion:GridTextColumn MappingName="Description"  Width="0" IsReadOnly="True" DisplayBinding="{Binding Description}"/>
                             <syncfusion:GridTextColumn MappingName="Qty" Width="80" IsReadOnly="True" DisplayBinding="{Binding qty}"/>
@@ -151,26 +154,50 @@
                     </TextBlock>
                 </Expander.Header>
                 <Grid Width="800">
-                    <Label Content="File Name:" HorizontalAlignment="Left" Margin="30,35,0,0" VerticalAlignment="Top"/>
-                    <syncfusion:SfTextBoxExt x:Name="txtFileName" HorizontalAlignment="Left" Height="31" Margin="119,35,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="168" FontSize="16"/>
-                    <Label Content="Qty:" HorizontalAlignment="Left" Margin="30,78,0,0" VerticalAlignment="Top"/>
-                    <syncfusion:IntegerTextBox x:Name="txtTarpQty" HorizontalAlignment="Left" Height="31" Margin="119,78,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" FontSize="16" ValueChanged="TxtMediaPrice_ValueChanged"/>
-                    <Label Content="Size:" HorizontalAlignment="Left" Margin="30,119,0,0" VerticalAlignment="Top"/>
-                    <Label Content="x" HorizontalAlignment="Left" Margin="173,119,0,0" VerticalAlignment="Top"/>
-                    <syncfusion:DoubleTextBox x:Name="txtTarpX" HorizontalAlignment="Left" Height="31"  Margin="119,119,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="42" FontSize="16" MinValue="0"/>
-                    <syncfusion:DoubleTextBox x:Name="txtTarpY" HorizontalAlignment="Left" Height="31"  Margin="201,119,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="38" FontSize="16" MinValue="0"/>
-                    <Label Content="Media:" HorizontalAlignment="Left" Margin="30,159,0,0" VerticalAlignment="Top"/>
-                    <syncfusion:SfTextBoxExt x:Name="txtTarpMedia" HorizontalAlignment="Left" Height="31" Margin="119,159,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" FontSize="16"/>
-                    <Label Content="Price:" HorizontalAlignment="Left" Margin="30,199,0,0" VerticalAlignment="Top"/>
-                    <syncfusion:DoubleTextBox x:Name="txtMediaPrice" HorizontalAlignment="Left" Height="31" Margin="119,199,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" FontSize="16" ValueChanged="TxtMediaPrice_ValueChanged" MinValue="0"/>
-                    <Label Content="Border:" HorizontalAlignment="Left" Margin="30,238,0,0" VerticalAlignment="Top"/>
-                    <syncfusion:SfTextBoxExt x:Name="txtTarpBorder" HorizontalAlignment="Left" Height="31" Margin="119,238,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" FontSize="16"/>
-                    <Label Content="I-LET:" HorizontalAlignment="Left" Margin="30,278,0,0" VerticalAlignment="Top"/>
-                    <syncfusion:SfTextBoxExt x:Name="txtTarpILET" HorizontalAlignment="Left" Height="31" Margin="119,278,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" FontSize="16"/>
-                    <Label Content="Unit Price:" HorizontalAlignment="Left" Margin="30,318,0,0" VerticalAlignment="Top"/>
-                    <syncfusion:DoubleTextBox x:Name="txtTarpUnitPrice" HorizontalAlignment="Left" Height="31" Margin="119,318,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" FontSize="16" MinValue="0"/>
-                    <syncfusion:ButtonAdv x:Name="btnAddTarp" SmallIcon="{x:Null}"  HorizontalAlignment="Left" Height="29" Label="Add Tarpaulin" Margin="41,369,0,0" VerticalAlignment="Top" Width="120" Click="BtnAddTarp_Click"/>
-                    <syncfusion:ButtonAdv x:Name="btnRemoveTarp" SmallIcon="{x:Null}"  HorizontalAlignment="Left" Height="29" Label="Remove Tarpaulin" Margin="191,369,0,0" VerticalAlignment="Top" Width="120" Click="BtnRemoveTarp_Click"/>
+                    <StackPanel x:Name="tarpStack" Margin="0,0,444,0">
+                        <Expander IsExpanded="{Binding SelectedExpander, ConverterParameter=1, Converter={StaticResource ExpanderToBooleanConverter}, Mode=TwoWay}">
+                            <Expander.Header>
+                                <TextBlock Text="Tarpaulin" />
+                            </Expander.Header>
+                            <Grid>
+                                <Label Content="File Name:" HorizontalAlignment="Left" Margin="29,2,0,0" VerticalAlignment="Top"/>
+                                <syncfusion:SfTextBoxExt x:Name="txtFileName" HorizontalAlignment="Left" Height="31" Margin="118,2,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="168" FontSize="16"/>
+                                <Label Content="Qty:" HorizontalAlignment="Left" Margin="29,45,0,0" VerticalAlignment="Top"/>
+                                <syncfusion:IntegerTextBox x:Name="txtTarpQty" HorizontalAlignment="Left" Height="31" Margin="118,45,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" FontSize="16" ValueChanged="TxtMediaPrice_ValueChanged"/>
+                                <Label Content="Size:" HorizontalAlignment="Left" Margin="29,86,0,0" VerticalAlignment="Top"/>
+                                <Label Content="x" HorizontalAlignment="Left" Margin="172,86,0,0" VerticalAlignment="Top"/>
+                                <syncfusion:DoubleTextBox x:Name="txtTarpX" HorizontalAlignment="Left" Height="31"  Margin="118,86,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="42" FontSize="16" MinValue="0"/>
+                                <syncfusion:DoubleTextBox x:Name="txtTarpY" HorizontalAlignment="Left" Height="31"  Margin="200,86,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="38" FontSize="16" MinValue="0"/>
+                                <Label Content="Media:" HorizontalAlignment="Left" Margin="29,126,0,0" VerticalAlignment="Top"/>
+                                <syncfusion:SfTextBoxExt x:Name="txtTarpMedia" HorizontalAlignment="Left" Height="31" Margin="118,126,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" FontSize="16"/>
+                                <Label Content="Price:" HorizontalAlignment="Left" Margin="29,166,0,0" VerticalAlignment="Top"/>
+                                <syncfusion:DoubleTextBox x:Name="txtMediaPrice" HorizontalAlignment="Left" Height="31" Margin="118,166,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" FontSize="16" ValueChanged="TxtMediaPrice_ValueChanged" MinValue="0"/>
+                                <Label Content="Border:" HorizontalAlignment="Left" Margin="29,205,0,0" VerticalAlignment="Top"/>
+                                <syncfusion:SfTextBoxExt x:Name="txtTarpBorder" HorizontalAlignment="Left" Height="31" Margin="118,205,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" FontSize="16"/>
+                                <Label Content="I-LET:" HorizontalAlignment="Left" Margin="29,245,0,0" VerticalAlignment="Top"/>
+                                <syncfusion:SfTextBoxExt x:Name="txtTarpILET" HorizontalAlignment="Left" Height="31" Margin="118,245,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" FontSize="16"/>
+                                <Label Content="Unit Price:" HorizontalAlignment="Left" Margin="29,285,0,0" VerticalAlignment="Top"/>
+                                <syncfusion:DoubleTextBox x:Name="txtTarpUnitPrice" HorizontalAlignment="Left" Height="31" Margin="118,285,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" FontSize="16" MinValue="0"/>
+                                <syncfusion:ButtonAdv x:Name="btnAddTarp" SmallIcon="{x:Null}"  HorizontalAlignment="Left" Height="29" Label="Add Tarpaulin" Margin="40,326,0,0" VerticalAlignment="Top" Width="120" Click="BtnAddTarp_Click"/>
+                                <syncfusion:ButtonAdv x:Name="btnRemoveTarp" SmallIcon="{x:Null}"  HorizontalAlignment="Left" Height="29" Label="Remove Tarpaulin" Margin="190,326,0,0" VerticalAlignment="Top" Width="120" Click="BtnRemoveTarp_Click"/>
+                            </Grid>
+                        </Expander>
+                        <Expander IsExpanded="{Binding SelectedExpander, ConverterParameter=2, Converter={StaticResource ExpanderToBooleanConverter}, Mode=TwoWay}">
+                            <Expander.Header>
+                                <TextBlock Text="Other service(s)" />
+                            </Expander.Header>
+                            <Grid Height="350">
+                                <Label Content="Service:" HorizontalAlignment="Left" Margin="36,45,0,0" VerticalAlignment="Top"/>
+                                <syncfusion:SfTextBoxExt x:Name="txtServiceName" HorizontalAlignment="Left" Height="31" Margin="131,45,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="168" FontSize="16"/>
+                                <Label Content="Service Fee:" HorizontalAlignment="Left" Margin="36,85,0,0" VerticalAlignment="Top"/>
+                                <syncfusion:DoubleTextBox x:Name="txtServiceFee" HorizontalAlignment="Left" Height="31" Margin="133,85,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" FontSize="16" MinValue="0"/>
+                                <syncfusion:ButtonAdv x:Name="btnAddFee" SmallIcon="{x:Null}"  HorizontalAlignment="Left" Height="29" Label="Add Service" Margin="29,171,0,0" VerticalAlignment="Top" Width="120" Click="BtnAddFee_Click"/>
+                                <syncfusion:ButtonAdv x:Name="btnRemoveFee" SmallIcon="{x:Null}"  HorizontalAlignment="Left" Height="29" Label="Remove last service" Margin="179,171,0,0" VerticalAlignment="Top" Width="130" Click="BtnRemoveTarp_Click"/>
+                            </Grid>
+
+                        </Expander>
+                    </StackPanel>
+
                     <syncfusion:SfDataGrid x:Name="dgTarpaulin" HorizontalAlignment="Center" Height="418" VerticalAlignment="Center" Width="444" ItemsSource="{Binding}" AutoGenerateColumns="False" Margin="356,0,0,0">
                         <syncfusion:SfDataGrid.Columns>
                             <syncfusion:GridTextColumn MappingName="File Name" Width="125" IsReadOnly="True" DisplayBinding="{Binding fileName}"/>

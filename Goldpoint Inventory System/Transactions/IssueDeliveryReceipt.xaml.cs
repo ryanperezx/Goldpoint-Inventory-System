@@ -114,7 +114,6 @@ namespace Goldpoint_Inventory_System.Transactions
                 switch (dr)
                 {
                     case MessageBoxResult.Yes:
-                        MessageBox.Show(txtPOJO.Text);
                         SqlConnection conn = DBUtils.GetDBConnection();
                         conn.Open();
                         //insert all and print
@@ -554,7 +553,6 @@ namespace Goldpoint_Inventory_System.Transactions
                     break;
             }
         }
-
         private void radiobuttonPayment(object sender, RoutedEventArgs e)
         {
             RadioButton radiobtn = (RadioButton)sender;
@@ -575,7 +573,6 @@ namespace Goldpoint_Inventory_System.Transactions
                     break;
             }
         }
-
         private void BtnAddItem_Click(object sender, RoutedEventArgs e)
         {
             if(string.IsNullOrEmpty(txtDesc.Text) || string.IsNullOrEmpty(txtQty.Text) || string.IsNullOrEmpty(txtUnitPrice.Text))
