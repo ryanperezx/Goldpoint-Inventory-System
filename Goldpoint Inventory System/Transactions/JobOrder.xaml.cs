@@ -204,7 +204,6 @@ namespace Goldpoint_Inventory_System.Transactions
             txtDate.Text = DateTime.Today.ToShortDateString();
             txtDateDeadline.Text = DateTime.Today.ToShortDateString();
             txtCustName.Text = null;
-            txtIssuedBy.Text = null;
             txtContactNo.Text = null;
             txtAddress.Document.Blocks.Clear();
             txtRemarks.Document.Blocks.Clear();

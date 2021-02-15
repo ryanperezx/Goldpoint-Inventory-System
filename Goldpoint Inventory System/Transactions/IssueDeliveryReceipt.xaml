@@ -103,8 +103,8 @@
                     <syncfusion:IntegerTextBox x:Name="txtQty" HorizontalAlignment="Left" Height="31" Margin="129,93,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" FontSize="16"/>
                     <Label Content="Unit Price:" HorizontalAlignment="Left" Margin="30,153,0,0" VerticalAlignment="Top"/>
                     <syncfusion:DoubleTextBox x:Name="txtUnitPrice" HorizontalAlignment="Left" Height="31" Margin="129,153,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" FontSize="16" MinValue="0"/>
-                    <syncfusion:ButtonAdv x:Name="btnAddItem" SmallIcon="{x:Null}"  HorizontalAlignment="Left" Height="29" Label="Add item" Margin="201,354,0,0" VerticalAlignment="Top" Width="120" Click="BtnAddItem_Click"/>
-                    <syncfusion:ButtonAdv x:Name="btnRemoveLastItem" SmallIcon="{x:Null}"  HorizontalAlignment="Left" Height="29" Label="Remove last item" Margin="30,354,0,0" VerticalAlignment="Top" Width="120" Click="BtnRemoveLastItem_Click"/>
+                    <syncfusion:ButtonAdv x:Name="btnAddItem" SmallIcon="{x:Null}"  HorizontalAlignment="Left" Height="29" Label="Add item" Margin="30,354,0,0" VerticalAlignment="Top" Width="120" Click="BtnAddItem_Click"/>
+                    <syncfusion:ButtonAdv x:Name="btnRemoveLastItem" SmallIcon="{x:Null}"  HorizontalAlignment="Left" Height="29" Label="Remove last item" Margin="201,354,0,0" VerticalAlignment="Top" Width="120" Click="BtnRemoveLastItem_Click"/>
                     <syncfusion:SfDataGrid x:Name="dgItems" HorizontalAlignment="Center" Height="418" VerticalAlignment="Center" Width="434" ItemsSource="{Binding}" AutoGenerateColumns="False" Margin="366,0,0,0">
                         <syncfusion:SfDataGrid.Columns>
                             <syncfusion:GridTextColumn MappingName="Qty" Width="80" IsReadOnly="True" DisplayBinding="{Binding qty}"/>

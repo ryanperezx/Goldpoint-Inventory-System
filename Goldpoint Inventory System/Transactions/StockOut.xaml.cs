@@ -360,7 +360,6 @@ namespace Goldpoint_Inventory_System.Transactions
             txtTotalPerItem.Value = 0;
             txtTransactRemarks.Document.Blocks.Clear();
             txtType.Text = null;
-            txtIssuedBy.Text = null;
             getDRNo();
 
             chkInv.IsChecked = false;
