@@ -674,7 +674,7 @@ namespace Goldpoint_Inventory_System.Transactions
 
                             foreach (var tarp in tarp)
                             {
-                                if(tarp.tarpSize == null)
+                                if (tarp.tarpSize == "")
                                 {
                                     using (SqlCommand cmd = new SqlCommand("INSERT into TarpMaterial (jobOrderNo, fileName, qty, unitPrice) VALUES (@jobOrderNo, @fileName, @qty, @unitPrice)", conn))
                                     {
@@ -975,7 +975,11 @@ namespace Goldpoint_Inventory_System.Transactions
                     fileName = txtServiceName.Text,
                     tarpQty = 1,
                     unitPrice = (double)txtServiceFee.Value,
-                    amount = (double)txtServiceFee.Value * 1
+                    amount = (double)txtServiceFee.Value * 1,
+                    tarpSize = "",
+                    media = "",
+                    border = "",
+                    ILET = "",
 
                 });
 
@@ -1305,6 +1309,9 @@ namespace Goldpoint_Inventory_System.Transactions
                                 textSelection = document.Find("<full name>", false, true);
                                 textRange = textSelection.GetAsOneRange();
                                 textRange.Text = txtCustName.Text;
+                                textSelection = document.Find("<issuer>", false, true);
+                                textRange = textSelection.GetAsOneRange();
+                                textRange.Text = txtIssuedBy.Text;
                                 textSelection = document.Find("<job order no>", false, true);
                                 textRange = textSelection.GetAsOneRange();
                                 textRange.Text = txtJobOrder.Value.ToString();
@@ -1358,6 +1365,9 @@ namespace Goldpoint_Inventory_System.Transactions
                                         textSelection = document2.Find("<full name>", false, true);
                                         textRange = textSelection.GetAsOneRange();
                                         textRange.Text = txtCustName.Text;
+                                        textSelection = document2.Find("<issuer>", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = txtIssuedBy.Text;
                                         textSelection = document2.Find("<job order no>", false, true);
                                         textRange = textSelection.GetAsOneRange();
                                         textRange.Text = txtJobOrder.Value.ToString();
@@ -1575,6 +1585,9 @@ namespace Goldpoint_Inventory_System.Transactions
                                 textSelection = document.Find("<full name>", false, true);
                                 textRange = textSelection.GetAsOneRange();
                                 textRange.Text = txtCustName.Text;
+                                textSelection = document.Find("<issuer>", false, true);
+                                textRange = textSelection.GetAsOneRange();
+                                textRange.Text = txtIssuedBy.Text;
                                 textSelection = document.Find("<job order no>", false, true);
                                 textRange = textSelection.GetAsOneRange();
                                 textRange.Text = txtJobOrder.Value.ToString();
@@ -1628,6 +1641,9 @@ namespace Goldpoint_Inventory_System.Transactions
                                         textSelection = document2.Find("<full name>", false, true);
                                         textRange = textSelection.GetAsOneRange();
                                         textRange.Text = txtCustName.Text;
+                                        textSelection = document2.Find("<issuer>", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = txtIssuedBy.Text;
                                         textSelection = document2.Find("<job order no>", false, true);
                                         textRange = textSelection.GetAsOneRange();
                                         textRange.Text = txtJobOrder.Value.ToString();

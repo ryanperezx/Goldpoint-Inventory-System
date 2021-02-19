@@ -1046,11 +1046,16 @@ namespace Goldpoint_Inventory_System.Log
 
                                     txtJobOrder.Text = Convert.ToString(service);
 
+                                    btnIssueOR.IsEnabled = true;
+                                    btnIssueInvoice.IsEnabled = true;
+
                                 }
                                 else
                                 {
                                     MessageBox.Show("Job order does not exist.");
                                     exJobOrderTarp.IsEnabled = false;
+                                    btnIssueOR.IsEnabled = false;
+                                    btnIssueInvoice.IsEnabled = false;
                                     return;
                                 }
                             }
@@ -1196,10 +1201,16 @@ namespace Goldpoint_Inventory_System.Log
                                     exJobOrder.IsEnabled = true;
                                     btnPrintJobOrder.IsEnabled = true;
                                     txtJobOrder.Text = Convert.ToString(service);
+
+                                    btnIssueOR.IsEnabled = true;
+                                    btnIssueInvoice.IsEnabled = true;
                                 }
                                 else
                                 {
                                     MessageBox.Show("Job order does not exist.");
+
+                                    btnIssueOR.IsEnabled = false;
+                                    btnIssueInvoice.IsEnabled = false;
                                     exJobOrder.IsEnabled = false;
                                     return;
                                 }
@@ -1643,6 +1654,9 @@ namespace Goldpoint_Inventory_System.Log
                         textSelection = document.Find("<full name>", false, true);
                         textRange = textSelection.GetAsOneRange();
                         textRange.Text = txtCustName.Text;
+                        textSelection = document.Find("<issuer>", false, true);
+                        textRange = textSelection.GetAsOneRange();
+                        textRange.Text = txtIssuedBy.Text;
                         textSelection = document.Find("<job order no>", false, true);
                         textRange = textSelection.GetAsOneRange();
                         textRange.Text = txtJobOrderNo.Text;
@@ -1665,6 +1679,7 @@ namespace Goldpoint_Inventory_System.Log
                         textSelection = document.Find("<total>", false, true);
                         textRange = textSelection.GetAsOneRange();
                         textRange.Text = txtTotal.Text;
+
                         if (txtUnpaidBalancePayment.Value > 0)
                         {
                             textSelection = document.Find("<balance>", false, true);
@@ -1696,6 +1711,9 @@ namespace Goldpoint_Inventory_System.Log
                                 textSelection = document2.Find("<full name>", false, true);
                                 textRange = textSelection.GetAsOneRange();
                                 textRange.Text = txtCustName.Text;
+                                textSelection = document2.Find("<issuer>", false, true);
+                                textRange = textSelection.GetAsOneRange();
+                                textRange.Text = txtIssuedBy.Text;
                                 textSelection = document2.Find("<job order no>", false, true);
                                 textRange = textSelection.GetAsOneRange();
                                 textRange.Text = txtJobOrderNo.Text;
@@ -1913,6 +1931,9 @@ namespace Goldpoint_Inventory_System.Log
                         textSelection = document.Find("<full name>", false, true);
                         textRange = textSelection.GetAsOneRange();
                         textRange.Text = txtCustName.Text;
+                        textSelection = document.Find("<issuer>", false, true);
+                        textRange = textSelection.GetAsOneRange();
+                        textRange.Text = txtIssuedBy.Text;
                         textSelection = document.Find("<job order no>", false, true);
                         textRange = textSelection.GetAsOneRange();
                         textRange.Text = txtJobOrderNo.Text;
@@ -1966,6 +1987,9 @@ namespace Goldpoint_Inventory_System.Log
                                 textSelection = document2.Find("<full name>", false, true);
                                 textRange = textSelection.GetAsOneRange();
                                 textRange.Text = txtCustName.Text;
+                                textSelection = document2.Find("<issuer>", false, true);
+                                textRange = textSelection.GetAsOneRange();
+                                textRange.Text = txtIssuedBy.Text;
                                 textSelection = document2.Find("<job order no>", false, true);
                                 textRange = textSelection.GetAsOneRange();
                                 textRange.Text = txtJobOrderNo.Text;

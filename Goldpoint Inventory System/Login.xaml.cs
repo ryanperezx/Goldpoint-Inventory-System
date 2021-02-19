@@ -1,17 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
+using NLog;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace Goldpoint_Inventory_System
 {
@@ -20,6 +11,7 @@ namespace Goldpoint_Inventory_System
     /// </summary>
     public partial class Login : Window
     {
+        private static Logger Log = LogManager.GetCurrentClassLogger();
         public Login()
         {
             InitializeComponent();
@@ -108,10 +100,99 @@ namespace Goldpoint_Inventory_System
 
         private void BtnLogin_Click(object sender, RoutedEventArgs e)
         {
+            /*
+             if (string.IsNullOrEmpty(txtUsername.Text) || string.IsNullOrEmpty(txtPassword.Password))
+            {
+                MessageBox.Show("One or more fields are empty!");
+                return;
+            }
+            else
+            {
+                SqlConnection conn = DBUtils.GetDBConnection();
+                conn.Open();
+                Nullable<int> loginAttempts;
+                string fullName = "";
+                string adminLevel = "";
+                using (SqlCommand cmd = new SqlCommand("SELECT tries FROM Account WHERE username = @username", conn))
+                {
+                    cmd.Parameters.AddWithValue("@username", txtUsername.Text);
+                    loginAttempts = Convert.ToInt32(cmd.ExecuteScalar());
+                }
+                if (loginAttempts < 5)
+                {
+                    string un = txtUsername.Text;
+                    string pw = txtPassword.Password;
+
+
+                    using (SqlCommand cmd = new SqlCommand("SELECT username,  (firstName + ' ' +  lastName) as fullName, adminLevel from Account where username = @username AND password = @password", conn))
+                    {
+                        cmd.Parameters.AddWithValue("@username", un);
+                        cmd.Parameters.AddWithValue("@password", pw);
+                        var reader = cmd.ExecuteReader();
+                        if (reader.Read())
+                        {
+                            fullName = Convert.ToString(reader.GetValue(reader.GetOrdinal("fullName")));
+                            adminLevel = Convert.ToString(reader.GetValue(reader.GetOrdinal("adminLevel")));
+
+                            reader.Close();
+                            reader.Dispose();
+                            using (SqlCommand cmd2 = new SqlCommand("UPDATE Account SET tries = 0", conn))
+                            {
+                                cmd2.ExecuteNonQuery();
+                                MessageBox.Show("Login Successful");
+                                Log = LogManager.GetLogger("userLogin");
+                                Log.Info(" Account Name: " + txtUsername.Text + " has logged in.");
+                            }
+
+                        }
+                        else
+                        {
+                            reader.Close();
+                            reader.Dispose();
+                            using (SqlCommand cmd2 = new SqlCommand("UPDATE Account SET tries = tries + 1 where username = @username", conn))
+                            {
+                                cmd2.Parameters.AddWithValue("@username", un);
+                                cmd2.ExecuteNonQuery();
+                            }
+                            MessageBox.Show("Username or Password is invalid");
+                            return;
+                        }
+                    }
+                    txtPassword.Password = null;
+                    txtUsername.Text = null;
+                    Hide();
+                    new MainWindow(adminLevel,fullName).ShowDialog();
+                    ShowDialog();
+
+                }
+                else
+                {
+                    string sMessageBoxText = "Due to multiple login attempts, your account has been locked. \nPlease unlock it to continue.";
+                    string sCaption = "Account Recovery";
+                    MessageBoxButton btnMessageBox = MessageBoxButton.YesNoCancel;
+                    MessageBoxImage icnMessageBox = MessageBoxImage.Warning;
+
+                    MessageBoxResult dr = MessageBox.Show(sMessageBoxText, sCaption, btnMessageBox, icnMessageBox);
+
+                    switch (dr)
+                    {
+                        case MessageBoxResult.Yes:
+                            Hide();
+                            new ForgotPassword(txtUsername.Text).ShowDialog();
+                            ShowDialog();
+                            break;
+
+                        case MessageBoxResult.No: break;
+                    }
+                }
+            }
+            */
             Hide();
-            new MainWindow("Administrator", "Admin").ShowDialog();
+            new MainWindow("Administrator", "Ryan").ShowDialog();
             ShowDialog();
+
         }
+
 
         private void BtnExit_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {

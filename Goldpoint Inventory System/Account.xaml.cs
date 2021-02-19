@@ -32,6 +32,7 @@ namespace Goldpoint_Inventory_System
         {
             InitializeComponent();
             this.adminLevel = adminLevel;
+            adminRights();
         }
 
         private void adminRights()
@@ -115,7 +116,7 @@ namespace Goldpoint_Inventory_System
 
         private void BtnSave_Click(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrEmpty(txtUser.Text) || string.IsNullOrEmpty(txtFirstName.Text) || string.IsNullOrEmpty(txtLastName.Text) || string.IsNullOrEmpty(cmbQuestion.Text) || string.IsNullOrEmpty(txtAns.Password) || string.IsNullOrEmpty(txtConfirmPass.Password) || string.IsNullOrEmpty(txtPass.Password) || string.IsNullOrEmpty(txtPass.Password))
+            if (string.IsNullOrEmpty(txtUser.Text) || string.IsNullOrEmpty(txtFirstName.Text) || string.IsNullOrEmpty(cmbUserLevel.Text) || string.IsNullOrEmpty(txtLastName.Text) || string.IsNullOrEmpty(cmbQuestion.Text) || string.IsNullOrEmpty(txtAns.Password) || string.IsNullOrEmpty(txtConfirmPass.Password) || string.IsNullOrEmpty(txtPass.Password) || string.IsNullOrEmpty(txtPass.Password))
             {
                 MessageBox.Show("One or more fields are empty!");
             }
@@ -145,7 +146,7 @@ namespace Goldpoint_Inventory_System
                             switch (dr)
                             {
                                 case MessageBoxResult.Yes:
-                                    using (SqlCommand cmd1 = new SqlCommand("INSERT into Account (firstName, lastName, username, password, securityQuestion, answer, tries, userLevel) VALUES (@firstName, @lastName, @username, @password, @securityQuestion, @answer, 0, @userLevel)", conn))
+                                    using (SqlCommand cmd1 = new SqlCommand("INSERT into Account (firstName, lastName, username, password, securityQuestion, answer, tries, adminLevel) VALUES (@firstName, @lastName, @username, @password, @securityQuestion, @answer, 0, @adminLevel)", conn))
                                     {
                                         cmd1.Parameters.AddWithValue("@firstName", txtFirstName.Text);
                                         cmd1.Parameters.AddWithValue("@lastName", txtLastName.Text);
@@ -153,11 +154,7 @@ namespace Goldpoint_Inventory_System
                                         cmd1.Parameters.AddWithValue("@password", txtPass.Password);
                                         cmd1.Parameters.AddWithValue("@securityQuestion", cmbQuestion.Text);
                                         cmd1.Parameters.AddWithValue("@answer", txtAns.Password);
-                                        if (cmbUserLevel.Text.Equals("Secretary"))
-                                            cmd1.Parameters.AddWithValue("@userLevel", 0);
-                                        else
-                                            cmd1.Parameters.AddWithValue("@userLevel", 1);
-
+                                        cmd1.Parameters.AddWithValue("@adminLevel", cmbUserLevel.Text);
                                         try
                                         {
                                             cmd1.ExecuteNonQuery();

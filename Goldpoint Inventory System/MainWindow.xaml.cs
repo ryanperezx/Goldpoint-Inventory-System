@@ -36,8 +36,6 @@ namespace Goldpoint_Inventory_System
     /// </summary>
     public partial class MainWindow : Window
     {
-        string fullName;
-
         public MainWindow(string adminLevel, string fullName)
         {
             SfSkinManager.ApplyStylesOnApplication = true;
@@ -80,9 +78,6 @@ namespace Goldpoint_Inventory_System
 
             date.Content = DateTime.Now.ToString("D");
             startTimer();
-
-            this.fullName = fullName;
-
         }
 
         bool m_layoutflag = true;

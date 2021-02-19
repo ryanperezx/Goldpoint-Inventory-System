@@ -465,7 +465,7 @@ namespace Goldpoint_Inventory_System.Transactions
                         }
                         foreach (var item in items)
                         {
-                            using (SqlCommand cmd = new SqlCommand("INSERT into ReleasedMaterials VALUES (@DRNo, @itemCode, @desc, @type, @brand, @size, @qty, @totalPerItem)", conn))
+                            using (SqlCommand cmd = new SqlCommand("INSERT into ReleasedMaterials VALUES (@DRNo, @itemCode, @desc, @type, @brand, @size, @qty, @totalPerItem, @remarks)", conn))
                             {
                                 cmd.Parameters.AddWithValue("@DRNo", txtDRNo.Text);
                                 cmd.Parameters.AddWithValue("@itemCode", item.itemCode);
