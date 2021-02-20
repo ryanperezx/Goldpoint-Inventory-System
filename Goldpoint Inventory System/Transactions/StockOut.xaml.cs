@@ -3,9 +3,11 @@ using Syncfusion.DocIO;
 using Syncfusion.DocIO.DLS;
 using Syncfusion.DocToPDFConverter;
 using Syncfusion.Pdf;
+using Syncfusion.Windows.PdfViewer;
 using System;
 using System.Collections.ObjectModel;
 using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -22,7 +24,9 @@ namespace Goldpoint_Inventory_System.Transactions
         ObservableCollection<PhotocopyDataModel> photocopy = new ObservableCollection<PhotocopyDataModel>();
 
         private static Logger Log = LogManager.GetCurrentClassLogger();
-
+        int startPageIndex = 0;
+        int endPageIndex = 0;
+        System.Drawing.Image[] images = null;
         public StockOut(string fullName, string adminLevel)
         {
             InitializeComponent();
@@ -901,6 +905,8 @@ namespace Goldpoint_Inventory_System.Transactions
                 case MessageBoxResult.Yes:
                     DocToPDFConverter converter = new DocToPDFConverter();
                     PdfDocument pdfDocument;
+                    PdfViewerControl pdfViewer1 = new PdfViewerControl();
+
                     //should print 2 receipts, for customer and company
                     try
                     {
@@ -938,7 +944,7 @@ namespace Goldpoint_Inventory_System.Transactions
                             {
                                 foreach (var item in items)
                                 {
-                                    if (counter > 13)
+                                    if (counter > 17)
                                     {
                                         textSelection = document2.Find("<dr no>", false, true);
                                         textRange = textSelection.GetAsOneRange();
@@ -1002,7 +1008,7 @@ namespace Goldpoint_Inventory_System.Transactions
                             {
                                 foreach (var item in photocopy)
                                 {
-                                    if (counter > 13)
+                                    if (counter > 17)
                                     {
                                         textSelection = document2.Find("<dr no>", false, true);
                                         textRange = textSelection.GetAsOneRange();
@@ -1062,7 +1068,7 @@ namespace Goldpoint_Inventory_System.Transactions
                                 }
                             }
                             //remove unused placeholder
-                            for (int i = counter; i <= 13; i++)
+                            for (int i = counter; i <= 17; i++)
                             {
 
                                 textSelection = document.Find("<qty" + i + ">", false, true);
@@ -1083,7 +1089,7 @@ namespace Goldpoint_Inventory_System.Transactions
                             }
                             if (counter2 > 1)
                             {
-                                for (int i = counter2; i <= 13; i++)
+                                for (int i = counter2; i <= 17; i++)
                                 {
                                     textSelection = document2.Find("<qty" + i + ">", false, true);
                                     textRange = textSelection.GetAsOneRange();
@@ -1102,13 +1108,22 @@ namespace Goldpoint_Inventory_System.Transactions
                                     textRange.Text = "";
                                 }
                                 pdfDocument = converter.ConvertToPDF(document2);
-                                pdfDocument.Save(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/Sample-2.pdf");
+                                pdfDocument.Save(Environment.CurrentDirectory + "/temp.pdf");
+                                pdfViewer1.Load(Environment.CurrentDirectory + "/temp.pdf");
+                                pdfViewer1.PrinterSettings.PageOrientation = PdfViewerPrintOrientation.Landscape;
+                                pdfViewer1.PrinterSettings.PageSize = PdfViewerPrintSize.ActualSize;
+                                pdfViewer1.Print();
                                 document2.Close();
+
 
                             }
                             pdfDocument = converter.ConvertToPDF(document);
-                            pdfDocument.Save(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/Sample.pdf");
-                            pdfDocument.Close(true);
+                            pdfDocument.Save(Environment.CurrentDirectory + "/temp.pdf");
+                            pdfViewer1.Load(Environment.CurrentDirectory + "/temp.pdf");
+                            pdfViewer1.PrinterSettings.PageOrientation = PdfViewerPrintOrientation.Landscape;
+                            pdfViewer1.PrinterSettings.PageSize = PdfViewerPrintSize.ActualSize;
+                            pdfViewer1.Print();
+                            File.Delete(Environment.CurrentDirectory + "/temp.pdf");
 
                         }
                     }

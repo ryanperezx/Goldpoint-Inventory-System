@@ -4,9 +4,12 @@ using Syncfusion.DocIO;
 using Syncfusion.DocIO.DLS;
 using Syncfusion.DocToPDFConverter;
 using Syncfusion.Pdf;
+using Syncfusion.Windows.PdfViewer;
 using System;
 using System.Collections.ObjectModel;
 using System.Data.SqlClient;
+using System.Drawing.Printing;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -1641,6 +1644,8 @@ namespace Goldpoint_Inventory_System.Log
         {
             DocToPDFConverter converter = new DocToPDFConverter();
             PdfDocument pdfDocument;
+            PdfViewerControl pdfViewer1 = new PdfViewerControl();
+
             //should print 2 receipts, for customer and company
             if (txtJobOrder.Text == "Printing, Services, etc.")
             {
@@ -1687,7 +1692,7 @@ namespace Goldpoint_Inventory_System.Log
                             textRange.Text = txtUnpaidBalancePayment.Text;
                             textSelection = document.Find("<downpayment>", false, true);
                             textRange = textSelection.GetAsOneRange();
-                            textRange.Text = "0";
+                            textRange.Text = txtAmount.Text;
                         }
                         else
                         {
@@ -1742,7 +1747,7 @@ namespace Goldpoint_Inventory_System.Log
                                     textRange.Text = txtUnpaidBalancePayment.Text;
                                     textSelection = document2.Find("<downpayment>", false, true);
                                     textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = "0";
+                                    textRange.Text = txtAmount.Text;
                                 }
                                 else
                                 {
@@ -1900,13 +1905,17 @@ namespace Goldpoint_Inventory_System.Log
                                 textRange.Text = "";
                             }
                             pdfDocument = converter.ConvertToPDF(document2);
-                            pdfDocument.Save(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/Sample-2.pdf");
+                            pdfDocument.Save(Environment.CurrentDirectory + "/temp.pdf");
+                            pdfViewer1.Load(Environment.CurrentDirectory + "/temp.pdf");
+                            pdfViewer1.Print();
                             document2.Close();
-
                         }
                         pdfDocument = converter.ConvertToPDF(document);
-                        pdfDocument.Save(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/Sample.pdf");
-                        pdfDocument.Close(true);
+
+                        pdfDocument.Save(Environment.CurrentDirectory + "/temp.pdf");
+                        pdfViewer1.Load(Environment.CurrentDirectory + "/temp.pdf");
+                        pdfViewer1.Print();
+                        File.Delete(Environment.CurrentDirectory + "/temp.pdf");
                     }
 
                 }
@@ -1927,6 +1936,8 @@ namespace Goldpoint_Inventory_System.Log
                     {
                         Syncfusion.DocIO.DLS.TextSelection textSelection;
                         WTextRange textRange;
+                        IWSection section = document.AddSection();
+                        section.PageSetup.Orientation = PageOrientation.Landscape;
 
                         textSelection = document.Find("<full name>", false, true);
                         textRange = textSelection.GetAsOneRange();
@@ -2177,16 +2188,19 @@ namespace Goldpoint_Inventory_System.Log
                                 textRange.Text = "";
 
                                 pdfDocument = converter.ConvertToPDF(document2);
-                                pdfDocument.Save(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/Sample-2.pdf");
+                                pdfDocument.Save(Environment.CurrentDirectory + "/temp.pdf");
+                                pdfViewer1.Load(Environment.CurrentDirectory + "/temp.pdf");
+                                pdfViewer1.Print();
                                 document2.Close();
                             }
                         }
-
                         pdfDocument = converter.ConvertToPDF(document);
-                        pdfDocument.Save(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/Sample.pdf");
-                        pdfDocument.Close(true);
 
-                        document.Close();
+                        pdfDocument.Save(Environment.CurrentDirectory + "/temp.pdf");
+                        pdfViewer1.Load(Environment.CurrentDirectory + "/temp.pdf");
+                        pdfViewer1.Print();
+                        File.Delete(Environment.CurrentDirectory + "/temp.pdf");
+
 
                     }
                 }
@@ -2194,7 +2208,7 @@ namespace Goldpoint_Inventory_System.Log
                 {
                     MessageBox.Show("An error has been encountered! Log has been updated with the error");
                     Log = LogManager.GetLogger("*");
-                    Log.Error(ex, "Query Error");
+                    Log.Error(ex);
                     return;
                 }
 
@@ -2211,6 +2225,8 @@ namespace Goldpoint_Inventory_System.Log
             {
                 DocToPDFConverter converter = new DocToPDFConverter();
                 PdfDocument pdfDocument;
+                PdfViewerControl pdfViewer1 = new PdfViewerControl();
+
                 //should print 2 receipts, for customer and company
                 try
                 {
@@ -2257,7 +2273,7 @@ namespace Goldpoint_Inventory_System.Log
                         {
                             foreach (var item in services)
                             {
-                                if (counter > 13)
+                                if (counter > 17)
                                 {
                                     textSelection = document2.Find("<dr no>", false, true);
                                     textRange = textSelection.GetAsOneRange();
@@ -2329,7 +2345,7 @@ namespace Goldpoint_Inventory_System.Log
                         {
                             foreach (var item in tarp)
                             {
-                                if (counter > 13)
+                                if (counter > 17)
                                 {
                                     textSelection = document2.Find("<dr no>", false, true);
                                     textRange = textSelection.GetAsOneRange();
@@ -2403,7 +2419,7 @@ namespace Goldpoint_Inventory_System.Log
                         {
                             foreach (var item in photocopy)
                             {
-                                if (counter > 13)
+                                if (counter > 17)
                                 {
                                     textSelection = document2.Find("<dr no>", false, true);
                                     textRange = textSelection.GetAsOneRange();
@@ -2476,7 +2492,7 @@ namespace Goldpoint_Inventory_System.Log
                         {
                             foreach (var item in stockOut)
                             {
-                                if (counter > 13)
+                                if (counter > 17)
                                 {
                                     textSelection = document2.Find("<dr no>", false, true);
                                     textRange = textSelection.GetAsOneRange();
@@ -2549,7 +2565,7 @@ namespace Goldpoint_Inventory_System.Log
                         {
                             foreach (var item in items)
                             {
-                                if (counter > 13)
+                                if (counter > 17)
                                 {
                                     textSelection = document2.Find("<dr no>", false, true);
                                     textRange = textSelection.GetAsOneRange();
@@ -2620,7 +2636,7 @@ namespace Goldpoint_Inventory_System.Log
                         }
 
                         //remove unused placeholder
-                        for (int i = counter; i <= 13; i++)
+                        for (int i = counter; i <= 17; i++)
                         {
 
                             textSelection = document.Find("<qty" + i + ">", false, true);
@@ -2641,7 +2657,7 @@ namespace Goldpoint_Inventory_System.Log
                         }
                         if (counter2 > 1)
                         {
-                            for (int i = counter2; i <= 13; i++)
+                            for (int i = counter2; i <= 17; i++)
                             {
                                 textSelection = document2.Find("<qty" + i + ">", false, true);
                                 textRange = textSelection.GetAsOneRange();
@@ -2660,13 +2676,22 @@ namespace Goldpoint_Inventory_System.Log
                                 textRange.Text = "";
                             }
                             pdfDocument = converter.ConvertToPDF(document2);
-                            pdfDocument.Save(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/Sample-2.pdf");
+                            pdfDocument.Save(Environment.CurrentDirectory + "/temp.pdf");
+                            pdfViewer1.Load(Environment.CurrentDirectory + "/temp.pdf");
+                            pdfViewer1.PrinterSettings.PageOrientation = PdfViewerPrintOrientation.Landscape;
+                            pdfViewer1.PrinterSettings.PageSize = PdfViewerPrintSize.ActualSize;
+                            pdfViewer1.Print();
                             document2.Close();
+
 
                         }
                         pdfDocument = converter.ConvertToPDF(document);
-                        pdfDocument.Save(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/Sample.pdf");
-                        pdfDocument.Close(true);
+                        pdfDocument.Save(Environment.CurrentDirectory + "/temp.pdf");
+                        pdfViewer1.Load(Environment.CurrentDirectory + "/temp.pdf");
+                        pdfViewer1.PrinterSettings.PageOrientation = PdfViewerPrintOrientation.Landscape;
+                        pdfViewer1.PrinterSettings.PageSize = PdfViewerPrintSize.ActualSize;
+                        pdfViewer1.Print();
+                        File.Delete(Environment.CurrentDirectory + "/temp.pdf");
 
                     }
                 }
@@ -2798,5 +2823,6 @@ namespace Goldpoint_Inventory_System.Log
                 }
             }
         }
+
     }
 }

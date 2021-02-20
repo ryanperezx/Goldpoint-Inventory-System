@@ -50,7 +50,7 @@ namespace Goldpoint_Inventory_System
         {
             SqlConnection conn = DBUtils.GetDBConnection();
             conn.Open();
-            using (SqlCommand cmd = new SqlCommand("SELECT * from InventoryItems where qty < criticalLevel", conn))
+            using (SqlCommand cmd = new SqlCommand("SELECT * from InventoryItems where qty <= criticalLevel", conn))
             {
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {

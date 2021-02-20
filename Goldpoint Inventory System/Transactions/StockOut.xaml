@@ -40,11 +40,11 @@
                     <Label Content="Size:" HorizontalAlignment="Left" Margin="38,153,0,0" VerticalAlignment="Top"/>
                     <syncfusion:SfTextBoxExt x:Name="txtSize" HorizontalAlignment="Left" Height="31" Margin="154,153,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" IsEnabled="False"/>
                     <Label Content="Qty:" HorizontalAlignment="Left" Margin="38,189,0,0" VerticalAlignment="Top"/>
-                    <syncfusion:IntegerTextBox x:Name="txtQty" HorizontalAlignment="Left" Height="31" Margin="154,189,0,0" MinWidth="100" MinValue="0" Value="0" MaxValue="10000" NumberGroupSeparator="," TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="120"/>
+                    <syncfusion:IntegerTextBox x:Name="txtQty" HorizontalAlignment="Left" Height="31" Margin="154,189,0,0" MinWidth="100" MinValue="0" Value="0" MaxValue="50000" NumberGroupSeparator="," TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="120"/>
                     <Label Content="Item Price:" HorizontalAlignment="Left" Margin="38,226,0,0" VerticalAlignment="Top"/>
-                    <syncfusion:DoubleTextBox x:Name="txtItemPrice" HorizontalAlignment="Left" Height="31" Margin="154,226,0,0" MinWidth="100" NumberGroupSeparator="," TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="120" IsReadOnly="True" Value="0.00"/>
+                    <syncfusion:DoubleTextBox x:Name="txtItemPrice" HorizontalAlignment="Left" Height="31" Margin="154,226,0,0" MinWidth="100" NumberGroupSeparator="," TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="120" IsReadOnly="True" MaximumNumberDecimalDigits="4"/>
                     <Label Content="Total per Item:" HorizontalAlignment="Left" Margin="38,263,0,0" VerticalAlignment="Top"/>
-                    <syncfusion:DoubleTextBox x:Name="txtTotalPerItem"  HorizontalAlignment="Left" Height="31" Margin="154,263,0,0" MinWidth="100" NumberGroupSeparator="," TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="120"  IsReadOnly="True"  Value="0.00"/>
+                    <syncfusion:DoubleTextBox x:Name="txtTotalPerItem"  HorizontalAlignment="Left" Height="31" Margin="154,263,0,0" MinWidth="100" NumberGroupSeparator="," TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="120"  IsReadOnly="True" MaximumNumberDecimalDigits="4"/>
                     <Label Content="Remarks:" HorizontalAlignment="Left" Margin="38,299,0,0" VerticalAlignment="Top"/>
                     <syncfusion:SfTextBoxExt x:Name="txtRemarks"  HorizontalAlignment="Left" Height="31" Margin="154,299,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="120"/>
                     <syncfusion:ButtonAdv x:Name="btnAddtoList" Click="BtnAddtoList_Click " SmallIcon="{x:Null}" HorizontalAlignment="Left" Height="29" Label="Add to list" Margin="34,341,0,0" VerticalAlignment="Top" Width="140"/>
@@ -112,11 +112,11 @@
                     <RadioButton x:Name="rdUnpaid" Checked="radiobuttonPayment" Content="Unpaid" GroupName="Service" HorizontalAlignment="Left" Margin="139,216,0,0" VerticalAlignment="Top"/>
                     <RadioButton x:Name="rdDownpayment" Checked="radiobuttonPayment" Content="Downpayment" GroupName="Service" HorizontalAlignment="Left" Margin="139,231,0,0" VerticalAlignment="Top"/>
                     <Label Content="Discount:" HorizontalAlignment="Left" Margin="29,256,0,0" VerticalAlignment="Top"/>
-                    <syncfusion:DoubleTextBox x:Name="txtDiscount" HorizontalAlignment="Left" Height="26" Margin="139,256,0,0" MinWidth="100" NumberGroupSeparator="," TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="140" MinValue="0"/>
+                    <syncfusion:DoubleTextBox x:Name="txtDiscount" HorizontalAlignment="Left" Height="26" Margin="139,256,0,0" MinWidth="100" NumberGroupSeparator="," TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="140" MinValue="0" MaximumNumberDecimalDigits="4"/>
                     <Label Content="Paid amount:" HorizontalAlignment="Left" Margin="29,291,0,0" VerticalAlignment="Top"/>
-                    <syncfusion:DoubleTextBox x:Name="txtDownpayment" HorizontalAlignment="Left" Height="26" Margin="139,291,0,0" MinWidth="100" NumberGroupSeparator="," TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="140" MinValue="0"  IsEnabled="False"/>
+                    <syncfusion:DoubleTextBox x:Name="txtDownpayment" HorizontalAlignment="Left" Height="26" Margin="139,291,0,0" MinWidth="100" NumberGroupSeparator="," MaximumNumberDecimalDigits="4" TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="140" MinValue="0"  IsEnabled="False"/>
                     <Label Content="Total:" HorizontalAlignment="Left" Margin="29,326,0,0" VerticalAlignment="Top"/>
-                    <syncfusion:DoubleTextBox x:Name="txtTotal" HorizontalAlignment="Left" Height="26" Margin="139,326,0,0" MinWidth="100" NumberGroupSeparator="," TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="140" IsEnabled="False"/>
+                    <syncfusion:DoubleTextBox x:Name="txtTotal" HorizontalAlignment="Left" Height="26" Margin="139,326,0,0" MinWidth="100" MaximumNumberDecimalDigits="4" NumberGroupSeparator="," TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="140" IsEnabled="False"/>
                     <Label Content="Issuer:" HorizontalAlignment="Left" Margin="29,364,0,0" VerticalAlignment="Top"/>
                     <syncfusion:SfTextBoxExt x:Name="txtIssuedBy" HorizontalAlignment="Left" Height="26" Margin="139,364,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" IsReadOnly="True"/>
 

@@ -24,9 +24,9 @@
         <Label Content="Description:" HorizontalAlignment="Left" Margin="63,125,0,0" VerticalAlignment="Top"/>
         <syncfusion:SfTextBoxExt x:Name="txtDesc" HorizontalAlignment="Left" Height="31" Margin="162,125,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="155" FontSize="16"/>
         <Label Content="Amount:" HorizontalAlignment="Left" Margin="63,171,0,0" VerticalAlignment="Top"/>
-        <syncfusion:DoubleTextBox x:Name="txtAmount" HorizontalAlignment="Left" Height="31" Margin="162,171,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="155" FontSize="16"/>
+        <syncfusion:DoubleTextBox x:Name="txtAmount" HorizontalAlignment="Left" Height="31" Margin="162,171,0,0" MaximumNumberDecimalDigits="4" TextWrapping="Wrap" VerticalAlignment="Top" Width="155" FontSize="16"/>
         <Label Content="Total:" HorizontalAlignment="Left" Margin="63,218,0,0" VerticalAlignment="Top"/>
-        <syncfusion:DoubleTextBox x:Name="txtTotal" HorizontalAlignment="Left" Height="31" Margin="162,218,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="155" FontSize="16"/>
+        <syncfusion:DoubleTextBox x:Name="txtTotal" MaximumNumberDecimalDigits="4" HorizontalAlignment="Left" Height="31" Margin="162,218,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="155" FontSize="16"/>
 
         <StackPanel x:Name="stack" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,78,60,0">
             <StackPanel.Resources>

@@ -84,11 +84,11 @@
                     <Label Content="Date:" HorizontalAlignment="Left" Margin="21,39,0,0" VerticalAlignment="Top"/>
                     <syncfusion:DateTimeEdit x:Name="txtDatePayment" HorizontalAlignment="Left" Height="31" Margin="149,39,0,0" TextWrapping="Wrap" Text="DateTimeEdit" VerticalAlignment="Top" Width="120" FontSize="16"/>
                     <Label Content="Amount:" HorizontalAlignment="Left" Margin="21,79,0,0" VerticalAlignment="Top" />
-                    <syncfusion:DoubleTextBox x:Name="txtAmount" Height="31" Margin="149,79,431,0" NumberGroupSeparator="," NumberDecimalDigits="2" NumberDecimalSeparator="." TextWrapping="Wrap" Text="DoubleTextBox" Value="0" MinValue="0"  VerticalAlignment="Top" FontSize="16"/>
+                    <syncfusion:DoubleTextBox x:Name="txtAmount" Height="31" Margin="149,79,431,0" NumberGroupSeparator="," MaximumNumberDecimalDigits="4" NumberDecimalSeparator="." TextWrapping="Wrap" Text="DoubleTextBox" Value="0" MinValue="0"  VerticalAlignment="Top" FontSize="16"/>
                     <Label Content="Unpaid Balance:" HorizontalAlignment="Left" Margin="21,119,0,0" VerticalAlignment="Top"/>
-                    <syncfusion:DoubleTextBox x:Name="txtUnpaidBalancePayment" HorizontalAlignment="Left" Height="31" Margin="149,119,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" IsEnabled="False" FontSize="16"/>
+                    <syncfusion:DoubleTextBox x:Name="txtUnpaidBalancePayment" HorizontalAlignment="Left" Height="31" Margin="149,119,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" IsEnabled="False" FontSize="16" MaximumNumberDecimalDigits="4"/>
                     <Label Content="Total:" HorizontalAlignment="Left" Margin="21,159,0,0" VerticalAlignment="Top"/>
-                    <syncfusion:DoubleTextBox x:Name="txtTotal" HorizontalAlignment="Left" Height="31" Margin="149,159,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" IsEnabled="False" FontSize="16"/>
+                    <syncfusion:DoubleTextBox x:Name="txtTotal" HorizontalAlignment="Left" Height="31" Margin="149,159,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" IsEnabled="False" FontSize="16" MaximumNumberDecimalDigits="4"/>
                     <TextBlock HorizontalAlignment="Left" Margin="380,10,0,0" TextWrapping="Wrap" Text="Payment History" VerticalAlignment="Top"/>
                     <syncfusion:SfDataGrid x:Name="dgPaymentHistory" HorizontalAlignment="Center" Height="369" VerticalAlignment="Center" Width="310" ItemsSource="{Binding}" AutoGenerateColumns="False" Margin="380,39,10,10">
                         <syncfusion:SfDataGrid.Columns>

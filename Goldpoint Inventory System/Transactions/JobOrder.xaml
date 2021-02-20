@@ -57,9 +57,9 @@
                     <RadioButton x:Name="rdPaid" Content="Paid" HorizontalAlignment="Left" Margin="129,219,0,0" VerticalAlignment="Top" Click="radiobuttonPayment"/>
                     <RadioButton x:Name="rdDownpayment" Content="Downpayment" HorizontalAlignment="Left" Margin="129,249,0,0" VerticalAlignment="Top" Click="radiobuttonPayment"/>
                     <Label Content="Down payment:" HorizontalAlignment="Left" Margin="384,238,0,0" VerticalAlignment="Top"/>
-                    <syncfusion:DoubleTextBox x:Name="txtDownpayment" HorizontalAlignment="Left" Height="31" Margin="513,238,0,0" NumberGroupSeparator="," NumberDecimalDigits="2" NumberDecimalSeparator="." TextWrapping="Wrap" Text="DoubleTextBox" Value="0" VerticalAlignment="Top" Width="128" IsEnabled="False" FontSize="16"/>
+                    <syncfusion:DoubleTextBox x:Name="txtDownpayment" HorizontalAlignment="Left" Height="31" Margin="513,238,0,0" NumberGroupSeparator="," MaximumNumberDecimalDigits="4" NumberDecimalSeparator="." TextWrapping="Wrap" Text="DoubleTextBox" VerticalAlignment="Top" Width="128" IsEnabled="False" FontSize="16"/>
                     <Label Content="Total:"  HorizontalAlignment="Left" Margin="383,324,0,0" VerticalAlignment="Top"/>
-                    <syncfusion:DoubleTextBox x:Name="txtItemTotal" HorizontalAlignment="Left" Height="31" Margin="512,324,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="128" IsReadOnly="True" MinValue="0" FontSize="16"/>
+                    <syncfusion:DoubleTextBox x:Name="txtItemTotal" HorizontalAlignment="Left" Height="31" Margin="512,324,0,0" TextWrapping="Wrap" MaximumNumberDecimalDigits="4" VerticalAlignment="Top" Width="128" IsReadOnly="True" MinValue="0" FontSize="16"/>
                 </Grid>
             </Expander>
             <Expander ExpandDirection="Right" Height="420" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Top" IsExpanded="{Binding SelectedExpander, ConverterParameter=2, Converter={StaticResource ExpanderToBooleanConverter}, Mode=TwoWay}">
@@ -124,7 +124,7 @@
                     <syncfusion:SfTextBoxExt x:Name="txtSize" HorizontalAlignment="Left" Height="31" Margin="133,209,0,0" MinWidth="100"  TextWrapping="Wrap"  VerticalAlignment="Top" Width="118" FontSize="16"/>
                     <Label Content="Qty:" HorizontalAlignment="Left" Margin="17,89,0,0" VerticalAlignment="Top"/>
                     <Label Content="Price per item:" HorizontalAlignment="Left" Margin="17,249,0,0" VerticalAlignment="Top"/>
-                    <syncfusion:DoubleTextBox x:Name="txtPricePerItem" HorizontalAlignment="Left" Height="31" Margin="133,249,0,0" MinWidth="100"  TextWrapping="Wrap"  VerticalAlignment="Top" Width="118" FontSize="16"/>
+                    <syncfusion:DoubleTextBox x:Name="txtPricePerItem" HorizontalAlignment="Left" Height="31" Margin="133,249,0,0" MinWidth="100" MaximumNumberDecimalDigits="4" TextWrapping="Wrap"  VerticalAlignment="Top" Width="118" FontSize="16"/>
                     <syncfusion:SfDataGrid x:Name="dgService" HorizontalAlignment="Right"  Height="418" VerticalAlignment="Center" Width="444" ItemsSource="{Binding}" AutoGenerateColumns="False" Margin="0,0,0,0" AutoExpandGroups="True">
                         <syncfusion:SfDataGrid.GroupColumnDescriptions>
                             <syncfusion:GroupColumnDescription ColumnName="Description"/>
@@ -177,7 +177,7 @@
                                 <Label Content="I-LET:" HorizontalAlignment="Left" Margin="29,245,0,0" VerticalAlignment="Top"/>
                                 <syncfusion:SfTextBoxExt x:Name="txtTarpILET" HorizontalAlignment="Left" Height="31" Margin="118,245,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" FontSize="16"/>
                                 <Label Content="Unit Price:" HorizontalAlignment="Left" Margin="29,285,0,0" VerticalAlignment="Top"/>
-                                <syncfusion:DoubleTextBox x:Name="txtTarpUnitPrice" HorizontalAlignment="Left" Height="31" Margin="118,285,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" FontSize="16" MinValue="0"/>
+                                <syncfusion:DoubleTextBox x:Name="txtTarpUnitPrice" HorizontalAlignment="Left" Height="31" Margin="118,285,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" FontSize="16" MinValue="0" MaximumNumberDecimalDigits="4"/>
                                 <syncfusion:ButtonAdv x:Name="btnAddTarp" SmallIcon="{x:Null}"  HorizontalAlignment="Left" Height="29" Label="Add Tarpaulin" Margin="40,326,0,0" VerticalAlignment="Top" Width="120" Click="BtnAddTarp_Click"/>
                                 <syncfusion:ButtonAdv x:Name="btnRemoveTarp" SmallIcon="{x:Null}"  HorizontalAlignment="Left" Height="29" Label="Remove Tarpaulin" Margin="190,326,0,0" VerticalAlignment="Top" Width="120" Click="BtnRemoveTarp_Click"/>
                             </Grid>
@@ -190,7 +190,7 @@
                                 <Label Content="Service:" HorizontalAlignment="Left" Margin="36,45,0,0" VerticalAlignment="Top"/>
                                 <syncfusion:SfTextBoxExt x:Name="txtServiceName" HorizontalAlignment="Left" Height="31" Margin="131,45,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="168" FontSize="16"/>
                                 <Label Content="Service Fee:" HorizontalAlignment="Left" Margin="36,85,0,0" VerticalAlignment="Top"/>
-                                <syncfusion:DoubleTextBox x:Name="txtServiceFee" HorizontalAlignment="Left" Height="31" Margin="133,85,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" FontSize="16" MinValue="0"/>
+                                <syncfusion:DoubleTextBox x:Name="txtServiceFee" HorizontalAlignment="Left" Height="31" Margin="133,85,0,0" MaximumNumberDecimalDigits="4" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" FontSize="16" MinValue="0"/>
                                 <syncfusion:ButtonAdv x:Name="btnAddFee" SmallIcon="{x:Null}"  HorizontalAlignment="Left" Height="29" Label="Add Service" Margin="29,171,0,0" VerticalAlignment="Top" Width="120" Click="BtnAddFee_Click"/>
                                 <syncfusion:ButtonAdv x:Name="btnRemoveFee" SmallIcon="{x:Null}"  HorizontalAlignment="Left" Height="29" Label="Remove last service" Margin="179,171,0,0" VerticalAlignment="Top" Width="130" Click="BtnRemoveTarp_Click"/>
                             </Grid>

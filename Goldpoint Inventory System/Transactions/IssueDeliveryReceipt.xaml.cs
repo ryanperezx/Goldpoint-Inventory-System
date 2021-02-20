@@ -426,7 +426,7 @@ namespace Goldpoint_Inventory_System.Transactions
                             {
                                 foreach (var item in items)
                                 {
-                                    if (counter > 13)
+                                    if (counter > 17)
                                     {
 
                                         textSelection = document2.Find("<dr no>", false, true);
@@ -489,7 +489,7 @@ namespace Goldpoint_Inventory_System.Transactions
                             }
 
                             //remove unused placeholder
-                            for (int i = counter; i <= 13; i++)
+                            for (int i = counter; i <= 17; i++)
                             {
 
                                 textSelection = document.Find("<qty" + i + ">", false, true);
@@ -510,7 +510,7 @@ namespace Goldpoint_Inventory_System.Transactions
                             }
                             if (counter2 > 1)
                             {
-                                for (int i = counter2; i <= 14; i++)
+                                for (int i = counter2; i <= 17; i++)
                                 {
                                     textSelection = document2.Find("<qty" + i + ">", false, true);
                                     textRange = textSelection.GetAsOneRange();
