@@ -2726,7 +2726,7 @@ namespace Goldpoint_Inventory_System.Log
 
         private void BtnIssueOR_Click(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrEmpty(txtDRNo.Text) || string.IsNullOrEmpty(txtJobOrderNo.Text))
+            if (string.IsNullOrEmpty(txtDRNo.Text) && string.IsNullOrEmpty(txtJobOrderNo.Text))
             {
                 MessageBox.Show("Please search for the transaction first.");
             }
@@ -2787,7 +2787,7 @@ namespace Goldpoint_Inventory_System.Log
         }
         private void BtnIssueInvoice_Click(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrEmpty(txtDRNo.Text) || string.IsNullOrEmpty(txtJobOrderNo.Text))
+            if (string.IsNullOrEmpty(txtDRNo.Text) && string.IsNullOrEmpty(txtJobOrderNo.Text))
             {
                 MessageBox.Show("Please search for the transaction first.");
             }
@@ -2854,7 +2854,7 @@ namespace Goldpoint_Inventory_System.Log
             }
             else
             {
-                string sMessageBoxText = "Confirming issue of Invoice for Transaction";
+                string sMessageBoxText = "Confirming issue of Delivery Receipt for Transaction";
                 string sCaption = "Update Transaction?";
                 MessageBoxButton btnMessageBox = MessageBoxButton.YesNoCancel;
                 MessageBoxImage icnMessageBox = MessageBoxImage.Warning;
