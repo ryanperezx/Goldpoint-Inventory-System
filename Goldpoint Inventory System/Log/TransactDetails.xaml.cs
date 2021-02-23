@@ -68,6 +68,7 @@ namespace Goldpoint_Inventory_System.Log
                 exJobOrderTarp.IsEnabled = false;
                 exIssueDR.IsEnabled = false;
                 btnPrintJobOrder.IsEnabled = false;
+                btnIssueDR.IsEnabled = false;
                 emptyFields();
                 clearServices();
                 switch (cmbService.Text)
@@ -271,6 +272,8 @@ namespace Goldpoint_Inventory_System.Log
                         {
                             exJobOrder.IsEnabled = true;
                             btnPrintJobOrder.IsEnabled = true;
+                            if (string.IsNullOrEmpty(txtDRNo.Text))
+                                btnIssueDR.IsEnabled = true;
                             txtJobOrder.Text = Convert.ToString(service);
                             using (SqlCommand cmd = new SqlCommand("SELECT * from ServiceMaterial where JobOrderNo = @jobOrderNo and service = 'Printing, Services, etc.'", conn))
                             {
@@ -307,6 +310,8 @@ namespace Goldpoint_Inventory_System.Log
                         {
                             exJobOrderTarp.IsEnabled = true;
                             btnPrintJobOrder.IsEnabled = true;
+                            if (string.IsNullOrEmpty(txtDRNo.Text))
+                                btnIssueDR.IsEnabled = true;
                             txtJobOrder.Text = Convert.ToString(service);
                             using (SqlCommand cmd = new SqlCommand("SELECT * from TarpMaterial where JobOrderNo = @jobOrderNo", conn))
                             {
@@ -575,6 +580,8 @@ namespace Goldpoint_Inventory_System.Log
                         {
                             exJobOrder.IsEnabled = true;
                             btnPrintJobOrder.IsEnabled = true;
+                            if (string.IsNullOrEmpty(txtDRNo.Text))
+                                btnIssueDR.IsEnabled = true;
                             txtJobOrder.Text = Convert.ToString(service);
                             using (SqlCommand cmd = new SqlCommand("SELECT * from ServiceMaterial where JobOrderNo = @jobOrderNo", conn))
                             {
@@ -611,6 +618,8 @@ namespace Goldpoint_Inventory_System.Log
                         {
                             exJobOrderTarp.IsEnabled = true;
                             btnPrintJobOrder.IsEnabled = true;
+                            if (string.IsNullOrEmpty(txtDRNo.Text))
+                                btnIssueDR.IsEnabled = true;
                             txtJobOrder.Text = Convert.ToString(service);
                             using (SqlCommand cmd = new SqlCommand("SELECT * from TarpMaterial where JobOrderNo = @jobOrderNo", conn))
                             {
@@ -872,6 +881,8 @@ namespace Goldpoint_Inventory_System.Log
                         {
                             exJobOrder.IsEnabled = true;
                             btnPrintJobOrder.IsEnabled = true;
+                            if(string.IsNullOrEmpty(txtDRNo.Text))
+                                btnIssueDR.IsEnabled = true;
                             txtJobOrder.Text = Convert.ToString(service);
                             using (SqlCommand cmd = new SqlCommand("SELECT * from ServiceMaterial where JobOrderNo = @jobOrderNo", conn))
                             {
@@ -908,7 +919,8 @@ namespace Goldpoint_Inventory_System.Log
                         {
                             exJobOrderTarp.IsEnabled = true;
                             btnPrintJobOrder.IsEnabled = true;
-
+                            if (string.IsNullOrEmpty(txtDRNo.Text))
+                                btnIssueDR.IsEnabled = true;
                             txtJobOrder.Text = Convert.ToString(service);
                             using (SqlCommand cmd = new SqlCommand("SELECT * from TarpMaterial where JobOrderNo = @jobOrderNo", conn))
                             {
@@ -1094,6 +1106,8 @@ namespace Goldpoint_Inventory_System.Log
                         txtUnpaidBalancePayment.Value = Math.Abs(Convert.ToDouble(txtTotal.Value - unpaidBalance));
                         txtAmount.MaxValue = (double)txtUnpaidBalancePayment.Value;
                         txtAmount.Value = (double)txtUnpaidBalancePayment.Value;
+                        if (string.IsNullOrEmpty(txtDRNo.Text))
+                            btnIssueDR.IsEnabled = true;
 
                         using (SqlCommand cmd = new SqlCommand("SELECT * from TarpMaterial where JobOrderNo = @jobOrderNo", conn))
                         {
@@ -1251,6 +1265,8 @@ namespace Goldpoint_Inventory_System.Log
                         txtUnpaidBalancePayment.Value = Math.Abs(Convert.ToDouble(txtTotal.Value - unpaidBalance));
                         txtAmount.MaxValue = (double)txtUnpaidBalancePayment.Value;
                         txtAmount.Value = (double)txtUnpaidBalancePayment.Value;
+                        if (string.IsNullOrEmpty(txtDRNo.Text))
+                            btnIssueDR.IsEnabled = true;
 
                         using (SqlCommand cmd = new SqlCommand("SELECT * from ServiceMaterial where JobOrderNo = @jobOrderNo", conn))
                         {
@@ -2710,7 +2726,7 @@ namespace Goldpoint_Inventory_System.Log
 
         private void BtnIssueOR_Click(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrEmpty(txtDRNo.Text))
+            if (string.IsNullOrEmpty(txtDRNo.Text) || string.IsNullOrEmpty(txtJobOrderNo.Text))
             {
                 MessageBox.Show("Please search for the transaction first.");
             }
@@ -2742,10 +2758,12 @@ namespace Goldpoint_Inventory_System.Log
                                 }
                             }
                         }
-                        using (SqlCommand cmd = new SqlCommand("UPDATE TransactionDetails set ORNo = @orNo where DRNo = @drNo", conn))
+                        using (SqlCommand cmd = new SqlCommand("UPDATE TransactionDetails set ORNo = @orNo where (DRNo = @drNo OR (jobOrderNo = @jobOrderNo AND service = @service))", conn))
                         {
                             cmd.Parameters.AddWithValue("@orNo", txtORNo.Text);
                             cmd.Parameters.AddWithValue("@drNo", txtDRNo.Text);
+                            cmd.Parameters.AddWithValue("@jobOrderNo", txtJobOrderNo.Text);
+                            cmd.Parameters.AddWithValue("@service", txtJobOrder.Text);
                             try
                             {
                                 cmd.ExecuteNonQuery();
@@ -2769,7 +2787,7 @@ namespace Goldpoint_Inventory_System.Log
         }
         private void BtnIssueInvoice_Click(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrEmpty(txtDRNo.Text))
+            if (string.IsNullOrEmpty(txtDRNo.Text) || string.IsNullOrEmpty(txtJobOrderNo.Text))
             {
                 MessageBox.Show("Please search for the transaction first.");
             }
@@ -2800,10 +2818,12 @@ namespace Goldpoint_Inventory_System.Log
                                 }
                             }
                         }
-                        using (SqlCommand cmd = new SqlCommand("UPDATE TransactionDetails set InvoiceNo = @invoiceNo where DRNo = @drNo", conn))
+                        using (SqlCommand cmd = new SqlCommand("UPDATE TransactionDetails set InvoiceNo = @invoiceNo where (DRNo = @drNo OR (jobOrderNo = @jobOrderNo AND service = @service))", conn))
                         {
                             cmd.Parameters.AddWithValue("@invoiceNo", txtInvoiceNo.Text);
                             cmd.Parameters.AddWithValue("@drNo", txtDRNo.Text);
+                            cmd.Parameters.AddWithValue("@jobOrderNo", txtJobOrderNo.Text);
+                            cmd.Parameters.AddWithValue("@service", txtJobOrder.Text);
                             try
                             {
                                 cmd.ExecuteNonQuery();
@@ -2826,5 +2846,76 @@ namespace Goldpoint_Inventory_System.Log
             }
         }
 
+        private void BtnIssueDR_Click(object sender, RoutedEventArgs e)
+        {
+            if (!string.IsNullOrEmpty(txtDRNo.Text))
+            {
+                MessageBox.Show("Delivery Receipt has already been issued");
+            }
+            else
+            {
+                string sMessageBoxText = "Confirming issue of Invoice for Transaction";
+                string sCaption = "Update Transaction?";
+                MessageBoxButton btnMessageBox = MessageBoxButton.YesNoCancel;
+                MessageBoxImage icnMessageBox = MessageBoxImage.Warning;
+
+                MessageBoxResult dr = MessageBox.Show(sMessageBoxText, sCaption, btnMessageBox, icnMessageBox);
+                switch (dr)
+                {
+                    case MessageBoxResult.Yes:
+                        SqlConnection conn = DBUtils.GetDBConnection();
+                        conn.Open();
+                        using (SqlCommand cmd = new SqlCommand("SELECT TOP 1 DRNo from TransactionDetails WHERE DRNo is not null AND DATALENGTH(DRNo) > 0 ORDER BY DRNo DESC", conn))
+                        {
+                            using (SqlDataReader reader = cmd.ExecuteReader())
+                            {
+                                if (!reader.Read())
+                                    txtDRNo.Text = DateTime.Today.Year.ToString() + "0001";
+                                else
+                                {
+                                    int DRNoIndex = reader.GetOrdinal("DRNo");
+                                    int DRNo = 0;
+                                    if (Convert.ToInt32(Convert.ToString(reader.GetValue(DRNoIndex)).Substring(0, 4)) < DateTime.Today.Year)
+                                    {
+                                        txtDRNo.Text = DateTime.Today.Year.ToString() + "0001";
+                                    }
+                                    else
+                                    {
+                                        DRNo = Convert.ToInt32(reader.GetValue(DRNoIndex)) + 1;
+                                        txtDRNo.Text = DRNo.ToString();
+
+                                    }
+
+                                }
+                            }
+                        }
+                        using (SqlCommand cmd = new SqlCommand("UPDATE TransactionDetails set drNo = @drNo where jobOrderNo = @jobOrderNo AND service = @service", conn))
+                        {
+                            cmd.Parameters.AddWithValue("@drNo", txtDRNo.Text);
+                            cmd.Parameters.AddWithValue("@jobOrderNo", txtJobOrderNo.Text);
+                            cmd.Parameters.AddWithValue("@service", txtJobOrder.Text);
+                            try
+                            {
+                                cmd.ExecuteNonQuery();
+                            }
+                            catch (SqlException ex)
+                            {
+                                MessageBox.Show("An error has been encountered! Log has been updated with the error");
+                                Log = LogManager.GetLogger("*");
+                                Log.Error(ex);
+                                return;
+                            }
+                        }
+
+
+                        MessageBox.Show("Transaction has been updated");
+                        break;
+                    case MessageBoxResult.No:
+                        return;
+                    case MessageBoxResult.Cancel:
+                        return;
+                }
+            }
+        }
     }
 }

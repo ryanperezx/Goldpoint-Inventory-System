@@ -19,6 +19,8 @@ namespace Goldpoint_Inventory_System
             if (IsServerConnected() != true)
             {
                 MessageBox.Show("There is no connection with the database, please check your network and see if the device is connected.");
+                btnLogin.IsEnabled = false;
+                lblForgot.IsEnabled = false;
             }
         }
 

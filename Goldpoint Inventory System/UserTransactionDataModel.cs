@@ -56,7 +56,7 @@ namespace Goldpoint_Inventory_System
             set;
         }
 
-        public int drNo
+        public string drNo
         {
             get;
             set;

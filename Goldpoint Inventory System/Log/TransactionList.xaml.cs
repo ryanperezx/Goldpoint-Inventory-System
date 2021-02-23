@@ -41,6 +41,11 @@ namespace Goldpoint_Inventory_System.Log
                                 int dateIndex = reader.GetOrdinal("date");
                                 int deadlineIndex = reader.GetOrdinal("deadline");
                                 int drNoindex = reader.GetOrdinal("drNo");
+                                string drNo = null;
+                                if (reader.GetValue(drNoindex) == DBNull.Value)
+                                    drNo = "";
+                                else
+                                    drNo = Convert.ToString(reader.GetValue(drNoindex));
                                 int serviceIndex = reader.GetOrdinal("service");
                                 int customerNameIndex = reader.GetOrdinal("customerName");
                                 int issuedByIndex = reader.GetOrdinal("issuedBy");
@@ -52,7 +57,7 @@ namespace Goldpoint_Inventory_System.Log
                                 {
                                     date = Convert.ToString(reader.GetValue(dateIndex)),
                                     deadline = Convert.ToString(reader.GetValue(deadlineIndex)),
-                                    drNo = Convert.ToInt32(reader.GetValue(drNoindex)),
+                                    drNo = drNo,
                                     service = Convert.ToString(reader.GetValue(serviceIndex)),
                                     customerName = Convert.ToString(reader.GetValue(customerNameIndex)),
                                     issuedBy = Convert.ToString(reader.GetValue(issuedByIndex)),
@@ -98,6 +103,11 @@ namespace Goldpoint_Inventory_System.Log
                                         int dateIndex = reader.GetOrdinal("date");
                                         int deadlineIndex = reader.GetOrdinal("deadline");
                                         int drNoindex = reader.GetOrdinal("drNo");
+                                        string drNo = null;
+                                        if (reader.GetValue(drNoindex) == DBNull.Value)
+                                            drNo = "";
+                                        else
+                                            drNo = Convert.ToString(reader.GetValue(drNoindex));
                                         int serviceIndex = reader.GetOrdinal("service");
                                         int customerNameIndex = reader.GetOrdinal("customerName");
                                         int issuedByIndex = reader.GetOrdinal("issuedBy");
@@ -109,7 +119,7 @@ namespace Goldpoint_Inventory_System.Log
                                         {
                                             date = Convert.ToString(reader.GetValue(dateIndex)),
                                             deadline = Convert.ToString(reader.GetValue(deadlineIndex)),
-                                            drNo = Convert.ToInt32(reader.GetValue(drNoindex)),
+                                            drNo = drNo,
                                             service = Convert.ToString(reader.GetValue(serviceIndex)),
                                             customerName = Convert.ToString(reader.GetValue(customerNameIndex)),
                                             issuedBy = Convert.ToString(reader.GetValue(issuedByIndex)),
@@ -142,6 +152,11 @@ namespace Goldpoint_Inventory_System.Log
                                         int dateIndex = reader.GetOrdinal("date");
                                         int deadlineIndex = reader.GetOrdinal("deadline");
                                         int drNoindex = reader.GetOrdinal("drNo");
+                                        string drNo = null;
+                                        if (reader.GetValue(drNoindex) == DBNull.Value)
+                                            drNo = "";
+                                        else
+                                            drNo = Convert.ToString(reader.GetValue(drNoindex));
                                         int serviceIndex = reader.GetOrdinal("service");
                                         int customerNameIndex = reader.GetOrdinal("customerName");
                                         int issuedByIndex = reader.GetOrdinal("issuedBy");
@@ -153,7 +168,7 @@ namespace Goldpoint_Inventory_System.Log
                                         {
                                             date = Convert.ToString(reader.GetValue(dateIndex)),
                                             deadline = Convert.ToString(reader.GetValue(deadlineIndex)),
-                                            drNo = Convert.ToInt32(reader.GetValue(drNoindex)),
+                                            drNo = drNo,
                                             service = Convert.ToString(reader.GetValue(serviceIndex)),
                                             customerName = Convert.ToString(reader.GetValue(customerNameIndex)),
                                             issuedBy = Convert.ToString(reader.GetValue(issuedByIndex)),
@@ -186,6 +201,11 @@ namespace Goldpoint_Inventory_System.Log
                                         int dateIndex = reader.GetOrdinal("date");
                                         int deadlineIndex = reader.GetOrdinal("deadline");
                                         int drNoindex = reader.GetOrdinal("drNo");
+                                        string drNo = null;
+                                        if (reader.GetValue(drNoindex) == DBNull.Value)
+                                            drNo = "";
+                                        else
+                                            drNo = Convert.ToString(reader.GetValue(drNoindex));
                                         int serviceIndex = reader.GetOrdinal("service");
                                         int customerNameIndex = reader.GetOrdinal("customerName");
                                         int issuedByIndex = reader.GetOrdinal("issuedBy");
@@ -197,7 +217,7 @@ namespace Goldpoint_Inventory_System.Log
                                         {
                                             date = Convert.ToString(reader.GetValue(dateIndex)),
                                             deadline = Convert.ToString(reader.GetValue(deadlineIndex)),
-                                            drNo = Convert.ToInt32(reader.GetValue(drNoindex)),
+                                            drNo = drNo,
                                             service = Convert.ToString(reader.GetValue(serviceIndex)),
                                             customerName = Convert.ToString(reader.GetValue(customerNameIndex)),
                                             issuedBy = Convert.ToString(reader.GetValue(issuedByIndex)),
@@ -239,6 +259,11 @@ namespace Goldpoint_Inventory_System.Log
                             int dateIndex = reader.GetOrdinal("date");
                             int deadlineIndex = reader.GetOrdinal("deadline");
                             int drNoindex = reader.GetOrdinal("drNo");
+                            string drNo = null;
+                            if (reader.GetValue(drNoindex) == DBNull.Value)
+                                drNo = "";
+                            else
+                                drNo = Convert.ToString(reader.GetValue(drNoindex));
                             int serviceIndex = reader.GetOrdinal("service");
                             int customerNameIndex = reader.GetOrdinal("customerName");
                             int issuedByIndex = reader.GetOrdinal("issuedBy");
@@ -250,7 +275,7 @@ namespace Goldpoint_Inventory_System.Log
                             {
                                 date = Convert.ToString(reader.GetValue(dateIndex)),
                                 deadline = Convert.ToString(reader.GetValue(deadlineIndex)),
-                                drNo = Convert.ToInt32(reader.GetValue(drNoindex)),
+                                drNo = drNo,
                                 service = Convert.ToString(reader.GetValue(serviceIndex)),
                                 customerName = Convert.ToString(reader.GetValue(customerNameIndex)),
                                 issuedBy = Convert.ToString(reader.GetValue(issuedByIndex)),
@@ -281,9 +306,13 @@ namespace Goldpoint_Inventory_System.Log
                             int dateIndex = reader.GetOrdinal("date");
                             int deadlineIndex = reader.GetOrdinal("deadline");
                             int drNoindex = reader.GetOrdinal("drNo");
+                            string drNo = null;
+                            if (reader.GetValue(drNoindex) == DBNull.Value)
+                                drNo = "";
+                            else
+                                drNo = Convert.ToString(reader.GetValue(drNoindex));
                             int serviceIndex = reader.GetOrdinal("service");
                             int customerNameIndex = reader.GetOrdinal("customerName");
-                            int issuedByIndex = reader.GetOrdinal("issuedBy");
                             int addressIndex = reader.GetOrdinal("address");
                             int contactNoIndex = reader.GetOrdinal("contactNo");
                             int statusIndex = reader.GetOrdinal("status");
@@ -292,10 +321,9 @@ namespace Goldpoint_Inventory_System.Log
                             {
                                 date = Convert.ToString(reader.GetValue(dateIndex)),
                                 deadline = Convert.ToString(reader.GetValue(deadlineIndex)),
-                                drNo = Convert.ToInt32(reader.GetValue(drNoindex)),
+                                drNo = drNo,
                                 service = Convert.ToString(reader.GetValue(serviceIndex)),
                                 customerName = Convert.ToString(reader.GetValue(customerNameIndex)),
-                                issuedBy = Convert.ToString(reader.GetValue(issuedByIndex)),
                                 address = Convert.ToString(reader.GetValue(addressIndex)),
                                 contactNo = Convert.ToString(reader.GetValue(contactNoIndex)),
                                 status = Convert.ToString(reader.GetValue(statusIndex)),
@@ -328,6 +356,11 @@ namespace Goldpoint_Inventory_System.Log
                             int dateIndex = reader.GetOrdinal("date");
                             int deadlineIndex = reader.GetOrdinal("deadline");
                             int drNoindex = reader.GetOrdinal("drNo");
+                            string drNo = null;
+                            if (reader.GetValue(drNoindex) == DBNull.Value)
+                                drNo = "";
+                            else
+                                drNo = Convert.ToString(reader.GetValue(drNoindex));
                             int serviceIndex = reader.GetOrdinal("service");
                             int customerNameIndex = reader.GetOrdinal("customerName");
                             int issuedByIndex = reader.GetOrdinal("issuedBy");
@@ -339,7 +372,7 @@ namespace Goldpoint_Inventory_System.Log
                             {
                                 date = Convert.ToString(reader.GetValue(dateIndex)),
                                 deadline = Convert.ToString(reader.GetValue(deadlineIndex)),
-                                drNo = Convert.ToInt32(reader.GetValue(drNoindex)),
+                                drNo = drNo,
                                 service = Convert.ToString(reader.GetValue(serviceIndex)),
                                 customerName = Convert.ToString(reader.GetValue(customerNameIndex)),
                                 issuedBy = Convert.ToString(reader.GetValue(issuedByIndex)),

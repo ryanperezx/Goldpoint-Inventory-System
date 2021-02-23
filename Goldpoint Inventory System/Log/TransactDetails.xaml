@@ -126,7 +126,9 @@
                     <syncfusion:SfTextBoxExt x:Name="txtJobOrderNo" HorizontalAlignment="Left" Height="31" Margin="136,244,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" IsReadOnly="True" FontSize="16"/>
                     <Label Content="Job Order:" HorizontalAlignment="Left" Margin="22,289,0,0" VerticalAlignment="Top"/>
                     <syncfusion:SfTextBoxExt x:Name="txtJobOrder" HorizontalAlignment="Left" Height="31" Margin="136,289,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="170" IsReadOnly="True" FontSize="16"/>
-                    <syncfusion:ButtonAdv SmallIcon="{x:Null}" x:Name="btnPrintJobOrder" Click="BtnPrintJobOrder_Click" Height="35" Label="Print Job Order" Margin="34,345,546,0" VerticalAlignment="Top" IsEnabled="False"/>
+                    <syncfusion:ButtonAdv SmallIcon="{x:Null}" x:Name="btnPrintJobOrder" Click="BtnPrintJobOrder_Click" Height="35" Label="Print Job Order" Margin="22,345,558,0" VerticalAlignment="Top" IsEnabled="False"/>
+                    <syncfusion:ButtonAdv SmallIcon="{x:Null}" x:Name="btnIssueDR" Click="BtnIssueDR_Click" Height="35" Label="Issue DR for Job Order" Margin="194,345,386,0" VerticalAlignment="Top" IsEnabled="False"/>
+
                 </Grid>
             </Expander>
             <Expander x:Name="exIssueDR" ExpandDirection="Right" FontSize="16" HorizontalAlignment="Left"  Height="420" VerticalAlignment="Top" IsExpanded="{Binding SelectedExpander, ConverterParameter=4, Converter={StaticResource ExpanderToBooleanConverter}, Mode=TwoWay}" IsEnabled="False">
