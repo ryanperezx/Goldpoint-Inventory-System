@@ -8,7 +8,6 @@ using Syncfusion.Windows.PdfViewer;
 using System;
 using System.Collections.ObjectModel;
 using System.Data.SqlClient;
-using System.Drawing.Printing;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -881,7 +880,7 @@ namespace Goldpoint_Inventory_System.Log
                         {
                             exJobOrder.IsEnabled = true;
                             btnPrintJobOrder.IsEnabled = true;
-                            if(string.IsNullOrEmpty(txtDRNo.Text))
+                            if (string.IsNullOrEmpty(txtDRNo.Text))
                                 btnIssueDR.IsEnabled = true;
                             txtJobOrder.Text = Convert.ToString(service);
                             using (SqlCommand cmd = new SqlCommand("SELECT * from ServiceMaterial where JobOrderNo = @jobOrderNo", conn))
@@ -1213,7 +1212,7 @@ namespace Goldpoint_Inventory_System.Log
                                     }
 
                                     service = Convert.ToString(reader.GetValue(serviceIndex));
-                                    if(reader.GetValue(drNoIndex) != DBNull.Value)
+                                    if (reader.GetValue(drNoIndex) != DBNull.Value)
                                         drNo = Convert.ToInt32(reader.GetValue(drNoIndex));
                                     exist = true;
                                     exJobOrder.IsEnabled = true;
@@ -2907,8 +2906,44 @@ namespace Goldpoint_Inventory_System.Log
                             }
                         }
 
+                        double itemTotal = 0;
+                        //we would only get the total
+                        if (services.Count > 0)
+                        {
+                            foreach (var amount in services)
+                            {
+                                itemTotal += amount.amount;
+                            }
+                        }
+                        else if (tarp.Count > 0)
+                        {
+                            foreach (var amount in services)
+                            {
+                                itemTotal += amount.amount;
+                            }
+                        }
 
-                        MessageBox.Show("Transaction has been updated");
+                        using (SqlCommand cmd = new SqlCommand("INSERT into PaymentHist VALUES (@DRNo, @date, @paidAmt, @total, @status)", conn))
+                        {
+                            cmd.Parameters.AddWithValue("@DRNo", txtDRNo.Text);
+                            cmd.Parameters.AddWithValue("@date", txtDate.Text);
+                            cmd.Parameters.AddWithValue("@total", itemTotal);
+                            cmd.Parameters.AddWithValue("@paidAmt", 0);
+                            cmd.Parameters.AddWithValue("@status", "Unpaid");
+
+                            try
+                            {
+                                cmd.ExecuteNonQuery();
+                            }
+                            catch (SqlException ex)
+                            {
+                                MessageBox.Show("An error has been encountered! Log has been updated with the error");
+                                Log = LogManager.GetLogger("*");
+                                Log.Error(ex);
+                            }
+                        }
+
+                        MessageBox.Show("Transaction has been updated. Please search for the transaction again");
                         break;
                     case MessageBoxResult.No:
                         return;
