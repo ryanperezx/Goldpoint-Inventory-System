@@ -24,9 +24,6 @@ namespace Goldpoint_Inventory_System.Transactions
         ObservableCollection<PhotocopyDataModel> photocopy = new ObservableCollection<PhotocopyDataModel>();
 
         private static Logger Log = LogManager.GetCurrentClassLogger();
-        int startPageIndex = 0;
-        int endPageIndex = 0;
-        System.Drawing.Image[] images = null;
         public StockOut(string fullName, string adminLevel)
         {
             InitializeComponent();
@@ -745,12 +742,21 @@ namespace Goldpoint_Inventory_System.Transactions
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
                     if (!reader.Read())
-                        txtDRNo.Text = "1";
+                        txtDRNo.Text = DateTime.Today.Year.ToString() + "0001";
                     else
                     {
                         int DRNoIndex = reader.GetOrdinal("DRNo");
-                        int DRNo = Convert.ToInt32(reader.GetValue(DRNoIndex)) + 1;
-                        txtDRNo.Text = DRNo.ToString();
+                        int DRNo = 0;
+                        if (Convert.ToInt32(Convert.ToString(reader.GetValue(DRNoIndex)).Substring(0, 4)) < DateTime.Today.Year)
+                        {
+                            txtDRNo.Text = DateTime.Today.Year.ToString() + "0001";
+                        }
+                        else
+                        {
+                            DRNo = Convert.ToInt32(reader.GetValue(DRNoIndex)) + 1;
+                            txtDRNo.Text = DRNo.ToString();
+
+                        }
 
                     }
                 }

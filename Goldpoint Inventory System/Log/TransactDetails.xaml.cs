@@ -10,6 +10,7 @@ using System.Collections.ObjectModel;
 using System.Data.SqlClient;
 using System.Drawing.Printing;
 using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -33,9 +34,6 @@ namespace Goldpoint_Inventory_System.Log
 
         //for payment and claiming button
         bool exist = false;
-        int startPageIndex = 0;
-        int endPageIndex = 0;
-        System.Drawing.Image[] images = null;
         public TransactDetails()
         {
             InitializeComponent();
@@ -717,7 +715,8 @@ namespace Goldpoint_Inventory_System.Log
                                         txtCustName.Text = Convert.ToString(reader.GetValue(custNameIndex));
                                         TextRange textRange = new TextRange(txtAddress.Document.ContentStart, txtAddress.Document.ContentEnd);
                                         textRange.Text = Convert.ToString(reader.GetValue(addressIndex));
-                                        txtDRNo.Text = Convert.ToString(reader.GetValue(drNoIndex));
+                                        if (reader.GetValue(drNoIndex) != DBNull.Value)
+                                            txtDRNo.Text = Convert.ToString(reader.GetValue(drNoIndex));
                                         txtContactNo.Text = Convert.ToString(reader.GetValue(contactNoIndex));
                                         txtRemarks.Text = Convert.ToString(reader.GetValue(remarksIndex));
                                         txtJobOrderNo.Text = Convert.ToString(jobOrderNo);
@@ -754,7 +753,8 @@ namespace Goldpoint_Inventory_System.Log
                                         btnIssueInvoice.IsEnabled = true;
 
                                         service = Convert.ToString(reader.GetValue(serviceIndex));
-                                        drNo = Convert.ToInt32(reader.GetValue(drNoIndex));
+                                        if (reader.GetValue(drNoIndex) != DBNull.Value)
+                                            drNo = Convert.ToInt32(reader.GetValue(drNoIndex));
                                         exist = true;
 
                                     }
@@ -1199,7 +1199,8 @@ namespace Goldpoint_Inventory_System.Log
                                     }
 
                                     service = Convert.ToString(reader.GetValue(serviceIndex));
-                                    drNo = Convert.ToInt32(reader.GetValue(drNoIndex));
+                                    if(reader.GetValue(drNoIndex) != DBNull.Value)
+                                        drNo = Convert.ToInt32(reader.GetValue(drNoIndex));
                                     exist = true;
                                     exJobOrder.IsEnabled = true;
                                     btnPrintJobOrder.IsEnabled = true;
@@ -1413,7 +1414,7 @@ namespace Goldpoint_Inventory_System.Log
 
                                         using (SqlCommand cmd1 = new SqlCommand("INSERT into TransactionLogs (date, [transaction], remarks) VALUES (@date, @transaction, '')", conn))
                                         {
-                                            cmd1.Parameters.AddWithValue("@date", txtDate.Text);
+                                            cmd1.Parameters.AddWithValue("@date", DateTime.Today.ToShortDateString());
                                             cmd1.Parameters.AddWithValue("@transaction", "Customer: " + txtCustName.Text + ", with D.R No: " + txtDRNo.Text + ", paid Php " + txtAmount.Text + ". Current Outstanding Balance is Php " + txtTotal.Text);
                                             try
                                             {
@@ -1670,7 +1671,7 @@ namespace Goldpoint_Inventory_System.Log
                         textRange.Text = txtDeadline.Text;
                         textSelection = document.Find("<date>", false, true);
                         textRange = textSelection.GetAsOneRange();
-                        textRange.Text = txtDate.Text;
+                        textRange.Text = DateTime.Today.ToShortDateString();
                         textSelection = document.Find("<address>", false, true);
                         textRange = textSelection.GetAsOneRange();
                         TextRange address = new TextRange(txtAddress.Document.ContentStart, txtAddress.Document.ContentEnd);
@@ -1727,7 +1728,7 @@ namespace Goldpoint_Inventory_System.Log
                                 textRange.Text = txtDeadline.Text;
                                 textSelection = document2.Find("<date>", false, true);
                                 textRange = textSelection.GetAsOneRange();
-                                textRange.Text = txtDate.Text;
+                                textRange.Text = DateTime.Today.ToShortDateString();
                                 textSelection = document2.Find("<address>", false, true);
                                 textRange = textSelection.GetAsOneRange();
                                 textRange.Text = address.Text;
@@ -1953,7 +1954,7 @@ namespace Goldpoint_Inventory_System.Log
                         textRange.Text = txtDeadline.Text;
                         textSelection = document.Find("<date>", false, true);
                         textRange = textSelection.GetAsOneRange();
-                        textRange.Text = txtDate.Text;
+                        textRange.Text = DateTime.Today.ToShortDateString();
                         textSelection = document.Find("<address>", false, true);
                         textRange = textSelection.GetAsOneRange();
                         TextRange address = new TextRange(txtAddress.Document.ContentStart, txtAddress.Document.ContentEnd);
@@ -2009,7 +2010,7 @@ namespace Goldpoint_Inventory_System.Log
                                 textRange.Text = txtDeadline.Text;
                                 textSelection = document2.Find("<date>", false, true);
                                 textRange = textSelection.GetAsOneRange();
-                                textRange.Text = txtDate.Text;
+                                textRange.Text = DateTime.Today.ToShortDateString();
                                 textSelection = document2.Find("<address>", false, true);
                                 textRange = textSelection.GetAsOneRange();
                                 textRange.Text = address.Text;
@@ -2219,7 +2220,7 @@ namespace Goldpoint_Inventory_System.Log
         {
             if (string.IsNullOrEmpty(txtDRNo.Text))
             {
-                MessageBox.Show("Please search for the transaction first.");
+                MessageBox.Show("Print DR is not applicable to this transaction");
             }
             else
             {
@@ -2258,7 +2259,7 @@ namespace Goldpoint_Inventory_System.Log
                         }
                         textSelection = document.Find("<date>", false, true);
                         textRange = textSelection.GetAsOneRange();
-                        textRange.Text = txtDate.Text;
+                        textRange.Text = DateTime.Today.ToShortDateString();
                         textSelection = document.Find("<address>", false, true);
                         textRange = textSelection.GetAsOneRange();
                         TextRange address = new TextRange(txtAddress.Document.ContentStart, txtAddress.Document.ContentEnd);
@@ -2271,7 +2272,8 @@ namespace Goldpoint_Inventory_System.Log
                         int counter2 = 1;
                         if (services.Count > 0)
                         {
-                            foreach (var item in services)
+                            var grouped = services.GroupBy(i => i.Description).Select(i => new { Description = i.Key, Quantity = i.Sum(item => item.qty), UnitPrice = i.Sum(item => item.unitPrice), Amount = i.Sum(item => item.amount) }); //group 
+                            foreach (var item in grouped)
                             {
                                 if (counter > 17)
                                 {
@@ -2298,14 +2300,14 @@ namespace Goldpoint_Inventory_System.Log
                                     }
                                     textSelection = document2.Find("<date>", false, true);
                                     textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = txtDate.Text;
+                                    textRange.Text = DateTime.Today.ToShortDateString();
                                     textSelection = document2.Find("<address>", false, true);
                                     textRange = textSelection.GetAsOneRange();
                                     textRange.Text = address.Text;
 
                                     textSelection = document2.Find("<qty" + counter2 + ">", false, true);
                                     textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = item.qty.ToString();
+                                    textRange.Text = item.Quantity.ToString();
 
                                     textSelection = document2.Find("<description" + counter2 + ">", false, true);
                                     textRange = textSelection.GetAsOneRange();
@@ -2313,18 +2315,18 @@ namespace Goldpoint_Inventory_System.Log
 
                                     textSelection = document2.Find("<price" + counter2 + ">", false, true);
                                     textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = item.unitPrice.ToString();
+                                    textRange.Text = item.UnitPrice.ToString();
 
                                     textSelection = document2.Find("<amount" + counter2 + ">", false, true);
                                     textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = item.amount.ToString();
+                                    textRange.Text = item.Amount.ToString();
                                     counter2++;
                                 }
                                 else
                                 {
                                     textSelection = document.Find("<qty" + counter + ">", false, true);
                                     textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = item.qty.ToString();
+                                    textRange.Text = item.Quantity.ToString();
 
                                     textSelection = document.Find("<description" + counter + ">", false, true);
                                     textRange = textSelection.GetAsOneRange();
@@ -2332,11 +2334,11 @@ namespace Goldpoint_Inventory_System.Log
 
                                     textSelection = document.Find("<price" + counter + ">", false, true);
                                     textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = item.unitPrice.ToString();
+                                    textRange.Text = item.UnitPrice.ToString();
 
                                     textSelection = document.Find("<amount" + counter + ">", false, true);
                                     textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = item.amount.ToString();
+                                    textRange.Text = item.Amount.ToString();
                                     counter++;
                                 }
                             }
@@ -2370,7 +2372,7 @@ namespace Goldpoint_Inventory_System.Log
                                     }
                                     textSelection = document2.Find("<date>", false, true);
                                     textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = txtDate.Text;
+                                    textRange.Text = DateTime.Today.ToShortDateString();
                                     textSelection = document2.Find("<address>", false, true);
                                     textRange = textSelection.GetAsOneRange();
                                     textRange.Text = address.Text;
@@ -2444,7 +2446,7 @@ namespace Goldpoint_Inventory_System.Log
                                     }
                                     textSelection = document2.Find("<date>", false, true);
                                     textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = txtDate.Text;
+                                    textRange.Text = DateTime.Today.ToShortDateString();
                                     textSelection = document2.Find("<address>", false, true);
                                     textRange = textSelection.GetAsOneRange();
                                     textRange.Text = address.Text;
@@ -2517,7 +2519,7 @@ namespace Goldpoint_Inventory_System.Log
                                     }
                                     textSelection = document2.Find("<date>", false, true);
                                     textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = txtDate.Text;
+                                    textRange.Text = DateTime.Today.ToShortDateString();
                                     textSelection = document2.Find("<address>", false, true);
                                     textRange = textSelection.GetAsOneRange();
                                     textRange.Text = address.Text;
@@ -2590,7 +2592,7 @@ namespace Goldpoint_Inventory_System.Log
                                     }
                                     textSelection = document2.Find("<date>", false, true);
                                     textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = txtDate.Text;
+                                    textRange.Text = DateTime.Today.ToShortDateString();
                                     textSelection = document2.Find("<address>", false, true);
                                     textRange = textSelection.GetAsOneRange();
                                     textRange.Text = address.Text;

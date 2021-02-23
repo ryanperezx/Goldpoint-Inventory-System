@@ -85,7 +85,7 @@ namespace Goldpoint_Inventory_System
             SqlConnection conn = DBUtils.GetDBConnection();
             conn.Open();
             //get all non company use
-            using (SqlCommand cmd = new SqlCommand("SELECT DISTINCT td.service, td.deadline, td.customerName, td.DRNo, td.status, td.claimed, td.issuedBy from TransactionDetails td INNER JOIN PaymentHist ph on td.DRNo = ph.DRNo WHERE (td.claimed = 'Unclaimed' AND TRY_CAST(td.deadline as date) >= CONVERT(VARCHAR(10), getdate(), 23)) AND jobOrderNo > 0 AND inaccessible = 1", conn))
+            using (SqlCommand cmd = new SqlCommand("SELECT DISTINCT service, deadline, customerName, jobOrderNo, status, claimed, issuedBy from TransactionDetails WHERE (claimed = 'Unclaimed' AND TRY_CAST(deadline as date) >= CONVERT(VARCHAR(10), getdate(), 23)) AND jobOrderNo > 0 AND inaccessible = 1", conn))
             {
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
@@ -97,7 +97,7 @@ namespace Goldpoint_Inventory_System
                             int serviceIndex = reader.GetOrdinal("service");
                             int deadlineIndex = reader.GetOrdinal("deadline");
                             int custNameIndex = reader.GetOrdinal("customerName");
-                            int drNoIndex = reader.GetOrdinal("DRNo");
+                            int jobOrderNoIndex = reader.GetOrdinal("JobOrderNo");
                             int statusIndex = reader.GetOrdinal("status");
                             int claimedIndex = reader.GetOrdinal("claimed");
                             int issuedByIndex = reader.GetOrdinal("issuedBy");
@@ -107,7 +107,7 @@ namespace Goldpoint_Inventory_System
                                 deadline = Convert.ToString(reader.GetValue(deadlineIndex)),
                                 customerName = Convert.ToString(reader.GetValue(custNameIndex)),
                                 service = Convert.ToString(reader.GetValue(serviceIndex)),
-                                receiptNo = Convert.ToString(reader.GetValue(drNoIndex)),
+                                receiptNo = Convert.ToString(reader.GetValue(jobOrderNoIndex)),
                                 status = Convert.ToString(reader.GetValue(statusIndex)),
                                 claimed = Convert.ToString(reader.GetValue(claimedIndex)),
                                 issuedBy = Convert.ToString(reader.GetValue(issuedByIndex))

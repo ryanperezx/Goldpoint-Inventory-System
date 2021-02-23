@@ -97,12 +97,18 @@
                     </TextBlock>
                 </Expander.Header>
                 <Grid Width="800">
-                    <Label Content="Description:" HorizontalAlignment="Left" Margin="30,35,0,0" VerticalAlignment="Top"/>
-                    <syncfusion:SfTextBoxExt x:Name="txtDesc" HorizontalAlignment="Left" Height="31" Margin="129,35,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="192" FontSize="16"/>
-                    <Label Content="Qty:" HorizontalAlignment="Left" Margin="30,93,0,0" VerticalAlignment="Top"/>
-                    <syncfusion:IntegerTextBox x:Name="txtQty" HorizontalAlignment="Left" Height="31" Margin="129,93,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" FontSize="16"/>
-                    <Label Content="Unit Price:" HorizontalAlignment="Left" Margin="30,153,0,0" VerticalAlignment="Top"/>
-                    <syncfusion:DoubleTextBox x:Name="txtUnitPrice" HorizontalAlignment="Left" Height="31" Margin="129,153,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" FontSize="16" MinValue="0"/>
+
+                    <Label Content="Item Code:" HorizontalAlignment="Left" Margin="30,74,0,0" VerticalAlignment="Top"/>
+                    <syncfusion:SfTextBoxExt x:Name="txtItemCode" HorizontalAlignment="Left" Height="31" Margin="129,74,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="167" FontSize="16"/>
+                    <Label x:Name="btnSearchItemCode" MouseLeftButtonDown="BtnSearchItemCode_MouseLeftButtonDown" VerticalAlignment="Top" HorizontalAlignment="Left" Height="30" Width="30" Cursor="Hand" ToolTip="Search Item Code" Margin="301,75,0,0">
+                        <iconPacks:PackIconMaterialLight Kind="Magnify" Height="20" Width="20" Foreground="DarkGoldenrod" />
+                    </Label>
+                    <Label Content="Description:" HorizontalAlignment="Left" Margin="30,123,0,0" VerticalAlignment="Top"/>
+                    <syncfusion:SfTextBoxExt x:Name="txtDesc" HorizontalAlignment="Left" Height="31" Margin="129,123,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="192" FontSize="16"/>
+                    <Label Content="Qty:" HorizontalAlignment="Left" Margin="30,174,0,0" VerticalAlignment="Top"/>
+                    <syncfusion:IntegerTextBox x:Name="txtQty" HorizontalAlignment="Left" Height="31" Margin="129,174,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" FontSize="16"/>
+                    <Label Content="Unit Price:" HorizontalAlignment="Left" Margin="30,224,0,0" VerticalAlignment="Top"/>
+                    <syncfusion:DoubleTextBox x:Name="txtUnitPrice" HorizontalAlignment="Left" Height="31" Margin="129,224,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" FontSize="16" MinValue="0"/>
                     <syncfusion:ButtonAdv x:Name="btnAddItem" SmallIcon="{x:Null}"  HorizontalAlignment="Left" Height="29" Label="Add item" Margin="30,354,0,0" VerticalAlignment="Top" Width="120" Click="BtnAddItem_Click"/>
                     <syncfusion:ButtonAdv x:Name="btnRemoveLastItem" SmallIcon="{x:Null}"  HorizontalAlignment="Left" Height="29" Label="Remove last item" Margin="201,354,0,0" VerticalAlignment="Top" Width="120" Click="BtnRemoveLastItem_Click"/>
                     <syncfusion:SfDataGrid x:Name="dgItems" HorizontalAlignment="Center" Height="418" VerticalAlignment="Center" Width="434" ItemsSource="{Binding}" AutoGenerateColumns="False" Margin="366,0,0,0">

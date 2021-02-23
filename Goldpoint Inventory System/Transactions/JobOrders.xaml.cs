@@ -27,7 +27,7 @@ namespace Goldpoint_Inventory_System.Transactions
             {
                 SqlConnection conn = DBUtils.GetDBConnection();
                 conn.Open();
-                using (SqlCommand cmd = new SqlCommand("SELECT * from TransactionDetails where jobOrderNo is not null AND DATALENGTH(jobOrderNo) > 0 and (service = 'Printing, Services, etc.' or service = 'Tarpaulin') and  customerName LIKE @custName and inaccessible = 1", conn))
+                using (SqlCommand cmd = new SqlCommand("SELECT * from TransactionDetails where jobOrderNo is not null AND DATALENGTH(jobOrderNo) > 0 and (service = 'Printing, Services, etc.' or service = 'Tarpaulin') and customerName LIKE @custName and inaccessible = 1", conn))
                 {
                     cmd.Parameters.AddWithValue("@custName", '%' + txtCustName.Text + '%');
                     using (SqlDataReader reader = cmd.ExecuteReader())

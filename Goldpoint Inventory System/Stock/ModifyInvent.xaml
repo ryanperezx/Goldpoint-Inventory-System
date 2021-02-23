@@ -24,7 +24,7 @@
             <StackPanel.Resources>
                 <local:ExpanderToBooleanConverter x:Key="ExpanderToBooleanConverter" />
             </StackPanel.Resources>
-            <Expander Header="Modify Item" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Top" Width="900" IsExpanded="{Binding SelectedExpander, ConverterParameter=1, Converter={StaticResource ExpanderToBooleanConverter}, Mode=TwoWay}" >
+            <Expander IsEnabled="False" Header="Modify Item" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Top" Width="900" IsExpanded="{Binding SelectedExpander, ConverterParameter=1, Converter={StaticResource ExpanderToBooleanConverter}, Mode=TwoWay}" >
                 <Grid Height="400">
                     <Label Content="Item Code:" HorizontalAlignment="Left" Margin="100,40,0,0" VerticalAlignment="Top"/>
                     <syncfusion:SfTextBoxExt x:Name="txtItemCode" HorizontalAlignment="Left" Height="31" Margin="209,40,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" FontSize="16"/>

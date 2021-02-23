@@ -115,7 +115,7 @@
                 </Expander.Header>
                 <Grid Width="700">
                     <Label Content="Issue By:" HorizontalAlignment="Left" Margin="22,37,0,0" VerticalAlignment="Top"/>
-                    <syncfusion:SfTextBoxExt x:Name="txtIssuedBy" HorizontalAlignment="Left" Height="31" Margin="136,37,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" IsReadOnly="True" FontSize="16"/>
+                    <syncfusion:SfTextBoxExt x:Name="txtIssuedBy" HorizontalAlignment="Left" Height="31" Margin="136,37,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="170" IsReadOnly="True" FontSize="16"/>
 
                     <syncfusion:ButtonAdv SmallIcon="{x:Null}" x:Name="btnPrintDR" Click="BtnPrintDR_Click" HorizontalAlignment="Left" Height="35" Label="Print DR" Margin="22,114,0,0" VerticalAlignment="Top" Width="120"/>
                     <syncfusion:ButtonAdv SmallIcon="{x:Null}" x:Name="btnIssueOR" Click="BtnIssueOR_Click" HorizontalAlignment="Left" Height="35" Label="Issue OR" Margin="194,114,0,0" VerticalAlignment="Top" Width="120" IsEnabled="False"/>

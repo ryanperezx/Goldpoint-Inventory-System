@@ -123,7 +123,7 @@
                 </Grid>
             </Expander>
             <Expander Header="Customer Information" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Top" Width="400" IsExpanded="{Binding SelectedExpander, ConverterParameter=2, Converter={StaticResource ExpanderToBooleanConverter}, Mode=TwoWay}">
-                <Grid Height="400" >
+                <Grid Height="395" >
                     <Label Content="Date:" HorizontalAlignment="Left" Margin="31,36,0,0" VerticalAlignment="Top"/>
                     <syncfusion:DateTimeEdit x:Name="txtDate" HorizontalAlignment="Left" Height="31" Margin="164,36,0,0" TextWrapping="Wrap" Text="DateTimeEdit" VerticalAlignment="Top" Width="135"/>
                     <Label Content="Customer Name:" HorizontalAlignment="Left" Margin="31,85,0,0" VerticalAlignment="Top"/>

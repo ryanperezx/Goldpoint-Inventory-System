@@ -33,7 +33,7 @@
         <syncfusion:SfDataGrid x:Name="dgPending" HorizontalAlignment="Left" Height="257" Margin="855,195,0,0" VerticalAlignment="Top" Width="470" ItemsSource="{Binding}" AutoGenerateColumns="False">
             <syncfusion:SfDataGrid.Columns>
                 <syncfusion:GridTextColumn MappingName="Deadline" Width="100" DisplayBinding="{Binding deadline}"/>
-                <syncfusion:GridTextColumn MappingName="D.R No" DisplayBinding="{Binding receiptNo}" Width="120"/>
+                <syncfusion:GridTextColumn MappingName="J.O No" DisplayBinding="{Binding receiptNo}" Width="120"/>
                 <syncfusion:GridTextColumn MappingName="Customer Name" DisplayBinding="{Binding customerName}" Width="170"/>
                 <syncfusion:GridTextColumn MappingName="Issued by" DisplayBinding="{Binding issuedBy}" Width="120"/>
                 <syncfusion:GridTextColumn MappingName="Service" DisplayBinding="{Binding service}" Width="120"/>

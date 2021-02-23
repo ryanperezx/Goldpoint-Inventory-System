@@ -8,6 +8,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Data.SqlClient;
 using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -31,7 +32,6 @@ namespace Goldpoint_Inventory_System.Transactions
             dgService.ItemsSource = services;
             dgTarpaulin.ItemsSource = tarp;
             txtIssuedBy.Text = fullName;
-            getDRNo();
         }
 
         private void SearchJobOrders_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -50,6 +50,7 @@ namespace Goldpoint_Inventory_System.Transactions
                 if (value == "Printing, Services, etc.")
                 {
                     expServ.IsEnabled = true;
+                    expServ.IsExpanded = true;
                     expTarp.IsEnabled = false;
                     emptyTarp();
                 }
@@ -58,6 +59,7 @@ namespace Goldpoint_Inventory_System.Transactions
 
                     expServ.IsEnabled = false;
                     expTarp.IsEnabled = true;
+                    expTarp.IsExpanded = true;
                     emptyService();
                 }
             }
@@ -98,12 +100,21 @@ namespace Goldpoint_Inventory_System.Transactions
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
                     if (!reader.Read())
-                        txtDRNo.Text = "1";
+                        txtDRNo.Text = DateTime.Today.Year.ToString() + "0001";
                     else
                     {
                         int DRNoIndex = reader.GetOrdinal("DRNo");
-                        int DRNo = Convert.ToInt32(reader.GetValue(DRNoIndex)) + 1;
-                        txtDRNo.Text = DRNo.ToString();
+                        int DRNo = 0;
+                        if (Convert.ToInt32(Convert.ToString(reader.GetValue(DRNoIndex)).Substring(0,4)) < DateTime.Today.Year)
+                        {
+                            txtDRNo.Text = DateTime.Today.Year.ToString() + "0001";
+                        }
+                        else
+                        {
+                            DRNo = Convert.ToInt32(reader.GetValue(DRNoIndex)) + 1;
+                            txtDRNo.Text = DRNo.ToString();
+
+                        }
 
                     }
                 }
@@ -132,7 +143,6 @@ namespace Goldpoint_Inventory_System.Transactions
                         btnCancelJobOrder.IsEnabled = false;
                         btnAddJobOrder.IsEnabled = false;
                         btnSaveJobOrder.IsEnabled = true;
-                        getDRNo();
                     }
                 }
             }
@@ -155,7 +165,6 @@ namespace Goldpoint_Inventory_System.Transactions
                         btnCancelJobOrder.IsEnabled = false;
                         btnAddJobOrder.IsEnabled = false;
                         btnSaveJobOrder.IsEnabled = true;
-                        getDRNo();
                     }
                 }
             }
@@ -283,7 +292,6 @@ namespace Goldpoint_Inventory_System.Transactions
         }
         private void BtnReset_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            getDRNo();
             services.Clear();
             tarp.Clear();
             txtJobOrder.IsEnabled = true;
@@ -597,9 +605,9 @@ namespace Goldpoint_Inventory_System.Transactions
                         SqlConnection conn = DBUtils.GetDBConnection();
                         conn.Open();
                         bool success = true;
+                        if (chkDR.IsChecked == true)
+                            getDRNo();
                         getJobOrderNo();
-                        getDRNo();
-
                         if (cmbJobOrder.Text == "Printing, Services, etc.")
                         {
                             foreach (var item in services)
@@ -634,7 +642,14 @@ namespace Goldpoint_Inventory_System.Transactions
 
                             using (SqlCommand cmd = new SqlCommand("INSERT into TransactionDetails (drNo, jobOrderNo, service, date, deadline, customerName, issuedBy, contactNo, address, remarks, status, claimed, inaccessible) VALUES (@drNo, @jobOrderNo, @service, @date, @deadline, @customerName, @issuedBy, @contactNo, @address, @remarks, @status, 'Unclaimed', 1)", conn))
                             {
-                                cmd.Parameters.AddWithValue("@drNo", txtDRNo.Text);
+                                if (string.IsNullOrEmpty(txtDRNo.Text))
+                                {
+                                    cmd.Parameters.AddWithValue("@drNo", DBNull.Value);
+                                }
+                                else
+                                {
+                                    cmd.Parameters.AddWithValue("@drNo", txtDRNo.Text);
+                                }
                                 cmd.Parameters.AddWithValue("@jobOrderNo", txtJobOrder.Value);
                                 cmd.Parameters.AddWithValue("@service", cmbJobOrder.Text);
                                 cmd.Parameters.AddWithValue("@date", txtDate.Text);
@@ -727,7 +742,14 @@ namespace Goldpoint_Inventory_System.Transactions
 
                             using (SqlCommand cmd = new SqlCommand("INSERT into TransactionDetails (drNo, jobOrderNo, service, date, deadline, customerName, issuedBy, contactNo, address, remarks, status, claimed, inaccessible) VALUES (@drNo, @jobOrderNo, @service, @date, @deadline, @customerName, @issuedBy, @contactNo, @address, @remarks, @status, 'Unclaimed', 1)", conn))
                             {
-                                cmd.Parameters.AddWithValue("@drNo", txtDRNo.Text);
+                                if (string.IsNullOrEmpty(txtDRNo.Text))
+                                {
+                                    cmd.Parameters.AddWithValue("@drNo", DBNull.Value);
+                                }
+                                else
+                                {
+                                    cmd.Parameters.AddWithValue("@drNo", txtDRNo.Text);
+                                }
                                 cmd.Parameters.AddWithValue("@jobOrderNo", txtJobOrder.Value);
                                 cmd.Parameters.AddWithValue("@service", cmbJobOrder.Text);
                                 cmd.Parameters.AddWithValue("@date", txtDate.Text);
@@ -766,7 +788,10 @@ namespace Goldpoint_Inventory_System.Transactions
                         }
                         if (success)
                         {
-                            promptPrintDR();
+                            if (!string.IsNullOrEmpty(txtDRNo.Text))
+                            {
+                                promptPrintDR();
+                            }
                             promptPrintJobOrder();
                             string jobOrder = null;
                             if (cmbJobOrder.Text == "Printing, Services, etc.")
@@ -831,36 +856,38 @@ namespace Goldpoint_Inventory_System.Transactions
                                     success = false;
                                 }
                             }
-
-                            using (SqlCommand cmd = new SqlCommand("INSERT into PaymentHist VALUES (@DRNo, @date, @paidAmt, @total, @status)", conn))
+                            if (!string.IsNullOrEmpty(txtDRNo.Text))
                             {
-                                cmd.Parameters.AddWithValue("@DRNo", txtDRNo.Text);
-                                cmd.Parameters.AddWithValue("@date", txtDate.Text);
-                                cmd.Parameters.AddWithValue("@total", txtItemTotal.Value);
-                                if (rdPaid.IsChecked == true)
+                                using (SqlCommand cmd = new SqlCommand("INSERT into PaymentHist VALUES (@DRNo, @date, @paidAmt, @total, @status)", conn))
                                 {
-                                    cmd.Parameters.AddWithValue("@paidAmt", txtItemTotal.Value);
-                                    cmd.Parameters.AddWithValue("@status", "Paid");
-                                }
-                                if (rdUnpaid.IsChecked == true)
-                                {
-                                    cmd.Parameters.AddWithValue("@paidAmt", 0);
-                                    cmd.Parameters.AddWithValue("@status", "Unpaid");
-                                }
-                                if (rdDownpayment.IsChecked == true)
-                                {
-                                    cmd.Parameters.AddWithValue("@paidAmt", txtDownpayment.Value);
-                                    cmd.Parameters.AddWithValue("@status", "Unpaid");
-                                }
-                                try
-                                {
-                                    cmd.ExecuteNonQuery();
-                                }
-                                catch (SqlException ex)
-                                {
-                                    MessageBox.Show("An error has been encountered! Log has been updated with the error");
-                                    Log = LogManager.GetLogger("*");
-                                    Log.Error(ex);
+                                    cmd.Parameters.AddWithValue("@DRNo", txtDRNo.Text);
+                                    cmd.Parameters.AddWithValue("@date", txtDate.Text);
+                                    cmd.Parameters.AddWithValue("@total", txtItemTotal.Value);
+                                    if (rdPaid.IsChecked == true)
+                                    {
+                                        cmd.Parameters.AddWithValue("@paidAmt", txtItemTotal.Value);
+                                        cmd.Parameters.AddWithValue("@status", "Paid");
+                                    }
+                                    if (rdUnpaid.IsChecked == true)
+                                    {
+                                        cmd.Parameters.AddWithValue("@paidAmt", 0);
+                                        cmd.Parameters.AddWithValue("@status", "Unpaid");
+                                    }
+                                    if (rdDownpayment.IsChecked == true)
+                                    {
+                                        cmd.Parameters.AddWithValue("@paidAmt", txtDownpayment.Value);
+                                        cmd.Parameters.AddWithValue("@status", "Unpaid");
+                                    }
+                                    try
+                                    {
+                                        cmd.ExecuteNonQuery();
+                                    }
+                                    catch (SqlException ex)
+                                    {
+                                        MessageBox.Show("An error has been encountered! Log has been updated with the error");
+                                        Log = LogManager.GetLogger("*");
+                                        Log.Error(ex);
+                                    }
                                 }
                             }
                             MessageBox.Show("Job Order has been added");
@@ -874,7 +901,6 @@ namespace Goldpoint_Inventory_System.Transactions
                         emptyTarp();
                         services.Clear();
                         tarp.Clear();
-                        getDRNo();
                         break;
                     case MessageBoxResult.No:
                         return;
@@ -1070,7 +1096,9 @@ namespace Goldpoint_Inventory_System.Transactions
                             int counter2 = 1;
                             if (services.Count > 0)
                             {
-                                foreach (var item in services)
+                                var grouped = services.GroupBy(i => i.Description).Select(i => new { Description = i.Key, Quantity = i.Sum(item => item.qty), UnitPrice = i.Sum(item => item.unitPrice), Amount = i.Sum(item => item.amount) }); //group 
+
+                                foreach (var item in grouped)
                                 {
                                     if (counter > 17)
                                     {
@@ -1105,38 +1133,38 @@ namespace Goldpoint_Inventory_System.Transactions
 
                                         textSelection = document2.Find("<qty" + counter2 + ">", false, true);
                                         textRange = textSelection.GetAsOneRange();
-                                        textRange.Text = item.qty.ToString();
+                                        textRange.Text = item.Quantity.ToString();
 
                                         textSelection = document2.Find("<description" + counter2 + ">", false, true);
                                         textRange = textSelection.GetAsOneRange();
-                                        textRange.Text = item.material;
+                                        textRange.Text = item.Description;
 
                                         textSelection = document2.Find("<price" + counter2 + ">", false, true);
                                         textRange = textSelection.GetAsOneRange();
-                                        textRange.Text = item.unitPrice.ToString();
+                                        textRange.Text = item.UnitPrice.ToString();
 
                                         textSelection = document2.Find("<amount" + counter2 + ">", false, true);
                                         textRange = textSelection.GetAsOneRange();
-                                        textRange.Text = item.amount.ToString();
+                                        textRange.Text = item.Amount.ToString();
                                         counter2++;
                                     }
                                     else
                                     {
                                         textSelection = document.Find("<qty" + counter + ">", false, true);
                                         textRange = textSelection.GetAsOneRange();
-                                        textRange.Text = item.qty.ToString();
+                                        textRange.Text = item.Quantity.ToString();
 
                                         textSelection = document.Find("<description" + counter + ">", false, true);
                                         textRange = textSelection.GetAsOneRange();
-                                        textRange.Text = item.material;
+                                        textRange.Text = item.Description;
 
                                         textSelection = document.Find("<price" + counter + ">", false, true);
                                         textRange = textSelection.GetAsOneRange();
-                                        textRange.Text = item.unitPrice.ToString();
+                                        textRange.Text = item.UnitPrice.ToString();
 
                                         textSelection = document.Find("<amount" + counter + ">", false, true);
                                         textRange = textSelection.GetAsOneRange();
-                                        textRange.Text = item.amount.ToString();
+                                        textRange.Text = item.Amount.ToString();
                                         counter++;
                                     }
                                 }
@@ -1872,6 +1900,11 @@ namespace Goldpoint_Inventory_System.Transactions
                 case MessageBoxResult.Cancel:
                     break;
             }
+        }
+
+        private void ChkDR_Checked(object sender, RoutedEventArgs e)
+        {
+            getDRNo();
         }
     }
 }

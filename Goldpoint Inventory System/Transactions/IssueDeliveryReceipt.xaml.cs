@@ -3,9 +3,11 @@ using Syncfusion.DocIO;
 using Syncfusion.DocIO.DLS;
 using Syncfusion.DocToPDFConverter;
 using Syncfusion.Pdf;
+using Syncfusion.Windows.PdfViewer;
 using System;
 using System.Collections.ObjectModel;
 using System.Data.SqlClient;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -28,6 +30,7 @@ namespace Goldpoint_Inventory_System.Transactions
             stack.DataContext = new ExpanderListViewModel();
             txtIssuedBy.Text = fullName;
             dgItems.ItemsSource = items;
+            expDetails.IsExpanded = true;
             getDRNo();
         }
 
@@ -40,12 +43,21 @@ namespace Goldpoint_Inventory_System.Transactions
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
                     if (!reader.Read())
-                        txtDRNo.Text = "1";
+                        txtDRNo.Text = DateTime.Today.Year.ToString() + "0001";
                     else
                     {
                         int DRNoIndex = reader.GetOrdinal("DRNo");
-                        int DRNo = Convert.ToInt32(reader.GetValue(DRNoIndex)) + 1;
-                        txtDRNo.Text = DRNo.ToString();
+                        int DRNo = 0;
+                        if (Convert.ToInt32(Convert.ToString(reader.GetValue(DRNoIndex)).Substring(0, 4)) < DateTime.Today.Year)
+                        {
+                            txtDRNo.Text = DateTime.Today.Year.ToString() + "0001";
+                        }
+                        else
+                        {
+                            DRNo = Convert.ToInt32(reader.GetValue(DRNoIndex)) + 1;
+                            txtDRNo.Text = DRNo.ToString();
+
+                        }
 
                     }
                 }
@@ -389,6 +401,8 @@ namespace Goldpoint_Inventory_System.Transactions
                 case MessageBoxResult.Yes:
                     DocToPDFConverter converter = new DocToPDFConverter();
                     PdfDocument pdfDocument;
+                    PdfViewerControl pdfViewer1 = new PdfViewerControl();
+
                     //should print 2 receipts, for customer and company
                     try
                     {
@@ -529,14 +543,21 @@ namespace Goldpoint_Inventory_System.Transactions
                                     textRange.Text = "";
                                 }
                                 pdfDocument = converter.ConvertToPDF(document2);
-                                pdfDocument.Save(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/Sample-2.pdf");
+                                pdfDocument.Save(Environment.CurrentDirectory + "/temp.pdf");
+                                pdfViewer1.Load(Environment.CurrentDirectory + "/temp.pdf");
+                                pdfViewer1.PrinterSettings.PageOrientation = PdfViewerPrintOrientation.Landscape;
+                                pdfViewer1.PrinterSettings.PageSize = PdfViewerPrintSize.ActualSize;
+                                pdfViewer1.Print();
                                 document2.Close();
 
                             }
                             pdfDocument = converter.ConvertToPDF(document);
-                            pdfDocument.Save(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "/Sample.pdf");
-                            pdfDocument.Close(true);
-
+                            pdfDocument.Save(Environment.CurrentDirectory + "/temp.pdf");
+                            pdfViewer1.Load(Environment.CurrentDirectory + "/temp.pdf");
+                            pdfViewer1.PrinterSettings.PageOrientation = PdfViewerPrintOrientation.Landscape;
+                            pdfViewer1.PrinterSettings.PageSize = PdfViewerPrintSize.ActualSize;
+                            pdfViewer1.Print();
+                            File.Delete(Environment.CurrentDirectory + "/temp.pdf");
                         }
                     }
                     catch (Exception ex)
@@ -618,6 +639,44 @@ namespace Goldpoint_Inventory_System.Transactions
                 double amount = items[items.Count - 1].amount;
                 txtTotal.Value -= amount;
                 items.RemoveAt(items.Count - 1);
+            }
+        }
+
+        private void BtnSearchItemCode_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (string.IsNullOrEmpty(txtItemCode.Text))
+            {
+                MessageBox.Show("Please type the item code before searching");
+                txtItemCode.Focus();
+            }
+            else
+            {
+                SqlConnection conn = DBUtils.GetDBConnection();
+                conn.Open();
+                using (SqlCommand cmd = new SqlCommand("SELECT * from InventoryItems where itemCode = @itemCode", conn))
+                {
+                    cmd.Parameters.AddWithValue("@itemCode", txtItemCode.Text);
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+
+                            reader.Read();
+                            int descriptionIndex = reader.GetOrdinal("description");
+                            txtDesc.Text = Convert.ToString(reader.GetValue(descriptionIndex));
+
+                            txtQty.Value = 0;
+
+                            int msrpIndex = reader.GetOrdinal("MSRP");
+                            txtUnitPrice.Value = Convert.ToDouble(reader.GetValue(msrpIndex));
+                        }
+                        else
+                        {
+                            MessageBox.Show("Item does not exist in the inventory");
+                        }
+                    }
+
+                }
             }
         }
     }
