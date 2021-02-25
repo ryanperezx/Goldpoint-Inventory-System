@@ -124,7 +124,7 @@ namespace Goldpoint_Inventory_System
             SqlConnection conn = DBUtils.GetDBConnection();
             conn.Open();
             //get all non company use
-            using (SqlCommand cmd = new SqlCommand("SELECT DISTINCT td.service, td.deadline, td.customerName, td.DRNo, td.status, td.remarks, td.issuedBy, ph.total from TransactionDetails td INNER JOIN PaymentHist ph on td.DRNo = ph.DRNo WHERE ph.date = @date", conn))
+            using (SqlCommand cmd = new SqlCommand("SELECT DISTINCT td.service, td.deadline, td.customerName, td.DRNo, td.status, td.remarks, td.issuedBy, ph.total from TransactionDetails td INNER JOIN PaymentHist ph on (td.DRNo = ph.receiptNo OR td.jobOrderNo = ph.receiptNo) and td.service = ph.service WHERE ph.date = @date", conn))
             {
                 cmd.Parameters.AddWithValue("@date", DateTime.Today.ToShortDateString());
                 using (SqlDataReader reader = cmd.ExecuteReader())
@@ -161,7 +161,7 @@ namespace Goldpoint_Inventory_System
                 }
             }
             //get all company use
-            using (SqlCommand cmd = new SqlCommand("SELECT td.date, td.deadline, td.drNo, td.service, td.customerName, td.address, td.contactNo, td.status from TransactionDetails td LEFT JOIN PaymentHist ph on ph.DRNo = td.DRNo where ph.DRNo IS null and td.date = @date", conn))
+            using (SqlCommand cmd = new SqlCommand("SELECT DISTINCT td.date, td.deadline, td.drNo, td.service, td.customerName, td.address, td.contactNo, td.status from TransactionDetails td where td.date = @date and td.address = 'N\\A' and td.contactNo = 'N\\A'", conn))
             {
                 cmd.Parameters.AddWithValue("@date", DateTime.Today.ToShortDateString());
                 using (SqlDataReader reader = cmd.ExecuteReader())

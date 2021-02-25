@@ -55,687 +55,1013 @@ namespace Goldpoint_Inventory_System.Log
             }
             else
             {
-                SqlConnection conn = DBUtils.GetDBConnection();
-                conn.Open();
-                string service = "";
-                string jobOrderNo = "";
-                int drNo = 0;
-                double unpaidBalance = 0;
-                exPhotocopy.IsEnabled = false;
-                exStockOut.IsEnabled = false;
-                exJobOrder.IsEnabled = false;
-                exJobOrderTarp.IsEnabled = false;
-                exIssueDR.IsEnabled = false;
-                btnPrintJobOrder.IsEnabled = false;
-                btnIssueDR.IsEnabled = false;
-                emptyFields();
-                clearServices();
-                switch (cmbService.Text)
+                 try
                 {
-                    case "Official Receipt":
-                        using (SqlCommand cmd = new SqlCommand("SELECT * from TransactionDetails WHERE ORNo = @serviceNo and inaccessible = 1", conn))
-                        {
-                            cmd.Parameters.AddWithValue("@serviceNo", txtServiceNo.Text);
-                            using (SqlDataReader reader = cmd.ExecuteReader())
+                    SqlConnection conn = DBUtils.GetDBConnection();
+                    conn.Open();
+                    string service = "";
+                    string jobOrderNo = "";
+                    int drNo = 0;
+                    double unpaidBalance = 0;
+                    exPhotocopy.IsEnabled = false;
+                    exStockOut.IsEnabled = false;
+                    exJobOrder.IsEnabled = false;
+                    exJobOrderTarp.IsEnabled = false;
+                    exIssueDR.IsEnabled = false;
+                    btnPrintJobOrder.IsEnabled = false;
+                    btnIssueDR.IsEnabled = false;
+                    emptyFields();
+                    clearServices();
+                    switch (cmbService.Text)
+                    {
+                        case "Official Receipt":
+                            using (SqlCommand cmd = new SqlCommand("SELECT * from TransactionDetails WHERE ORNo = @serviceNo and inaccessible = 1", conn))
                             {
-                                if (reader.HasRows)
-                                {
-                                    while (reader.Read())
-                                    {
-                                        int serviceIndex = reader.GetOrdinal("service");
-                                        int dateIndex = reader.GetOrdinal("date");
-                                        int deadlineIndex = reader.GetOrdinal("deadline");
-                                        int custNameIndex = reader.GetOrdinal("customerName");
-                                        int issuedByIndex = reader.GetOrdinal("issuedBy");
-                                        int addressIndex = reader.GetOrdinal("address");
-                                        int contactNoIndex = reader.GetOrdinal("contactNo");
-                                        int remarksIndex = reader.GetOrdinal("remarks");
-                                        int invoiceNoIndex = reader.GetOrdinal("invoiceNo");
-                                        int drNoIndex = reader.GetOrdinal("DRNo");
-                                        int statusIndex = reader.GetOrdinal("status");
-                                        int jobOrderNoIndex = reader.GetOrdinal("jobOrderNo");
-                                        int claimedIndex = reader.GetOrdinal("claimed");
-                                        int pojoNoIndex = reader.GetOrdinal("poJoNo");
-
-
-                                        if (reader.GetValue(jobOrderNoIndex) != DBNull.Value)
-                                        {
-                                            jobOrderNo = Convert.ToString(reader.GetValue(jobOrderNoIndex));
-                                        }
-                                        else if (reader.GetValue(pojoNoIndex) != DBNull.Value)
-                                        {
-                                            jobOrderNo = Convert.ToString(reader.GetValue(pojoNoIndex));
-                                        }
-                                        if (reader.GetValue(issuedByIndex) != DBNull.Value)
-                                        {
-                                            txtIssuedBy.Text = Convert.ToString(reader.GetValue(issuedByIndex));
-                                        }
-                                        txtDate.Text = Convert.ToString(reader.GetValue(dateIndex));
-                                        txtDeadline.Text = Convert.ToString(reader.GetValue(deadlineIndex));
-                                        txtCustName.Text = Convert.ToString(reader.GetValue(custNameIndex));
-                                        TextRange textRange = new TextRange(txtAddress.Document.ContentStart, txtAddress.Document.ContentEnd);
-                                        textRange.Text = Convert.ToString(reader.GetValue(addressIndex));
-                                        txtContactNo.Text = Convert.ToString(reader.GetValue(contactNoIndex));
-                                        txtRemarks.Text = Convert.ToString(reader.GetValue(remarksIndex));
-
-                                        if (!string.IsNullOrEmpty(Convert.ToString(reader.GetValue(invoiceNoIndex))))
-                                        {
-                                            chkInv.IsChecked = true;
-                                            txtInvoiceNo.Text = Convert.ToString(reader.GetValue(invoiceNoIndex));
-                                        }
-                                        chkOR.IsChecked = true;
-                                        chkDR.IsChecked = true;
-                                        txtJobOrderNo.Text = Convert.ToString(jobOrderNo);
-                                        txtORNo.Text = txtServiceNo.Text;
-                                        txtDRNo.Text = Convert.ToString(reader.GetValue(drNoIndex));
-
-                                        if (Convert.ToString(reader.GetValue(statusIndex)) == "Paid")
-                                        {
-                                            rdPaid.IsChecked = true;
-                                        }
-                                        else
-                                        {
-                                            rdUnpaid.IsChecked = true;
-                                        }
-
-                                        if (Convert.ToString(reader.GetValue(claimedIndex)) == "Claimed")
-                                        {
-                                            chkClaimed.IsChecked = true;
-                                            btnClaiming.IsEnabled = false;
-                                        }
-                                        else
-                                        {
-                                            chkClaimed.IsChecked = false;
-                                            btnClaiming.IsEnabled = true;
-
-                                        }
-
-                                        btnIssueOR.IsEnabled = true;
-                                        btnIssueInvoice.IsEnabled = true;
-
-                                        service = Convert.ToString(reader.GetValue(serviceIndex));
-                                        drNo = Convert.ToInt32(reader.GetValue(drNoIndex));
-                                        exist = true;
-                                    }
-                                }
-                                else
-                                {
-                                    MessageBox.Show("Transaction does not exist");
-                                    btnIssueOR.IsEnabled = false;
-                                    btnIssueInvoice.IsEnabled = false;
-                                    return;
-                                }
-
-                            }
-                        }
-                        using (SqlCommand cmd = new SqlCommand("SELECT * from PaymentHist where DRNo = @serviceNo", conn))
-                        {
-                            cmd.Parameters.AddWithValue("@serviceNo", drNo);
-                            using (SqlDataReader reader = cmd.ExecuteReader())
-                            {
-                                payHist.Clear();
-                                if (reader.HasRows)
-                                {
-                                    while (reader.Read())
-                                    {
-                                        int dateIndex = reader.GetOrdinal("date");
-                                        int paidAmtIndex = reader.GetOrdinal("paidAmount");
-                                        int totalIndex = reader.GetOrdinal("total");
-                                        int statusIndex = reader.GetOrdinal("status");
-
-                                        payHist.Add(new PaymentHistoryDataModel
-                                        {
-                                            date = Convert.ToString(reader.GetValue(dateIndex)),
-                                            amount = Convert.ToDouble(reader.GetValue(paidAmtIndex))
-                                        });
-
-                                        unpaidBalance += Convert.ToDouble(reader.GetValue(paidAmtIndex));
-                                        txtTotal.Value = Convert.ToDouble(reader.GetValue(totalIndex));
-                                    }
-                                }
-                            }
-                        }
-                        txtUnpaidBalancePayment.Value = Math.Abs(Convert.ToDouble(txtTotal.Value - unpaidBalance));
-                        txtAmount.MaxValue = (double)txtUnpaidBalancePayment.Value;
-                        txtAmount.Value = (double)txtUnpaidBalancePayment.Value;
-
-                        if (service == "Stock Out")
-                        {
-                            txtJobOrderNo.Text = null;
-                            exPhotocopy.IsEnabled = true;
-                            exStockOut.IsEnabled = true;
-                            using (SqlCommand cmd = new SqlCommand("SELECT * from PhotocopyDetails WHERE DRNo = @serviceNo", conn))
-                            {
-                                cmd.Parameters.AddWithValue("@serviceNo", drNo);
+                                cmd.Parameters.AddWithValue("@serviceNo", txtServiceNo.Text);
                                 using (SqlDataReader reader = cmd.ExecuteReader())
                                 {
-                                    photocopy.Clear();
                                     if (reader.HasRows)
                                     {
                                         while (reader.Read())
                                         {
-                                            int itemIndex = reader.GetOrdinal("item");
-                                            int priceIndex = reader.GetOrdinal("price");
-                                            int qtyIndex = reader.GetOrdinal("qty");
-                                            int totalPerItemIndex = reader.GetOrdinal("totalPerItem");
-
-                                            photocopy.Add(new PhotocopyDataModel
-                                            {
-                                                item = Convert.ToString(reader.GetValue(itemIndex)),
-                                                price = Convert.ToDouble(reader.GetValue(priceIndex)),
-                                                qty = Convert.ToInt32(reader.GetValue(qtyIndex)),
-                                                totalPerItem = Convert.ToDouble(reader.GetValue(totalPerItemIndex))
-                                            });
-                                        }
-                                    }
-                                }
-                            }
-
-                            using (SqlCommand cmd = new SqlCommand("SELECT * from ReleasedMaterials WHERE DRNo = @serviceNo", conn))
-                            {
-                                cmd.Parameters.AddWithValue("@serviceNo", drNo);
-                                using (SqlDataReader reader = cmd.ExecuteReader())
-                                {
-                                    stockOut.Clear();
-                                    if (reader.HasRows)
-                                    {
-                                        while (reader.Read())
-                                        {
-                                            int itemCodeIndex = reader.GetOrdinal("itemCode");
-                                            int descriptionIndex = reader.GetOrdinal("description");
-                                            int typeIndex = reader.GetOrdinal("type");
-                                            int brandIndex = reader.GetOrdinal("brand");
-                                            int sizeIndex = reader.GetOrdinal("size");
-                                            int qtyIndex = reader.GetOrdinal("qty");
-                                            int totalPerItemIndex = reader.GetOrdinal("totalPerItem");
+                                            int serviceIndex = reader.GetOrdinal("service");
+                                            int dateIndex = reader.GetOrdinal("date");
+                                            int deadlineIndex = reader.GetOrdinal("deadline");
+                                            int custNameIndex = reader.GetOrdinal("customerName");
+                                            int issuedByIndex = reader.GetOrdinal("issuedBy");
+                                            int addressIndex = reader.GetOrdinal("address");
+                                            int contactNoIndex = reader.GetOrdinal("contactNo");
                                             int remarksIndex = reader.GetOrdinal("remarks");
+                                            int invoiceNoIndex = reader.GetOrdinal("invoiceNo");
+                                            int drNoIndex = reader.GetOrdinal("DRNo");
+                                            int statusIndex = reader.GetOrdinal("status");
+                                            int jobOrderNoIndex = reader.GetOrdinal("jobOrderNo");
+                                            int claimedIndex = reader.GetOrdinal("claimed");
+                                            int pojoNoIndex = reader.GetOrdinal("poJoNo");
 
-                                            stockOut.Add(new ItemDataModel
+
+                                            if (reader.GetValue(jobOrderNoIndex) != DBNull.Value)
                                             {
-                                                itemCode = Convert.ToString(reader.GetValue(itemCodeIndex)),
-                                                description = Convert.ToString(reader.GetValue(descriptionIndex)),
-                                                type = Convert.ToString(reader.GetValue(typeIndex)),
-                                                brand = Convert.ToString(reader.GetValue(brandIndex)),
-                                                size = Convert.ToString(reader.GetValue(sizeIndex)),
-                                                qty = Convert.ToInt32(reader.GetValue(qtyIndex)),
-                                                totalPerItem = Convert.ToDouble(reader.GetValue(totalPerItemIndex)),
-                                                remarks = Convert.ToString(reader.GetValue(remarksIndex)),
-                                            });
+                                                jobOrderNo = Convert.ToString(reader.GetValue(jobOrderNoIndex));
+                                            }
+                                            else if (reader.GetValue(pojoNoIndex) != DBNull.Value)
+                                            {
+                                                jobOrderNo = Convert.ToString(reader.GetValue(pojoNoIndex));
+                                            }
+                                            if (reader.GetValue(issuedByIndex) != DBNull.Value)
+                                            {
+                                                txtIssuedBy.Text = Convert.ToString(reader.GetValue(issuedByIndex));
+                                            }
+                                            txtDate.Text = Convert.ToString(reader.GetValue(dateIndex));
+                                            txtDeadline.Text = Convert.ToString(reader.GetValue(deadlineIndex));
+                                            txtCustName.Text = Convert.ToString(reader.GetValue(custNameIndex));
+                                            TextRange textRange = new TextRange(txtAddress.Document.ContentStart, txtAddress.Document.ContentEnd);
+                                            textRange.Text = Convert.ToString(reader.GetValue(addressIndex));
+                                            txtContactNo.Text = Convert.ToString(reader.GetValue(contactNoIndex));
+                                            txtRemarks.Text = Convert.ToString(reader.GetValue(remarksIndex));
 
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        else if (service == "Printing, Services, etc.")
-                        {
-                            exJobOrder.IsEnabled = true;
-                            btnPrintJobOrder.IsEnabled = true;
-                            if (string.IsNullOrEmpty(txtDRNo.Text))
-                                btnIssueDR.IsEnabled = true;
-                            txtJobOrder.Text = Convert.ToString(service);
-                            using (SqlCommand cmd = new SqlCommand("SELECT * from ServiceMaterial where JobOrderNo = @jobOrderNo and service = 'Printing, Services, etc.'", conn))
-                            {
-                                cmd.Parameters.AddWithValue("@jobOrderNo", jobOrderNo);
-                                using (SqlDataReader reader = cmd.ExecuteReader())
-                                {
-                                    services.Clear();
-                                    while (reader.Read())
-                                    {
-                                        int descriptionIndex = reader.GetOrdinal("description");
-                                        int unitIndex = reader.GetOrdinal("unit");
-                                        int qtyIndex = reader.GetOrdinal("qty");
-                                        int materialIndex = reader.GetOrdinal("material");
-                                        int copyIndex = reader.GetOrdinal("copy");
-                                        int sizeIndex = reader.GetOrdinal("size");
-                                        int totalPerItemIndex = reader.GetOrdinal("totalPerItem");
-
-                                        services.Add(new JobOrderDataModel
-                                        {
-                                            Description = Convert.ToString(reader.GetValue(descriptionIndex)),
-                                            unit = Convert.ToString(reader.GetValue(unitIndex)),
-                                            qty = Convert.ToInt32(reader.GetValue(qtyIndex)),
-                                            material = Convert.ToString(reader.GetValue(materialIndex)),
-                                            copy = Convert.ToString(reader.GetValue(copyIndex)),
-                                            size = Convert.ToString(reader.GetValue(sizeIndex)),
-                                            unitPrice = Convert.ToDouble(reader.GetValue(totalPerItemIndex)) / Convert.ToInt32(reader.GetValue(qtyIndex)),
-                                            amount = Convert.ToDouble(reader.GetValue(totalPerItemIndex))
-                                        });
-                                    }
-                                }
-                            }
-                        }
-                        else if (service == "Tarpaulin")
-                        {
-                            exJobOrderTarp.IsEnabled = true;
-                            btnPrintJobOrder.IsEnabled = true;
-                            if (string.IsNullOrEmpty(txtDRNo.Text))
-                                btnIssueDR.IsEnabled = true;
-                            txtJobOrder.Text = Convert.ToString(service);
-                            using (SqlCommand cmd = new SqlCommand("SELECT * from TarpMaterial where JobOrderNo = @jobOrderNo", conn))
-                            {
-                                cmd.Parameters.AddWithValue("@jobOrderNo", jobOrderNo);
-                                using (SqlDataReader reader = cmd.ExecuteReader())
-                                {
-                                    tarp.Clear();
-                                    while (reader.Read())
-                                    {
-                                        int fileNameIndex = reader.GetOrdinal("fileName");
-                                        int qtyIndex = reader.GetOrdinal("qty");
-                                        int sizeIndex = reader.GetOrdinal("size");
-                                        int mediaIndex = reader.GetOrdinal("media");
-                                        int borderIndex = reader.GetOrdinal("border");
-                                        int iLETIndex = reader.GetOrdinal("ILET");
-                                        int unitPriceIndex = reader.GetOrdinal("unitPrice");
-
-
-
-                                        tarp.Add(new JobOrderDataModel
-                                        {
-                                            fileName = Convert.ToString(reader.GetValue(fileNameIndex)),
-                                            tarpQty = Convert.ToInt32(reader.GetValue(qtyIndex)),
-                                            tarpSize = Convert.ToString(reader.GetValue(sizeIndex)),
-                                            media = Convert.ToString(reader.GetValue(mediaIndex)),
-                                            border = Convert.ToString(reader.GetValue(borderIndex)),
-                                            ILET = Convert.ToString(reader.GetValue(iLETIndex)),
-                                            unitPrice = Convert.ToDouble(reader.GetValue(unitPriceIndex)),
-                                            amount = (double)(Convert.ToDouble(reader.GetValue(unitPriceIndex)) * Convert.ToInt32(reader.GetValue(qtyIndex)))
-                                        });
-                                    }
-                                }
-                            }
-                        }
-                        else if (service == "Manual Transaction")
-                        {
-                            exIssueDR.IsEnabled = true;
-                            using (SqlCommand cmd = new SqlCommand("SELECT * from ManualTransaction WHERE DRNo = @serviceNo", conn))
-                            {
-                                cmd.Parameters.AddWithValue("@serviceNo", drNo);
-                                using (SqlDataReader reader = cmd.ExecuteReader())
-                                {
-                                    items.Clear();
-                                    while (reader.Read())
-                                    {
-                                        int descIndex = reader.GetOrdinal("description");
-                                        int qtyIndex = reader.GetOrdinal("qty");
-                                        int unitPriceIndex = reader.GetOrdinal("unitPrice");
-                                        int amountIndex = reader.GetOrdinal("amount");
-
-                                        items.Add(new DeliveryReceiptDataModel
-                                        {
-                                            description = Convert.ToString(reader.GetValue(descIndex)),
-                                            qty = Convert.ToInt32(reader.GetValue(qtyIndex)),
-                                            unitPrice = Convert.ToDouble(reader.GetValue(unitPriceIndex)),
-                                            amount = Convert.ToDouble(reader.GetValue(amountIndex))
-                                        });
-                                    }
-
-                                }
-                            }
-                        }
-
-                        break;
-                    case "Delivery Receipt":
-                        using (SqlCommand cmd = new SqlCommand("SELECT * from TransactionDetails WHERE DRNo = @serviceNo and inaccessible = 1", conn))
-                        {
-                            cmd.Parameters.AddWithValue("@serviceNo", txtServiceNo.Text);
-                            using (SqlDataReader reader = cmd.ExecuteReader())
-                            {
-                                if (reader.HasRows)
-                                {
-                                    while (reader.Read())
-                                    {
-                                        int serviceIndex = reader.GetOrdinal("service");
-                                        int dateIndex = reader.GetOrdinal("date");
-                                        int deadlineIndex = reader.GetOrdinal("deadline");
-                                        int custNameIndex = reader.GetOrdinal("customerName");
-                                        int issuedByIndex = reader.GetOrdinal("issuedBy");
-                                        int addressIndex = reader.GetOrdinal("address");
-                                        int contactNoIndex = reader.GetOrdinal("contactNo");
-                                        int remarksIndex = reader.GetOrdinal("remarks");
-                                        int invoiceNoIndex = reader.GetOrdinal("invoiceNo");
-                                        int orNoIndex = reader.GetOrdinal("ORNo");
-                                        int statusIndex = reader.GetOrdinal("status");
-                                        int claimedIndex = reader.GetOrdinal("claimed");
-                                        int jobOrderNoIndex = reader.GetOrdinal("jobOrderNo");
-                                        int pojoNoIndex = reader.GetOrdinal("poJoNo");
-
-                                        if (reader.GetValue(jobOrderNoIndex) != DBNull.Value)
-                                        {
-                                            jobOrderNo = Convert.ToString(reader.GetValue(jobOrderNoIndex));
-                                        }
-                                        else if (reader.GetValue(pojoNoIndex) != DBNull.Value)
-                                        {
-                                            jobOrderNo = Convert.ToString(reader.GetValue(pojoNoIndex));
-                                        }
-                                        if (reader.GetValue(issuedByIndex) != DBNull.Value)
-                                        {
-                                            txtIssuedBy.Text = Convert.ToString(reader.GetValue(issuedByIndex));
-                                        }
-                                        txtDate.Text = Convert.ToString(reader.GetValue(dateIndex));
-                                        txtDeadline.Text = Convert.ToString(reader.GetValue(deadlineIndex));
-                                        txtCustName.Text = Convert.ToString(reader.GetValue(custNameIndex));
-                                        TextRange textRange = new TextRange(txtAddress.Document.ContentStart, txtAddress.Document.ContentEnd);
-                                        textRange.Text = Convert.ToString(reader.GetValue(addressIndex));
-                                        txtContactNo.Text = Convert.ToString(reader.GetValue(contactNoIndex));
-                                        txtRemarks.Text = Convert.ToString(reader.GetValue(remarksIndex));
-                                        txtJobOrderNo.Text = Convert.ToString(jobOrderNo);
-
-                                        if (!string.IsNullOrEmpty(Convert.ToString(reader.GetValue(invoiceNoIndex))))
-                                        {
-                                            chkInv.IsChecked = true;
-                                            txtInvoiceNo.Text = Convert.ToString(reader.GetValue(invoiceNoIndex));
-                                        }
-                                        if (!string.IsNullOrEmpty(Convert.ToString(reader.GetValue(orNoIndex))))
-                                        {
+                                            if (!string.IsNullOrEmpty(Convert.ToString(reader.GetValue(invoiceNoIndex))))
+                                            {
+                                                chkInv.IsChecked = true;
+                                                txtInvoiceNo.Text = Convert.ToString(reader.GetValue(invoiceNoIndex));
+                                            }
                                             chkOR.IsChecked = true;
-                                            txtORNo.Text = Convert.ToString(reader.GetValue(orNoIndex));
-                                        }
-                                        chkDR.IsChecked = true;
-                                        txtDRNo.Text = txtServiceNo.Text;
-
-                                        if (Convert.ToString(reader.GetValue(statusIndex)) == "Paid")
-                                        {
-                                            rdPaid.IsChecked = true;
-                                        }
-                                        else
-                                        {
-                                            rdUnpaid.IsChecked = true;
-                                        }
-
-                                        if (Convert.ToString(reader.GetValue(claimedIndex)) == "Claimed")
-                                        {
-                                            chkClaimed.IsChecked = true;
-                                            btnClaiming.IsEnabled = false;
-                                        }
-                                        else
-                                        {
-                                            chkClaimed.IsChecked = false;
-                                            btnClaiming.IsEnabled = true;
-
-                                        }
-
-                                        btnIssueOR.IsEnabled = true;
-                                        btnIssueInvoice.IsEnabled = true;
-
-                                        service = Convert.ToString(reader.GetValue(serviceIndex));
-                                        drNo = Convert.ToInt32(txtServiceNo.Text);
-                                        exist = true;
-
-                                    }
-                                }
-                                else
-                                {
-                                    MessageBox.Show("Transaction does not exist");
-                                    btnIssueOR.IsEnabled = false;
-                                    btnIssueInvoice.IsEnabled = false;
-                                    return;
-                                }
-                            }
-                        }
-                        using (SqlCommand cmd = new SqlCommand("SELECT * from PaymentHist WHERE DRNo = @serviceNo", conn))
-                        {
-                            cmd.Parameters.AddWithValue("@serviceNo", drNo);
-                            using (SqlDataReader reader = cmd.ExecuteReader())
-                            {
-                                payHist.Clear();
-                                if (reader.HasRows)
-                                {
-                                    while (reader.Read())
-                                    {
-                                        int dateIndex = reader.GetOrdinal("date");
-                                        int paidAmtIndex = reader.GetOrdinal("paidAmount");
-                                        int totalIndex = reader.GetOrdinal("total");
-                                        int statusIndex = reader.GetOrdinal("status");
-
-                                        payHist.Add(new PaymentHistoryDataModel
-                                        {
-                                            date = Convert.ToString(reader.GetValue(dateIndex)),
-                                            amount = Convert.ToDouble(reader.GetValue(paidAmtIndex))
-                                        });
-
-                                        unpaidBalance += Convert.ToDouble(reader.GetValue(paidAmtIndex));
-                                        txtTotal.Value = Convert.ToDouble(reader.GetValue(totalIndex));
-
-
-                                    }
-                                }
-                            }
-                        }
-
-                        txtUnpaidBalancePayment.Value = txtTotal.Value - unpaidBalance;
-                        txtAmount.MaxValue = (double)txtUnpaidBalancePayment.Value;
-                        txtAmount.Value = (double)txtUnpaidBalancePayment.Value;
-
-                        if (service == "Stock Out")
-                        {
-                            txtJobOrderNo.Text = null;
-                            exPhotocopy.IsEnabled = true;
-                            exStockOut.IsEnabled = true;
-                            using (SqlCommand cmd = new SqlCommand("SELECT * from PhotocopyDetails WHERE DRNo = @serviceNo", conn))
-                            {
-                                cmd.Parameters.AddWithValue("@serviceNo", drNo);
-                                using (SqlDataReader reader = cmd.ExecuteReader())
-                                {
-                                    photocopy.Clear();
-                                    if (reader.HasRows)
-                                    {
-                                        while (reader.Read())
-                                        {
-                                            int itemIndex = reader.GetOrdinal("item");
-                                            int priceIndex = reader.GetOrdinal("price");
-                                            int qtyIndex = reader.GetOrdinal("qty");
-                                            int totalPerItemIndex = reader.GetOrdinal("totalPerItem");
-
-                                            photocopy.Add(new PhotocopyDataModel
-                                            {
-                                                item = Convert.ToString(reader.GetValue(itemIndex)),
-                                                price = Convert.ToDouble(reader.GetValue(priceIndex)),
-                                                qty = Convert.ToInt32(reader.GetValue(qtyIndex)),
-                                                totalPerItem = Convert.ToDouble(reader.GetValue(totalPerItemIndex))
-                                            });
-                                        }
-                                    }
-                                }
-                            }
-
-                            using (SqlCommand cmd = new SqlCommand("SELECT * from ReleasedMaterials WHERE DRNo = @serviceNo", conn))
-                            {
-                                cmd.Parameters.AddWithValue("@serviceNo", drNo);
-                                using (SqlDataReader reader = cmd.ExecuteReader())
-                                {
-                                    stockOut.Clear();
-                                    if (reader.HasRows)
-                                    {
-                                        while (reader.Read())
-                                        {
-                                            int itemCodeIndex = reader.GetOrdinal("itemCode");
-                                            int descriptionIndex = reader.GetOrdinal("description");
-                                            int typeIndex = reader.GetOrdinal("type");
-                                            int brandIndex = reader.GetOrdinal("brand");
-                                            int sizeIndex = reader.GetOrdinal("size");
-                                            int qtyIndex = reader.GetOrdinal("qty");
-                                            int totalPerItemIndex = reader.GetOrdinal("totalPerItem");
-                                            int remarksIndex = reader.GetOrdinal("remarks");
-
-                                            stockOut.Add(new ItemDataModel
-                                            {
-                                                itemCode = Convert.ToString(reader.GetValue(itemCodeIndex)),
-                                                description = Convert.ToString(reader.GetValue(descriptionIndex)),
-                                                type = Convert.ToString(reader.GetValue(typeIndex)),
-                                                brand = Convert.ToString(reader.GetValue(brandIndex)),
-                                                size = Convert.ToString(reader.GetValue(sizeIndex)),
-                                                qty = Convert.ToInt32(reader.GetValue(qtyIndex)),
-                                                totalPerItem = Convert.ToDouble(reader.GetValue(totalPerItemIndex)),
-                                                remarks = Convert.ToString(reader.GetValue(remarksIndex)),
-                                            });
-
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        else if (service == "Printing, Services, etc.")
-                        {
-                            exJobOrder.IsEnabled = true;
-                            btnPrintJobOrder.IsEnabled = true;
-                            if (string.IsNullOrEmpty(txtDRNo.Text))
-                                btnIssueDR.IsEnabled = true;
-                            txtJobOrder.Text = Convert.ToString(service);
-                            using (SqlCommand cmd = new SqlCommand("SELECT * from ServiceMaterial where JobOrderNo = @jobOrderNo", conn))
-                            {
-                                cmd.Parameters.AddWithValue("@jobOrderNo", jobOrderNo);
-                                using (SqlDataReader reader = cmd.ExecuteReader())
-                                {
-                                    services.Clear();
-                                    while (reader.Read())
-                                    {
-                                        int descriptionIndex = reader.GetOrdinal("description");
-                                        int unitIndex = reader.GetOrdinal("unit");
-                                        int qtyIndex = reader.GetOrdinal("qty");
-                                        int materialIndex = reader.GetOrdinal("material");
-                                        int copyIndex = reader.GetOrdinal("copy");
-                                        int sizeIndex = reader.GetOrdinal("size");
-                                        int totalPerItemIndex = reader.GetOrdinal("totalPerItem");
-
-                                        services.Add(new JobOrderDataModel
-                                        {
-                                            Description = Convert.ToString(reader.GetValue(descriptionIndex)),
-                                            unit = Convert.ToString(reader.GetValue(unitIndex)),
-                                            qty = Convert.ToInt32(reader.GetValue(qtyIndex)),
-                                            material = Convert.ToString(reader.GetValue(materialIndex)),
-                                            copy = Convert.ToString(reader.GetValue(copyIndex)),
-                                            size = Convert.ToString(reader.GetValue(sizeIndex)),
-                                            unitPrice = Convert.ToDouble(reader.GetValue(totalPerItemIndex)) / Convert.ToInt32(reader.GetValue(qtyIndex)),
-                                            amount = Convert.ToDouble(reader.GetValue(totalPerItemIndex))
-                                        });
-                                    }
-                                }
-                            }
-                        }
-                        else if (service == "Tarpaulin")
-                        {
-                            exJobOrderTarp.IsEnabled = true;
-                            btnPrintJobOrder.IsEnabled = true;
-                            if (string.IsNullOrEmpty(txtDRNo.Text))
-                                btnIssueDR.IsEnabled = true;
-                            txtJobOrder.Text = Convert.ToString(service);
-                            using (SqlCommand cmd = new SqlCommand("SELECT * from TarpMaterial where JobOrderNo = @jobOrderNo", conn))
-                            {
-                                cmd.Parameters.AddWithValue("@jobOrderNo", jobOrderNo);
-                                using (SqlDataReader reader = cmd.ExecuteReader())
-                                {
-                                    tarp.Clear();
-                                    while (reader.Read())
-                                    {
-                                        int fileNameIndex = reader.GetOrdinal("fileName");
-                                        int qtyIndex = reader.GetOrdinal("qty");
-                                        int sizeIndex = reader.GetOrdinal("size");
-                                        int mediaIndex = reader.GetOrdinal("media");
-                                        int borderIndex = reader.GetOrdinal("border");
-                                        int iLETIndex = reader.GetOrdinal("ILET");
-                                        int unitPriceIndex = reader.GetOrdinal("unitPrice");
-
-                                        tarp.Add(new JobOrderDataModel
-                                        {
-                                            fileName = Convert.ToString(reader.GetValue(fileNameIndex)),
-                                            tarpQty = Convert.ToInt32(reader.GetValue(qtyIndex)),
-                                            tarpSize = Convert.ToString(reader.GetValue(sizeIndex)),
-                                            media = Convert.ToString(reader.GetValue(mediaIndex)),
-                                            border = Convert.ToString(reader.GetValue(borderIndex)),
-                                            ILET = Convert.ToString(reader.GetValue(iLETIndex)),
-                                            unitPrice = Convert.ToDouble(reader.GetValue(unitPriceIndex)),
-                                            amount = (double)(Convert.ToDouble(reader.GetValue(unitPriceIndex)) * Convert.ToInt32(reader.GetValue(qtyIndex)))
-                                        });
-                                    }
-                                }
-                            }
-                        }
-                        else if (service == "Manual Transaction")
-                        {
-                            exIssueDR.IsEnabled = true;
-
-                            using (SqlCommand cmd = new SqlCommand("SELECT * from ManualTransaction WHERE DRNo = @serviceNo", conn))
-                            {
-                                cmd.Parameters.AddWithValue("@serviceNo", drNo);
-                                using (SqlDataReader reader = cmd.ExecuteReader())
-                                {
-                                    items.Clear();
-                                    while (reader.Read())
-                                    {
-                                        int descIndex = reader.GetOrdinal("description");
-                                        int qtyIndex = reader.GetOrdinal("qty");
-                                        int unitPriceIndex = reader.GetOrdinal("unitPrice");
-                                        int amountIndex = reader.GetOrdinal("amount");
-
-                                        items.Add(new DeliveryReceiptDataModel
-                                        {
-                                            description = Convert.ToString(reader.GetValue(descIndex)),
-                                            qty = Convert.ToInt32(reader.GetValue(qtyIndex)),
-                                            unitPrice = Convert.ToDouble(reader.GetValue(unitPriceIndex)),
-                                            amount = Convert.ToDouble(reader.GetValue(amountIndex))
-                                        });
-                                    }
-
-                                }
-                            }
-                        }
-                        break;
-                    case "Invoice":
-                        using (SqlCommand cmd = new SqlCommand("SELECT * from TransactionDetails WHERE invoiceNo = @serviceNo and inaccessible = 1", conn))
-                        {
-                            cmd.Parameters.AddWithValue("@serviceNo", txtServiceNo.Text);
-                            using (SqlDataReader reader = cmd.ExecuteReader())
-                            {
-                                if (reader.HasRows)
-                                {
-                                    while (reader.Read())
-                                    {
-                                        int serviceIndex = reader.GetOrdinal("service");
-                                        int dateIndex = reader.GetOrdinal("date");
-                                        int deadlineIndex = reader.GetOrdinal("deadline");
-                                        int custNameIndex = reader.GetOrdinal("customerName");
-                                        int issuedByIndex = reader.GetOrdinal("issuedBy");
-                                        int addressIndex = reader.GetOrdinal("address");
-                                        int contactNoIndex = reader.GetOrdinal("contactNo");
-                                        int remarksIndex = reader.GetOrdinal("remarks");
-                                        int orNoIndex = reader.GetOrdinal("ORNo");
-                                        int drNoIndex = reader.GetOrdinal("DRNo");
-                                        int statusIndex = reader.GetOrdinal("status");
-                                        int claimedIndex = reader.GetOrdinal("claimed");
-                                        int jobOrderNoIndex = reader.GetOrdinal("jobOrderNo");
-                                        int pojoNoIndex = reader.GetOrdinal("pojoNo");
-
-                                        if (reader.GetValue(jobOrderNoIndex) != DBNull.Value)
-                                        {
-                                            jobOrderNo = Convert.ToString(reader.GetValue(jobOrderNoIndex));
-                                        }
-                                        else if (reader.GetValue(pojoNoIndex) != DBNull.Value)
-                                        {
-                                            jobOrderNo = Convert.ToString(reader.GetValue(pojoNoIndex));
-                                        }
-                                        if (reader.GetValue(issuedByIndex) != DBNull.Value)
-                                        {
-                                            txtIssuedBy.Text = Convert.ToString(reader.GetValue(issuedByIndex));
-                                        }
-                                        txtDate.Text = Convert.ToString(reader.GetValue(dateIndex));
-                                        txtDeadline.Text = Convert.ToString(reader.GetValue(deadlineIndex));
-                                        txtCustName.Text = Convert.ToString(reader.GetValue(custNameIndex));
-                                        TextRange textRange = new TextRange(txtAddress.Document.ContentStart, txtAddress.Document.ContentEnd);
-                                        textRange.Text = Convert.ToString(reader.GetValue(addressIndex));
-                                        if (reader.GetValue(drNoIndex) != DBNull.Value)
+                                            chkDR.IsChecked = true;
+                                            txtJobOrderNo.Text = Convert.ToString(jobOrderNo);
+                                            txtORNo.Text = txtServiceNo.Text;
                                             txtDRNo.Text = Convert.ToString(reader.GetValue(drNoIndex));
-                                        txtContactNo.Text = Convert.ToString(reader.GetValue(contactNoIndex));
-                                        txtRemarks.Text = Convert.ToString(reader.GetValue(remarksIndex));
-                                        txtJobOrderNo.Text = Convert.ToString(jobOrderNo);
 
+                                            if (Convert.ToString(reader.GetValue(statusIndex)) == "Paid")
+                                            {
+                                                rdPaid.IsChecked = true;
+                                            }
+                                            else
+                                            {
+                                                rdUnpaid.IsChecked = true;
+                                            }
+
+                                            if (Convert.ToString(reader.GetValue(claimedIndex)) == "Claimed")
+                                            {
+                                                chkClaimed.IsChecked = true;
+                                                btnClaiming.IsEnabled = false;
+                                            }
+                                            else
+                                            {
+                                                chkClaimed.IsChecked = false;
+                                                btnClaiming.IsEnabled = true;
+
+                                            }
+
+                                            btnIssueOR.IsEnabled = true;
+                                            btnIssueInvoice.IsEnabled = true;
+
+                                            service = Convert.ToString(reader.GetValue(serviceIndex));
+                                            if (reader.GetValue(drNoIndex) != DBNull.Value)
+                                                drNo = Convert.ToInt32(reader.GetValue(drNoIndex));
+                                            exist = true;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        MessageBox.Show("Transaction does not exist");
+                                        btnIssueOR.IsEnabled = false;
+                                        btnIssueInvoice.IsEnabled = false;
+                                        return;
+                                    }
+
+                                }
+                            }
+                            using (SqlCommand cmd = new SqlCommand("SELECT * from PaymentHist where receiptNo = @receiptNo and service = @service", conn))
+                            {
+                                cmd.Parameters.AddWithValue("@service", service);
+
+                                if (!string.IsNullOrEmpty(txtJobOrderNo.Text))
+                                {
+                                    cmd.Parameters.AddWithValue("@receiptNo", txtJobOrderNo.Text);
+                                }
+                                else
+                                {
+                                    cmd.Parameters.AddWithValue("@receiptNo", txtDRNo.Text);
+                                }
+                                using (SqlDataReader reader = cmd.ExecuteReader())
+                                {
+                                    payHist.Clear();
+                                    if (reader.HasRows)
+                                    {
+                                        while (reader.Read())
+                                        {
+                                            int dateIndex = reader.GetOrdinal("date");
+                                            int paidAmtIndex = reader.GetOrdinal("paidAmount");
+                                            int totalIndex = reader.GetOrdinal("total");
+                                            int statusIndex = reader.GetOrdinal("status");
+
+                                            payHist.Add(new PaymentHistoryDataModel
+                                            {
+                                                date = Convert.ToString(reader.GetValue(dateIndex)),
+                                                amount = Convert.ToDouble(reader.GetValue(paidAmtIndex))
+                                            });
+
+                                            unpaidBalance += Convert.ToDouble(reader.GetValue(paidAmtIndex));
+                                            txtTotal.Value = Convert.ToDouble(reader.GetValue(totalIndex));
+                                        }
+                                    }
+                                }
+                            }
+                            txtUnpaidBalancePayment.Value = Math.Abs(Convert.ToDouble(txtTotal.Value - unpaidBalance));
+                            txtAmount.MaxValue = (double)txtUnpaidBalancePayment.Value;
+                            txtAmount.Value = (double)txtUnpaidBalancePayment.Value;
+
+                            if (service == "Stock Out")
+                            {
+                                txtJobOrderNo.Text = null;
+                                exPhotocopy.IsEnabled = true;
+                                exStockOut.IsEnabled = true;
+                                using (SqlCommand cmd = new SqlCommand("SELECT * from PhotocopyDetails WHERE DRNo = @serviceNo", conn))
+                                {
+                                    cmd.Parameters.AddWithValue("@serviceNo", drNo);
+                                    using (SqlDataReader reader = cmd.ExecuteReader())
+                                    {
+                                        photocopy.Clear();
+                                        if (reader.HasRows)
+                                        {
+                                            while (reader.Read())
+                                            {
+                                                int itemIndex = reader.GetOrdinal("item");
+                                                int priceIndex = reader.GetOrdinal("price");
+                                                int qtyIndex = reader.GetOrdinal("qty");
+                                                int totalPerItemIndex = reader.GetOrdinal("totalPerItem");
+
+                                                photocopy.Add(new PhotocopyDataModel
+                                                {
+                                                    item = Convert.ToString(reader.GetValue(itemIndex)),
+                                                    price = Convert.ToDouble(reader.GetValue(priceIndex)),
+                                                    qty = Convert.ToInt32(reader.GetValue(qtyIndex)),
+                                                    totalPerItem = Convert.ToDouble(reader.GetValue(totalPerItemIndex))
+                                                });
+                                            }
+                                        }
+                                    }
+                                }
+
+                                using (SqlCommand cmd = new SqlCommand("SELECT * from ReleasedMaterials WHERE DRNo = @serviceNo", conn))
+                                {
+                                    cmd.Parameters.AddWithValue("@serviceNo", drNo);
+                                    using (SqlDataReader reader = cmd.ExecuteReader())
+                                    {
+                                        stockOut.Clear();
+                                        if (reader.HasRows)
+                                        {
+                                            while (reader.Read())
+                                            {
+                                                int itemCodeIndex = reader.GetOrdinal("itemCode");
+                                                int descriptionIndex = reader.GetOrdinal("description");
+                                                int typeIndex = reader.GetOrdinal("type");
+                                                int brandIndex = reader.GetOrdinal("brand");
+                                                int sizeIndex = reader.GetOrdinal("size");
+                                                int qtyIndex = reader.GetOrdinal("qty");
+                                                int totalPerItemIndex = reader.GetOrdinal("totalPerItem");
+                                                int remarksIndex = reader.GetOrdinal("remarks");
+
+                                                stockOut.Add(new ItemDataModel
+                                                {
+                                                    itemCode = Convert.ToString(reader.GetValue(itemCodeIndex)),
+                                                    description = Convert.ToString(reader.GetValue(descriptionIndex)),
+                                                    type = Convert.ToString(reader.GetValue(typeIndex)),
+                                                    brand = Convert.ToString(reader.GetValue(brandIndex)),
+                                                    size = Convert.ToString(reader.GetValue(sizeIndex)),
+                                                    qty = Convert.ToInt32(reader.GetValue(qtyIndex)),
+                                                    totalPerItem = Convert.ToDouble(reader.GetValue(totalPerItemIndex)),
+                                                    remarks = Convert.ToString(reader.GetValue(remarksIndex)),
+                                                });
+
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            else if (service == "Printing, Services, etc.")
+                            {
+                                exJobOrder.IsEnabled = true;
+                                btnPrintJobOrder.IsEnabled = true;
+                                if (string.IsNullOrEmpty(txtDRNo.Text))
+                                    btnIssueDR.IsEnabled = true;
+                                txtJobOrder.Text = Convert.ToString(service);
+                                using (SqlCommand cmd = new SqlCommand("SELECT * from ServiceMaterial where JobOrderNo = @jobOrderNo and service = 'Printing, Services, etc.'", conn))
+                                {
+                                    cmd.Parameters.AddWithValue("@jobOrderNo", jobOrderNo);
+                                    using (SqlDataReader reader = cmd.ExecuteReader())
+                                    {
+                                        services.Clear();
+                                        while (reader.Read())
+                                        {
+                                            int descriptionIndex = reader.GetOrdinal("description");
+                                            int unitIndex = reader.GetOrdinal("unit");
+                                            int qtyIndex = reader.GetOrdinal("qty");
+                                            int materialIndex = reader.GetOrdinal("material");
+                                            int copyIndex = reader.GetOrdinal("copy");
+                                            int sizeIndex = reader.GetOrdinal("size");
+                                            int totalPerItemIndex = reader.GetOrdinal("totalPerItem");
+
+                                            services.Add(new JobOrderDataModel
+                                            {
+                                                Description = Convert.ToString(reader.GetValue(descriptionIndex)),
+                                                unit = Convert.ToString(reader.GetValue(unitIndex)),
+                                                qty = Convert.ToInt32(reader.GetValue(qtyIndex)),
+                                                material = Convert.ToString(reader.GetValue(materialIndex)),
+                                                copy = Convert.ToString(reader.GetValue(copyIndex)),
+                                                size = Convert.ToString(reader.GetValue(sizeIndex)),
+                                                unitPrice = Convert.ToDouble(reader.GetValue(totalPerItemIndex)) / Convert.ToInt32(reader.GetValue(qtyIndex)),
+                                                amount = Convert.ToDouble(reader.GetValue(totalPerItemIndex))
+                                            });
+                                        }
+                                    }
+                                }
+                            }
+                            else if (service == "Tarpaulin")
+                            {
+                                exJobOrderTarp.IsEnabled = true;
+                                btnPrintJobOrder.IsEnabled = true;
+                                if (string.IsNullOrEmpty(txtDRNo.Text))
+                                    btnIssueDR.IsEnabled = true;
+                                txtJobOrder.Text = Convert.ToString(service);
+                                using (SqlCommand cmd = new SqlCommand("SELECT * from TarpMaterial where JobOrderNo = @jobOrderNo", conn))
+                                {
+                                    cmd.Parameters.AddWithValue("@jobOrderNo", jobOrderNo);
+                                    using (SqlDataReader reader = cmd.ExecuteReader())
+                                    {
+                                        tarp.Clear();
+                                        while (reader.Read())
+                                        {
+                                            int fileNameIndex = reader.GetOrdinal("fileName");
+                                            int qtyIndex = reader.GetOrdinal("qty");
+                                            int sizeIndex = reader.GetOrdinal("size");
+                                            int mediaIndex = reader.GetOrdinal("media");
+                                            int borderIndex = reader.GetOrdinal("border");
+                                            int iLETIndex = reader.GetOrdinal("ILET");
+                                            int unitPriceIndex = reader.GetOrdinal("unitPrice");
+
+
+
+                                            tarp.Add(new JobOrderDataModel
+                                            {
+                                                fileName = Convert.ToString(reader.GetValue(fileNameIndex)),
+                                                tarpQty = Convert.ToInt32(reader.GetValue(qtyIndex)),
+                                                tarpSize = Convert.ToString(reader.GetValue(sizeIndex)),
+                                                media = Convert.ToString(reader.GetValue(mediaIndex)),
+                                                border = Convert.ToString(reader.GetValue(borderIndex)),
+                                                ILET = Convert.ToString(reader.GetValue(iLETIndex)),
+                                                unitPrice = Convert.ToDouble(reader.GetValue(unitPriceIndex)),
+                                                amount = (double)(Convert.ToDouble(reader.GetValue(unitPriceIndex)) * Convert.ToInt32(reader.GetValue(qtyIndex)))
+                                            });
+                                        }
+                                    }
+                                }
+                            }
+                            else if (service == "Manual Transaction")
+                            {
+                                exIssueDR.IsEnabled = true;
+                                using (SqlCommand cmd = new SqlCommand("SELECT * from ManualTransaction WHERE DRNo = @serviceNo", conn))
+                                {
+                                    cmd.Parameters.AddWithValue("@serviceNo", drNo);
+                                    using (SqlDataReader reader = cmd.ExecuteReader())
+                                    {
+                                        items.Clear();
+                                        while (reader.Read())
+                                        {
+                                            int descIndex = reader.GetOrdinal("description");
+                                            int qtyIndex = reader.GetOrdinal("qty");
+                                            int unitPriceIndex = reader.GetOrdinal("unitPrice");
+                                            int amountIndex = reader.GetOrdinal("amount");
+
+                                            items.Add(new DeliveryReceiptDataModel
+                                            {
+                                                description = Convert.ToString(reader.GetValue(descIndex)),
+                                                qty = Convert.ToInt32(reader.GetValue(qtyIndex)),
+                                                unitPrice = Convert.ToDouble(reader.GetValue(unitPriceIndex)),
+                                                amount = Convert.ToDouble(reader.GetValue(amountIndex))
+                                            });
+                                        }
+
+                                    }
+                                }
+                            }
+
+                            break;
+                        case "Delivery Receipt":
+                            using (SqlCommand cmd = new SqlCommand("SELECT * from TransactionDetails WHERE DRNo = @serviceNo and inaccessible = 1", conn))
+                            {
+                                cmd.Parameters.AddWithValue("@serviceNo", txtServiceNo.Text);
+                                using (SqlDataReader reader = cmd.ExecuteReader())
+                                {
+                                    if (reader.HasRows)
+                                    {
+                                        while (reader.Read())
+                                        {
+                                            int serviceIndex = reader.GetOrdinal("service");
+                                            int dateIndex = reader.GetOrdinal("date");
+                                            int deadlineIndex = reader.GetOrdinal("deadline");
+                                            int custNameIndex = reader.GetOrdinal("customerName");
+                                            int issuedByIndex = reader.GetOrdinal("issuedBy");
+                                            int addressIndex = reader.GetOrdinal("address");
+                                            int contactNoIndex = reader.GetOrdinal("contactNo");
+                                            int remarksIndex = reader.GetOrdinal("remarks");
+                                            int invoiceNoIndex = reader.GetOrdinal("invoiceNo");
+                                            int orNoIndex = reader.GetOrdinal("ORNo");
+                                            int statusIndex = reader.GetOrdinal("status");
+                                            int claimedIndex = reader.GetOrdinal("claimed");
+                                            int jobOrderNoIndex = reader.GetOrdinal("jobOrderNo");
+                                            int pojoNoIndex = reader.GetOrdinal("poJoNo");
+
+                                            if (reader.GetValue(jobOrderNoIndex) != DBNull.Value)
+                                            {
+                                                jobOrderNo = Convert.ToString(reader.GetValue(jobOrderNoIndex));
+                                            }
+                                            else if (reader.GetValue(pojoNoIndex) != DBNull.Value)
+                                            {
+                                                jobOrderNo = Convert.ToString(reader.GetValue(pojoNoIndex));
+                                            }
+                                            if (reader.GetValue(issuedByIndex) != DBNull.Value)
+                                            {
+                                                txtIssuedBy.Text = Convert.ToString(reader.GetValue(issuedByIndex));
+                                            }
+                                            txtDate.Text = Convert.ToString(reader.GetValue(dateIndex));
+                                            txtDeadline.Text = Convert.ToString(reader.GetValue(deadlineIndex));
+                                            txtCustName.Text = Convert.ToString(reader.GetValue(custNameIndex));
+                                            TextRange textRange = new TextRange(txtAddress.Document.ContentStart, txtAddress.Document.ContentEnd);
+                                            textRange.Text = Convert.ToString(reader.GetValue(addressIndex));
+                                            txtContactNo.Text = Convert.ToString(reader.GetValue(contactNoIndex));
+                                            txtRemarks.Text = Convert.ToString(reader.GetValue(remarksIndex));
+                                            txtJobOrderNo.Text = Convert.ToString(jobOrderNo);
+
+                                            if (!string.IsNullOrEmpty(Convert.ToString(reader.GetValue(invoiceNoIndex))))
+                                            {
+                                                chkInv.IsChecked = true;
+                                                txtInvoiceNo.Text = Convert.ToString(reader.GetValue(invoiceNoIndex));
+                                            }
+                                            if (!string.IsNullOrEmpty(Convert.ToString(reader.GetValue(orNoIndex))))
+                                            {
+                                                chkOR.IsChecked = true;
+                                                txtORNo.Text = Convert.ToString(reader.GetValue(orNoIndex));
+                                            }
+                                            chkDR.IsChecked = true;
+                                            txtDRNo.Text = txtServiceNo.Text;
+
+                                            if (Convert.ToString(reader.GetValue(statusIndex)) == "Paid")
+                                            {
+                                                rdPaid.IsChecked = true;
+                                            }
+                                            else
+                                            {
+                                                rdUnpaid.IsChecked = true;
+                                            }
+
+                                            if (Convert.ToString(reader.GetValue(claimedIndex)) == "Claimed")
+                                            {
+                                                chkClaimed.IsChecked = true;
+                                                btnClaiming.IsEnabled = false;
+                                            }
+                                            else
+                                            {
+                                                chkClaimed.IsChecked = false;
+                                                btnClaiming.IsEnabled = true;
+
+                                            }
+
+                                            btnIssueOR.IsEnabled = true;
+                                            btnIssueInvoice.IsEnabled = true;
+
+                                            service = Convert.ToString(reader.GetValue(serviceIndex));
+                                            drNo = Convert.ToInt32(txtServiceNo.Text);
+                                            exist = true;
+
+                                        }
+                                    }
+                                    else
+                                    {
+                                        MessageBox.Show("Transaction does not exist");
+                                        btnIssueOR.IsEnabled = false;
+                                        btnIssueInvoice.IsEnabled = false;
+                                        return;
+                                    }
+                                }
+                            }
+                            using (SqlCommand cmd = new SqlCommand("SELECT date, paidAmount, total, status from PaymentHist WHERE receiptNo = @receiptNo and service = @service", conn))
+                            {
+                                cmd.Parameters.AddWithValue("@service", service);
+
+                                if (!string.IsNullOrEmpty(txtJobOrderNo.Text))
+                                {
+                                    cmd.Parameters.AddWithValue("@receiptNo", txtJobOrderNo.Text);
+                                }
+                                else
+                                {
+                                    cmd.Parameters.AddWithValue("@receiptNo", txtDRNo.Text);
+                                }
+                                using (SqlDataReader reader = cmd.ExecuteReader())
+                                {
+                                    payHist.Clear();
+                                    if (reader.HasRows)
+                                    {
+                                        while (reader.Read())
+                                        {
+                                            int dateIndex = reader.GetOrdinal("date");
+                                            int paidAmtIndex = reader.GetOrdinal("paidAmount");
+                                            int totalIndex = reader.GetOrdinal("total");
+                                            int statusIndex = reader.GetOrdinal("status");
+
+                                            payHist.Add(new PaymentHistoryDataModel
+                                            {
+                                                date = Convert.ToString(reader.GetValue(dateIndex)),
+                                                amount = Convert.ToDouble(reader.GetValue(paidAmtIndex))
+                                            });
+
+                                            unpaidBalance += Convert.ToDouble(reader.GetValue(paidAmtIndex));
+                                            txtTotal.Value = Convert.ToDouble(reader.GetValue(totalIndex));
+
+
+                                        }
+                                    }
+                                }
+                            }
+
+                            txtUnpaidBalancePayment.Value = txtTotal.Value - unpaidBalance;
+                            txtAmount.MaxValue = (double)txtUnpaidBalancePayment.Value;
+                            txtAmount.Value = (double)txtUnpaidBalancePayment.Value;
+
+                            if (service == "Stock Out")
+                            {
+                                txtJobOrderNo.Text = null;
+                                exPhotocopy.IsEnabled = true;
+                                exStockOut.IsEnabled = true;
+                                using (SqlCommand cmd = new SqlCommand("SELECT * from PhotocopyDetails WHERE DRNo = @serviceNo", conn))
+                                {
+                                    cmd.Parameters.AddWithValue("@serviceNo", drNo);
+                                    using (SqlDataReader reader = cmd.ExecuteReader())
+                                    {
+                                        photocopy.Clear();
+                                        if (reader.HasRows)
+                                        {
+                                            while (reader.Read())
+                                            {
+                                                int itemIndex = reader.GetOrdinal("item");
+                                                int priceIndex = reader.GetOrdinal("price");
+                                                int qtyIndex = reader.GetOrdinal("qty");
+                                                int totalPerItemIndex = reader.GetOrdinal("totalPerItem");
+
+                                                photocopy.Add(new PhotocopyDataModel
+                                                {
+                                                    item = Convert.ToString(reader.GetValue(itemIndex)),
+                                                    price = Convert.ToDouble(reader.GetValue(priceIndex)),
+                                                    qty = Convert.ToInt32(reader.GetValue(qtyIndex)),
+                                                    totalPerItem = Convert.ToDouble(reader.GetValue(totalPerItemIndex))
+                                                });
+                                            }
+                                        }
+                                    }
+                                }
+
+                                using (SqlCommand cmd = new SqlCommand("SELECT * from ReleasedMaterials WHERE DRNo = @serviceNo", conn))
+                                {
+                                    cmd.Parameters.AddWithValue("@serviceNo", drNo);
+                                    using (SqlDataReader reader = cmd.ExecuteReader())
+                                    {
+                                        stockOut.Clear();
+                                        if (reader.HasRows)
+                                        {
+                                            while (reader.Read())
+                                            {
+                                                int itemCodeIndex = reader.GetOrdinal("itemCode");
+                                                int descriptionIndex = reader.GetOrdinal("description");
+                                                int typeIndex = reader.GetOrdinal("type");
+                                                int brandIndex = reader.GetOrdinal("brand");
+                                                int sizeIndex = reader.GetOrdinal("size");
+                                                int qtyIndex = reader.GetOrdinal("qty");
+                                                int totalPerItemIndex = reader.GetOrdinal("totalPerItem");
+                                                int remarksIndex = reader.GetOrdinal("remarks");
+
+                                                stockOut.Add(new ItemDataModel
+                                                {
+                                                    itemCode = Convert.ToString(reader.GetValue(itemCodeIndex)),
+                                                    description = Convert.ToString(reader.GetValue(descriptionIndex)),
+                                                    type = Convert.ToString(reader.GetValue(typeIndex)),
+                                                    brand = Convert.ToString(reader.GetValue(brandIndex)),
+                                                    size = Convert.ToString(reader.GetValue(sizeIndex)),
+                                                    qty = Convert.ToInt32(reader.GetValue(qtyIndex)),
+                                                    totalPerItem = Convert.ToDouble(reader.GetValue(totalPerItemIndex)),
+                                                    remarks = Convert.ToString(reader.GetValue(remarksIndex)),
+                                                });
+
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            else if (service == "Printing, Services, etc.")
+                            {
+                                exJobOrder.IsEnabled = true;
+                                btnPrintJobOrder.IsEnabled = true;
+                                if (string.IsNullOrEmpty(txtDRNo.Text))
+                                    btnIssueDR.IsEnabled = true;
+                                txtJobOrder.Text = Convert.ToString(service);
+                                using (SqlCommand cmd = new SqlCommand("SELECT * from ServiceMaterial where JobOrderNo = @jobOrderNo", conn))
+                                {
+                                    cmd.Parameters.AddWithValue("@jobOrderNo", jobOrderNo);
+                                    using (SqlDataReader reader = cmd.ExecuteReader())
+                                    {
+                                        services.Clear();
+                                        while (reader.Read())
+                                        {
+                                            int descriptionIndex = reader.GetOrdinal("description");
+                                            int unitIndex = reader.GetOrdinal("unit");
+                                            int qtyIndex = reader.GetOrdinal("qty");
+                                            int materialIndex = reader.GetOrdinal("material");
+                                            int copyIndex = reader.GetOrdinal("copy");
+                                            int sizeIndex = reader.GetOrdinal("size");
+                                            int totalPerItemIndex = reader.GetOrdinal("totalPerItem");
+
+                                            services.Add(new JobOrderDataModel
+                                            {
+                                                Description = Convert.ToString(reader.GetValue(descriptionIndex)),
+                                                unit = Convert.ToString(reader.GetValue(unitIndex)),
+                                                qty = Convert.ToInt32(reader.GetValue(qtyIndex)),
+                                                material = Convert.ToString(reader.GetValue(materialIndex)),
+                                                copy = Convert.ToString(reader.GetValue(copyIndex)),
+                                                size = Convert.ToString(reader.GetValue(sizeIndex)),
+                                                unitPrice = Convert.ToDouble(reader.GetValue(totalPerItemIndex)) / Convert.ToInt32(reader.GetValue(qtyIndex)),
+                                                amount = Convert.ToDouble(reader.GetValue(totalPerItemIndex))
+                                            });
+                                        }
+                                    }
+                                }
+                            }
+                            else if (service == "Tarpaulin")
+                            {
+                                exJobOrderTarp.IsEnabled = true;
+                                btnPrintJobOrder.IsEnabled = true;
+                                if (string.IsNullOrEmpty(txtDRNo.Text))
+                                    btnIssueDR.IsEnabled = true;
+                                txtJobOrder.Text = Convert.ToString(service);
+                                using (SqlCommand cmd = new SqlCommand("SELECT * from TarpMaterial where JobOrderNo = @jobOrderNo", conn))
+                                {
+                                    cmd.Parameters.AddWithValue("@jobOrderNo", jobOrderNo);
+                                    using (SqlDataReader reader = cmd.ExecuteReader())
+                                    {
+                                        tarp.Clear();
+                                        while (reader.Read())
+                                        {
+                                            int fileNameIndex = reader.GetOrdinal("fileName");
+                                            int qtyIndex = reader.GetOrdinal("qty");
+                                            int sizeIndex = reader.GetOrdinal("size");
+                                            int mediaIndex = reader.GetOrdinal("media");
+                                            int borderIndex = reader.GetOrdinal("border");
+                                            int iLETIndex = reader.GetOrdinal("ILET");
+                                            int unitPriceIndex = reader.GetOrdinal("unitPrice");
+
+                                            tarp.Add(new JobOrderDataModel
+                                            {
+                                                fileName = Convert.ToString(reader.GetValue(fileNameIndex)),
+                                                tarpQty = Convert.ToInt32(reader.GetValue(qtyIndex)),
+                                                tarpSize = Convert.ToString(reader.GetValue(sizeIndex)),
+                                                media = Convert.ToString(reader.GetValue(mediaIndex)),
+                                                border = Convert.ToString(reader.GetValue(borderIndex)),
+                                                ILET = Convert.ToString(reader.GetValue(iLETIndex)),
+                                                unitPrice = Convert.ToDouble(reader.GetValue(unitPriceIndex)),
+                                                amount = (double)(Convert.ToDouble(reader.GetValue(unitPriceIndex)) * Convert.ToInt32(reader.GetValue(qtyIndex)))
+                                            });
+                                        }
+                                    }
+                                }
+                            }
+                            else if (service == "Manual Transaction")
+                            {
+                                exIssueDR.IsEnabled = true;
+
+                                using (SqlCommand cmd = new SqlCommand("SELECT * from ManualTransaction WHERE DRNo = @serviceNo", conn))
+                                {
+                                    cmd.Parameters.AddWithValue("@serviceNo", drNo);
+                                    using (SqlDataReader reader = cmd.ExecuteReader())
+                                    {
+                                        items.Clear();
+                                        while (reader.Read())
+                                        {
+                                            int descIndex = reader.GetOrdinal("description");
+                                            int qtyIndex = reader.GetOrdinal("qty");
+                                            int unitPriceIndex = reader.GetOrdinal("unitPrice");
+                                            int amountIndex = reader.GetOrdinal("amount");
+
+                                            items.Add(new DeliveryReceiptDataModel
+                                            {
+                                                description = Convert.ToString(reader.GetValue(descIndex)),
+                                                qty = Convert.ToInt32(reader.GetValue(qtyIndex)),
+                                                unitPrice = Convert.ToDouble(reader.GetValue(unitPriceIndex)),
+                                                amount = Convert.ToDouble(reader.GetValue(amountIndex))
+                                            });
+                                        }
+
+                                    }
+                                }
+                            }
+                            break;
+                        case "Invoice":
+                            using (SqlCommand cmd = new SqlCommand("SELECT * from TransactionDetails WHERE invoiceNo = @serviceNo and inaccessible = 1", conn))
+                            {
+                                cmd.Parameters.AddWithValue("@serviceNo", txtServiceNo.Text);
+                                using (SqlDataReader reader = cmd.ExecuteReader())
+                                {
+                                    if (reader.HasRows)
+                                    {
+                                        while (reader.Read())
+                                        {
+                                            int serviceIndex = reader.GetOrdinal("service");
+                                            int dateIndex = reader.GetOrdinal("date");
+                                            int deadlineIndex = reader.GetOrdinal("deadline");
+                                            int custNameIndex = reader.GetOrdinal("customerName");
+                                            int issuedByIndex = reader.GetOrdinal("issuedBy");
+                                            int addressIndex = reader.GetOrdinal("address");
+                                            int contactNoIndex = reader.GetOrdinal("contactNo");
+                                            int remarksIndex = reader.GetOrdinal("remarks");
+                                            int orNoIndex = reader.GetOrdinal("ORNo");
+                                            int drNoIndex = reader.GetOrdinal("DRNo");
+                                            int statusIndex = reader.GetOrdinal("status");
+                                            int claimedIndex = reader.GetOrdinal("claimed");
+                                            int jobOrderNoIndex = reader.GetOrdinal("jobOrderNo");
+                                            int pojoNoIndex = reader.GetOrdinal("pojoNo");
+
+                                            if (reader.GetValue(jobOrderNoIndex) != DBNull.Value)
+                                            {
+                                                jobOrderNo = Convert.ToString(reader.GetValue(jobOrderNoIndex));
+                                            }
+                                            else if (reader.GetValue(pojoNoIndex) != DBNull.Value)
+                                            {
+                                                jobOrderNo = Convert.ToString(reader.GetValue(pojoNoIndex));
+                                            }
+                                            if (reader.GetValue(issuedByIndex) != DBNull.Value)
+                                            {
+                                                txtIssuedBy.Text = Convert.ToString(reader.GetValue(issuedByIndex));
+                                            }
+                                            txtDate.Text = Convert.ToString(reader.GetValue(dateIndex));
+                                            txtDeadline.Text = Convert.ToString(reader.GetValue(deadlineIndex));
+                                            txtCustName.Text = Convert.ToString(reader.GetValue(custNameIndex));
+                                            TextRange textRange = new TextRange(txtAddress.Document.ContentStart, txtAddress.Document.ContentEnd);
+                                            textRange.Text = Convert.ToString(reader.GetValue(addressIndex));
+                                            if (reader.GetValue(drNoIndex) != DBNull.Value)
+                                                txtDRNo.Text = Convert.ToString(reader.GetValue(drNoIndex));
+                                            txtContactNo.Text = Convert.ToString(reader.GetValue(contactNoIndex));
+                                            txtRemarks.Text = Convert.ToString(reader.GetValue(remarksIndex));
+                                            txtJobOrderNo.Text = Convert.ToString(jobOrderNo);
+
+                                            if (!string.IsNullOrEmpty(Convert.ToString(reader.GetValue(orNoIndex))))
+                                            {
+                                                chkOR.IsChecked = true;
+                                                txtORNo.Text = Convert.ToString(reader.GetValue(orNoIndex));
+                                            }
+                                            chkDR.IsChecked = true;
+                                            txtInvoiceNo.Text = txtServiceNo.Text;
+
+                                            if (Convert.ToString(reader.GetValue(statusIndex)) == "Paid")
+                                            {
+                                                rdPaid.IsChecked = true;
+                                            }
+                                            else
+                                            {
+                                                rdUnpaid.IsChecked = true;
+                                            }
+
+                                            if (Convert.ToString(reader.GetValue(claimedIndex)) == "Claimed")
+                                            {
+                                                chkClaimed.IsChecked = true;
+                                                btnClaiming.IsEnabled = false;
+                                            }
+                                            else
+                                            {
+                                                chkClaimed.IsChecked = false;
+                                                btnClaiming.IsEnabled = true;
+                                            }
+
+                                            btnIssueOR.IsEnabled = true;
+                                            btnIssueInvoice.IsEnabled = true;
+
+                                            service = Convert.ToString(reader.GetValue(serviceIndex));
+                                            if (reader.GetValue(drNoIndex) != DBNull.Value)
+                                                drNo = Convert.ToInt32(reader.GetValue(drNoIndex));
+                                            exist = true;
+
+                                        }
+                                    }
+                                    else
+                                    {
+                                        MessageBox.Show("Transaction does not exist");
+                                        btnIssueOR.IsEnabled = false;
+                                        btnIssueInvoice.IsEnabled = false;
+                                        return;
+                                    }
+                                }
+                            }
+                            using (SqlCommand cmd = new SqlCommand("SELECT * from PaymentHist WHERE receiptNo = @receiptNo and service = @service", conn))
+                            {
+                                cmd.Parameters.AddWithValue("@service", service);
+                                if (!string.IsNullOrEmpty(txtJobOrderNo.Text))
+                                {
+                                    cmd.Parameters.AddWithValue("@receiptNo", txtJobOrderNo.Text);
+                                }
+                                else
+                                {
+                                    cmd.Parameters.AddWithValue("@receiptNo", txtDRNo.Text);
+                                }
+                                using (SqlDataReader reader = cmd.ExecuteReader())
+                                {
+                                    payHist.Clear();
+                                    if (reader.HasRows)
+                                    {
+                                        while (reader.Read())
+                                        {
+                                            int dateIndex = reader.GetOrdinal("date");
+                                            int paidAmtIndex = reader.GetOrdinal("paidAmount");
+                                            int totalIndex = reader.GetOrdinal("total");
+                                            int statusIndex = reader.GetOrdinal("status");
+
+                                            payHist.Add(new PaymentHistoryDataModel
+                                            {
+                                                date = Convert.ToString(reader.GetValue(dateIndex)),
+                                                amount = Convert.ToDouble(reader.GetValue(paidAmtIndex))
+                                            });
+
+                                            unpaidBalance += Convert.ToDouble(reader.GetValue(paidAmtIndex));
+                                            txtTotal.Value = Convert.ToDouble(reader.GetValue(totalIndex));
+                                        }
+                                    }
+                                }
+                            }
+
+                            txtUnpaidBalancePayment.Value = Math.Abs(Convert.ToDouble(txtTotal.Value - unpaidBalance));
+                            txtAmount.MaxValue = (double)txtUnpaidBalancePayment.Value;
+                            txtAmount.Value = (double)txtUnpaidBalancePayment.Value;
+
+                            if (service == "Stock Out")
+                            {
+                                txtJobOrderNo.Text = null;
+                                exPhotocopy.IsEnabled = true;
+                                exStockOut.IsEnabled = true;
+                                using (SqlCommand cmd = new SqlCommand("SELECT * from PhotocopyDetails WHERE DRNo = @serviceNo", conn))
+                                {
+                                    cmd.Parameters.AddWithValue("@serviceNo", drNo);
+                                    using (SqlDataReader reader = cmd.ExecuteReader())
+                                    {
+                                        photocopy.Clear();
+                                        if (reader.HasRows)
+                                        {
+                                            while (reader.Read())
+                                            {
+                                                int itemIndex = reader.GetOrdinal("item");
+                                                int priceIndex = reader.GetOrdinal("price");
+                                                int qtyIndex = reader.GetOrdinal("qty");
+                                                int totalPerItemIndex = reader.GetOrdinal("totalPerItem");
+
+                                                photocopy.Add(new PhotocopyDataModel
+                                                {
+                                                    item = Convert.ToString(reader.GetValue(itemIndex)),
+                                                    price = Convert.ToDouble(reader.GetValue(priceIndex)),
+                                                    qty = Convert.ToInt32(reader.GetValue(qtyIndex)),
+                                                    totalPerItem = Convert.ToDouble(reader.GetValue(totalPerItemIndex))
+                                                });
+                                            }
+                                        }
+                                    }
+                                }
+
+                                using (SqlCommand cmd = new SqlCommand("SELECT * from ReleasedMaterials WHERE DRNo = @serviceNo", conn))
+                                {
+                                    cmd.Parameters.AddWithValue("@serviceNo", drNo);
+                                    using (SqlDataReader reader = cmd.ExecuteReader())
+                                    {
+                                        stockOut.Clear();
+                                        if (reader.HasRows)
+                                        {
+                                            while (reader.Read())
+                                            {
+                                                int itemCodeIndex = reader.GetOrdinal("itemCode");
+                                                int descriptionIndex = reader.GetOrdinal("description");
+                                                int typeIndex = reader.GetOrdinal("type");
+                                                int brandIndex = reader.GetOrdinal("brand");
+                                                int sizeIndex = reader.GetOrdinal("size");
+                                                int qtyIndex = reader.GetOrdinal("qty");
+                                                int totalPerItemIndex = reader.GetOrdinal("totalPerItem");
+                                                int remarksIndex = reader.GetOrdinal("remarks");
+
+                                                stockOut.Add(new ItemDataModel
+                                                {
+                                                    itemCode = Convert.ToString(reader.GetValue(itemCodeIndex)),
+                                                    description = Convert.ToString(reader.GetValue(descriptionIndex)),
+                                                    type = Convert.ToString(reader.GetValue(typeIndex)),
+                                                    brand = Convert.ToString(reader.GetValue(brandIndex)),
+                                                    size = Convert.ToString(reader.GetValue(sizeIndex)),
+                                                    qty = Convert.ToInt32(reader.GetValue(qtyIndex)),
+                                                    totalPerItem = Convert.ToDouble(reader.GetValue(totalPerItemIndex)),
+                                                    remarks = Convert.ToString(reader.GetValue(remarksIndex)),
+                                                });
+
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            else if (service == "Printing, Services, etc.")
+                            {
+                                exJobOrder.IsEnabled = true;
+                                btnPrintJobOrder.IsEnabled = true;
+                                if (string.IsNullOrEmpty(txtDRNo.Text))
+                                    btnIssueDR.IsEnabled = true;
+                                txtJobOrder.Text = Convert.ToString(service);
+                                using (SqlCommand cmd = new SqlCommand("SELECT * from ServiceMaterial where JobOrderNo = @jobOrderNo", conn))
+                                {
+                                    cmd.Parameters.AddWithValue("@jobOrderNo", jobOrderNo);
+                                    using (SqlDataReader reader = cmd.ExecuteReader())
+                                    {
+                                        services.Clear();
+                                        while (reader.Read())
+                                        {
+                                            int descriptionIndex = reader.GetOrdinal("description");
+                                            int unitIndex = reader.GetOrdinal("unit");
+                                            int qtyIndex = reader.GetOrdinal("qty");
+                                            int materialIndex = reader.GetOrdinal("material");
+                                            int copyIndex = reader.GetOrdinal("copy");
+                                            int sizeIndex = reader.GetOrdinal("size");
+                                            int totalPerItemIndex = reader.GetOrdinal("totalPerItem");
+
+                                            services.Add(new JobOrderDataModel
+                                            {
+                                                Description = Convert.ToString(reader.GetValue(descriptionIndex)),
+                                                unit = Convert.ToString(reader.GetValue(unitIndex)),
+                                                qty = Convert.ToInt32(reader.GetValue(qtyIndex)),
+                                                material = Convert.ToString(reader.GetValue(materialIndex)),
+                                                copy = Convert.ToString(reader.GetValue(copyIndex)),
+                                                size = Convert.ToString(reader.GetValue(sizeIndex)),
+                                                unitPrice = Convert.ToDouble(reader.GetValue(totalPerItemIndex)) / Convert.ToInt32(reader.GetValue(qtyIndex)),
+                                                amount = Convert.ToDouble(reader.GetValue(totalPerItemIndex))
+                                            });
+                                        }
+                                    }
+                                }
+                            }
+                            else if (service == "Tarpaulin")
+                            {
+                                exJobOrderTarp.IsEnabled = true;
+                                btnPrintJobOrder.IsEnabled = true;
+                                if (string.IsNullOrEmpty(txtDRNo.Text))
+                                    btnIssueDR.IsEnabled = true;
+                                txtJobOrder.Text = Convert.ToString(service);
+                                using (SqlCommand cmd = new SqlCommand("SELECT * from TarpMaterial where JobOrderNo = @jobOrderNo", conn))
+                                {
+                                    cmd.Parameters.AddWithValue("@jobOrderNo", jobOrderNo);
+                                    using (SqlDataReader reader = cmd.ExecuteReader())
+                                    {
+                                        tarp.Clear();
+                                        while (reader.Read())
+                                        {
+                                            int fileNameIndex = reader.GetOrdinal("fileName");
+                                            int qtyIndex = reader.GetOrdinal("qty");
+                                            int sizeIndex = reader.GetOrdinal("size");
+                                            int mediaIndex = reader.GetOrdinal("media");
+                                            int borderIndex = reader.GetOrdinal("border");
+                                            int iLETIndex = reader.GetOrdinal("ILET");
+                                            int unitPriceIndex = reader.GetOrdinal("unitPrice");
+
+                                            tarp.Add(new JobOrderDataModel
+                                            {
+                                                fileName = Convert.ToString(reader.GetValue(fileNameIndex)),
+                                                tarpQty = Convert.ToInt32(reader.GetValue(qtyIndex)),
+                                                tarpSize = Convert.ToString(reader.GetValue(sizeIndex)),
+                                                media = Convert.ToString(reader.GetValue(mediaIndex)),
+                                                border = Convert.ToString(reader.GetValue(borderIndex)),
+                                                ILET = Convert.ToString(reader.GetValue(iLETIndex)),
+                                                unitPrice = Convert.ToDouble(reader.GetValue(unitPriceIndex)),
+                                                amount = (double)(Convert.ToDouble(reader.GetValue(unitPriceIndex)) * Convert.ToInt32(reader.GetValue(qtyIndex)))
+                                            });
+                                        }
+                                    }
+                                }
+                            }
+                            else if (service == "Manual Transaction")
+                            {
+                                exIssueDR.IsEnabled = true;
+                                using (SqlCommand cmd = new SqlCommand("SELECT * from ManualTransaction WHERE DRNo = @serviceNo", conn))
+                                {
+                                    cmd.Parameters.AddWithValue("@serviceNo", drNo);
+                                    using (SqlDataReader reader = cmd.ExecuteReader())
+                                    {
+                                        items.Clear();
+                                        while (reader.Read())
+                                        {
+                                            int descIndex = reader.GetOrdinal("description");
+                                            int qtyIndex = reader.GetOrdinal("qty");
+                                            int unitPriceIndex = reader.GetOrdinal("unitPrice");
+                                            int amountIndex = reader.GetOrdinal("amount");
+
+                                            items.Add(new DeliveryReceiptDataModel
+                                            {
+                                                description = Convert.ToString(reader.GetValue(descIndex)),
+                                                qty = Convert.ToInt32(reader.GetValue(qtyIndex)),
+                                                unitPrice = Convert.ToDouble(reader.GetValue(unitPriceIndex)),
+                                                amount = Convert.ToDouble(reader.GetValue(amountIndex))
+                                            });
+                                        }
+
+                                    }
+                                }
+                            }
+                            break;
+                        case "Job Order (Tarpaulin)":
+                            //should be able to issue or and dr here
+                            using (SqlCommand cmd = new SqlCommand("SELECT * from TransactionDetails where jobOrderNo = @jobOrderNo and service = 'Tarpaulin' and inaccessible = 1", conn))
+                            {
+                                cmd.Parameters.AddWithValue("@jobOrderNo", txtServiceNo.Text);
+                                using (SqlDataReader reader = cmd.ExecuteReader())
+                                {
+                                    if (reader.HasRows)
+                                    {
+                                        reader.Read();
+                                        int drNoIndex = reader.GetOrdinal("DRNo");
+                                        int orNoIndex = reader.GetOrdinal("ORNo");
+                                        int invoiceNoIndex = reader.GetOrdinal("invoiceNo");
+                                        int serviceIndex = reader.GetOrdinal("service");
+                                        int dateIndex = reader.GetOrdinal("date");
+                                        int deadlineIndex = reader.GetOrdinal("deadline");
+                                        int customerNameIndex = reader.GetOrdinal("customerName");
+                                        int issuedByIndex = reader.GetOrdinal("issuedBy");
+                                        int addressIndex = reader.GetOrdinal("address");
+                                        int contactNoIndex = reader.GetOrdinal("contactNo");
+                                        int remarksIndex = reader.GetOrdinal("remarks");
+                                        int statusIndex = reader.GetOrdinal("status");
+                                        int claimedIndex = reader.GetOrdinal("Claimed");
+
+                                        txtDate.Text = Convert.ToString(reader.GetValue(dateIndex));
+                                        txtDeadline.Text = Convert.ToString(reader.GetValue(deadlineIndex));
+                                        txtCustName.Text = Convert.ToString(reader.GetValue(customerNameIndex));
+                                        TextRange textRange = new TextRange(txtAddress.Document.ContentStart, txtAddress.Document.ContentEnd);
+                                        textRange.Text = Convert.ToString(reader.GetValue(addressIndex));
+                                        txtContactNo.Text = Convert.ToString(reader.GetValue(contactNoIndex));
+                                        txtDRNo.Text = Convert.ToString(reader.GetValue(drNoIndex));
+                                        txtORNo.Text = Convert.ToString(reader.GetValue(orNoIndex));
+                                        txtInvoiceNo.Text = Convert.ToString(reader.GetValue(invoiceNoIndex));
+                                        txtRemarks.Text = Convert.ToString(reader.GetValue(remarksIndex));
+                                        txtJobOrderNo.Text = txtServiceNo.Text;
+
+                                        if (reader.GetValue(issuedByIndex) != DBNull.Value)
+                                        {
+                                            txtIssuedBy.Text = Convert.ToString(reader.GetValue(issuedByIndex));
+                                        }
+
+                                        if (!string.IsNullOrEmpty(Convert.ToString(reader.GetValue(invoiceNoIndex))))
+                                        {
+                                            chkInv.IsChecked = true;
+                                            txtInvoiceNo.Text = Convert.ToString(reader.GetValue(invoiceNoIndex));
+                                        }
                                         if (!string.IsNullOrEmpty(Convert.ToString(reader.GetValue(orNoIndex))))
                                         {
                                             chkOR.IsChecked = true;
                                             txtORNo.Text = Convert.ToString(reader.GetValue(orNoIndex));
                                         }
                                         chkDR.IsChecked = true;
-                                        txtInvoiceNo.Text = txtServiceNo.Text;
 
                                         if (Convert.ToString(reader.GetValue(statusIndex)) == "Paid")
                                         {
@@ -745,7 +1071,6 @@ namespace Goldpoint_Inventory_System.Log
                                         {
                                             rdUnpaid.IsChecked = true;
                                         }
-
                                         if (Convert.ToString(reader.GetValue(claimedIndex)) == "Claimed")
                                         {
                                             chkClaimed.IsChecked = true;
@@ -756,136 +1081,241 @@ namespace Goldpoint_Inventory_System.Log
                                             chkClaimed.IsChecked = false;
                                             btnClaiming.IsEnabled = true;
                                         }
+                                        service = Convert.ToString(reader.GetValue(serviceIndex));
+                                        if(reader.GetValue(drNoIndex) != DBNull.Value)
+                                            drNo = Convert.ToInt32(reader.GetValue(drNoIndex));
+                                        exist = true;
+                                        exJobOrderTarp.IsEnabled = true;
+                                        btnPrintJobOrder.IsEnabled = true;
+
+                                        txtJobOrder.Text = Convert.ToString(service);
 
                                         btnIssueOR.IsEnabled = true;
                                         btnIssueInvoice.IsEnabled = true;
+
+                                    }
+                                    else
+                                    {
+                                        MessageBox.Show("Job order does not exist.");
+                                        exJobOrderTarp.IsEnabled = false;
+                                        btnIssueOR.IsEnabled = false;
+                                        btnIssueInvoice.IsEnabled = false;
+                                        return;
+                                    }
+                                }
+                            }
+                            using (SqlCommand cmd = new SqlCommand("SELECT * from PaymentHist where receiptNo = @receiptNo and service = @service", conn))
+                            {
+                                cmd.Parameters.AddWithValue("@service", service);
+                                if (!string.IsNullOrEmpty(txtJobOrderNo.Text))
+                                {
+                                    cmd.Parameters.AddWithValue("@receiptNo", txtJobOrderNo.Text);
+                                }
+                                else
+                                {
+                                    cmd.Parameters.AddWithValue("@receiptNo", txtDRNo.Text);
+                                }
+                                using (SqlDataReader reader = cmd.ExecuteReader())
+                                {
+                                    payHist.Clear();
+                                    if (reader.HasRows)
+                                    {
+                                        while (reader.Read())
+                                        {
+                                            int dateIndex = reader.GetOrdinal("date");
+                                            int paidAmtIndex = reader.GetOrdinal("paidAmount");
+                                            int totalIndex = reader.GetOrdinal("total");
+                                            int statusIndex = reader.GetOrdinal("status");
+
+                                            payHist.Add(new PaymentHistoryDataModel
+                                            {
+                                                date = Convert.ToString(reader.GetValue(dateIndex)),
+                                                amount = Convert.ToDouble(reader.GetValue(paidAmtIndex))
+                                            });
+
+                                            unpaidBalance += Convert.ToDouble(reader.GetValue(paidAmtIndex));
+                                            txtTotal.Value = Convert.ToDouble(reader.GetValue(totalIndex));
+                                        }
+                                    }
+                                }
+                            }
+
+                            txtUnpaidBalancePayment.Value = Math.Abs(Convert.ToDouble(txtTotal.Value - unpaidBalance));
+                            txtAmount.MaxValue = (double)txtUnpaidBalancePayment.Value;
+                            txtAmount.Value = (double)txtUnpaidBalancePayment.Value;
+                            if (string.IsNullOrEmpty(txtDRNo.Text))
+                                btnIssueDR.IsEnabled = true;
+
+                            using (SqlCommand cmd = new SqlCommand("SELECT * from TarpMaterial where JobOrderNo = @jobOrderNo", conn))
+                            {
+                                cmd.Parameters.AddWithValue("@jobOrderNo", txtServiceNo.Text);
+                                using (SqlDataReader reader = cmd.ExecuteReader())
+                                {
+                                    tarp.Clear();
+                                    while (reader.Read())
+                                    {
+                                        int fileNameIndex = reader.GetOrdinal("fileName");
+                                        int qtyIndex = reader.GetOrdinal("qty");
+                                        int sizeIndex = reader.GetOrdinal("size");
+                                        int mediaIndex = reader.GetOrdinal("media");
+                                        int borderIndex = reader.GetOrdinal("border");
+                                        int iLETIndex = reader.GetOrdinal("ILET");
+                                        int unitPriceIndex = reader.GetOrdinal("unitPrice");
+
+                                        tarp.Add(new JobOrderDataModel
+                                        {
+                                            fileName = Convert.ToString(reader.GetValue(fileNameIndex)),
+                                            tarpQty = Convert.ToInt32(reader.GetValue(qtyIndex)),
+                                            tarpSize = Convert.ToString(reader.GetValue(sizeIndex)),
+                                            media = Convert.ToString(reader.GetValue(mediaIndex)),
+                                            border = Convert.ToString(reader.GetValue(borderIndex)),
+                                            ILET = Convert.ToString(reader.GetValue(iLETIndex)),
+                                            unitPrice = Convert.ToDouble(reader.GetValue(unitPriceIndex)),
+                                            amount = (double)(Convert.ToDouble(reader.GetValue(unitPriceIndex)) * Convert.ToInt32(reader.GetValue(qtyIndex)))
+                                        });
+                                    }
+                                }
+                            }
+                            break;
+                        case "Job Order (Printing, Services, etc.)":
+                            //should be able to issue or and dr here
+                            using (SqlCommand cmd = new SqlCommand("SELECT * from TransactionDetails where jobOrderNo = @jobOrderNo and service = 'Printing, Services, etc.' and inaccessible = 1", conn))
+                            {
+                                cmd.Parameters.AddWithValue("@jobOrderNo", txtServiceNo.Text);
+                                using (SqlDataReader reader = cmd.ExecuteReader())
+                                {
+                                    if (reader.HasRows)
+                                    {
+                                        reader.Read();
+                                        int drNoIndex = reader.GetOrdinal("DRNo");
+                                        int orNoIndex = reader.GetOrdinal("ORNo");
+                                        int invoiceNoIndex = reader.GetOrdinal("invoiceNo");
+                                        int serviceIndex = reader.GetOrdinal("service");
+                                        int dateIndex = reader.GetOrdinal("date");
+                                        int deadlineIndex = reader.GetOrdinal("deadline");
+                                        int customerNameIndex = reader.GetOrdinal("customerName");
+                                        int issuedByIndex = reader.GetOrdinal("issuedBy");
+                                        int addressIndex = reader.GetOrdinal("address");
+                                        int contactNoIndex = reader.GetOrdinal("contactNo");
+                                        int remarksIndex = reader.GetOrdinal("remarks");
+                                        int statusIndex = reader.GetOrdinal("status");
+                                        int claimedIndex = reader.GetOrdinal("Claimed");
+
+                                        txtDate.Text = Convert.ToString(reader.GetValue(dateIndex));
+                                        txtDeadline.Text = Convert.ToString(reader.GetValue(deadlineIndex));
+                                        txtCustName.Text = Convert.ToString(reader.GetValue(customerNameIndex));
+                                        TextRange textRange = new TextRange(txtAddress.Document.ContentStart, txtAddress.Document.ContentEnd);
+                                        textRange.Text = Convert.ToString(reader.GetValue(addressIndex));
+                                        txtContactNo.Text = Convert.ToString(reader.GetValue(contactNoIndex));
+                                        txtDRNo.Text = Convert.ToString(reader.GetValue(drNoIndex));
+                                        txtORNo.Text = Convert.ToString(reader.GetValue(orNoIndex));
+                                        txtInvoiceNo.Text = Convert.ToString(reader.GetValue(invoiceNoIndex));
+                                        txtRemarks.Text = Convert.ToString(reader.GetValue(remarksIndex));
+                                        txtJobOrderNo.Text = txtServiceNo.Text;
+
+                                        if (reader.GetValue(issuedByIndex) != DBNull.Value)
+                                        {
+                                            txtIssuedBy.Text = Convert.ToString(reader.GetValue(issuedByIndex));
+                                        }
+
+                                        if (!string.IsNullOrEmpty(Convert.ToString(reader.GetValue(invoiceNoIndex))))
+                                        {
+                                            chkInv.IsChecked = true;
+                                            txtInvoiceNo.Text = Convert.ToString(reader.GetValue(invoiceNoIndex));
+                                        }
+                                        if (!string.IsNullOrEmpty(Convert.ToString(reader.GetValue(orNoIndex))))
+                                        {
+                                            chkOR.IsChecked = true;
+                                            txtORNo.Text = Convert.ToString(reader.GetValue(orNoIndex));
+                                        }
+                                        chkDR.IsChecked = true;
+
+                                        if (Convert.ToString(reader.GetValue(statusIndex)) == "Paid")
+                                        {
+                                            rdPaid.IsChecked = true;
+                                        }
+                                        else
+                                        {
+                                            rdUnpaid.IsChecked = true;
+                                        }
+                                        if (Convert.ToString(reader.GetValue(claimedIndex)) == "Claimed")
+                                        {
+                                            chkClaimed.IsChecked = true;
+                                            btnClaiming.IsEnabled = false;
+                                        }
+                                        else
+                                        {
+                                            chkClaimed.IsChecked = false;
+                                            btnClaiming.IsEnabled = true;
+                                        }
 
                                         service = Convert.ToString(reader.GetValue(serviceIndex));
                                         if (reader.GetValue(drNoIndex) != DBNull.Value)
                                             drNo = Convert.ToInt32(reader.GetValue(drNoIndex));
                                         exist = true;
+                                        exJobOrder.IsEnabled = true;
+                                        btnPrintJobOrder.IsEnabled = true;
+                                        txtJobOrder.Text = Convert.ToString(service);
 
+                                        btnIssueOR.IsEnabled = true;
+                                        btnIssueInvoice.IsEnabled = true;
                                     }
+                                    else
+                                    {
+                                        MessageBox.Show("Job order does not exist.");
+
+                                        btnIssueOR.IsEnabled = false;
+                                        btnIssueInvoice.IsEnabled = false;
+                                        exJobOrder.IsEnabled = false;
+                                        return;
+                                    }
+                                }
+                            }
+                            using (SqlCommand cmd = new SqlCommand("SELECT * from PaymentHist where receiptNo = @receiptNo and service = @service", conn))
+                            {
+                                cmd.Parameters.AddWithValue("@service", service);
+                                if (!string.IsNullOrEmpty(txtJobOrderNo.Text))
+                                {
+                                    cmd.Parameters.AddWithValue("@receiptNo", txtJobOrderNo.Text);
                                 }
                                 else
                                 {
-                                    MessageBox.Show("Transaction does not exist");
-                                    btnIssueOR.IsEnabled = false;
-                                    btnIssueInvoice.IsEnabled = false;
-                                    return;
+                                    cmd.Parameters.AddWithValue("@receiptNo", txtDRNo.Text);
                                 }
-                            }
-                        }
-                        using (SqlCommand cmd = new SqlCommand("SELECT * from PaymentHist WHERE DRNo = @serviceNo", conn))
-                        {
-                            cmd.Parameters.AddWithValue("@serviceNo", drNo);
-                            using (SqlDataReader reader = cmd.ExecuteReader())
-                            {
-                                payHist.Clear();
-                                if (reader.HasRows)
-                                {
-                                    while (reader.Read())
-                                    {
-                                        int dateIndex = reader.GetOrdinal("date");
-                                        int paidAmtIndex = reader.GetOrdinal("paidAmount");
-                                        int totalIndex = reader.GetOrdinal("total");
-                                        int statusIndex = reader.GetOrdinal("status");
-
-                                        payHist.Add(new PaymentHistoryDataModel
-                                        {
-                                            date = Convert.ToString(reader.GetValue(dateIndex)),
-                                            amount = Convert.ToDouble(reader.GetValue(paidAmtIndex))
-                                        });
-
-                                        unpaidBalance += Convert.ToDouble(reader.GetValue(paidAmtIndex));
-                                        txtTotal.Value = Convert.ToDouble(reader.GetValue(totalIndex));
-                                    }
-                                }
-                            }
-                        }
-
-                        txtUnpaidBalancePayment.Value = Math.Abs(Convert.ToDouble(txtTotal.Value - unpaidBalance));
-                        txtAmount.MaxValue = (double)txtUnpaidBalancePayment.Value;
-                        txtAmount.Value = (double)txtUnpaidBalancePayment.Value;
-
-                        if (service == "Stock Out")
-                        {
-                            txtJobOrderNo.Text = null;
-                            exPhotocopy.IsEnabled = true;
-                            exStockOut.IsEnabled = true;
-                            using (SqlCommand cmd = new SqlCommand("SELECT * from PhotocopyDetails WHERE DRNo = @serviceNo", conn))
-                            {
-                                cmd.Parameters.AddWithValue("@serviceNo", drNo);
                                 using (SqlDataReader reader = cmd.ExecuteReader())
                                 {
-                                    photocopy.Clear();
+                                    payHist.Clear();
                                     if (reader.HasRows)
                                     {
                                         while (reader.Read())
                                         {
-                                            int itemIndex = reader.GetOrdinal("item");
-                                            int priceIndex = reader.GetOrdinal("price");
-                                            int qtyIndex = reader.GetOrdinal("qty");
-                                            int totalPerItemIndex = reader.GetOrdinal("totalPerItem");
+                                            int dateIndex = reader.GetOrdinal("date");
+                                            int paidAmtIndex = reader.GetOrdinal("paidAmount");
+                                            int totalIndex = reader.GetOrdinal("total");
+                                            int statusIndex = reader.GetOrdinal("status");
 
-                                            photocopy.Add(new PhotocopyDataModel
+                                            payHist.Add(new PaymentHistoryDataModel
                                             {
-                                                item = Convert.ToString(reader.GetValue(itemIndex)),
-                                                price = Convert.ToDouble(reader.GetValue(priceIndex)),
-                                                qty = Convert.ToInt32(reader.GetValue(qtyIndex)),
-                                                totalPerItem = Convert.ToDouble(reader.GetValue(totalPerItemIndex))
+                                                date = Convert.ToString(reader.GetValue(dateIndex)),
+                                                amount = Convert.ToDouble(reader.GetValue(paidAmtIndex))
                                             });
+
+                                            unpaidBalance += Convert.ToDouble(reader.GetValue(paidAmtIndex));
+                                            txtTotal.Value = Convert.ToDouble(reader.GetValue(totalIndex));
                                         }
                                     }
                                 }
                             }
 
-                            using (SqlCommand cmd = new SqlCommand("SELECT * from ReleasedMaterials WHERE DRNo = @serviceNo", conn))
-                            {
-                                cmd.Parameters.AddWithValue("@serviceNo", drNo);
-                                using (SqlDataReader reader = cmd.ExecuteReader())
-                                {
-                                    stockOut.Clear();
-                                    if (reader.HasRows)
-                                    {
-                                        while (reader.Read())
-                                        {
-                                            int itemCodeIndex = reader.GetOrdinal("itemCode");
-                                            int descriptionIndex = reader.GetOrdinal("description");
-                                            int typeIndex = reader.GetOrdinal("type");
-                                            int brandIndex = reader.GetOrdinal("brand");
-                                            int sizeIndex = reader.GetOrdinal("size");
-                                            int qtyIndex = reader.GetOrdinal("qty");
-                                            int totalPerItemIndex = reader.GetOrdinal("totalPerItem");
-                                            int remarksIndex = reader.GetOrdinal("remarks");
-
-                                            stockOut.Add(new ItemDataModel
-                                            {
-                                                itemCode = Convert.ToString(reader.GetValue(itemCodeIndex)),
-                                                description = Convert.ToString(reader.GetValue(descriptionIndex)),
-                                                type = Convert.ToString(reader.GetValue(typeIndex)),
-                                                brand = Convert.ToString(reader.GetValue(brandIndex)),
-                                                size = Convert.ToString(reader.GetValue(sizeIndex)),
-                                                qty = Convert.ToInt32(reader.GetValue(qtyIndex)),
-                                                totalPerItem = Convert.ToDouble(reader.GetValue(totalPerItemIndex)),
-                                                remarks = Convert.ToString(reader.GetValue(remarksIndex)),
-                                            });
-
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        else if (service == "Printing, Services, etc.")
-                        {
-                            exJobOrder.IsEnabled = true;
-                            btnPrintJobOrder.IsEnabled = true;
+                            txtUnpaidBalancePayment.Value = Math.Abs(Convert.ToDouble(txtTotal.Value - unpaidBalance));
+                            txtAmount.MaxValue = (double)txtUnpaidBalancePayment.Value;
+                            txtAmount.Value = (double)txtUnpaidBalancePayment.Value;
                             if (string.IsNullOrEmpty(txtDRNo.Text))
                                 btnIssueDR.IsEnabled = true;
-                            txtJobOrder.Text = Convert.ToString(service);
+
                             using (SqlCommand cmd = new SqlCommand("SELECT * from ServiceMaterial where JobOrderNo = @jobOrderNo", conn))
                             {
-                                cmd.Parameters.AddWithValue("@jobOrderNo", jobOrderNo);
+                                cmd.Parameters.AddWithValue("@jobOrderNo", txtServiceNo.Text);
                                 using (SqlDataReader reader = cmd.ExecuteReader())
                                 {
                                     services.Clear();
@@ -913,392 +1343,14 @@ namespace Goldpoint_Inventory_System.Log
                                     }
                                 }
                             }
-                        }
-                        else if (service == "Tarpaulin")
-                        {
-                            exJobOrderTarp.IsEnabled = true;
-                            btnPrintJobOrder.IsEnabled = true;
-                            if (string.IsNullOrEmpty(txtDRNo.Text))
-                                btnIssueDR.IsEnabled = true;
-                            txtJobOrder.Text = Convert.ToString(service);
-                            using (SqlCommand cmd = new SqlCommand("SELECT * from TarpMaterial where JobOrderNo = @jobOrderNo", conn))
-                            {
-                                cmd.Parameters.AddWithValue("@jobOrderNo", jobOrderNo);
-                                using (SqlDataReader reader = cmd.ExecuteReader())
-                                {
-                                    tarp.Clear();
-                                    while (reader.Read())
-                                    {
-                                        int fileNameIndex = reader.GetOrdinal("fileName");
-                                        int qtyIndex = reader.GetOrdinal("qty");
-                                        int sizeIndex = reader.GetOrdinal("size");
-                                        int mediaIndex = reader.GetOrdinal("media");
-                                        int borderIndex = reader.GetOrdinal("border");
-                                        int iLETIndex = reader.GetOrdinal("ILET");
-                                        int unitPriceIndex = reader.GetOrdinal("unitPrice");
-
-                                        tarp.Add(new JobOrderDataModel
-                                        {
-                                            fileName = Convert.ToString(reader.GetValue(fileNameIndex)),
-                                            tarpQty = Convert.ToInt32(reader.GetValue(qtyIndex)),
-                                            tarpSize = Convert.ToString(reader.GetValue(sizeIndex)),
-                                            media = Convert.ToString(reader.GetValue(mediaIndex)),
-                                            border = Convert.ToString(reader.GetValue(borderIndex)),
-                                            ILET = Convert.ToString(reader.GetValue(iLETIndex)),
-                                            unitPrice = Convert.ToDouble(reader.GetValue(unitPriceIndex)),
-                                            amount = (double)(Convert.ToDouble(reader.GetValue(unitPriceIndex)) * Convert.ToInt32(reader.GetValue(qtyIndex)))
-                                        });
-                                    }
-                                }
-                            }
-                        }
-                        else if (service == "Manual Transaction")
-                        {
-                            exIssueDR.IsEnabled = true;
-                            using (SqlCommand cmd = new SqlCommand("SELECT * from ManualTransaction WHERE DRNo = @serviceNo", conn))
-                            {
-                                cmd.Parameters.AddWithValue("@serviceNo", drNo);
-                                using (SqlDataReader reader = cmd.ExecuteReader())
-                                {
-                                    items.Clear();
-                                    while (reader.Read())
-                                    {
-                                        int descIndex = reader.GetOrdinal("description");
-                                        int qtyIndex = reader.GetOrdinal("qty");
-                                        int unitPriceIndex = reader.GetOrdinal("unitPrice");
-                                        int amountIndex = reader.GetOrdinal("amount");
-
-                                        items.Add(new DeliveryReceiptDataModel
-                                        {
-                                            description = Convert.ToString(reader.GetValue(descIndex)),
-                                            qty = Convert.ToInt32(reader.GetValue(qtyIndex)),
-                                            unitPrice = Convert.ToDouble(reader.GetValue(unitPriceIndex)),
-                                            amount = Convert.ToDouble(reader.GetValue(amountIndex))
-                                        });
-                                    }
-
-                                }
-                            }
-                        }
-                        break;
-                    case "Job Order (Tarpaulin)":
-                        //should be able to issue or and dr here
-                        using (SqlCommand cmd = new SqlCommand("SELECT * from TransactionDetails where jobOrderNo = @jobOrderNo and service = 'Tarpaulin' and inaccessible = 1", conn))
-                        {
-                            cmd.Parameters.AddWithValue("@jobOrderNo", txtServiceNo.Text);
-                            using (SqlDataReader reader = cmd.ExecuteReader())
-                            {
-                                if (reader.HasRows)
-                                {
-                                    reader.Read();
-                                    int drNoIndex = reader.GetOrdinal("DRNo");
-                                    int orNoIndex = reader.GetOrdinal("ORNo");
-                                    int invoiceNoIndex = reader.GetOrdinal("invoiceNo");
-                                    int serviceIndex = reader.GetOrdinal("service");
-                                    int dateIndex = reader.GetOrdinal("date");
-                                    int deadlineIndex = reader.GetOrdinal("deadline");
-                                    int customerNameIndex = reader.GetOrdinal("customerName");
-                                    int issuedByIndex = reader.GetOrdinal("issuedBy");
-                                    int addressIndex = reader.GetOrdinal("address");
-                                    int contactNoIndex = reader.GetOrdinal("contactNo");
-                                    int remarksIndex = reader.GetOrdinal("remarks");
-                                    int statusIndex = reader.GetOrdinal("status");
-                                    int claimedIndex = reader.GetOrdinal("Claimed");
-
-                                    txtDate.Text = Convert.ToString(reader.GetValue(dateIndex));
-                                    txtDeadline.Text = Convert.ToString(reader.GetValue(deadlineIndex));
-                                    txtCustName.Text = Convert.ToString(reader.GetValue(customerNameIndex));
-                                    TextRange textRange = new TextRange(txtAddress.Document.ContentStart, txtAddress.Document.ContentEnd);
-                                    textRange.Text = Convert.ToString(reader.GetValue(addressIndex));
-                                    txtContactNo.Text = Convert.ToString(reader.GetValue(contactNoIndex));
-                                    txtDRNo.Text = Convert.ToString(reader.GetValue(drNoIndex));
-                                    txtORNo.Text = Convert.ToString(reader.GetValue(orNoIndex));
-                                    txtInvoiceNo.Text = Convert.ToString(reader.GetValue(invoiceNoIndex));
-                                    txtRemarks.Text = Convert.ToString(reader.GetValue(remarksIndex));
-                                    txtJobOrderNo.Text = txtServiceNo.Text;
-
-                                    if (reader.GetValue(issuedByIndex) != DBNull.Value)
-                                    {
-                                        txtIssuedBy.Text = Convert.ToString(reader.GetValue(issuedByIndex));
-                                    }
-
-                                    if (!string.IsNullOrEmpty(Convert.ToString(reader.GetValue(invoiceNoIndex))))
-                                    {
-                                        chkInv.IsChecked = true;
-                                        txtInvoiceNo.Text = Convert.ToString(reader.GetValue(invoiceNoIndex));
-                                    }
-                                    if (!string.IsNullOrEmpty(Convert.ToString(reader.GetValue(orNoIndex))))
-                                    {
-                                        chkOR.IsChecked = true;
-                                        txtORNo.Text = Convert.ToString(reader.GetValue(orNoIndex));
-                                    }
-                                    chkDR.IsChecked = true;
-
-                                    if (Convert.ToString(reader.GetValue(statusIndex)) == "Paid")
-                                    {
-                                        rdPaid.IsChecked = true;
-                                    }
-                                    else
-                                    {
-                                        rdUnpaid.IsChecked = true;
-                                    }
-                                    if (Convert.ToString(reader.GetValue(claimedIndex)) == "Claimed")
-                                    {
-                                        chkClaimed.IsChecked = true;
-                                        btnClaiming.IsEnabled = false;
-                                    }
-                                    else
-                                    {
-                                        chkClaimed.IsChecked = false;
-                                        btnClaiming.IsEnabled = true;
-                                    }
-                                    service = Convert.ToString(reader.GetValue(serviceIndex));
-                                    drNo = Convert.ToInt32(reader.GetValue(drNoIndex));
-                                    exist = true;
-                                    exJobOrderTarp.IsEnabled = true;
-                                    btnPrintJobOrder.IsEnabled = true;
-
-                                    txtJobOrder.Text = Convert.ToString(service);
-
-                                    btnIssueOR.IsEnabled = true;
-                                    btnIssueInvoice.IsEnabled = true;
-
-                                }
-                                else
-                                {
-                                    MessageBox.Show("Job order does not exist.");
-                                    exJobOrderTarp.IsEnabled = false;
-                                    btnIssueOR.IsEnabled = false;
-                                    btnIssueInvoice.IsEnabled = false;
-                                    return;
-                                }
-                            }
-                        }
-                        using (SqlCommand cmd = new SqlCommand("SELECT * from PaymentHist where DRNo = @serviceNo", conn))
-                        {
-                            cmd.Parameters.AddWithValue("@serviceNo", drNo);
-                            using (SqlDataReader reader = cmd.ExecuteReader())
-                            {
-                                payHist.Clear();
-                                if (reader.HasRows)
-                                {
-                                    while (reader.Read())
-                                    {
-                                        int dateIndex = reader.GetOrdinal("date");
-                                        int paidAmtIndex = reader.GetOrdinal("paidAmount");
-                                        int totalIndex = reader.GetOrdinal("total");
-                                        int statusIndex = reader.GetOrdinal("status");
-
-                                        payHist.Add(new PaymentHistoryDataModel
-                                        {
-                                            date = Convert.ToString(reader.GetValue(dateIndex)),
-                                            amount = Convert.ToDouble(reader.GetValue(paidAmtIndex))
-                                        });
-
-                                        unpaidBalance += Convert.ToDouble(reader.GetValue(paidAmtIndex));
-                                        txtTotal.Value = Convert.ToDouble(reader.GetValue(totalIndex));
-                                    }
-                                }
-                            }
-                        }
-
-                        txtUnpaidBalancePayment.Value = Math.Abs(Convert.ToDouble(txtTotal.Value - unpaidBalance));
-                        txtAmount.MaxValue = (double)txtUnpaidBalancePayment.Value;
-                        txtAmount.Value = (double)txtUnpaidBalancePayment.Value;
-                        if (string.IsNullOrEmpty(txtDRNo.Text))
-                            btnIssueDR.IsEnabled = true;
-
-                        using (SqlCommand cmd = new SqlCommand("SELECT * from TarpMaterial where JobOrderNo = @jobOrderNo", conn))
-                        {
-                            cmd.Parameters.AddWithValue("@jobOrderNo", txtServiceNo.Text);
-                            using (SqlDataReader reader = cmd.ExecuteReader())
-                            {
-                                tarp.Clear();
-                                while (reader.Read())
-                                {
-                                    int fileNameIndex = reader.GetOrdinal("fileName");
-                                    int qtyIndex = reader.GetOrdinal("qty");
-                                    int sizeIndex = reader.GetOrdinal("size");
-                                    int mediaIndex = reader.GetOrdinal("media");
-                                    int borderIndex = reader.GetOrdinal("border");
-                                    int iLETIndex = reader.GetOrdinal("ILET");
-                                    int unitPriceIndex = reader.GetOrdinal("unitPrice");
-
-                                    tarp.Add(new JobOrderDataModel
-                                    {
-                                        fileName = Convert.ToString(reader.GetValue(fileNameIndex)),
-                                        tarpQty = Convert.ToInt32(reader.GetValue(qtyIndex)),
-                                        tarpSize = Convert.ToString(reader.GetValue(sizeIndex)),
-                                        media = Convert.ToString(reader.GetValue(mediaIndex)),
-                                        border = Convert.ToString(reader.GetValue(borderIndex)),
-                                        ILET = Convert.ToString(reader.GetValue(iLETIndex)),
-                                        unitPrice = Convert.ToDouble(reader.GetValue(unitPriceIndex)),
-                                        amount = (double)(Convert.ToDouble(reader.GetValue(unitPriceIndex)) * Convert.ToInt32(reader.GetValue(qtyIndex)))
-                                    });
-                                }
-                            }
-                        }
-                        break;
-                    case "Job Order (Printing, Services, etc.)":
-                        //should be able to issue or and dr here
-                        using (SqlCommand cmd = new SqlCommand("SELECT * from TransactionDetails where jobOrderNo = @jobOrderNo and service = 'Printing, Services, etc.' and inaccessible = 1", conn))
-                        {
-                            cmd.Parameters.AddWithValue("@jobOrderNo", txtServiceNo.Text);
-                            using (SqlDataReader reader = cmd.ExecuteReader())
-                            {
-                                if (reader.HasRows)
-                                {
-                                    reader.Read();
-                                    int drNoIndex = reader.GetOrdinal("DRNo");
-                                    int orNoIndex = reader.GetOrdinal("ORNo");
-                                    int invoiceNoIndex = reader.GetOrdinal("invoiceNo");
-                                    int serviceIndex = reader.GetOrdinal("service");
-                                    int dateIndex = reader.GetOrdinal("date");
-                                    int deadlineIndex = reader.GetOrdinal("deadline");
-                                    int customerNameIndex = reader.GetOrdinal("customerName");
-                                    int issuedByIndex = reader.GetOrdinal("issuedBy");
-                                    int addressIndex = reader.GetOrdinal("address");
-                                    int contactNoIndex = reader.GetOrdinal("contactNo");
-                                    int remarksIndex = reader.GetOrdinal("remarks");
-                                    int statusIndex = reader.GetOrdinal("status");
-                                    int claimedIndex = reader.GetOrdinal("Claimed");
-
-                                    txtDate.Text = Convert.ToString(reader.GetValue(dateIndex));
-                                    txtDeadline.Text = Convert.ToString(reader.GetValue(deadlineIndex));
-                                    txtCustName.Text = Convert.ToString(reader.GetValue(customerNameIndex));
-                                    TextRange textRange = new TextRange(txtAddress.Document.ContentStart, txtAddress.Document.ContentEnd);
-                                    textRange.Text = Convert.ToString(reader.GetValue(addressIndex));
-                                    txtContactNo.Text = Convert.ToString(reader.GetValue(contactNoIndex));
-                                    txtDRNo.Text = Convert.ToString(reader.GetValue(drNoIndex));
-                                    txtORNo.Text = Convert.ToString(reader.GetValue(orNoIndex));
-                                    txtInvoiceNo.Text = Convert.ToString(reader.GetValue(invoiceNoIndex));
-                                    txtRemarks.Text = Convert.ToString(reader.GetValue(remarksIndex));
-                                    txtJobOrderNo.Text = txtServiceNo.Text;
-
-                                    if (reader.GetValue(issuedByIndex) != DBNull.Value)
-                                    {
-                                        txtIssuedBy.Text = Convert.ToString(reader.GetValue(issuedByIndex));
-                                    }
-
-                                    if (!string.IsNullOrEmpty(Convert.ToString(reader.GetValue(invoiceNoIndex))))
-                                    {
-                                        chkInv.IsChecked = true;
-                                        txtInvoiceNo.Text = Convert.ToString(reader.GetValue(invoiceNoIndex));
-                                    }
-                                    if (!string.IsNullOrEmpty(Convert.ToString(reader.GetValue(orNoIndex))))
-                                    {
-                                        chkOR.IsChecked = true;
-                                        txtORNo.Text = Convert.ToString(reader.GetValue(orNoIndex));
-                                    }
-                                    chkDR.IsChecked = true;
-
-                                    if (Convert.ToString(reader.GetValue(statusIndex)) == "Paid")
-                                    {
-                                        rdPaid.IsChecked = true;
-                                    }
-                                    else
-                                    {
-                                        rdUnpaid.IsChecked = true;
-                                    }
-                                    if (Convert.ToString(reader.GetValue(claimedIndex)) == "Claimed")
-                                    {
-                                        chkClaimed.IsChecked = true;
-                                        btnClaiming.IsEnabled = false;
-                                    }
-                                    else
-                                    {
-                                        chkClaimed.IsChecked = false;
-                                        btnClaiming.IsEnabled = true;
-                                    }
-
-                                    service = Convert.ToString(reader.GetValue(serviceIndex));
-                                    if (reader.GetValue(drNoIndex) != DBNull.Value)
-                                        drNo = Convert.ToInt32(reader.GetValue(drNoIndex));
-                                    exist = true;
-                                    exJobOrder.IsEnabled = true;
-                                    btnPrintJobOrder.IsEnabled = true;
-                                    txtJobOrder.Text = Convert.ToString(service);
-
-                                    btnIssueOR.IsEnabled = true;
-                                    btnIssueInvoice.IsEnabled = true;
-                                }
-                                else
-                                {
-                                    MessageBox.Show("Job order does not exist.");
-
-                                    btnIssueOR.IsEnabled = false;
-                                    btnIssueInvoice.IsEnabled = false;
-                                    exJobOrder.IsEnabled = false;
-                                    return;
-                                }
-                            }
-                        }
-                        using (SqlCommand cmd = new SqlCommand("SELECT * from PaymentHist where DRNo = @serviceNo", conn))
-                        {
-                            cmd.Parameters.AddWithValue("@serviceNo", drNo);
-                            using (SqlDataReader reader = cmd.ExecuteReader())
-                            {
-                                payHist.Clear();
-                                if (reader.HasRows)
-                                {
-                                    while (reader.Read())
-                                    {
-                                        int dateIndex = reader.GetOrdinal("date");
-                                        int paidAmtIndex = reader.GetOrdinal("paidAmount");
-                                        int totalIndex = reader.GetOrdinal("total");
-                                        int statusIndex = reader.GetOrdinal("status");
-
-                                        payHist.Add(new PaymentHistoryDataModel
-                                        {
-                                            date = Convert.ToString(reader.GetValue(dateIndex)),
-                                            amount = Convert.ToDouble(reader.GetValue(paidAmtIndex))
-                                        });
-
-                                        unpaidBalance += Convert.ToDouble(reader.GetValue(paidAmtIndex));
-                                        txtTotal.Value = Convert.ToDouble(reader.GetValue(totalIndex));
-                                    }
-                                }
-                            }
-                        }
-
-                        txtUnpaidBalancePayment.Value = Math.Abs(Convert.ToDouble(txtTotal.Value - unpaidBalance));
-                        txtAmount.MaxValue = (double)txtUnpaidBalancePayment.Value;
-                        txtAmount.Value = (double)txtUnpaidBalancePayment.Value;
-                        if (string.IsNullOrEmpty(txtDRNo.Text))
-                            btnIssueDR.IsEnabled = true;
-
-                        using (SqlCommand cmd = new SqlCommand("SELECT * from ServiceMaterial where JobOrderNo = @jobOrderNo", conn))
-                        {
-                            cmd.Parameters.AddWithValue("@jobOrderNo", txtServiceNo.Text);
-                            using (SqlDataReader reader = cmd.ExecuteReader())
-                            {
-                                services.Clear();
-                                while (reader.Read())
-                                {
-                                    int descriptionIndex = reader.GetOrdinal("description");
-                                    int unitIndex = reader.GetOrdinal("unit");
-                                    int qtyIndex = reader.GetOrdinal("qty");
-                                    int materialIndex = reader.GetOrdinal("material");
-                                    int copyIndex = reader.GetOrdinal("copy");
-                                    int sizeIndex = reader.GetOrdinal("size");
-                                    int totalPerItemIndex = reader.GetOrdinal("totalPerItem");
-
-                                    services.Add(new JobOrderDataModel
-                                    {
-                                        Description = Convert.ToString(reader.GetValue(descriptionIndex)),
-                                        unit = Convert.ToString(reader.GetValue(unitIndex)),
-                                        qty = Convert.ToInt32(reader.GetValue(qtyIndex)),
-                                        material = Convert.ToString(reader.GetValue(materialIndex)),
-                                        copy = Convert.ToString(reader.GetValue(copyIndex)),
-                                        size = Convert.ToString(reader.GetValue(sizeIndex)),
-                                        unitPrice = Convert.ToDouble(reader.GetValue(totalPerItemIndex)) / Convert.ToInt32(reader.GetValue(qtyIndex)),
-                                        amount = Convert.ToDouble(reader.GetValue(totalPerItemIndex))
-                                    });
-                                }
-                            }
-                        }
-                        break;
+                            break;
+                    }
                 }
+                catch(Exception ex)
+                {
+                    MessageBox.Show(ex.ToString());
+                }
+
                 if (txtUnpaidBalancePayment.Value <= 0)
                 {
                     btnPayment.IsEnabled = false;
@@ -1325,6 +1377,7 @@ namespace Goldpoint_Inventory_System.Log
             txtAmount.Value = 0;
             txtAmount.MaxValue = 0;
             txtCustName.Text = null;
+            txtIssuedBy.Text = null;
             txtDate.Text = DateTime.Today.ToShortDateString();
             txtDatePayment.Text = DateTime.Today.ToShortDateString();
             txtDRNo.Text = null;
@@ -1384,10 +1437,12 @@ namespace Goldpoint_Inventory_System.Log
                             //if fully paid or not, update all if fully paid, if not, normal add
                             bool fullyPaid = false;
                             int count = 0;
-                            using (SqlCommand cmd = new SqlCommand("SELECT COUNT(1) from TransactionDetails WHERE drNo = @DRNo and date = @date", conn))
+                            using (SqlCommand cmd = new SqlCommand("SELECT COUNT(1) from TransactionDetails WHERE date = @date and (drNo = @DRNo or (jobOrderNo = @jobOrderNo and service = @service))", conn))
                             {
                                 cmd.Parameters.AddWithValue("@DRNo", txtDRNo.Text);
                                 cmd.Parameters.AddWithValue("@date", txtDatePayment.Text);
+                                cmd.Parameters.AddWithValue("@jobOrderNo", txtJobOrderNo.Text);
+                                cmd.Parameters.AddWithValue("@service", txtJobOrder.Text);
                                 try
                                 {
                                     count = (int)cmd.ExecuteScalar();
@@ -1401,9 +1456,26 @@ namespace Goldpoint_Inventory_System.Log
                             }
                             if (count == 0)
                             {
-                                using (SqlCommand cmd = new SqlCommand("INSERT into PaymentHist VALUES (@DRNo, @date, @paidAmount, @total, @status)", conn))
+                                using (SqlCommand cmd = new SqlCommand("INSERT into PaymentHist VALUES (@receiptNo, @service, @date, @paidAmount, @total, @status)", conn))
                                 {
-                                    cmd.Parameters.AddWithValue("@DRNo", txtDRNo.Text);
+                                    if (!string.IsNullOrEmpty(txtJobOrderNo.Text))
+                                    {
+                                        cmd.Parameters.AddWithValue("@receiptNo", txtJobOrderNo.Text);
+                                        cmd.Parameters.AddWithValue("@service", txtJobOrder.Text);
+                                    }
+                                    else
+                                    {
+                                        cmd.Parameters.AddWithValue("@receiptNo", txtDRNo.Text);
+                                        if(stockOut.Count > 0 || photocopy.Count > 0)
+                                        {
+                                            cmd.Parameters.AddWithValue("@service", "Stock Out");
+                                        }
+                                        else if(items.Count > 0)
+                                        {
+                                            cmd.Parameters.AddWithValue("@service", "Manual Transaction");
+                                        }
+                                    }
+
                                     cmd.Parameters.AddWithValue("@date", txtDatePayment.Text);
                                     cmd.Parameters.AddWithValue("@paidAmount", txtAmount.Value);
                                     cmd.Parameters.AddWithValue("@total", txtTotal.Value);
@@ -1419,7 +1491,7 @@ namespace Goldpoint_Inventory_System.Log
                                     try
                                     {
                                         cmd.ExecuteNonQuery();
-                                        MessageBox.Show("Payment history updated");
+                                        MessageBox.Show("Payment history updated. Please search the transaction again");
                                         payHist.Add(new PaymentHistoryDataModel
                                         {
                                             date = txtDatePayment.Text,
@@ -1495,10 +1567,26 @@ namespace Goldpoint_Inventory_System.Log
                             }
                             else
                             {
-                                using (SqlCommand cmd = new SqlCommand("UPDATE PaymentHist set paidAmount = @paidAmount where DRNo = @DRNo and date = @date", conn))
+                                using (SqlCommand cmd = new SqlCommand("UPDATE PaymentHist set paidAmount = paidAmount + @paidAmount where receiptNo = @receiptNo and date = @date and service = @service", conn))
                                 {
                                     cmd.Parameters.AddWithValue("@paidAmount", txtAmount.Value);
-                                    cmd.Parameters.AddWithValue("@DRNo", txtDRNo.Text);
+                                    if (!string.IsNullOrEmpty(txtJobOrderNo.Text))
+                                    {
+                                        cmd.Parameters.AddWithValue("@receiptNo", txtJobOrderNo.Text);
+                                        cmd.Parameters.AddWithValue("@service", txtJobOrder.Text);
+                                    }
+                                    else
+                                    {
+                                        cmd.Parameters.AddWithValue("@receiptNo", txtDRNo.Text);
+                                        if (stockOut.Count > 0 || photocopy.Count > 0)
+                                        {
+                                            cmd.Parameters.AddWithValue("@service", "Stock Out");
+                                        }
+                                        else if (items.Count > 0)
+                                        {
+                                            cmd.Parameters.AddWithValue("@service", "Manual Transaction");
+                                        }
+                                    }
                                     cmd.Parameters.AddWithValue("@date", txtDatePayment.Text);
                                     try
                                     {
@@ -1513,7 +1601,7 @@ namespace Goldpoint_Inventory_System.Log
                                     }
                                 }
 
-                                using (SqlCommand cmd1 = new SqlCommand("UPDATE Sales set amount = @amount, status = @status where date = @date and [desc] = @desc", conn))
+                                using (SqlCommand cmd1 = new SqlCommand("UPDATE Sales set amount = amount + @amount, status = @status where date = @date and [desc] = @desc", conn))
                                 {
                                     cmd1.Parameters.AddWithValue("@date", txtDatePayment.Text);
                                     if (stockOut.Count > 0 || photocopy.Count > 0)
@@ -1567,9 +1655,25 @@ namespace Goldpoint_Inventory_System.Log
                             }
                             if (fullyPaid)
                             {
-                                using (SqlCommand cmd1 = new SqlCommand("UPDATE PaymentHist set status = 'Paid' where DRNo = @DRNo", conn))
+                                using (SqlCommand cmd1 = new SqlCommand("UPDATE PaymentHist set status = 'Paid' where receiptNo = @receiptNo and service = @service", conn))
                                 {
-                                    cmd1.Parameters.AddWithValue("@DRNo", txtDRNo.Text);
+                                    if (!string.IsNullOrEmpty(txtJobOrderNo.Text))
+                                    {
+                                        cmd1.Parameters.AddWithValue("@receiptNo", txtJobOrderNo.Text);
+                                        cmd1.Parameters.AddWithValue("@service", txtJobOrder.Text);
+                                    }
+                                    else
+                                    {
+                                        cmd1.Parameters.AddWithValue("@receiptNo", txtDRNo.Text);
+                                        if (stockOut.Count > 0 || photocopy.Count > 0)
+                                        {
+                                            cmd1.Parameters.AddWithValue("@service", "Stock Out");
+                                        }
+                                        else if (items.Count > 0)
+                                        {
+                                            cmd1.Parameters.AddWithValue("@service", "Manual Transaction");
+                                        }
+                                    }
                                     try
                                     {
                                         cmd1.ExecuteNonQuery();
@@ -1627,9 +1731,11 @@ namespace Goldpoint_Inventory_System.Log
                     case MessageBoxResult.Yes:
                         SqlConnection conn = DBUtils.GetDBConnection();
                         conn.Open();
-                        using (SqlCommand cmd = new SqlCommand("UPDATE TransactionDetails set claimed = 'Claimed' where DRNo = @DRNo", conn))
+                        using (SqlCommand cmd = new SqlCommand("UPDATE TransactionDetails set claimed = 'Claimed' where DRNo = @DRNo or (jobOrderNo = @jobOrderNo and service = @service)", conn))
                         {
                             cmd.Parameters.AddWithValue("@DRNo", txtDRNo.Text);
+                            cmd.Parameters.AddWithValue("@jobOrderNo", txtJobOrderNo.Text);
+                            cmd.Parameters.AddWithValue("@service", txtJobOrder.Text);
                             try
                             {
                                 cmd.ExecuteNonQuery();
@@ -1658,577 +1764,583 @@ namespace Goldpoint_Inventory_System.Log
         }
         private void BtnPrintJobOrder_Click(object sender, RoutedEventArgs e)
         {
+            PrintCopies pc = new PrintCopies();
+            pc.ShowDialog();
+            int loop = pc.copies;
             DocToPDFConverter converter = new DocToPDFConverter();
             PdfDocument pdfDocument;
             PdfViewerControl pdfViewer1 = new PdfViewerControl();
-
-            //should print 2 receipts, for customer and company
-            if (txtJobOrder.Text == "Printing, Services, etc.")
+            for(int print = 1; print <= loop; print++)
             {
-                try
+                //should print 2 receipts, for customer and company
+                if (txtJobOrder.Text == "Printing, Services, etc.")
                 {
-                    using (WordDocument document = new WordDocument("Templates/job-order-template.docx", FormatType.Docx))
+                    try
                     {
-                        Syncfusion.DocIO.DLS.TextSelection textSelection;
-                        WTextRange textRange;
+                        using (WordDocument document = new WordDocument("Templates/job-order-template.docx", FormatType.Docx))
+                        {
+                            Syncfusion.DocIO.DLS.TextSelection textSelection;
+                            WTextRange textRange;
 
-                        textSelection = document.Find("<full name>", false, true);
-                        textRange = textSelection.GetAsOneRange();
-                        textRange.Text = txtCustName.Text;
-                        textSelection = document.Find("<issuer>", false, true);
-                        textRange = textSelection.GetAsOneRange();
-                        textRange.Text = txtIssuedBy.Text;
-                        textSelection = document.Find("<job order no>", false, true);
-                        textRange = textSelection.GetAsOneRange();
-                        textRange.Text = txtJobOrderNo.Text;
-                        textSelection = document.Find("<deadline>", false, true);
-                        textRange = textSelection.GetAsOneRange();
-                        textRange.Text = txtDeadline.Text;
-                        textSelection = document.Find("<date>", false, true);
-                        textRange = textSelection.GetAsOneRange();
-                        textRange.Text = DateTime.Today.ToShortDateString();
-                        textSelection = document.Find("<address>", false, true);
-                        textRange = textSelection.GetAsOneRange();
-                        TextRange address = new TextRange(txtAddress.Document.ContentStart, txtAddress.Document.ContentEnd);
-                        textRange.Text = address.Text;
-                        textSelection = document.Find("<contact no>", false, true);
-                        textRange = textSelection.GetAsOneRange();
-                        textRange.Text = txtContactNo.Text;
-                        textSelection = document.Find("<total>", false, true);
-                        textRange = textSelection.GetAsOneRange();
-                        textRange.Text = txtTotal.Text;
-                        textSelection = document.Find("<total>", false, true);
-                        textRange = textSelection.GetAsOneRange();
-                        textRange.Text = txtTotal.Text;
+                            textSelection = document.Find("<full name>", false, true);
+                            textRange = textSelection.GetAsOneRange();
+                            textRange.Text = txtCustName.Text;
+                            textSelection = document.Find("<issuer>", false, true);
+                            textRange = textSelection.GetAsOneRange();
+                            textRange.Text = txtIssuedBy.Text;
+                            textSelection = document.Find("<job order no>", false, true);
+                            textRange = textSelection.GetAsOneRange();
+                            textRange.Text = txtJobOrderNo.Text;
+                            textSelection = document.Find("<deadline>", false, true);
+                            textRange = textSelection.GetAsOneRange();
+                            textRange.Text = txtDeadline.Text;
+                            textSelection = document.Find("<date>", false, true);
+                            textRange = textSelection.GetAsOneRange();
+                            textRange.Text = DateTime.Today.ToShortDateString();
+                            textSelection = document.Find("<address>", false, true);
+                            textRange = textSelection.GetAsOneRange();
+                            TextRange address = new TextRange(txtAddress.Document.ContentStart, txtAddress.Document.ContentEnd);
+                            textRange.Text = address.Text;
+                            textSelection = document.Find("<contact no>", false, true);
+                            textRange = textSelection.GetAsOneRange();
+                            textRange.Text = txtContactNo.Text;
+                            textSelection = document.Find("<total>", false, true);
+                            textRange = textSelection.GetAsOneRange();
+                            textRange.Text = txtTotal.Text;
+                            textSelection = document.Find("<total>", false, true);
+                            textRange = textSelection.GetAsOneRange();
+                            textRange.Text = txtTotal.Text;
 
-                        if (txtUnpaidBalancePayment.Value > 0)
-                        {
-                            textSelection = document.Find("<balance>", false, true);
-                            textRange = textSelection.GetAsOneRange();
-                            textRange.Text = txtUnpaidBalancePayment.Text;
-                            textSelection = document.Find("<downpayment>", false, true);
-                            textRange = textSelection.GetAsOneRange();
-                            textRange.Text = txtAmount.Text;
-                        }
-                        else
-                        {
-                            textSelection = document.Find("<balance>", false, true);
-                            textRange = textSelection.GetAsOneRange();
-                            textRange.Text = "0";
-                            textSelection = document.Find("<downpayment>", false, true);
-                            textRange = textSelection.GetAsOneRange();
-                            textRange.Text = "0";
-                        }
-                        //create new file if item exceeds table (10 rows)
-                        int counter = 1;
-                        int counter2 = 1;
-                        WordDocument document2 = new WordDocument("Templates/job-order-template.docx", FormatType.Docx);
-                        foreach (var item in services)
-                        {
-                            if (counter > 10)
+                            if (txtUnpaidBalancePayment.Value > 0)
                             {
-                                //should print the other document first
-                                //use another counter
-                                textSelection = document2.Find("<full name>", false, true);
+                                textSelection = document.Find("<balance>", false, true);
                                 textRange = textSelection.GetAsOneRange();
-                                textRange.Text = txtCustName.Text;
-                                textSelection = document2.Find("<issuer>", false, true);
+                                textRange.Text = txtUnpaidBalancePayment.Text;
+                                textSelection = document.Find("<downpayment>", false, true);
                                 textRange = textSelection.GetAsOneRange();
-                                textRange.Text = txtIssuedBy.Text;
-                                textSelection = document2.Find("<job order no>", false, true);
-                                textRange = textSelection.GetAsOneRange();
-                                textRange.Text = txtJobOrderNo.Text;
-                                textSelection = document2.Find("<deadline>", false, true);
-                                textRange = textSelection.GetAsOneRange();
-                                textRange.Text = txtDeadline.Text;
-                                textSelection = document2.Find("<date>", false, true);
-                                textRange = textSelection.GetAsOneRange();
-                                textRange.Text = DateTime.Today.ToShortDateString();
-                                textSelection = document2.Find("<address>", false, true);
-                                textRange = textSelection.GetAsOneRange();
-                                textRange.Text = address.Text;
-                                textSelection = document2.Find("<contact no>", false, true);
-                                textRange = textSelection.GetAsOneRange();
-                                textRange.Text = txtContactNo.Text;
-                                textSelection = document2.Find("<total>", false, true);
-                                textRange = textSelection.GetAsOneRange();
-                                textRange.Text = txtTotal.Text;
-                                textSelection = document2.Find("<total>", false, true);
-                                textRange = textSelection.GetAsOneRange();
-                                textRange.Text = txtTotal.Text;
-                                if (txtUnpaidBalancePayment.Value > 0)
-                                {
-                                    textSelection = document2.Find("<balance>", false, true);
-                                    textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = txtUnpaidBalancePayment.Text;
-                                    textSelection = document2.Find("<downpayment>", false, true);
-                                    textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = txtAmount.Text;
-                                }
-                                else
-                                {
-                                    textSelection = document2.Find("<balance>", false, true);
-                                    textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = "0";
-                                    textSelection = document2.Find("<downpayment>", false, true);
-                                    textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = "0";
-                                }
-
-                                textSelection = document2.Find("<qty" + counter2 + ">", false, true);
-                                textRange = textSelection.GetAsOneRange();
-                                textRange.Text = item.qty.ToString();
-
-                                textSelection = document2.Find("<unit" + counter2 + ">", false, true);
-                                textRange = textSelection.GetAsOneRange();
-                                textRange.Text = item.unit;
-
-                                textSelection = document2.Find("<description" + counter2 + ">", false, true);
-                                textRange = textSelection.GetAsOneRange();
-                                textRange.Text = item.material;
-
-                                textSelection = document2.Find("<copy" + counter2 + ">", false, true);
-                                textRange = textSelection.GetAsOneRange();
-                                textRange.Text = item.copy;
-
-                                textSelection = document2.Find("<size" + counter2 + ">", false, true);
-                                textRange = textSelection.GetAsOneRange();
-                                textRange.Text = item.size;
-
-                                textSelection = document2.Find("<material" + counter2 + ">", false, true);
-                                textRange = textSelection.GetAsOneRange();
-                                textRange.Text = item.material;
-
-                                textSelection = document2.Find("<price" + counter2 + ">", false, true);
-                                textRange = textSelection.GetAsOneRange();
-                                textRange.Text = item.unitPrice.ToString();
-
-                                textSelection = document2.Find("<amount" + counter2 + ">", false, true);
-                                textRange = textSelection.GetAsOneRange();
-                                textRange.Text = item.amount.ToString();
-
-                                counter2++;
-
+                                textRange.Text = txtAmount.Text;
                             }
                             else
                             {
-                                textSelection = document.Find("<qty" + counter + ">", false, true);
+                                textSelection = document.Find("<balance>", false, true);
                                 textRange = textSelection.GetAsOneRange();
-                                textRange.Text = item.qty.ToString();
-
-                                textSelection = document.Find("<unit" + counter + ">", false, true);
+                                textRange.Text = "0";
+                                textSelection = document.Find("<downpayment>", false, true);
                                 textRange = textSelection.GetAsOneRange();
-                                textRange.Text = item.unit;
-
-                                textSelection = document.Find("<description" + counter + ">", false, true);
-                                textRange = textSelection.GetAsOneRange();
-                                textRange.Text = item.material;
-
-                                textSelection = document.Find("<copy" + counter + ">", false, true);
-                                textRange = textSelection.GetAsOneRange();
-                                textRange.Text = item.copy;
-
-                                textSelection = document.Find("<size" + counter + ">", false, true);
-                                textRange = textSelection.GetAsOneRange();
-                                textRange.Text = item.size;
-
-                                textSelection = document.Find("<material" + counter + ">", false, true);
-                                textRange = textSelection.GetAsOneRange();
-                                textRange.Text = item.material;
-
-                                textSelection = document.Find("<price" + counter + ">", false, true);
-                                textRange = textSelection.GetAsOneRange();
-                                textRange.Text = item.unitPrice.ToString();
-
-                                textSelection = document.Find("<amount" + counter + ">", false, true);
-                                textRange = textSelection.GetAsOneRange();
-                                textRange.Text = item.amount.ToString();
-
-                                counter++;
+                                textRange.Text = "0";
                             }
-                        }
-
-                        //removing unused fields
-                        for (int i = counter; i <= 10; i++)
-                        {
-                            textSelection = document.Find("<qty" + i + ">", false, true);
-                            textRange = textSelection.GetAsOneRange();
-                            textRange.Text = "";
-
-                            textSelection = document.Find("<unit" + i + ">", false, true);
-                            textRange = textSelection.GetAsOneRange();
-                            textRange.Text = "";
-
-                            textSelection = document.Find("<description" + i + ">", false, true);
-                            textRange = textSelection.GetAsOneRange();
-                            textRange.Text = "";
-
-                            textSelection = document.Find("<copy" + i + ">", false, true);
-                            textRange = textSelection.GetAsOneRange();
-                            textRange.Text = "";
-
-                            textSelection = document.Find("<size" + i + ">", false, true);
-                            textRange = textSelection.GetAsOneRange();
-                            textRange.Text = "";
-
-                            textSelection = document.Find("<material" + i + ">", false, true);
-                            textRange = textSelection.GetAsOneRange();
-                            textRange.Text = "";
-
-                            textSelection = document.Find("<price" + i + ">", false, true);
-                            textRange = textSelection.GetAsOneRange();
-                            textRange.Text = "";
-
-                            textSelection = document.Find("<amount" + i + ">", false, true);
-                            textRange = textSelection.GetAsOneRange();
-                            textRange.Text = "";
-                        }
-                        //optional
-                        if (counter2 > 1)
-                        {
-                            for (int i = counter2; i <= 10; i++)
+                            //create new file if item exceeds table (10 rows)
+                            int counter = 1;
+                            int counter2 = 1;
+                            WordDocument document2 = new WordDocument("Templates/job-order-template.docx", FormatType.Docx);
+                            foreach (var item in services)
                             {
-                                textSelection = document2.Find("<qty" + i + ">", false, true);
-                                textRange = textSelection.GetAsOneRange();
-                                textRange.Text = "";
-
-                                textSelection = document2.Find("<unit" + i + ">", false, true);
-                                textRange = textSelection.GetAsOneRange();
-                                textRange.Text = "";
-
-                                textSelection = document2.Find("<description" + i + ">", false, true);
-                                textRange = textSelection.GetAsOneRange();
-                                textRange.Text = "";
-
-                                textSelection = document2.Find("<copy" + i + ">", false, true);
-                                textRange = textSelection.GetAsOneRange();
-                                textRange.Text = "";
-
-                                textSelection = document2.Find("<size" + i + ">", false, true);
-                                textRange = textSelection.GetAsOneRange();
-                                textRange.Text = "";
-
-                                textSelection = document2.Find("<material" + i + ">", false, true);
-                                textRange = textSelection.GetAsOneRange();
-                                textRange.Text = "";
-
-                                textSelection = document2.Find("<price" + i + ">", false, true);
-                                textRange = textSelection.GetAsOneRange();
-                                textRange.Text = "";
-
-                                textSelection = document2.Find("<amount" + i + ">", false, true);
-                                textRange = textSelection.GetAsOneRange();
-                                textRange.Text = "";
-                            }
-                            pdfDocument = converter.ConvertToPDF(document2);
-                            pdfDocument.Save(Environment.CurrentDirectory + "/temp.pdf");
-                            pdfViewer1.Load(Environment.CurrentDirectory + "/temp.pdf");
-                            pdfViewer1.Print();
-                            document2.Close();
-                        }
-                        pdfDocument = converter.ConvertToPDF(document);
-
-                        pdfDocument.Save(Environment.CurrentDirectory + "/temp.pdf");
-                        pdfViewer1.Load(Environment.CurrentDirectory + "/temp.pdf");
-                        pdfViewer1.Print();
-                        File.Delete(Environment.CurrentDirectory + "/temp.pdf");
-                    }
-
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("An error has been encountered! Log has been updated with the error");
-                    Log = LogManager.GetLogger("*");
-                    Log.Error(ex);
-                    return;
-                }
-
-            }
-            else if (txtJobOrder.Text == "Tarpaulin")
-            {
-                try
-                {
-                    using (WordDocument document = new WordDocument("Templates/job-order-tarpaulin-template.docx", FormatType.Docx))
-                    {
-                        Syncfusion.DocIO.DLS.TextSelection textSelection;
-                        WTextRange textRange;
-                        IWSection section = document.AddSection();
-                        section.PageSetup.Orientation = PageOrientation.Landscape;
-
-                        textSelection = document.Find("<full name>", false, true);
-                        textRange = textSelection.GetAsOneRange();
-                        textRange.Text = txtCustName.Text;
-                        textSelection = document.Find("<issuer>", false, true);
-                        textRange = textSelection.GetAsOneRange();
-                        textRange.Text = txtIssuedBy.Text;
-                        textSelection = document.Find("<job order no>", false, true);
-                        textRange = textSelection.GetAsOneRange();
-                        textRange.Text = txtJobOrderNo.Text;
-                        textSelection = document.Find("<deadline>", false, true);
-                        textRange = textSelection.GetAsOneRange();
-                        textRange.Text = txtDeadline.Text;
-                        textSelection = document.Find("<date>", false, true);
-                        textRange = textSelection.GetAsOneRange();
-                        textRange.Text = DateTime.Today.ToShortDateString();
-                        textSelection = document.Find("<address>", false, true);
-                        textRange = textSelection.GetAsOneRange();
-                        TextRange address = new TextRange(txtAddress.Document.ContentStart, txtAddress.Document.ContentEnd);
-                        textRange.Text = address.Text;
-                        textSelection = document.Find("<contact no>", false, true);
-                        textRange = textSelection.GetAsOneRange();
-                        textRange.Text = txtContactNo.Text;
-                        textSelection = document.Find("<total>", false, true);
-                        textRange = textSelection.GetAsOneRange();
-                        textRange.Text = txtTotal.Text;
-                        textSelection = document.Find("<total>", false, true);
-                        textRange = textSelection.GetAsOneRange();
-                        textRange.Text = txtTotal.Text;
-                        if (txtUnpaidBalancePayment.Value > 0)
-                        {
-                            textSelection = document.Find("<balance>", false, true);
-                            textRange = textSelection.GetAsOneRange();
-                            textRange.Text = txtUnpaidBalancePayment.Text;
-                            textSelection = document.Find("<downpayment>", false, true);
-                            textRange = textSelection.GetAsOneRange();
-                            textRange.Text = "0";
-                        }
-                        else
-                        {
-                            textSelection = document.Find("<balance>", false, true);
-                            textRange = textSelection.GetAsOneRange();
-                            textRange.Text = "0";
-                            textSelection = document.Find("<downpayment>", false, true);
-                            textRange = textSelection.GetAsOneRange();
-                            textRange.Text = "0";
-                        }
-
-                        int counter = 1;
-                        int counter2 = 1;
-                        WordDocument document2 = new WordDocument("Templates/job-order-tarpaulin-template.docx", FormatType.Docx);
-                        //create new file if item exceeds table (9 rows)
-                        foreach (var item in tarp)
-                        {
-                            if (counter > 9)
-                            {
-
-                                textSelection = document2.Find("<full name>", false, true);
-                                textRange = textSelection.GetAsOneRange();
-                                textRange.Text = txtCustName.Text;
-                                textSelection = document2.Find("<issuer>", false, true);
-                                textRange = textSelection.GetAsOneRange();
-                                textRange.Text = txtIssuedBy.Text;
-                                textSelection = document2.Find("<job order no>", false, true);
-                                textRange = textSelection.GetAsOneRange();
-                                textRange.Text = txtJobOrderNo.Text;
-                                textSelection = document2.Find("<deadline>", false, true);
-                                textRange = textSelection.GetAsOneRange();
-                                textRange.Text = txtDeadline.Text;
-                                textSelection = document2.Find("<date>", false, true);
-                                textRange = textSelection.GetAsOneRange();
-                                textRange.Text = DateTime.Today.ToShortDateString();
-                                textSelection = document2.Find("<address>", false, true);
-                                textRange = textSelection.GetAsOneRange();
-                                textRange.Text = address.Text;
-                                textSelection = document2.Find("<contact no>", false, true);
-                                textRange = textSelection.GetAsOneRange();
-                                textRange.Text = txtContactNo.Text;
-                                textSelection = document2.Find("<total>", false, true);
-                                textRange = textSelection.GetAsOneRange();
-                                textRange.Text = txtTotal.Text;
-                                textSelection = document2.Find("<total>", false, true);
-                                textRange = textSelection.GetAsOneRange();
-                                textRange.Text = txtTotal.Text;
-                                if (txtUnpaidBalancePayment.Value > 0)
+                                if (counter > 10)
                                 {
-                                    textSelection = document2.Find("<balance>", false, true);
+                                    //should print the other document first
+                                    //use another counter
+                                    textSelection = document2.Find("<full name>", false, true);
                                     textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = txtUnpaidBalancePayment.Text;
-                                    textSelection = document2.Find("<downpayment>", false, true);
+                                    textRange.Text = txtCustName.Text;
+                                    textSelection = document2.Find("<issuer>", false, true);
                                     textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = "0";
+                                    textRange.Text = txtIssuedBy.Text;
+                                    textSelection = document2.Find("<job order no>", false, true);
+                                    textRange = textSelection.GetAsOneRange();
+                                    textRange.Text = txtJobOrderNo.Text;
+                                    textSelection = document2.Find("<deadline>", false, true);
+                                    textRange = textSelection.GetAsOneRange();
+                                    textRange.Text = txtDeadline.Text;
+                                    textSelection = document2.Find("<date>", false, true);
+                                    textRange = textSelection.GetAsOneRange();
+                                    textRange.Text = DateTime.Today.ToShortDateString();
+                                    textSelection = document2.Find("<address>", false, true);
+                                    textRange = textSelection.GetAsOneRange();
+                                    textRange.Text = address.Text;
+                                    textSelection = document2.Find("<contact no>", false, true);
+                                    textRange = textSelection.GetAsOneRange();
+                                    textRange.Text = txtContactNo.Text;
+                                    textSelection = document2.Find("<total>", false, true);
+                                    textRange = textSelection.GetAsOneRange();
+                                    textRange.Text = txtTotal.Text;
+                                    textSelection = document2.Find("<total>", false, true);
+                                    textRange = textSelection.GetAsOneRange();
+                                    textRange.Text = txtTotal.Text;
+                                    if (txtUnpaidBalancePayment.Value > 0)
+                                    {
+                                        textSelection = document2.Find("<balance>", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = txtUnpaidBalancePayment.Text;
+                                        textSelection = document2.Find("<downpayment>", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = txtAmount.Text;
+                                    }
+                                    else
+                                    {
+                                        textSelection = document2.Find("<balance>", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = "0";
+                                        textSelection = document2.Find("<downpayment>", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = "0";
+                                    }
+
+                                    textSelection = document2.Find("<qty" + counter2 + ">", false, true);
+                                    textRange = textSelection.GetAsOneRange();
+                                    textRange.Text = item.qty.ToString();
+
+                                    textSelection = document2.Find("<unit" + counter2 + ">", false, true);
+                                    textRange = textSelection.GetAsOneRange();
+                                    textRange.Text = item.unit;
+
+                                    textSelection = document2.Find("<description" + counter2 + ">", false, true);
+                                    textRange = textSelection.GetAsOneRange();
+                                    textRange.Text = item.material;
+
+                                    textSelection = document2.Find("<copy" + counter2 + ">", false, true);
+                                    textRange = textSelection.GetAsOneRange();
+                                    textRange.Text = item.copy;
+
+                                    textSelection = document2.Find("<size" + counter2 + ">", false, true);
+                                    textRange = textSelection.GetAsOneRange();
+                                    textRange.Text = item.size;
+
+                                    textSelection = document2.Find("<material" + counter2 + ">", false, true);
+                                    textRange = textSelection.GetAsOneRange();
+                                    textRange.Text = item.material;
+
+                                    textSelection = document2.Find("<price" + counter2 + ">", false, true);
+                                    textRange = textSelection.GetAsOneRange();
+                                    textRange.Text = item.unitPrice.ToString();
+
+                                    textSelection = document2.Find("<amount" + counter2 + ">", false, true);
+                                    textRange = textSelection.GetAsOneRange();
+                                    textRange.Text = item.amount.ToString();
+
+                                    counter2++;
+
                                 }
                                 else
                                 {
-                                    textSelection = document2.Find("<balance>", false, true);
+                                    textSelection = document.Find("<qty" + counter + ">", false, true);
                                     textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = "0";
-                                    textSelection = document2.Find("<downpayment>", false, true);
+                                    textRange.Text = item.qty.ToString();
+
+                                    textSelection = document.Find("<unit" + counter + ">", false, true);
                                     textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = "0";
+                                    textRange.Text = item.unit;
+
+                                    textSelection = document.Find("<description" + counter + ">", false, true);
+                                    textRange = textSelection.GetAsOneRange();
+                                    textRange.Text = item.material;
+
+                                    textSelection = document.Find("<copy" + counter + ">", false, true);
+                                    textRange = textSelection.GetAsOneRange();
+                                    textRange.Text = item.copy;
+
+                                    textSelection = document.Find("<size" + counter + ">", false, true);
+                                    textRange = textSelection.GetAsOneRange();
+                                    textRange.Text = item.size;
+
+                                    textSelection = document.Find("<material" + counter + ">", false, true);
+                                    textRange = textSelection.GetAsOneRange();
+                                    textRange.Text = item.material;
+
+                                    textSelection = document.Find("<price" + counter + ">", false, true);
+                                    textRange = textSelection.GetAsOneRange();
+                                    textRange.Text = item.unitPrice.ToString();
+
+                                    textSelection = document.Find("<amount" + counter + ">", false, true);
+                                    textRange = textSelection.GetAsOneRange();
+                                    textRange.Text = item.amount.ToString();
+
+                                    counter++;
                                 }
-
-                                textSelection = document2.Find("<qty" + counter2 + ">", false, true);
-                                textRange = textSelection.GetAsOneRange();
-                                textRange.Text = item.tarpQty.ToString();
-
-                                textSelection = document2.Find("<file name" + counter2 + ">", false, true);
-                                textRange = textSelection.GetAsOneRange();
-                                textRange.Text = item.fileName;
-
-                                textSelection = document2.Find("<size" + counter2 + ">", false, true);
-                                textRange = textSelection.GetAsOneRange();
-                                textRange.Text = item.tarpSize;
-
-                                textSelection = document2.Find("<media" + counter2 + ">", false, true);
-                                textRange = textSelection.GetAsOneRange();
-                                textRange.Text = item.media;
-
-                                textSelection = document2.Find("<border" + counter2 + ">", false, true);
-                                textRange = textSelection.GetAsOneRange();
-                                textRange.Text = item.border;
-
-                                textSelection = document2.Find("<ilet" + counter2 + ">", false, true);
-                                textRange = textSelection.GetAsOneRange();
-                                textRange.Text = item.ILET;
-
-                                textSelection = document2.Find("<price" + counter2 + ">", false, true);
-                                textRange = textSelection.GetAsOneRange();
-                                textRange.Text = item.unitPrice.ToString();
-
-                                textSelection = document2.Find("<amount" + counter2 + ">", false, true);
-                                textRange = textSelection.GetAsOneRange();
-                                textRange.Text = item.amount.ToString();
-
-                                counter2++;
                             }
-                            else
+
+                            //removing unused fields
+                            for (int i = counter; i <= 10; i++)
                             {
-                                textSelection = document.Find("<qty" + counter + ">", false, true);
+                                textSelection = document.Find("<qty" + i + ">", false, true);
                                 textRange = textSelection.GetAsOneRange();
-                                textRange.Text = item.tarpQty.ToString();
+                                textRange.Text = "";
 
-                                textSelection = document.Find("<file name" + counter + ">", false, true);
+                                textSelection = document.Find("<unit" + i + ">", false, true);
                                 textRange = textSelection.GetAsOneRange();
-                                textRange.Text = item.fileName;
+                                textRange.Text = "";
 
-                                textSelection = document.Find("<size" + counter + ">", false, true);
+                                textSelection = document.Find("<description" + i + ">", false, true);
                                 textRange = textSelection.GetAsOneRange();
-                                textRange.Text = item.tarpSize;
+                                textRange.Text = "";
 
-                                textSelection = document.Find("<media" + counter + ">", false, true);
+                                textSelection = document.Find("<copy" + i + ">", false, true);
                                 textRange = textSelection.GetAsOneRange();
-                                textRange.Text = item.media;
+                                textRange.Text = "";
 
-                                textSelection = document.Find("<border" + counter + ">", false, true);
+                                textSelection = document.Find("<size" + i + ">", false, true);
                                 textRange = textSelection.GetAsOneRange();
-                                textRange.Text = item.border;
+                                textRange.Text = "";
 
-                                textSelection = document.Find("<ilet" + counter + ">", false, true);
+                                textSelection = document.Find("<material" + i + ">", false, true);
                                 textRange = textSelection.GetAsOneRange();
-                                textRange.Text = item.ILET;
+                                textRange.Text = "";
 
-                                textSelection = document.Find("<price" + counter + ">", false, true);
+                                textSelection = document.Find("<price" + i + ">", false, true);
                                 textRange = textSelection.GetAsOneRange();
-                                textRange.Text = item.unitPrice.ToString();
+                                textRange.Text = "";
 
-                                textSelection = document.Find("<amount" + counter + ">", false, true);
+                                textSelection = document.Find("<amount" + i + ">", false, true);
                                 textRange = textSelection.GetAsOneRange();
-                                textRange.Text = item.amount.ToString();
-
-                                counter++;
+                                textRange.Text = "";
                             }
-                        }
-                        //remove text from docu if item > 10
-
-                        for (int i = counter; i <= 9; i++)
-                        {
-                            textSelection = document.Find("<qty" + i + ">", false, true);
-                            textRange = textSelection.GetAsOneRange();
-                            textRange.Text = "";
-
-                            textSelection = document.Find("<file name" + i + ">", false, true);
-                            textRange = textSelection.GetAsOneRange();
-                            textRange.Text = "";
-
-                            textSelection = document.Find("<size" + i + ">", false, true);
-                            textRange = textSelection.GetAsOneRange();
-                            textRange.Text = "";
-
-                            textSelection = document.Find("<media" + i + ">", false, true);
-                            textRange = textSelection.GetAsOneRange();
-                            textRange.Text = "";
-
-                            textSelection = document.Find("<border" + i + ">", false, true);
-                            textRange = textSelection.GetAsOneRange();
-                            textRange.Text = "";
-
-                            textSelection = document.Find("<ilet" + i + ">", false, true);
-                            textRange = textSelection.GetAsOneRange();
-                            textRange.Text = "";
-
-                            textSelection = document.Find("<price" + i + ">", false, true);
-                            textRange = textSelection.GetAsOneRange();
-                            textRange.Text = "";
-
-                            textSelection = document.Find("<amount" + i + ">", false, true);
-                            textRange = textSelection.GetAsOneRange();
-                            textRange.Text = "";
-
-                        }
-
-                        //optional
-                        if (counter2 > 1)
-                        {
-                            for (int i = counter2; i <= 9; i++)
+                            //optional
+                            if (counter2 > 1)
                             {
-                                textSelection = document2.Find("<qty" + i + ">", false, true);
-                                textRange = textSelection.GetAsOneRange();
-                                textRange.Text = "";
+                                for (int i = counter2; i <= 10; i++)
+                                {
+                                    textSelection = document2.Find("<qty" + i + ">", false, true);
+                                    textRange = textSelection.GetAsOneRange();
+                                    textRange.Text = "";
 
-                                textSelection = document2.Find("<file name" + i + ">", false, true);
-                                textRange = textSelection.GetAsOneRange();
-                                textRange.Text = "";
+                                    textSelection = document2.Find("<unit" + i + ">", false, true);
+                                    textRange = textSelection.GetAsOneRange();
+                                    textRange.Text = "";
 
-                                textSelection = document2.Find("<size" + i + ">", false, true);
-                                textRange = textSelection.GetAsOneRange();
-                                textRange.Text = "";
+                                    textSelection = document2.Find("<description" + i + ">", false, true);
+                                    textRange = textSelection.GetAsOneRange();
+                                    textRange.Text = "";
 
-                                textSelection = document2.Find("<media" + i + ">", false, true);
-                                textRange = textSelection.GetAsOneRange();
-                                textRange.Text = "";
+                                    textSelection = document2.Find("<copy" + i + ">", false, true);
+                                    textRange = textSelection.GetAsOneRange();
+                                    textRange.Text = "";
 
-                                textSelection = document2.Find("<border" + i + ">", false, true);
-                                textRange = textSelection.GetAsOneRange();
-                                textRange.Text = "";
+                                    textSelection = document2.Find("<size" + i + ">", false, true);
+                                    textRange = textSelection.GetAsOneRange();
+                                    textRange.Text = "";
 
-                                textSelection = document2.Find("<ilet" + i + ">", false, true);
-                                textRange = textSelection.GetAsOneRange();
-                                textRange.Text = "";
+                                    textSelection = document2.Find("<material" + i + ">", false, true);
+                                    textRange = textSelection.GetAsOneRange();
+                                    textRange.Text = "";
 
-                                textSelection = document2.Find("<price" + i + ">", false, true);
-                                textRange = textSelection.GetAsOneRange();
-                                textRange.Text = "";
+                                    textSelection = document2.Find("<price" + i + ">", false, true);
+                                    textRange = textSelection.GetAsOneRange();
+                                    textRange.Text = "";
 
-                                textSelection = document2.Find("<amount" + i + ">", false, true);
-                                textRange = textSelection.GetAsOneRange();
-                                textRange.Text = "";
-
+                                    textSelection = document2.Find("<amount" + i + ">", false, true);
+                                    textRange = textSelection.GetAsOneRange();
+                                    textRange.Text = "";
+                                }
                                 pdfDocument = converter.ConvertToPDF(document2);
                                 pdfDocument.Save(Environment.CurrentDirectory + "/temp.pdf");
                                 pdfViewer1.Load(Environment.CurrentDirectory + "/temp.pdf");
                                 pdfViewer1.Print();
                                 document2.Close();
                             }
+                            pdfDocument = converter.ConvertToPDF(document);
+
+                            pdfDocument.Save(Environment.CurrentDirectory + "/temp.pdf");
+                            pdfViewer1.Load(Environment.CurrentDirectory + "/temp.pdf");
+                            pdfViewer1.Print();
+                            File.Delete(Environment.CurrentDirectory + "/temp.pdf");
                         }
-                        pdfDocument = converter.ConvertToPDF(document);
-
-                        pdfDocument.Save(Environment.CurrentDirectory + "/temp.pdf");
-                        pdfViewer1.Load(Environment.CurrentDirectory + "/temp.pdf");
-                        pdfViewer1.Print();
-                        File.Delete(Environment.CurrentDirectory + "/temp.pdf");
-
 
                     }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("An error has been encountered! Log has been updated with the error");
-                    Log = LogManager.GetLogger("*");
-                    Log.Error(ex);
-                    return;
-                }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("An error has been encountered! Log has been updated with the error");
+                        Log = LogManager.GetLogger("*");
+                        Log.Error(ex);
+                        return;
+                    }
 
+                }
+                else if (txtJobOrder.Text == "Tarpaulin")
+                {
+                    try
+                    {
+                        using (WordDocument document = new WordDocument("Templates/job-order-tarpaulin-template.docx", FormatType.Docx))
+                        {
+                            Syncfusion.DocIO.DLS.TextSelection textSelection;
+                            WTextRange textRange;
+                            IWSection section = document.AddSection();
+                            section.PageSetup.Orientation = PageOrientation.Landscape;
+
+                            textSelection = document.Find("<full name>", false, true);
+                            textRange = textSelection.GetAsOneRange();
+                            textRange.Text = txtCustName.Text;
+                            textSelection = document.Find("<issuer>", false, true);
+                            textRange = textSelection.GetAsOneRange();
+                            textRange.Text = txtIssuedBy.Text;
+                            textSelection = document.Find("<job order no>", false, true);
+                            textRange = textSelection.GetAsOneRange();
+                            textRange.Text = txtJobOrderNo.Text;
+                            textSelection = document.Find("<deadline>", false, true);
+                            textRange = textSelection.GetAsOneRange();
+                            textRange.Text = txtDeadline.Text;
+                            textSelection = document.Find("<date>", false, true);
+                            textRange = textSelection.GetAsOneRange();
+                            textRange.Text = DateTime.Today.ToShortDateString();
+                            textSelection = document.Find("<address>", false, true);
+                            textRange = textSelection.GetAsOneRange();
+                            TextRange address = new TextRange(txtAddress.Document.ContentStart, txtAddress.Document.ContentEnd);
+                            textRange.Text = address.Text;
+                            textSelection = document.Find("<contact no>", false, true);
+                            textRange = textSelection.GetAsOneRange();
+                            textRange.Text = txtContactNo.Text;
+                            textSelection = document.Find("<total>", false, true);
+                            textRange = textSelection.GetAsOneRange();
+                            textRange.Text = txtTotal.Text;
+                            textSelection = document.Find("<total>", false, true);
+                            textRange = textSelection.GetAsOneRange();
+                            textRange.Text = txtTotal.Text;
+                            if (txtUnpaidBalancePayment.Value > 0)
+                            {
+                                textSelection = document.Find("<balance>", false, true);
+                                textRange = textSelection.GetAsOneRange();
+                                textRange.Text = txtUnpaidBalancePayment.Text;
+                                textSelection = document.Find("<downpayment>", false, true);
+                                textRange = textSelection.GetAsOneRange();
+                                textRange.Text = "0";
+                            }
+                            else
+                            {
+                                textSelection = document.Find("<balance>", false, true);
+                                textRange = textSelection.GetAsOneRange();
+                                textRange.Text = "0";
+                                textSelection = document.Find("<downpayment>", false, true);
+                                textRange = textSelection.GetAsOneRange();
+                                textRange.Text = "0";
+                            }
+
+                            int counter = 1;
+                            int counter2 = 1;
+                            WordDocument document2 = new WordDocument("Templates/job-order-tarpaulin-template.docx", FormatType.Docx);
+                            //create new file if item exceeds table (9 rows)
+                            foreach (var item in tarp)
+                            {
+                                if (counter > 9)
+                                {
+
+                                    textSelection = document2.Find("<full name>", false, true);
+                                    textRange = textSelection.GetAsOneRange();
+                                    textRange.Text = txtCustName.Text;
+                                    textSelection = document2.Find("<issuer>", false, true);
+                                    textRange = textSelection.GetAsOneRange();
+                                    textRange.Text = txtIssuedBy.Text;
+                                    textSelection = document2.Find("<job order no>", false, true);
+                                    textRange = textSelection.GetAsOneRange();
+                                    textRange.Text = txtJobOrderNo.Text;
+                                    textSelection = document2.Find("<deadline>", false, true);
+                                    textRange = textSelection.GetAsOneRange();
+                                    textRange.Text = txtDeadline.Text;
+                                    textSelection = document2.Find("<date>", false, true);
+                                    textRange = textSelection.GetAsOneRange();
+                                    textRange.Text = DateTime.Today.ToShortDateString();
+                                    textSelection = document2.Find("<address>", false, true);
+                                    textRange = textSelection.GetAsOneRange();
+                                    textRange.Text = address.Text;
+                                    textSelection = document2.Find("<contact no>", false, true);
+                                    textRange = textSelection.GetAsOneRange();
+                                    textRange.Text = txtContactNo.Text;
+                                    textSelection = document2.Find("<total>", false, true);
+                                    textRange = textSelection.GetAsOneRange();
+                                    textRange.Text = txtTotal.Text;
+                                    textSelection = document2.Find("<total>", false, true);
+                                    textRange = textSelection.GetAsOneRange();
+                                    textRange.Text = txtTotal.Text;
+                                    if (txtUnpaidBalancePayment.Value > 0)
+                                    {
+                                        textSelection = document2.Find("<balance>", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = txtUnpaidBalancePayment.Text;
+                                        textSelection = document2.Find("<downpayment>", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = "0";
+                                    }
+                                    else
+                                    {
+                                        textSelection = document2.Find("<balance>", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = "0";
+                                        textSelection = document2.Find("<downpayment>", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = "0";
+                                    }
+
+                                    textSelection = document2.Find("<qty" + counter2 + ">", false, true);
+                                    textRange = textSelection.GetAsOneRange();
+                                    textRange.Text = item.tarpQty.ToString();
+
+                                    textSelection = document2.Find("<file name" + counter2 + ">", false, true);
+                                    textRange = textSelection.GetAsOneRange();
+                                    textRange.Text = item.fileName;
+
+                                    textSelection = document2.Find("<size" + counter2 + ">", false, true);
+                                    textRange = textSelection.GetAsOneRange();
+                                    textRange.Text = item.tarpSize;
+
+                                    textSelection = document2.Find("<media" + counter2 + ">", false, true);
+                                    textRange = textSelection.GetAsOneRange();
+                                    textRange.Text = item.media;
+
+                                    textSelection = document2.Find("<border" + counter2 + ">", false, true);
+                                    textRange = textSelection.GetAsOneRange();
+                                    textRange.Text = item.border;
+
+                                    textSelection = document2.Find("<ilet" + counter2 + ">", false, true);
+                                    textRange = textSelection.GetAsOneRange();
+                                    textRange.Text = item.ILET;
+
+                                    textSelection = document2.Find("<price" + counter2 + ">", false, true);
+                                    textRange = textSelection.GetAsOneRange();
+                                    textRange.Text = item.unitPrice.ToString();
+
+                                    textSelection = document2.Find("<amount" + counter2 + ">", false, true);
+                                    textRange = textSelection.GetAsOneRange();
+                                    textRange.Text = item.amount.ToString();
+
+                                    counter2++;
+                                }
+                                else
+                                {
+                                    textSelection = document.Find("<qty" + counter + ">", false, true);
+                                    textRange = textSelection.GetAsOneRange();
+                                    textRange.Text = item.tarpQty.ToString();
+
+                                    textSelection = document.Find("<file name" + counter + ">", false, true);
+                                    textRange = textSelection.GetAsOneRange();
+                                    textRange.Text = item.fileName;
+
+                                    textSelection = document.Find("<size" + counter + ">", false, true);
+                                    textRange = textSelection.GetAsOneRange();
+                                    textRange.Text = item.tarpSize;
+
+                                    textSelection = document.Find("<media" + counter + ">", false, true);
+                                    textRange = textSelection.GetAsOneRange();
+                                    textRange.Text = item.media;
+
+                                    textSelection = document.Find("<border" + counter + ">", false, true);
+                                    textRange = textSelection.GetAsOneRange();
+                                    textRange.Text = item.border;
+
+                                    textSelection = document.Find("<ilet" + counter + ">", false, true);
+                                    textRange = textSelection.GetAsOneRange();
+                                    textRange.Text = item.ILET;
+
+                                    textSelection = document.Find("<price" + counter + ">", false, true);
+                                    textRange = textSelection.GetAsOneRange();
+                                    textRange.Text = item.unitPrice.ToString();
+
+                                    textSelection = document.Find("<amount" + counter + ">", false, true);
+                                    textRange = textSelection.GetAsOneRange();
+                                    textRange.Text = item.amount.ToString();
+
+                                    counter++;
+                                }
+                            }
+                            //remove text from docu if item > 10
+
+                            for (int i = counter; i <= 9; i++)
+                            {
+                                textSelection = document.Find("<qty" + i + ">", false, true);
+                                textRange = textSelection.GetAsOneRange();
+                                textRange.Text = "";
+
+                                textSelection = document.Find("<file name" + i + ">", false, true);
+                                textRange = textSelection.GetAsOneRange();
+                                textRange.Text = "";
+
+                                textSelection = document.Find("<size" + i + ">", false, true);
+                                textRange = textSelection.GetAsOneRange();
+                                textRange.Text = "";
+
+                                textSelection = document.Find("<media" + i + ">", false, true);
+                                textRange = textSelection.GetAsOneRange();
+                                textRange.Text = "";
+
+                                textSelection = document.Find("<border" + i + ">", false, true);
+                                textRange = textSelection.GetAsOneRange();
+                                textRange.Text = "";
+
+                                textSelection = document.Find("<ilet" + i + ">", false, true);
+                                textRange = textSelection.GetAsOneRange();
+                                textRange.Text = "";
+
+                                textSelection = document.Find("<price" + i + ">", false, true);
+                                textRange = textSelection.GetAsOneRange();
+                                textRange.Text = "";
+
+                                textSelection = document.Find("<amount" + i + ">", false, true);
+                                textRange = textSelection.GetAsOneRange();
+                                textRange.Text = "";
+
+                            }
+
+                            //optional
+                            if (counter2 > 1)
+                            {
+                                for (int i = counter2; i <= 9; i++)
+                                {
+                                    textSelection = document2.Find("<qty" + i + ">", false, true);
+                                    textRange = textSelection.GetAsOneRange();
+                                    textRange.Text = "";
+
+                                    textSelection = document2.Find("<file name" + i + ">", false, true);
+                                    textRange = textSelection.GetAsOneRange();
+                                    textRange.Text = "";
+
+                                    textSelection = document2.Find("<size" + i + ">", false, true);
+                                    textRange = textSelection.GetAsOneRange();
+                                    textRange.Text = "";
+
+                                    textSelection = document2.Find("<media" + i + ">", false, true);
+                                    textRange = textSelection.GetAsOneRange();
+                                    textRange.Text = "";
+
+                                    textSelection = document2.Find("<border" + i + ">", false, true);
+                                    textRange = textSelection.GetAsOneRange();
+                                    textRange.Text = "";
+
+                                    textSelection = document2.Find("<ilet" + i + ">", false, true);
+                                    textRange = textSelection.GetAsOneRange();
+                                    textRange.Text = "";
+
+                                    textSelection = document2.Find("<price" + i + ">", false, true);
+                                    textRange = textSelection.GetAsOneRange();
+                                    textRange.Text = "";
+
+                                    textSelection = document2.Find("<amount" + i + ">", false, true);
+                                    textRange = textSelection.GetAsOneRange();
+                                    textRange.Text = "";
+
+                                    pdfDocument = converter.ConvertToPDF(document2);
+                                    pdfDocument.Save(Environment.CurrentDirectory + "/temp.pdf");
+                                    pdfViewer1.Load(Environment.CurrentDirectory + "/temp.pdf");
+                                    pdfViewer1.Print();
+                                    document2.Close();
+                                }
+                            }
+                            pdfDocument = converter.ConvertToPDF(document);
+
+                            pdfDocument.Save(Environment.CurrentDirectory + "/temp.pdf");
+                            pdfViewer1.Load(Environment.CurrentDirectory + "/temp.pdf");
+                            pdfViewer1.Print();
+                            File.Delete(Environment.CurrentDirectory + "/temp.pdf");
+
+
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("An error has been encountered! Log has been updated with the error");
+                        Log = LogManager.GetLogger("*");
+                        Log.Error(ex);
+                        return;
+                    }
+
+                }
             }
+
 
         }
         private void BtnPrintDR_Click(object sender, RoutedEventArgs e)
@@ -2239,487 +2351,491 @@ namespace Goldpoint_Inventory_System.Log
             }
             else
             {
+                PrintCopies pc = new PrintCopies();
+                pc.ShowDialog();
+                int loop = pc.copies;
                 DocToPDFConverter converter = new DocToPDFConverter();
                 PdfDocument pdfDocument;
                 PdfViewerControl pdfViewer1 = new PdfViewerControl();
-
-                //should print 2 receipts, for customer and company
-                try
+                for (int print = 1; print <= loop; print++)
                 {
-                    using (WordDocument document = new WordDocument("Templates/receipt-template.docx", FormatType.Docx))
+                    //should print 2 receipts, for customer and company
+                    try
                     {
-                        Syncfusion.DocIO.DLS.TextSelection textSelection;
-                        WTextRange textRange;
-
-                        textSelection = document.Find("<dr no>", false, true);
-                        textRange = textSelection.GetAsOneRange();
-                        textRange.Text = txtDRNo.Text;
-                        textSelection = document.Find("<full name>", false, true);
-                        textRange = textSelection.GetAsOneRange();
-                        textRange.Text = txtCustName.Text;
-                        textSelection = document.Find("<printed name>", false, true);
-                        textRange = textSelection.GetAsOneRange();
-                        textRange.Text = txtCustName.Text.ToUpper();
-                        if (string.IsNullOrEmpty(txtJobOrderNo.Text) || txtJobOrderNo.Text.Equals("0"))
+                        using (WordDocument document = new WordDocument("Templates/receipt-template.docx", FormatType.Docx))
                         {
-                            textSelection = document.Find("<j.o no>", false, true);
+                            Syncfusion.DocIO.DLS.TextSelection textSelection;
+                            WTextRange textRange;
+
+                            textSelection = document.Find("<dr no>", false, true);
                             textRange = textSelection.GetAsOneRange();
-                            textRange.Text = "";
-                        }
-                        else
-                        {
-                            textSelection = document.Find("<j.o no>", false, true);
+                            textRange.Text = txtDRNo.Text;
+                            textSelection = document.Find("<full name>", false, true);
                             textRange = textSelection.GetAsOneRange();
-                            textRange.Text = txtJobOrderNo.Text;
-                        }
-                        textSelection = document.Find("<date>", false, true);
-                        textRange = textSelection.GetAsOneRange();
-                        textRange.Text = DateTime.Today.ToShortDateString();
-                        textSelection = document.Find("<address>", false, true);
-                        textRange = textSelection.GetAsOneRange();
-                        TextRange address = new TextRange(txtAddress.Document.ContentStart, txtAddress.Document.ContentEnd);
-                        textRange.Text = address.Text;
-
-                        //if item exceeds 13. create another file
-                        //check if stock out, photocopy or what of the two job order is printing
-                        WordDocument document2 = new WordDocument("Templates/receipt-template.docx", FormatType.Docx);
-                        int counter = 1;
-                        int counter2 = 1;
-                        if (services.Count > 0)
-                        {
-                            var grouped = services.GroupBy(i => i.Description).Select(i => new { Description = i.Key, Quantity = i.Sum(item => item.qty), UnitPrice = i.Sum(item => item.unitPrice), Amount = i.Sum(item => item.amount) }); //group 
-                            foreach (var item in grouped)
-                            {
-                                if (counter > 17)
-                                {
-                                    textSelection = document2.Find("<dr no>", false, true);
-                                    textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = txtDRNo.Text;
-                                    textSelection = document2.Find("<full name>", false, true);
-                                    textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = txtCustName.Text;
-                                    textSelection = document2.Find("<printed name>", false, true);
-                                    textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = txtCustName.Text.ToUpper();
-                                    if (string.IsNullOrEmpty(txtJobOrderNo.Text) || txtJobOrderNo.Text.Equals("0"))
-                                    {
-                                        textSelection = document2.Find("<j.o no>", false, true);
-                                        textRange = textSelection.GetAsOneRange();
-                                        textRange.Text = "";
-                                    }
-                                    else
-                                    {
-                                        textSelection = document2.Find("<j.o no>", false, true);
-                                        textRange = textSelection.GetAsOneRange();
-                                        textRange.Text = txtJobOrderNo.Text;
-                                    }
-                                    textSelection = document2.Find("<date>", false, true);
-                                    textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = DateTime.Today.ToShortDateString();
-                                    textSelection = document2.Find("<address>", false, true);
-                                    textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = address.Text;
-
-                                    textSelection = document2.Find("<qty" + counter2 + ">", false, true);
-                                    textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = item.Quantity.ToString();
-
-                                    textSelection = document2.Find("<description" + counter2 + ">", false, true);
-                                    textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = item.Description;
-
-                                    textSelection = document2.Find("<price" + counter2 + ">", false, true);
-                                    textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = item.UnitPrice.ToString();
-
-                                    textSelection = document2.Find("<amount" + counter2 + ">", false, true);
-                                    textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = item.Amount.ToString();
-                                    counter2++;
-                                }
-                                else
-                                {
-                                    textSelection = document.Find("<qty" + counter + ">", false, true);
-                                    textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = item.Quantity.ToString();
-
-                                    textSelection = document.Find("<description" + counter + ">", false, true);
-                                    textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = item.Description;
-
-                                    textSelection = document.Find("<price" + counter + ">", false, true);
-                                    textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = item.UnitPrice.ToString();
-
-                                    textSelection = document.Find("<amount" + counter + ">", false, true);
-                                    textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = item.Amount.ToString();
-                                    counter++;
-                                }
-                            }
-                        }
-                        else if (tarp.Count > 0)
-                        {
-                            foreach (var item in tarp)
-                            {
-                                if (counter > 17)
-                                {
-                                    textSelection = document2.Find("<dr no>", false, true);
-                                    textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = txtDRNo.Text;
-                                    textSelection = document2.Find("<full name>", false, true);
-                                    textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = txtCustName.Text;
-                                    textSelection = document2.Find("<printed name>", false, true);
-                                    textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = txtCustName.Text.ToUpper();
-                                    if (string.IsNullOrEmpty(txtJobOrderNo.Text) || txtJobOrderNo.Text.Equals("0"))
-                                    {
-                                        textSelection = document2.Find("<j.o no>", false, true);
-                                        textRange = textSelection.GetAsOneRange();
-                                        textRange.Text = "";
-                                    }
-                                    else
-                                    {
-                                        textSelection = document2.Find("<j.o no>", false, true);
-                                        textRange = textSelection.GetAsOneRange();
-                                        textRange.Text = txtJobOrderNo.Text;
-                                    }
-                                    textSelection = document2.Find("<date>", false, true);
-                                    textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = DateTime.Today.ToShortDateString();
-                                    textSelection = document2.Find("<address>", false, true);
-                                    textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = address.Text;
-
-                                    textSelection = document2.Find("<qty" + counter2 + ">", false, true);
-                                    textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = item.tarpQty.ToString();
-
-                                    textSelection = document2.Find("<description" + counter2 + ">", false, true);
-                                    textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = item.fileName;
-
-                                    textSelection = document2.Find("<price" + counter2 + ">", false, true);
-                                    textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = item.unitPrice.ToString();
-
-                                    textSelection = document2.Find("<amount" + counter2 + ">", false, true);
-                                    textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = item.amount.ToString();
-                                    counter2++;
-                                }
-                                else
-                                {
-                                    textSelection = document.Find("<qty" + counter + ">", false, true);
-                                    textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = item.tarpQty.ToString();
-
-                                    textSelection = document.Find("<description" + counter + ">", false, true);
-                                    textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = item.fileName;
-
-                                    textSelection = document.Find("<price" + counter + ">", false, true);
-                                    textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = item.unitPrice.ToString();
-
-                                    textSelection = document.Find("<amount" + counter + ">", false, true);
-                                    textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = item.amount.ToString();
-                                    counter++;
-                                }
-
-
-                            }
-                        }
-                        else if (photocopy.Count > 0)
-                        {
-                            foreach (var item in photocopy)
-                            {
-                                if (counter > 17)
-                                {
-                                    textSelection = document2.Find("<dr no>", false, true);
-                                    textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = txtDRNo.Text;
-                                    textSelection = document2.Find("<full name>", false, true);
-                                    textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = txtCustName.Text;
-                                    textSelection = document2.Find("<printed name>", false, true);
-                                    textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = txtCustName.Text.ToUpper();
-                                    if (string.IsNullOrEmpty(txtJobOrderNo.Text) || txtJobOrderNo.Text.Equals("0"))
-                                    {
-                                        textSelection = document2.Find("<j.o no>", false, true);
-                                        textRange = textSelection.GetAsOneRange();
-                                        textRange.Text = "";
-                                    }
-                                    else
-                                    {
-                                        textSelection = document2.Find("<j.o no>", false, true);
-                                        textRange = textSelection.GetAsOneRange();
-                                        textRange.Text = txtJobOrderNo.Text;
-                                    }
-                                    textSelection = document2.Find("<date>", false, true);
-                                    textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = DateTime.Today.ToShortDateString();
-                                    textSelection = document2.Find("<address>", false, true);
-                                    textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = address.Text;
-
-                                    textSelection = document2.Find("<qty" + counter2 + ">", false, true);
-                                    textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = item.qty.ToString();
-
-                                    textSelection = document2.Find("<description" + counter2 + ">", false, true);
-                                    textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = item.item;
-
-                                    textSelection = document2.Find("<price" + counter2 + ">", false, true);
-                                    textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = item.price.ToString();
-
-                                    textSelection = document2.Find("<amount" + counter2 + ">", false, true);
-                                    textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = item.totalPerItem.ToString();
-                                    counter2++;
-                                }
-                                else
-                                {
-                                    textSelection = document.Find("<qty" + counter + ">", false, true);
-                                    textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = item.qty.ToString();
-
-                                    textSelection = document.Find("<description" + counter + ">", false, true);
-                                    textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = item.item;
-
-                                    textSelection = document.Find("<price" + counter + ">", false, true);
-                                    textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = item.price.ToString();
-
-                                    textSelection = document.Find("<amount" + counter + ">", false, true);
-                                    textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = item.totalPerItem.ToString();
-                                    counter++;
-                                }
-
-                            }
-                        }
-                        else if (stockOut.Count > 0)
-                        {
-                            foreach (var item in stockOut)
-                            {
-                                if (counter > 17)
-                                {
-                                    textSelection = document2.Find("<dr no>", false, true);
-                                    textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = txtDRNo.Text;
-                                    textSelection = document2.Find("<full name>", false, true);
-                                    textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = txtCustName.Text;
-                                    textSelection = document2.Find("<printed name>", false, true);
-                                    textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = txtCustName.Text.ToUpper();
-                                    if (string.IsNullOrEmpty(txtJobOrderNo.Text) || txtJobOrderNo.Text.Equals("0"))
-                                    {
-                                        textSelection = document2.Find("<j.o no>", false, true);
-                                        textRange = textSelection.GetAsOneRange();
-                                        textRange.Text = "";
-                                    }
-                                    else
-                                    {
-                                        textSelection = document2.Find("<j.o no>", false, true);
-                                        textRange = textSelection.GetAsOneRange();
-                                        textRange.Text = txtJobOrderNo.Text;
-                                    }
-                                    textSelection = document2.Find("<date>", false, true);
-                                    textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = DateTime.Today.ToShortDateString();
-                                    textSelection = document2.Find("<address>", false, true);
-                                    textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = address.Text;
-
-                                    textSelection = document2.Find("<qty" + counter2 + ">", false, true);
-                                    textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = item.qty.ToString();
-
-                                    textSelection = document2.Find("<description" + counter2 + ">", false, true);
-                                    textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = item.description;
-
-                                    textSelection = document2.Find("<price" + counter2 + ">", false, true);
-                                    textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = (item.totalPerItem / item.qty).ToString();
-
-                                    textSelection = document2.Find("<amount" + counter2 + ">", false, true);
-                                    textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = item.totalPerItem.ToString();
-                                    counter2++;
-                                }
-                                else
-                                {
-                                    textSelection = document.Find("<qty" + counter + ">", false, true);
-                                    textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = item.qty.ToString();
-
-                                    textSelection = document.Find("<description" + counter + ">", false, true);
-                                    textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = item.description;
-
-                                    textSelection = document.Find("<price" + counter + ">", false, true);
-                                    textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = (item.totalPerItem / item.qty).ToString();
-
-                                    textSelection = document.Find("<amount" + counter + ">", false, true);
-                                    textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = item.totalPerItem.ToString();
-                                    counter++;
-                                }
-
-                            }
-                        }
-                        else if (items.Count > 0)
-                        {
-                            foreach (var item in items)
-                            {
-                                if (counter > 17)
-                                {
-                                    textSelection = document2.Find("<dr no>", false, true);
-                                    textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = txtDRNo.Text;
-                                    textSelection = document2.Find("<full name>", false, true);
-                                    textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = txtCustName.Text;
-                                    textSelection = document2.Find("<printed name>", false, true);
-                                    textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = txtCustName.Text.ToUpper();
-                                    if (string.IsNullOrEmpty(txtJobOrderNo.Text) || txtJobOrderNo.Text.Equals("0"))
-                                    {
-                                        textSelection = document2.Find("<j.o no>", false, true);
-                                        textRange = textSelection.GetAsOneRange();
-                                        textRange.Text = "";
-                                    }
-                                    else
-                                    {
-                                        textSelection = document2.Find("<j.o no>", false, true);
-                                        textRange = textSelection.GetAsOneRange();
-                                        textRange.Text = txtJobOrderNo.Text;
-                                    }
-                                    textSelection = document2.Find("<date>", false, true);
-                                    textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = DateTime.Today.ToShortDateString();
-                                    textSelection = document2.Find("<address>", false, true);
-                                    textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = address.Text;
-
-                                    textSelection = document2.Find("<qty" + counter2 + ">", false, true);
-                                    textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = item.qty.ToString();
-
-                                    textSelection = document2.Find("<description" + counter2 + ">", false, true);
-                                    textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = item.description;
-
-                                    textSelection = document2.Find("<price" + counter2 + ">", false, true);
-                                    textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = item.unitPrice.ToString();
-
-                                    textSelection = document2.Find("<amount" + counter2 + ">", false, true);
-                                    textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = item.amount.ToString();
-                                    counter2++;
-                                }
-                                else
-                                {
-                                    textSelection = document.Find("<qty" + counter + ">", false, true);
-                                    textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = item.qty.ToString();
-
-                                    textSelection = document.Find("<description" + counter + ">", false, true);
-                                    textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = item.description;
-
-                                    textSelection = document.Find("<price" + counter + ">", false, true);
-                                    textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = item.unitPrice.ToString();
-
-                                    textSelection = document.Find("<amount" + counter + ">", false, true);
-                                    textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = item.amount.ToString();
-                                    counter++;
-                                }
-
-                            }
-                        }
-
-                        //remove unused placeholder
-                        for (int i = counter; i <= 17; i++)
-                        {
-
-                            textSelection = document.Find("<qty" + i + ">", false, true);
+                            textRange.Text = txtCustName.Text;
+                            textSelection = document.Find("<printed name>", false, true);
                             textRange = textSelection.GetAsOneRange();
-                            textRange.Text = "";
-
-                            textSelection = document.Find("<description" + i + ">", false, true);
-                            textRange = textSelection.GetAsOneRange();
-                            textRange.Text = "";
-
-                            textSelection = document.Find("<price" + i + ">", false, true);
-                            textRange = textSelection.GetAsOneRange();
-                            textRange.Text = "";
-
-                            textSelection = document.Find("<amount" + i + ">", false, true);
-                            textRange = textSelection.GetAsOneRange();
-                            textRange.Text = "";
-                        }
-                        if (counter2 > 1)
-                        {
-                            for (int i = counter2; i <= 17; i++)
+                            textRange.Text = txtCustName.Text.ToUpper();
+                            if (string.IsNullOrEmpty(txtJobOrderNo.Text) || txtJobOrderNo.Text.Equals("0"))
                             {
-                                textSelection = document2.Find("<qty" + i + ">", false, true);
-                                textRange = textSelection.GetAsOneRange();
-                                textRange.Text = "";
-
-                                textSelection = document2.Find("<description" + i + ">", false, true);
-                                textRange = textSelection.GetAsOneRange();
-                                textRange.Text = "";
-
-                                textSelection = document2.Find("<price" + i + ">", false, true);
-                                textRange = textSelection.GetAsOneRange();
-                                textRange.Text = "";
-
-                                textSelection = document2.Find("<amount" + i + ">", false, true);
+                                textSelection = document.Find("<j.o no>", false, true);
                                 textRange = textSelection.GetAsOneRange();
                                 textRange.Text = "";
                             }
-                            pdfDocument = converter.ConvertToPDF(document2);
+                            else
+                            {
+                                textSelection = document.Find("<j.o no>", false, true);
+                                textRange = textSelection.GetAsOneRange();
+                                textRange.Text = txtJobOrderNo.Text;
+                            }
+                            textSelection = document.Find("<date>", false, true);
+                            textRange = textSelection.GetAsOneRange();
+                            textRange.Text = DateTime.Today.ToShortDateString();
+                            textSelection = document.Find("<address>", false, true);
+                            textRange = textSelection.GetAsOneRange();
+                            TextRange address = new TextRange(txtAddress.Document.ContentStart, txtAddress.Document.ContentEnd);
+                            textRange.Text = address.Text;
+
+                            //if item exceeds 13. create another file
+                            //check if stock out, photocopy or what of the two job order is printing
+                            WordDocument document2 = new WordDocument("Templates/receipt-template.docx", FormatType.Docx);
+                            int counter = 1;
+                            int counter2 = 1;
+                            if (services.Count > 0)
+                            {
+                                var grouped = services.GroupBy(i => i.Description).Select(i => new { Description = i.Key, Quantity = i.Sum(item => item.qty), UnitPrice = i.Sum(item => item.unitPrice), Amount = i.Sum(item => item.amount) }); //group 
+                                foreach (var item in grouped)
+                                {
+                                    if (counter > 17)
+                                    {
+                                        textSelection = document2.Find("<dr no>", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = txtDRNo.Text;
+                                        textSelection = document2.Find("<full name>", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = txtCustName.Text;
+                                        textSelection = document2.Find("<printed name>", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = txtCustName.Text.ToUpper();
+                                        if (string.IsNullOrEmpty(txtJobOrderNo.Text) || txtJobOrderNo.Text.Equals("0"))
+                                        {
+                                            textSelection = document2.Find("<j.o no>", false, true);
+                                            textRange = textSelection.GetAsOneRange();
+                                            textRange.Text = "";
+                                        }
+                                        else
+                                        {
+                                            textSelection = document2.Find("<j.o no>", false, true);
+                                            textRange = textSelection.GetAsOneRange();
+                                            textRange.Text = txtJobOrderNo.Text;
+                                        }
+                                        textSelection = document2.Find("<date>", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = DateTime.Today.ToShortDateString();
+                                        textSelection = document2.Find("<address>", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = address.Text;
+
+                                        textSelection = document2.Find("<qty" + counter2 + ">", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = item.Quantity.ToString();
+
+                                        textSelection = document2.Find("<description" + counter2 + ">", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = item.Description;
+
+                                        textSelection = document2.Find("<price" + counter2 + ">", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = item.UnitPrice.ToString();
+
+                                        textSelection = document2.Find("<amount" + counter2 + ">", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = item.Amount.ToString();
+                                        counter2++;
+                                    }
+                                    else
+                                    {
+                                        textSelection = document.Find("<qty" + counter + ">", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = item.Quantity.ToString();
+
+                                        textSelection = document.Find("<description" + counter + ">", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = item.Description;
+
+                                        textSelection = document.Find("<price" + counter + ">", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = item.UnitPrice.ToString();
+
+                                        textSelection = document.Find("<amount" + counter + ">", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = item.Amount.ToString();
+                                        counter++;
+                                    }
+                                }
+                            }
+                            else if (tarp.Count > 0)
+                            {
+                                foreach (var item in tarp)
+                                {
+                                    if (counter > 17)
+                                    {
+                                        textSelection = document2.Find("<dr no>", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = txtDRNo.Text;
+                                        textSelection = document2.Find("<full name>", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = txtCustName.Text;
+                                        textSelection = document2.Find("<printed name>", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = txtCustName.Text.ToUpper();
+                                        if (string.IsNullOrEmpty(txtJobOrderNo.Text) || txtJobOrderNo.Text.Equals("0"))
+                                        {
+                                            textSelection = document2.Find("<j.o no>", false, true);
+                                            textRange = textSelection.GetAsOneRange();
+                                            textRange.Text = "";
+                                        }
+                                        else
+                                        {
+                                            textSelection = document2.Find("<j.o no>", false, true);
+                                            textRange = textSelection.GetAsOneRange();
+                                            textRange.Text = txtJobOrderNo.Text;
+                                        }
+                                        textSelection = document2.Find("<date>", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = DateTime.Today.ToShortDateString();
+                                        textSelection = document2.Find("<address>", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = address.Text;
+
+                                        textSelection = document2.Find("<qty" + counter2 + ">", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = item.tarpQty.ToString();
+
+                                        textSelection = document2.Find("<description" + counter2 + ">", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = item.fileName;
+
+                                        textSelection = document2.Find("<price" + counter2 + ">", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = item.unitPrice.ToString();
+
+                                        textSelection = document2.Find("<amount" + counter2 + ">", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = item.amount.ToString();
+                                        counter2++;
+                                    }
+                                    else
+                                    {
+                                        textSelection = document.Find("<qty" + counter + ">", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = item.tarpQty.ToString();
+
+                                        textSelection = document.Find("<description" + counter + ">", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = item.fileName;
+
+                                        textSelection = document.Find("<price" + counter + ">", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = item.unitPrice.ToString();
+
+                                        textSelection = document.Find("<amount" + counter + ">", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = item.amount.ToString();
+                                        counter++;
+                                    }
+
+
+                                }
+                            }
+                            else if (photocopy.Count > 0)
+                            {
+                                foreach (var item in photocopy)
+                                {
+                                    if (counter > 17)
+                                    {
+                                        textSelection = document2.Find("<dr no>", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = txtDRNo.Text;
+                                        textSelection = document2.Find("<full name>", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = txtCustName.Text;
+                                        textSelection = document2.Find("<printed name>", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = txtCustName.Text.ToUpper();
+                                        if (string.IsNullOrEmpty(txtJobOrderNo.Text) || txtJobOrderNo.Text.Equals("0"))
+                                        {
+                                            textSelection = document2.Find("<j.o no>", false, true);
+                                            textRange = textSelection.GetAsOneRange();
+                                            textRange.Text = "";
+                                        }
+                                        else
+                                        {
+                                            textSelection = document2.Find("<j.o no>", false, true);
+                                            textRange = textSelection.GetAsOneRange();
+                                            textRange.Text = txtJobOrderNo.Text;
+                                        }
+                                        textSelection = document2.Find("<date>", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = DateTime.Today.ToShortDateString();
+                                        textSelection = document2.Find("<address>", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = address.Text;
+
+                                        textSelection = document2.Find("<qty" + counter2 + ">", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = item.qty.ToString();
+
+                                        textSelection = document2.Find("<description" + counter2 + ">", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = item.item;
+
+                                        textSelection = document2.Find("<price" + counter2 + ">", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = item.price.ToString();
+
+                                        textSelection = document2.Find("<amount" + counter2 + ">", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = item.totalPerItem.ToString();
+                                        counter2++;
+                                    }
+                                    else
+                                    {
+                                        textSelection = document.Find("<qty" + counter + ">", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = item.qty.ToString();
+
+                                        textSelection = document.Find("<description" + counter + ">", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = item.item;
+
+                                        textSelection = document.Find("<price" + counter + ">", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = item.price.ToString();
+
+                                        textSelection = document.Find("<amount" + counter + ">", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = item.totalPerItem.ToString();
+                                        counter++;
+                                    }
+
+                                }
+                            }
+                            else if (stockOut.Count > 0)
+                            {
+                                foreach (var item in stockOut)
+                                {
+                                    if (counter > 17)
+                                    {
+                                        textSelection = document2.Find("<dr no>", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = txtDRNo.Text;
+                                        textSelection = document2.Find("<full name>", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = txtCustName.Text;
+                                        textSelection = document2.Find("<printed name>", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = txtCustName.Text.ToUpper();
+                                        if (string.IsNullOrEmpty(txtJobOrderNo.Text) || txtJobOrderNo.Text.Equals("0"))
+                                        {
+                                            textSelection = document2.Find("<j.o no>", false, true);
+                                            textRange = textSelection.GetAsOneRange();
+                                            textRange.Text = "";
+                                        }
+                                        else
+                                        {
+                                            textSelection = document2.Find("<j.o no>", false, true);
+                                            textRange = textSelection.GetAsOneRange();
+                                            textRange.Text = txtJobOrderNo.Text;
+                                        }
+                                        textSelection = document2.Find("<date>", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = DateTime.Today.ToShortDateString();
+                                        textSelection = document2.Find("<address>", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = address.Text;
+
+                                        textSelection = document2.Find("<qty" + counter2 + ">", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = item.qty.ToString();
+
+                                        textSelection = document2.Find("<description" + counter2 + ">", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = item.description;
+
+                                        textSelection = document2.Find("<price" + counter2 + ">", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = (item.totalPerItem / item.qty).ToString();
+
+                                        textSelection = document2.Find("<amount" + counter2 + ">", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = item.totalPerItem.ToString();
+                                        counter2++;
+                                    }
+                                    else
+                                    {
+                                        textSelection = document.Find("<qty" + counter + ">", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = item.qty.ToString();
+
+                                        textSelection = document.Find("<description" + counter + ">", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = item.description;
+
+                                        textSelection = document.Find("<price" + counter + ">", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = (item.totalPerItem / item.qty).ToString();
+
+                                        textSelection = document.Find("<amount" + counter + ">", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = item.totalPerItem.ToString();
+                                        counter++;
+                                    }
+
+                                }
+                            }
+                            else if (items.Count > 0)
+                            {
+                                foreach (var item in items)
+                                {
+                                    if (counter > 17)
+                                    {
+                                        textSelection = document2.Find("<dr no>", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = txtDRNo.Text;
+                                        textSelection = document2.Find("<full name>", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = txtCustName.Text;
+                                        textSelection = document2.Find("<printed name>", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = txtCustName.Text.ToUpper();
+                                        if (string.IsNullOrEmpty(txtJobOrderNo.Text) || txtJobOrderNo.Text.Equals("0"))
+                                        {
+                                            textSelection = document2.Find("<j.o no>", false, true);
+                                            textRange = textSelection.GetAsOneRange();
+                                            textRange.Text = "";
+                                        }
+                                        else
+                                        {
+                                            textSelection = document2.Find("<j.o no>", false, true);
+                                            textRange = textSelection.GetAsOneRange();
+                                            textRange.Text = txtJobOrderNo.Text;
+                                        }
+                                        textSelection = document2.Find("<date>", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = DateTime.Today.ToShortDateString();
+                                        textSelection = document2.Find("<address>", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = address.Text;
+
+                                        textSelection = document2.Find("<qty" + counter2 + ">", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = item.qty.ToString();
+
+                                        textSelection = document2.Find("<description" + counter2 + ">", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = item.description;
+
+                                        textSelection = document2.Find("<price" + counter2 + ">", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = item.unitPrice.ToString();
+
+                                        textSelection = document2.Find("<amount" + counter2 + ">", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = item.amount.ToString();
+                                        counter2++;
+                                    }
+                                    else
+                                    {
+                                        textSelection = document.Find("<qty" + counter + ">", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = item.qty.ToString();
+
+                                        textSelection = document.Find("<description" + counter + ">", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = item.description;
+
+                                        textSelection = document.Find("<price" + counter + ">", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = item.unitPrice.ToString();
+
+                                        textSelection = document.Find("<amount" + counter + ">", false, true);
+                                        textRange = textSelection.GetAsOneRange();
+                                        textRange.Text = item.amount.ToString();
+                                        counter++;
+                                    }
+
+                                }
+                            }
+
+                            //remove unused placeholder
+                            for (int i = counter; i <= 17; i++)
+                            {
+
+                                textSelection = document.Find("<qty" + i + ">", false, true);
+                                textRange = textSelection.GetAsOneRange();
+                                textRange.Text = "";
+
+                                textSelection = document.Find("<description" + i + ">", false, true);
+                                textRange = textSelection.GetAsOneRange();
+                                textRange.Text = "";
+
+                                textSelection = document.Find("<price" + i + ">", false, true);
+                                textRange = textSelection.GetAsOneRange();
+                                textRange.Text = "";
+
+                                textSelection = document.Find("<amount" + i + ">", false, true);
+                                textRange = textSelection.GetAsOneRange();
+                                textRange.Text = "";
+                            }
+                            if (counter2 > 1)
+                            {
+                                for (int i = counter2; i <= 17; i++)
+                                {
+                                    textSelection = document2.Find("<qty" + i + ">", false, true);
+                                    textRange = textSelection.GetAsOneRange();
+                                    textRange.Text = "";
+
+                                    textSelection = document2.Find("<description" + i + ">", false, true);
+                                    textRange = textSelection.GetAsOneRange();
+                                    textRange.Text = "";
+
+                                    textSelection = document2.Find("<price" + i + ">", false, true);
+                                    textRange = textSelection.GetAsOneRange();
+                                    textRange.Text = "";
+
+                                    textSelection = document2.Find("<amount" + i + ">", false, true);
+                                    textRange = textSelection.GetAsOneRange();
+                                    textRange.Text = "";
+                                }
+                                pdfDocument = converter.ConvertToPDF(document2);
+                                pdfDocument.Save(Environment.CurrentDirectory + "/temp.pdf");
+                                pdfViewer1.Load(Environment.CurrentDirectory + "/temp.pdf");
+                                pdfViewer1.PrinterSettings.PageOrientation = PdfViewerPrintOrientation.Landscape;
+                                pdfViewer1.PrinterSettings.PageSize = PdfViewerPrintSize.ActualSize;
+                                pdfViewer1.Print();
+                                document2.Close();
+
+
+                            }
+                            pdfDocument = converter.ConvertToPDF(document);
                             pdfDocument.Save(Environment.CurrentDirectory + "/temp.pdf");
                             pdfViewer1.Load(Environment.CurrentDirectory + "/temp.pdf");
                             pdfViewer1.PrinterSettings.PageOrientation = PdfViewerPrintOrientation.Landscape;
                             pdfViewer1.PrinterSettings.PageSize = PdfViewerPrintSize.ActualSize;
                             pdfViewer1.Print();
-                            document2.Close();
-
+                            File.Delete(Environment.CurrentDirectory + "/temp.pdf");
 
                         }
-                        pdfDocument = converter.ConvertToPDF(document);
-                        pdfDocument.Save(Environment.CurrentDirectory + "/temp.pdf");
-                        pdfViewer1.Load(Environment.CurrentDirectory + "/temp.pdf");
-                        pdfViewer1.PrinterSettings.PageOrientation = PdfViewerPrintOrientation.Landscape;
-                        pdfViewer1.PrinterSettings.PageSize = PdfViewerPrintSize.ActualSize;
-                        pdfViewer1.Print();
-                        File.Delete(Environment.CurrentDirectory + "/temp.pdf");
-
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("An error has been encountered! Log has been updated with the error");
+                        Log = LogManager.GetLogger("*");
+                        Log.Error(ex, "Query Error");
+                        return;
                     }
                 }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("An error has been encountered! Log has been updated with the error");
-                    Log = LogManager.GetLogger("*");
-                    Log.Error(ex, "Query Error");
-                    return;
-                }
-
             }
         }
 
@@ -2906,44 +3022,7 @@ namespace Goldpoint_Inventory_System.Log
                             }
                         }
 
-                        double itemTotal = 0;
-                        //we would only get the total
-                        if (services.Count > 0)
-                        {
-                            foreach (var amount in services)
-                            {
-                                itemTotal += amount.amount;
-                            }
-                        }
-                        else if (tarp.Count > 0)
-                        {
-                            foreach (var amount in services)
-                            {
-                                itemTotal += amount.amount;
-                            }
-                        }
-
-                        using (SqlCommand cmd = new SqlCommand("INSERT into PaymentHist VALUES (@DRNo, @date, @paidAmt, @total, @status)", conn))
-                        {
-                            cmd.Parameters.AddWithValue("@DRNo", txtDRNo.Text);
-                            cmd.Parameters.AddWithValue("@date", txtDate.Text);
-                            cmd.Parameters.AddWithValue("@total", itemTotal);
-                            cmd.Parameters.AddWithValue("@paidAmt", 0);
-                            cmd.Parameters.AddWithValue("@status", "Unpaid");
-
-                            try
-                            {
-                                cmd.ExecuteNonQuery();
-                            }
-                            catch (SqlException ex)
-                            {
-                                MessageBox.Show("An error has been encountered! Log has been updated with the error");
-                                Log = LogManager.GetLogger("*");
-                                Log.Error(ex);
-                            }
-                        }
-
-                        MessageBox.Show("Transaction has been updated. Please search for the transaction again");
+                        MessageBox.Show("Transaction has been updated.");
                         break;
                     case MessageBoxResult.No:
                         return;

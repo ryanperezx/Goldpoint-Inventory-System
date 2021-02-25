@@ -581,9 +581,10 @@ namespace Goldpoint_Inventory_System.Transactions
                                     success = false;
                                 }
                             }
-                            using (SqlCommand cmd = new SqlCommand("INSERT into PaymentHist VALUES (@DRNo, @date, @paidAmt, @total, @status)", conn))
+                            using (SqlCommand cmd = new SqlCommand("INSERT into PaymentHist VALUES (@receiptNo, @service, @date, @paidAmt, @total, @status)", conn))
                             {
-                                cmd.Parameters.AddWithValue("@DRNo", txtDRNo.Text);
+                                cmd.Parameters.AddWithValue("@receiptNo", txtDRNo.Text);
+                                cmd.Parameters.AddWithValue("@service", "Stock Out");
                                 cmd.Parameters.AddWithValue("@date", txtDate.Text);
                                 cmd.Parameters.AddWithValue("@total", txtTotal.Value - txtDiscount.Value);
                                 if (rdPaid.IsChecked == true)
@@ -679,7 +680,7 @@ namespace Goldpoint_Inventory_System.Transactions
                                 cmd.Parameters.AddWithValue("@service", "Stock Out");
                                 cmd.Parameters.AddWithValue("@deadline", "N\\A");
                                 cmd.Parameters.AddWithValue("@customerName", txtCustName.Text);
-                                cmd.Parameters.AddWithValue("@issuedBy", txtCustName.Text);
+                                cmd.Parameters.AddWithValue("@issuedBy", txtIssuedBy.Text);
                                 cmd.Parameters.AddWithValue("@address", "N\\A");
                                 cmd.Parameters.AddWithValue("@contactNo", "N\\A");
                                 cmd.Parameters.AddWithValue("@remarks", remarks);
@@ -718,12 +719,12 @@ namespace Goldpoint_Inventory_System.Transactions
                             }
                         }
 
-                        if (success)
-                            MessageBox.Show("Transaction has been recorded!");
                         promptPrintDR();
                         emptyFields();
                         items.Clear();
                         photocopy.Clear();
+                        if (success)
+                            MessageBox.Show("Transaction has been recorded!");
                         break;
                     case MessageBoxResult.No:
                         return;
@@ -909,236 +910,242 @@ namespace Goldpoint_Inventory_System.Transactions
             switch (dr)
             {
                 case MessageBoxResult.Yes:
+                    PrintCopies pc = new PrintCopies();
+                    pc.ShowDialog();
+                    int loop = pc.copies;
                     DocToPDFConverter converter = new DocToPDFConverter();
                     PdfDocument pdfDocument;
                     PdfViewerControl pdfViewer1 = new PdfViewerControl();
-
-                    //should print 2 receipts, for customer and company
-                    try
+                    for (int print = 1; print <= loop; print++)
                     {
-                        using (WordDocument document = new WordDocument("Templates/receipt-template.docx", FormatType.Docx))
+
+                        //should print 2 receipts, for customer and company
+                        try
                         {
-                            Syncfusion.DocIO.DLS.TextSelection textSelection;
-                            WTextRange textRange;
-
-                            textSelection = document.Find("<dr no>", false, true);
-                            textRange = textSelection.GetAsOneRange();
-                            textRange.Text = txtDRNo.Text;
-                            textSelection = document.Find("<full name>", false, true);
-                            textRange = textSelection.GetAsOneRange();
-                            textRange.Text = txtCustName.Text;
-                            textSelection = document.Find("<printed name>", false, true);
-                            textRange = textSelection.GetAsOneRange();
-                            textRange.Text = txtCustName.Text.ToUpper();
-                            textSelection = document.Find("<j.o no>", false, true);
-                            textRange = textSelection.GetAsOneRange();
-                            textRange.Text = "";
-                            textSelection = document.Find("<date>", false, true);
-                            textRange = textSelection.GetAsOneRange();
-                            textRange.Text = txtDate.Text;
-                            textSelection = document.Find("<address>", false, true);
-                            textRange = textSelection.GetAsOneRange();
-                            TextRange address = new TextRange(txtAddress.Document.ContentStart, txtAddress.Document.ContentEnd);
-                            textRange.Text = address.Text;
-
-                            //if item exceeds 13. create another file
-                            //check if stock out, photocopy or what of the two job order is printing
-                            WordDocument document2 = new WordDocument("Templates/receipt-template.docx", FormatType.Docx);
-                            int counter = 1;
-                            int counter2 = 1;
-                            if (items.Count > 0)
+                            using (WordDocument document = new WordDocument("Templates/receipt-template.docx", FormatType.Docx))
                             {
-                                foreach (var item in items)
+                                Syncfusion.DocIO.DLS.TextSelection textSelection;
+                                WTextRange textRange;
+
+                                textSelection = document.Find("<dr no>", false, true);
+                                textRange = textSelection.GetAsOneRange();
+                                textRange.Text = txtDRNo.Text;
+                                textSelection = document.Find("<full name>", false, true);
+                                textRange = textSelection.GetAsOneRange();
+                                textRange.Text = txtCustName.Text;
+                                textSelection = document.Find("<printed name>", false, true);
+                                textRange = textSelection.GetAsOneRange();
+                                textRange.Text = txtCustName.Text.ToUpper();
+                                textSelection = document.Find("<j.o no>", false, true);
+                                textRange = textSelection.GetAsOneRange();
+                                textRange.Text = "";
+                                textSelection = document.Find("<date>", false, true);
+                                textRange = textSelection.GetAsOneRange();
+                                textRange.Text = txtDate.Text;
+                                textSelection = document.Find("<address>", false, true);
+                                textRange = textSelection.GetAsOneRange();
+                                TextRange address = new TextRange(txtAddress.Document.ContentStart, txtAddress.Document.ContentEnd);
+                                textRange.Text = address.Text;
+
+                                //if item exceeds 13. create another file
+                                //check if stock out, photocopy or what of the two job order is printing
+                                WordDocument document2 = new WordDocument("Templates/receipt-template.docx", FormatType.Docx);
+                                int counter = 1;
+                                int counter2 = 1;
+                                if (items.Count > 0)
                                 {
-                                    if (counter > 17)
+                                    foreach (var item in items)
                                     {
-                                        textSelection = document2.Find("<dr no>", false, true);
-                                        textRange = textSelection.GetAsOneRange();
-                                        textRange.Text = txtDRNo.Text;
-                                        textSelection = document2.Find("<full name>", false, true);
-                                        textRange = textSelection.GetAsOneRange();
-                                        textRange.Text = txtCustName.Text;
-                                        textSelection = document2.Find("<printed name>", false, true);
-                                        textRange = textSelection.GetAsOneRange();
-                                        textRange.Text = txtCustName.Text.ToUpper();
-                                        textSelection = document2.Find("<j.o no>", false, true);
+                                        if (counter > 17)
+                                        {
+                                            textSelection = document2.Find("<dr no>", false, true);
+                                            textRange = textSelection.GetAsOneRange();
+                                            textRange.Text = txtDRNo.Text;
+                                            textSelection = document2.Find("<full name>", false, true);
+                                            textRange = textSelection.GetAsOneRange();
+                                            textRange.Text = txtCustName.Text;
+                                            textSelection = document2.Find("<printed name>", false, true);
+                                            textRange = textSelection.GetAsOneRange();
+                                            textRange.Text = txtCustName.Text.ToUpper();
+                                            textSelection = document2.Find("<j.o no>", false, true);
+                                            textRange = textSelection.GetAsOneRange();
+                                            textRange.Text = "";
+                                            textSelection = document2.Find("<date>", false, true);
+                                            textRange = textSelection.GetAsOneRange();
+                                            textRange.Text = txtDate.Text;
+                                            textSelection = document2.Find("<address>", false, true);
+                                            textRange = textSelection.GetAsOneRange();
+                                            textRange.Text = address.Text;
+
+                                            textSelection = document2.Find("<qty" + counter2 + ">", false, true);
+                                            textRange = textSelection.GetAsOneRange();
+                                            textRange.Text = item.qty.ToString();
+
+                                            textSelection = document2.Find("<description" + counter2 + ">", false, true);
+                                            textRange = textSelection.GetAsOneRange();
+                                            textRange.Text = item.description;
+
+                                            textSelection = document2.Find("<price" + counter2 + ">", false, true);
+                                            textRange = textSelection.GetAsOneRange();
+                                            textRange.Text = (item.totalPerItem / item.qty).ToString();
+
+                                            textSelection = document2.Find("<amount" + counter2 + ">", false, true);
+                                            textRange = textSelection.GetAsOneRange();
+                                            textRange.Text = item.totalPerItem.ToString();
+                                            counter2++;
+                                        }
+                                        else
+                                        {
+                                            textSelection = document.Find("<qty" + counter + ">", false, true);
+                                            textRange = textSelection.GetAsOneRange();
+                                            textRange.Text = item.qty.ToString();
+
+                                            textSelection = document.Find("<description" + counter + ">", false, true);
+                                            textRange = textSelection.GetAsOneRange();
+                                            textRange.Text = item.description;
+
+                                            textSelection = document.Find("<price" + counter + ">", false, true);
+                                            textRange = textSelection.GetAsOneRange();
+                                            textRange.Text = (item.totalPerItem / item.qty).ToString();
+
+                                            textSelection = document.Find("<amount" + counter + ">", false, true);
+                                            textRange = textSelection.GetAsOneRange();
+                                            textRange.Text = item.totalPerItem.ToString();
+                                            counter++;
+                                        }
+
+                                    }
+                                }
+                                if (photocopy.Count > 0)
+                                {
+                                    foreach (var item in photocopy)
+                                    {
+                                        if (counter > 17)
+                                        {
+                                            textSelection = document2.Find("<dr no>", false, true);
+                                            textRange = textSelection.GetAsOneRange();
+                                            textRange.Text = txtDRNo.Text;
+                                            textSelection = document2.Find("<full name>", false, true);
+                                            textRange = textSelection.GetAsOneRange();
+                                            textRange.Text = txtCustName.Text;
+                                            textSelection = document2.Find("<printed name>", false, true);
+                                            textRange = textSelection.GetAsOneRange();
+                                            textRange.Text = txtCustName.Text.ToUpper();
+                                            textSelection = document2.Find("<j.o no>", false, true);
+                                            textRange = textSelection.GetAsOneRange();
+                                            textRange.Text = "";
+                                            textSelection = document2.Find("<date>", false, true);
+                                            textRange = textSelection.GetAsOneRange();
+                                            textRange.Text = txtDate.Text;
+                                            textSelection = document2.Find("<address>", false, true);
+                                            textRange = textSelection.GetAsOneRange();
+                                            textRange.Text = address.Text;
+
+                                            textSelection = document2.Find("<qty" + counter2 + ">", false, true);
+                                            textRange = textSelection.GetAsOneRange();
+                                            textRange.Text = item.qty.ToString();
+
+                                            textSelection = document2.Find("<description" + counter2 + ">", false, true);
+                                            textRange = textSelection.GetAsOneRange();
+                                            textRange.Text = item.item;
+
+                                            textSelection = document2.Find("<price" + counter2 + ">", false, true);
+                                            textRange = textSelection.GetAsOneRange();
+                                            textRange.Text = item.price.ToString();
+
+                                            textSelection = document2.Find("<amount" + counter2 + ">", false, true);
+                                            textRange = textSelection.GetAsOneRange();
+                                            textRange.Text = item.totalPerItem.ToString();
+                                            counter2++;
+                                        }
+                                        else
+                                        {
+                                            textSelection = document.Find("<qty" + counter + ">", false, true);
+                                            textRange = textSelection.GetAsOneRange();
+                                            textRange.Text = item.qty.ToString();
+
+                                            textSelection = document.Find("<description" + counter + ">", false, true);
+                                            textRange = textSelection.GetAsOneRange();
+                                            textRange.Text = item.item;
+
+                                            textSelection = document.Find("<price" + counter + ">", false, true);
+                                            textRange = textSelection.GetAsOneRange();
+                                            textRange.Text = item.price.ToString();
+
+                                            textSelection = document.Find("<amount" + counter + ">", false, true);
+                                            textRange = textSelection.GetAsOneRange();
+                                            textRange.Text = item.totalPerItem.ToString();
+                                            counter++;
+                                        }
+                                    }
+                                }
+                                //remove unused placeholder
+                                for (int i = counter; i <= 17; i++)
+                                {
+
+                                    textSelection = document.Find("<qty" + i + ">", false, true);
+                                    textRange = textSelection.GetAsOneRange();
+                                    textRange.Text = "";
+
+                                    textSelection = document.Find("<description" + i + ">", false, true);
+                                    textRange = textSelection.GetAsOneRange();
+                                    textRange.Text = "";
+
+                                    textSelection = document.Find("<price" + i + ">", false, true);
+                                    textRange = textSelection.GetAsOneRange();
+                                    textRange.Text = "";
+
+                                    textSelection = document.Find("<amount" + i + ">", false, true);
+                                    textRange = textSelection.GetAsOneRange();
+                                    textRange.Text = "";
+                                }
+                                if (counter2 > 1)
+                                {
+                                    for (int i = counter2; i <= 17; i++)
+                                    {
+                                        textSelection = document2.Find("<qty" + i + ">", false, true);
                                         textRange = textSelection.GetAsOneRange();
                                         textRange.Text = "";
-                                        textSelection = document2.Find("<date>", false, true);
-                                        textRange = textSelection.GetAsOneRange();
-                                        textRange.Text = txtDate.Text;
-                                        textSelection = document2.Find("<address>", false, true);
-                                        textRange = textSelection.GetAsOneRange();
-                                        textRange.Text = address.Text;
 
-                                        textSelection = document2.Find("<qty" + counter2 + ">", false, true);
-                                        textRange = textSelection.GetAsOneRange();
-                                        textRange.Text = item.qty.ToString();
-
-                                        textSelection = document2.Find("<description" + counter2 + ">", false, true);
-                                        textRange = textSelection.GetAsOneRange();
-                                        textRange.Text = item.description;
-
-                                        textSelection = document2.Find("<price" + counter2 + ">", false, true);
-                                        textRange = textSelection.GetAsOneRange();
-                                        textRange.Text = (item.totalPerItem / item.qty).ToString();
-
-                                        textSelection = document2.Find("<amount" + counter2 + ">", false, true);
-                                        textRange = textSelection.GetAsOneRange();
-                                        textRange.Text = item.totalPerItem.ToString();
-                                        counter2++;
-                                    }
-                                    else
-                                    {
-                                        textSelection = document.Find("<qty" + counter + ">", false, true);
-                                        textRange = textSelection.GetAsOneRange();
-                                        textRange.Text = item.qty.ToString();
-
-                                        textSelection = document.Find("<description" + counter + ">", false, true);
-                                        textRange = textSelection.GetAsOneRange();
-                                        textRange.Text = item.description;
-
-                                        textSelection = document.Find("<price" + counter + ">", false, true);
-                                        textRange = textSelection.GetAsOneRange();
-                                        textRange.Text = (item.totalPerItem / item.qty).ToString();
-
-                                        textSelection = document.Find("<amount" + counter + ">", false, true);
-                                        textRange = textSelection.GetAsOneRange();
-                                        textRange.Text = item.totalPerItem.ToString();
-                                        counter++;
-                                    }
-
-                                }
-                            }
-                            if (photocopy.Count > 0)
-                            {
-                                foreach (var item in photocopy)
-                                {
-                                    if (counter > 17)
-                                    {
-                                        textSelection = document2.Find("<dr no>", false, true);
-                                        textRange = textSelection.GetAsOneRange();
-                                        textRange.Text = txtDRNo.Text;
-                                        textSelection = document2.Find("<full name>", false, true);
-                                        textRange = textSelection.GetAsOneRange();
-                                        textRange.Text = txtCustName.Text;
-                                        textSelection = document2.Find("<printed name>", false, true);
-                                        textRange = textSelection.GetAsOneRange();
-                                        textRange.Text = txtCustName.Text.ToUpper();
-                                        textSelection = document2.Find("<j.o no>", false, true);
+                                        textSelection = document2.Find("<description" + i + ">", false, true);
                                         textRange = textSelection.GetAsOneRange();
                                         textRange.Text = "";
-                                        textSelection = document2.Find("<date>", false, true);
-                                        textRange = textSelection.GetAsOneRange();
-                                        textRange.Text = txtDate.Text;
-                                        textSelection = document2.Find("<address>", false, true);
-                                        textRange = textSelection.GetAsOneRange();
-                                        textRange.Text = address.Text;
 
-                                        textSelection = document2.Find("<qty" + counter2 + ">", false, true);
+                                        textSelection = document2.Find("<price" + i + ">", false, true);
                                         textRange = textSelection.GetAsOneRange();
-                                        textRange.Text = item.qty.ToString();
+                                        textRange.Text = "";
 
-                                        textSelection = document2.Find("<description" + counter2 + ">", false, true);
+                                        textSelection = document2.Find("<amount" + i + ">", false, true);
                                         textRange = textSelection.GetAsOneRange();
-                                        textRange.Text = item.item;
-
-                                        textSelection = document2.Find("<price" + counter2 + ">", false, true);
-                                        textRange = textSelection.GetAsOneRange();
-                                        textRange.Text = item.price.ToString();
-
-                                        textSelection = document2.Find("<amount" + counter2 + ">", false, true);
-                                        textRange = textSelection.GetAsOneRange();
-                                        textRange.Text = item.totalPerItem.ToString();
-                                        counter2++;
+                                        textRange.Text = "";
                                     }
-                                    else
-                                    {
-                                        textSelection = document.Find("<qty" + counter + ">", false, true);
-                                        textRange = textSelection.GetAsOneRange();
-                                        textRange.Text = item.qty.ToString();
+                                    pdfDocument = converter.ConvertToPDF(document2);
+                                    pdfDocument.Save(Environment.CurrentDirectory + "/temp.pdf");
+                                    pdfViewer1.Load(Environment.CurrentDirectory + "/temp.pdf");
+                                    pdfViewer1.PrinterSettings.PageOrientation = PdfViewerPrintOrientation.Landscape;
+                                    pdfViewer1.PrinterSettings.PageSize = PdfViewerPrintSize.ActualSize;
+                                    pdfViewer1.Print();
+                                    document2.Close();
 
-                                        textSelection = document.Find("<description" + counter + ">", false, true);
-                                        textRange = textSelection.GetAsOneRange();
-                                        textRange.Text = item.item;
 
-                                        textSelection = document.Find("<price" + counter + ">", false, true);
-                                        textRange = textSelection.GetAsOneRange();
-                                        textRange.Text = item.price.ToString();
-
-                                        textSelection = document.Find("<amount" + counter + ">", false, true);
-                                        textRange = textSelection.GetAsOneRange();
-                                        textRange.Text = item.totalPerItem.ToString();
-                                        counter++;
-                                    }
                                 }
-                            }
-                            //remove unused placeholder
-                            for (int i = counter; i <= 17; i++)
-                            {
-
-                                textSelection = document.Find("<qty" + i + ">", false, true);
-                                textRange = textSelection.GetAsOneRange();
-                                textRange.Text = "";
-
-                                textSelection = document.Find("<description" + i + ">", false, true);
-                                textRange = textSelection.GetAsOneRange();
-                                textRange.Text = "";
-
-                                textSelection = document.Find("<price" + i + ">", false, true);
-                                textRange = textSelection.GetAsOneRange();
-                                textRange.Text = "";
-
-                                textSelection = document.Find("<amount" + i + ">", false, true);
-                                textRange = textSelection.GetAsOneRange();
-                                textRange.Text = "";
-                            }
-                            if (counter2 > 1)
-                            {
-                                for (int i = counter2; i <= 17; i++)
-                                {
-                                    textSelection = document2.Find("<qty" + i + ">", false, true);
-                                    textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = "";
-
-                                    textSelection = document2.Find("<description" + i + ">", false, true);
-                                    textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = "";
-
-                                    textSelection = document2.Find("<price" + i + ">", false, true);
-                                    textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = "";
-
-                                    textSelection = document2.Find("<amount" + i + ">", false, true);
-                                    textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = "";
-                                }
-                                pdfDocument = converter.ConvertToPDF(document2);
+                                pdfDocument = converter.ConvertToPDF(document);
                                 pdfDocument.Save(Environment.CurrentDirectory + "/temp.pdf");
                                 pdfViewer1.Load(Environment.CurrentDirectory + "/temp.pdf");
                                 pdfViewer1.PrinterSettings.PageOrientation = PdfViewerPrintOrientation.Landscape;
                                 pdfViewer1.PrinterSettings.PageSize = PdfViewerPrintSize.ActualSize;
                                 pdfViewer1.Print();
-                                document2.Close();
-
+                                File.Delete(Environment.CurrentDirectory + "/temp.pdf");
 
                             }
-                            pdfDocument = converter.ConvertToPDF(document);
-                            pdfDocument.Save(Environment.CurrentDirectory + "/temp.pdf");
-                            pdfViewer1.Load(Environment.CurrentDirectory + "/temp.pdf");
-                            pdfViewer1.PrinterSettings.PageOrientation = PdfViewerPrintOrientation.Landscape;
-                            pdfViewer1.PrinterSettings.PageSize = PdfViewerPrintSize.ActualSize;
-                            pdfViewer1.Print();
-                            File.Delete(Environment.CurrentDirectory + "/temp.pdf");
-
                         }
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("An error has been encountered! Log has been updated with the error");
-                        Log = LogManager.GetLogger("*");
-                        Log.Error(ex);
-                        return;
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show("An error has been encountered! Log has been updated with the error");
+                            Log = LogManager.GetLogger("*");
+                            Log.Error(ex);
+                            return;
+                        }
                     }
                     break;
                 case MessageBoxResult.No:

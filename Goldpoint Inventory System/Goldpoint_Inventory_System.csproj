@@ -268,6 +268,9 @@
     <Compile Include="Log\TransactLog.xaml.cs">
       <DependentUpon>TransactLog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="PrintCopies.xaml.cs">
+      <DependentUpon>PrintCopies.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SkinCombo.xaml.cs">
       <DependentUpon>SkinCombo.xaml</DependentUpon>
     </Compile>
@@ -353,6 +356,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="PrintCopies.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="SkinCombo.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

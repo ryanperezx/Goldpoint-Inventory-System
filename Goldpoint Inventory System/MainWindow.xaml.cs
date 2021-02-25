@@ -39,45 +39,52 @@ namespace Goldpoint_Inventory_System
         public MainWindow(string adminLevel, string fullName)
         {
             SfSkinManager.ApplyStylesOnApplication = true;
-            InitializeComponent();
+            try
+            {
+                InitializeComponent();
 
-            StartPage sp = new StartPage(fullName);
-            StockOut so = new StockOut(fullName, adminLevel);
-            JobOrder jo = new JobOrder(fullName);
-            Account ac = new Account(adminLevel);
-            IssueDeliveryReceipt idr = new IssueDeliveryReceipt(fullName);
-            ccStockOut.Content = so;
-            ccStartPage.Content = sp;
-            ccJobOrder.Content = jo;
-            ccIssueDR.Content = idr;
-            ccAccount.Content = ac;
+                StartPage sp = new StartPage(fullName);
+                StockOut so = new StockOut(fullName, adminLevel);
+                JobOrder jo = new JobOrder(fullName);
+                Account ac = new Account(adminLevel);
+                IssueDeliveryReceipt idr = new IssueDeliveryReceipt(fullName);
+                ccStockOut.Content = so;
+                ccStartPage.Content = sp;
+                ccJobOrder.Content = jo;
+                ccIssueDR.Content = idr;
+                ccAccount.Content = ac;
 
-            DockingManager.SetState(StockIn, DockState.Hidden);
-            DockingManager.SetState(ccAccount, DockState.Hidden);
-            DockingManager.SetState(ModifyInvent, DockState.Hidden);
-            DockingManager.SetState(InventCheck, DockState.Hidden);
-            DockingManager.SetState(ccStockOut, DockState.Hidden);
-            DockingManager.SetState(Sales, DockState.Hidden);
-            DockingManager.SetState(TransactionLog, DockState.Hidden);
-            DockingManager.SetState(TransactionDetails, DockState.Hidden);
-            DockingManager.SetState(ccJobOrder, DockState.Hidden);
-            DockingManager.SetState(ImportDetails, DockState.Hidden);
-            DockingManager.SetState(ccIssueDR, DockState.Hidden);
+                DockingManager.SetState(StockIn, DockState.Hidden);
+                DockingManager.SetState(ccAccount, DockState.Hidden);
+                DockingManager.SetState(ModifyInvent, DockState.Hidden);
+                DockingManager.SetState(InventCheck, DockState.Hidden);
+                DockingManager.SetState(ccStockOut, DockState.Hidden);
+                DockingManager.SetState(Sales, DockState.Hidden);
+                DockingManager.SetState(TransactionLog, DockState.Hidden);
+                DockingManager.SetState(TransactionDetails, DockState.Hidden);
+                DockingManager.SetState(ccJobOrder, DockState.Hidden);
+                DockingManager.SetState(ImportDetails, DockState.Hidden);
+                DockingManager.SetState(ccIssueDR, DockState.Hidden);
 
-            Office2019ColorfulThemeSettings themeSettings = new Office2019ColorfulThemeSettings();
-            themeSettings.PrimaryBackground = new SolidColorBrush(Colors.DarkGoldenrod);
-            themeSettings.PrimaryForeground = new SolidColorBrush(Colors.White);
-            themeSettings.BodyFontSize = 14;
-            themeSettings.HeaderFontSize = 14;
-            themeSettings.SubHeaderFontSize = 14;
-            themeSettings.TitleFontSize = 14;
-            themeSettings.SubTitleFontSize = 14;
-            themeSettings.FontFamily = new FontFamily("Calibri");
-            SfSkinManager.RegisterThemeSettings("Office2019Colorful", themeSettings);
-            SfSkinManager.SetTheme(this, new Theme("Office2019Colorful"));
+                Office2019ColorfulThemeSettings themeSettings = new Office2019ColorfulThemeSettings();
+                themeSettings.PrimaryBackground = new SolidColorBrush(Colors.DarkGoldenrod);
+                themeSettings.PrimaryForeground = new SolidColorBrush(Colors.White);
+                themeSettings.BodyFontSize = 14;
+                themeSettings.HeaderFontSize = 14;
+                themeSettings.SubHeaderFontSize = 14;
+                themeSettings.TitleFontSize = 14;
+                themeSettings.SubTitleFontSize = 14;
+                themeSettings.FontFamily = new FontFamily("Calibri");
+                SfSkinManager.RegisterThemeSettings("Office2019Colorful", themeSettings);
+                SfSkinManager.SetTheme(this, new Theme("Office2019Colorful"));
 
-            date.Content = DateTime.Now.ToString("D");
-            startTimer();
+                date.Content = DateTime.Now.ToString("D");
+                startTimer();
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
         }
 
         bool m_layoutflag = true;
