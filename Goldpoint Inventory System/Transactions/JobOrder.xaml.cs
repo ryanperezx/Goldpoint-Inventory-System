@@ -294,6 +294,7 @@ namespace Goldpoint_Inventory_System.Transactions
         {
             services.Clear();
             tarp.Clear();
+            chkDR.IsEnabled = true;
             txtJobOrder.IsEnabled = true;
             txtJobOrder.Value = null;
             cmbJobOrder.IsEnabled = true;
@@ -304,6 +305,8 @@ namespace Goldpoint_Inventory_System.Transactions
             btnRemoveLastService.IsEnabled = true;
             btnRemoveTarp.IsEnabled = true;
             btnAddTarp.IsEnabled = true;
+            btnAddFee.IsEnabled = true;
+            btnRemoveFee.IsEnabled = true;
             cmbJobOrder.SelectedIndex = -1;
             expServ.IsEnabled = false;
             expTarp.IsEnabled = false;
@@ -326,7 +329,6 @@ namespace Goldpoint_Inventory_System.Transactions
             else
             {
                 string service = null;
-                int drNo = 0;
                 bool exist = false;
                 txtItemTotal.Value = 0;
                 SqlConnection conn = DBUtils.GetDBConnection();
@@ -357,7 +359,10 @@ namespace Goldpoint_Inventory_System.Transactions
                             TextRange textRange = new TextRange(txtAddress.Document.ContentStart, txtAddress.Document.ContentEnd);
                             textRange.Text = Convert.ToString(reader.GetValue(addressIndex));
                             txtContactNo.Text = Convert.ToString(reader.GetValue(contactNoIndex));
-                            txtDRNo.Text = Convert.ToString(reader.GetValue(drNoIndex));
+                            if (reader.GetValue(drNoIndex) != DBNull.Value)
+                                txtDRNo.Text = Convert.ToString(reader.GetValue(drNoIndex));
+                            else
+                                txtDRNo.Text = null;
 
                             if (Convert.ToString(reader.GetValue(statusIndex)) == "Paid")
                             {
@@ -369,7 +374,6 @@ namespace Goldpoint_Inventory_System.Transactions
                             }
 
                             service = Convert.ToString(reader.GetValue(serviceIndex));
-                            drNo = Convert.ToInt32(reader.GetValue(drNoIndex));
                             exist = true;
 
 
@@ -455,7 +459,7 @@ namespace Goldpoint_Inventory_System.Transactions
                         }
                     }
 
-
+                    chkDR.IsEnabled = false;
                     txtJobOrder.IsEnabled = false;
                     btnCancelJobOrder.IsEnabled = true;
                     btnAddJobOrder.IsEnabled = false;
@@ -464,6 +468,8 @@ namespace Goldpoint_Inventory_System.Transactions
                     btnRemoveLastService.IsEnabled = false;
                     btnAddTarp.IsEnabled = false;
                     btnRemoveTarp.IsEnabled = false;
+                    btnAddFee.IsEnabled = false;
+                    btnRemoveFee.IsEnabled = false;
                     disableFields();
                 }
             }

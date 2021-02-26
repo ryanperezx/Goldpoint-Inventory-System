@@ -294,7 +294,7 @@ namespace Goldpoint_Inventory_System.Log
             chkUnpaid.IsChecked = false;
             SqlConnection conn = DBUtils.GetDBConnection();
             conn.Open();
-            using (SqlCommand cmd = new SqlCommand("SELECT td.date, td.deadline, td.drNo, td.service, td.customerName, td.address, td.contactNo, td.status from TransactionDetails td LEFT JOIN PaymentHist ph on ph.DRNo = td.DRNo where ph.DRNo IS null", conn))
+            using (SqlCommand cmd = new SqlCommand("SELECT date, deadline, drNo, service, customerName, address, contactNo, status, issuedBy from TransactionDetails where address = 'N\\A' and contactNo = 'N\\A' and deadline = 'N\\A'", conn))
             {
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
@@ -313,6 +313,7 @@ namespace Goldpoint_Inventory_System.Log
                                 drNo = Convert.ToString(reader.GetValue(drNoindex));
                             int serviceIndex = reader.GetOrdinal("service");
                             int customerNameIndex = reader.GetOrdinal("customerName");
+                            int issuedByIndex = reader.GetOrdinal("issuedBy");
                             int addressIndex = reader.GetOrdinal("address");
                             int contactNoIndex = reader.GetOrdinal("contactNo");
                             int statusIndex = reader.GetOrdinal("status");
@@ -324,6 +325,7 @@ namespace Goldpoint_Inventory_System.Log
                                 drNo = drNo,
                                 service = Convert.ToString(reader.GetValue(serviceIndex)),
                                 customerName = Convert.ToString(reader.GetValue(customerNameIndex)),
+                                issuedBy = Convert.ToString(reader.GetValue(issuedByIndex)),
                                 address = Convert.ToString(reader.GetValue(addressIndex)),
                                 contactNo = Convert.ToString(reader.GetValue(contactNoIndex)),
                                 status = Convert.ToString(reader.GetValue(statusIndex)),

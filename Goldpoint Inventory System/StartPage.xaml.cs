@@ -161,7 +161,7 @@ namespace Goldpoint_Inventory_System
                 }
             }
             //get all company use
-            using (SqlCommand cmd = new SqlCommand("SELECT DISTINCT td.date, td.deadline, td.drNo, td.service, td.customerName, td.address, td.contactNo, td.status from TransactionDetails td where td.date = @date and td.address = 'N\\A' and td.contactNo = 'N\\A'", conn))
+            using (SqlCommand cmd = new SqlCommand("SELECT DISTINCT date, deadline, drNo, service, customerName, address, contactNo, status from TransactionDetails where date = @date and address = 'N\\A' and contactNo = 'N\\A'", conn))
             {
                 cmd.Parameters.AddWithValue("@date", DateTime.Today.ToShortDateString());
                 using (SqlDataReader reader = cmd.ExecuteReader())

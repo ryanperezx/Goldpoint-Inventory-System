@@ -102,7 +102,7 @@ namespace Goldpoint_Inventory_System
 
         private void BtnLogin_Click(object sender, RoutedEventArgs e)
         {
-            /*
+
              if (string.IsNullOrEmpty(txtUsername.Text) || string.IsNullOrEmpty(txtPassword.Password))
             {
                 MessageBox.Show("One or more fields are empty!");
@@ -188,10 +188,6 @@ namespace Goldpoint_Inventory_System
                     }
                 }
             }
-            */
-            Hide();
-            new MainWindow("Administrator", "Ryan Andrei Perez").ShowDialog();
-            ShowDialog();
         }
 
 

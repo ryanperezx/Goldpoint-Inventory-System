@@ -24,6 +24,7 @@ namespace Goldpoint_Inventory_System.Transactions
         ObservableCollection<PhotocopyDataModel> photocopy = new ObservableCollection<PhotocopyDataModel>();
 
         private static Logger Log = LogManager.GetCurrentClassLogger();
+        string adminLevel;
         public StockOut(string fullName, string adminLevel)
         {
             InitializeComponent();
@@ -36,7 +37,14 @@ namespace Goldpoint_Inventory_System.Transactions
             dgPhotocopy.ItemsSource = photocopy;
             getDRNo();
             rdUnpaid.IsChecked = true;
-            if(adminLevel == "Administrator")
+            this.adminLevel = adminLevel;
+            checkAdminLevel();
+
+        }
+
+        private void checkAdminLevel()
+        {
+            if (adminLevel == "Administrator")
             {
                 txtDiscount.IsEnabled = true;
             }
@@ -44,7 +52,6 @@ namespace Goldpoint_Inventory_System.Transactions
             {
                 txtDiscount.IsEnabled = false;
             }
-
         }
 
         private void radiobuttonPayment(object sender, RoutedEventArgs e)
@@ -57,17 +64,17 @@ namespace Goldpoint_Inventory_System.Transactions
                     txtDownpayment.Text = null;
                     txtDownpayment.IsEnabled = false;
                     txtDiscount.Value = 0;
-                    txtDiscount.IsEnabled = false;
+                    checkAdminLevel();
                     break;
                 case "Downpayment":
                     txtDownpayment.Text = null;
                     txtDownpayment.IsEnabled = true;
-                    txtDiscount.IsEnabled = true;
-                    break;
+                    checkAdminLevel();
+                     break;
                 case "Paid":
                     txtDownpayment.Text = null;
                     txtDownpayment.IsEnabled = false;
-                    txtDiscount.IsEnabled = true;
+                    checkAdminLevel();
                     break;
                 case "Company Use":
                     break;
@@ -106,7 +113,7 @@ namespace Goldpoint_Inventory_System.Transactions
                 txtContactNo.IsEnabled = true;
                 rdUnpaid.IsEnabled = true;
                 rdDownpayment.IsEnabled = true;
-                txtDiscount.IsEnabled = true;
+                checkAdminLevel();
 
                 if (chkbox.IsChecked == true && value == "Original Receipt")
                 {
@@ -174,7 +181,7 @@ namespace Goldpoint_Inventory_System.Transactions
                 txtContactNo.IsEnabled = true;
                 rdUnpaid.IsEnabled = true;
                 rdDownpayment.IsEnabled = true;
-                txtDiscount.IsEnabled = true;
+                checkAdminLevel();
 
             }
         }
@@ -896,6 +903,48 @@ namespace Goldpoint_Inventory_System.Transactions
                 txtItemPrice.Value = 0;
                 txtTotalPerItem.Value = 0;
                 searched = false;
+                return;
+            }
+            if(txtItemCode.Text.Length > 8)
+            {
+                SqlConnection conn = DBUtils.GetDBConnection();
+                conn.Open();
+                using (SqlCommand cmd = new SqlCommand("SELECT * from InventoryItems where itemCode = @itemCode", conn))
+                {
+                    cmd.Parameters.AddWithValue("@itemCode", txtItemCode.Text);
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+
+                            reader.Read();
+                            int descriptionIndex = reader.GetOrdinal("description");
+                            txtDesc.Text = Convert.ToString(reader.GetValue(descriptionIndex));
+
+                            int typeIndex = reader.GetOrdinal("type");
+                            txtType.Text = Convert.ToString(reader.GetValue(typeIndex));
+
+                            int brandIndex = reader.GetOrdinal("brand");
+                            txtBrand.Text = Convert.ToString(reader.GetValue(brandIndex));
+
+                            txtQty.Value = 0;
+
+                            int sizeIndex = reader.GetOrdinal("size");
+                            txtSize.Text = Convert.ToString(reader.GetValue(sizeIndex));
+
+                            int msrpIndex = reader.GetOrdinal("MSRP");
+                            txtItemPrice.Value = Convert.ToDouble(reader.GetValue(msrpIndex));
+
+                            ckDealersPrice.IsChecked = false;
+                            searched = true;
+                        }
+                        else
+                        {
+                            MessageBox.Show("Item does not exist in the inventory");
+                        }
+                    }
+
+                }
             }
         }
 
