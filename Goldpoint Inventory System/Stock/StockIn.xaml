@@ -16,7 +16,7 @@
         <Label Content="Date:" HorizontalAlignment="Left" Margin="159,58,0,0" VerticalAlignment="Top"/>
         <syncfusion:DateTimeEdit x:Name="txtDate" HorizontalAlignment="Left" Height="31" Margin="258,58,0,0" TextWrapping="Wrap" Text="DateTimeEdit" VerticalAlignment="Top" Width="120" FontSize="16"/>
         <Label Content="Item Code:" HorizontalAlignment="Left" Margin="159,104,0,0" VerticalAlignment="Top"/>
-        <syncfusion:SfTextBoxExt x:Name="txtItemCode" HorizontalAlignment="Left" Height="31" Margin="258,104,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" FontSize="16" TextChanged="TxtItemCode_TextChanged"/>
+        <syncfusion:SfTextBoxExt x:Name="txtItemCode" HorizontalAlignment="Left" Height="31" Margin="258,104,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" FontSize="16" TextChanged="TxtItemCode_TextChanged" KeyDown="TxtItemCode_KeyDown"/>
         <Label x:Name="btnSearchItem" VerticalAlignment="Top" HorizontalAlignment="Left" Height="30" Width="30" Cursor="Hand" Margin="383,104,0,0" MouseLeftButtonUp="BtnSearchItem_MouseLeftButtonUp" FontSize="16">
             <iconPacks:PackIconMaterialLight Kind="Magnify" Height="20" Width="20" Foreground="DarkGoldenrod" />
         </Label>

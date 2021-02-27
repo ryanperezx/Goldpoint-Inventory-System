@@ -51,6 +51,7 @@
                 <syncfusion:GridTextColumn MappingName="Issued by" Width="228" DisplayBinding="{Binding issuedBy}"/>
                 <syncfusion:GridTextColumn MappingName="Address" Width="228" DisplayBinding="{Binding address}"/>
                 <syncfusion:GridTextColumn MappingName="Contact No" Width="150" DisplayBinding="{Binding contactNo}"/>
+                <syncfusion:GridTextColumn MappingName="Grand Total" Width="150" DisplayBinding="{Binding total}"/>
                 <syncfusion:GridTextColumn MappingName="Status" Width="150" DisplayBinding="{Binding status}"/>
             </syncfusion:SfDataGrid.Columns>
         </syncfusion:SfDataGrid>

@@ -536,7 +536,7 @@ namespace Goldpoint_Inventory_System.Transactions
                             txtJobOrder.IsEnabled = true;
                             btnCancelJobOrder.IsEnabled = false;
                             btnAddJobOrder.IsEnabled = true;
-                            btnSaveJobOrder.IsEnabled = true;
+                            btnSaveJobOrder.IsEnabled = false;
                             btnAddService.IsEnabled = true;
                             btnRemoveLastService.IsEnabled = true;
                             btnAddTarp.IsEnabled = true;
@@ -944,7 +944,7 @@ namespace Goldpoint_Inventory_System.Transactions
                 });
 
                 txtItemTotal.Value += (double)(txtPricePerItem.Value * txtDescQty.Value);
-                txtDownpayment.MaxValue = (double)txtItemTotal.Value;
+                txtDownpayment.MaxValue = (double)txtItemTotal.Value - 1;
 
                 txtMaterial.Text = null;
                 txtCopy.Text = null;
@@ -985,7 +985,7 @@ namespace Goldpoint_Inventory_System.Transactions
                     amount = (double)(txtTarpUnitPrice.Value * txtTarpQty.Value)
                 });
                 txtItemTotal.Value += (double)(txtTarpUnitPrice.Value * txtTarpQty.Value);
-                txtDownpayment.MaxValue = (double)txtItemTotal.Value;
+                txtDownpayment.MaxValue = (double)txtItemTotal.Value - 1;
                 emptyTarp();
             }
         }

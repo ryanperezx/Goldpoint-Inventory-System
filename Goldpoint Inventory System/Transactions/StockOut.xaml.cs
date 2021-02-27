@@ -905,47 +905,6 @@ namespace Goldpoint_Inventory_System.Transactions
                 searched = false;
                 return;
             }
-            if(txtItemCode.Text.Length > 8)
-            {
-                SqlConnection conn = DBUtils.GetDBConnection();
-                conn.Open();
-                using (SqlCommand cmd = new SqlCommand("SELECT * from InventoryItems where itemCode = @itemCode", conn))
-                {
-                    cmd.Parameters.AddWithValue("@itemCode", txtItemCode.Text);
-                    using (SqlDataReader reader = cmd.ExecuteReader())
-                    {
-                        if (reader.HasRows)
-                        {
-
-                            reader.Read();
-                            int descriptionIndex = reader.GetOrdinal("description");
-                            txtDesc.Text = Convert.ToString(reader.GetValue(descriptionIndex));
-
-                            int typeIndex = reader.GetOrdinal("type");
-                            txtType.Text = Convert.ToString(reader.GetValue(typeIndex));
-
-                            int brandIndex = reader.GetOrdinal("brand");
-                            txtBrand.Text = Convert.ToString(reader.GetValue(brandIndex));
-
-                            txtQty.Value = 0;
-
-                            int sizeIndex = reader.GetOrdinal("size");
-                            txtSize.Text = Convert.ToString(reader.GetValue(sizeIndex));
-
-                            int msrpIndex = reader.GetOrdinal("MSRP");
-                            txtItemPrice.Value = Convert.ToDouble(reader.GetValue(msrpIndex));
-
-                            ckDealersPrice.IsChecked = false;
-                            searched = true;
-                        }
-                        else
-                        {
-                            MessageBox.Show("Item does not exist in the inventory");
-                        }
-                    }
-
-                }
-            }
         }
 
         private void promptPrintDR()
@@ -1413,6 +1372,51 @@ namespace Goldpoint_Inventory_System.Transactions
                 var last = photocopy.Last();
                 txtTotal.Value -= last.totalPerItem;
                 photocopy.RemoveAt(photocopy.Count - 1);
+            }
+        }
+
+        private void TxtItemCode_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if(e.Key == System.Windows.Input.Key.Return)
+            {
+                SqlConnection conn = DBUtils.GetDBConnection();
+                conn.Open();
+                using (SqlCommand cmd = new SqlCommand("SELECT * from InventoryItems where itemCode = @itemCode", conn))
+                {
+                    cmd.Parameters.AddWithValue("@itemCode", txtItemCode.Text);
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+
+                            reader.Read();
+                            int descriptionIndex = reader.GetOrdinal("description");
+                            txtDesc.Text = Convert.ToString(reader.GetValue(descriptionIndex));
+
+                            int typeIndex = reader.GetOrdinal("type");
+                            txtType.Text = Convert.ToString(reader.GetValue(typeIndex));
+
+                            int brandIndex = reader.GetOrdinal("brand");
+                            txtBrand.Text = Convert.ToString(reader.GetValue(brandIndex));
+
+                            txtQty.Value = 0;
+
+                            int sizeIndex = reader.GetOrdinal("size");
+                            txtSize.Text = Convert.ToString(reader.GetValue(sizeIndex));
+
+                            int msrpIndex = reader.GetOrdinal("MSRP");
+                            txtItemPrice.Value = Convert.ToDouble(reader.GetValue(msrpIndex));
+
+                            ckDealersPrice.IsChecked = false;
+                            searched = true;
+                        }
+                        else
+                        {
+                            MessageBox.Show("Item does not exist in the inventory");
+                        }
+                    }
+
+                }
             }
         }
     }
