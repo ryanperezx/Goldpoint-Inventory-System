@@ -40,10 +40,12 @@ namespace Goldpoint_Inventory_System
             if (adminLevel == "Administrator")
             {
                 btnSave.IsEnabled = true;
+                btnDelete.IsEnabled = true;
             }
             else
             {
                 btnSave.IsEnabled = false;
+                btnDelete.IsEnabled = true;
             }
         }
 

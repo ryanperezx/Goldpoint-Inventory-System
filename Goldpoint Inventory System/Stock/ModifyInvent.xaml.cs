@@ -135,6 +135,29 @@ namespace Goldpoint_Inventory_System.Stock
                         }
                         else
                         {
+                            using (SqlCommand cmd = new SqlCommand("INSERT into ImportDetails (date, itemCode, qty, remarks, fastMoving, replacement) VALUES (@date, @itemCode, @qty, @remarks, @fastMoving, @replacement)", conn))
+                            {
+                                cmd.Parameters.AddWithValue("@qty", txtQty.Value);
+                                cmd.Parameters.AddWithValue("@remarks", txtRemarks.Text);
+                                cmd.Parameters.AddWithValue("@fastMoving","N\\A");
+                                cmd.Parameters.AddWithValue("@itemCode", txtItemCode.Text);
+                                cmd.Parameters.AddWithValue("@date", DateTime.Today.ToShortDateString());
+                                cmd.Parameters.AddWithValue("@replacement", "No");
+                                try
+                                {
+                                    cmd.ExecuteNonQuery();
+                                }
+                                catch (SqlException ex)
+                                {
+                                    MessageBox.Show("An error has been encountered! Log has been updated with the error");
+                                    Log = LogManager.GetLogger("*");
+                                    Log.Error(ex);
+                                    return;
+                                }
+
+
+                            }
+
                             using (SqlCommand cmd = new SqlCommand("INSERT into InventoryItems VALUES (@itemCode, @desc, @type, @brand, @size, @qty, @criticalLevel, @remarks, @price, @msrp, @dealersPrice, '')", conn))
                             {
                                 cmd.Parameters.AddWithValue("@itemCode", txtItemCode.Text);

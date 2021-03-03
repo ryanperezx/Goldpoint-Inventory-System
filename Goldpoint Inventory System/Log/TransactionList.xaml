@@ -28,7 +28,7 @@
         </Style>
     </Window.Resources>
     <Grid>
-        <Label Content="Service No:" HorizontalAlignment="Left" Margin="78,24,0,0" VerticalAlignment="Top"/>
+        <Label Content="Receipt No:" HorizontalAlignment="Left" Margin="78,24,0,0" VerticalAlignment="Top"/>
         <syncfusion:SfTextBoxExt x:Name="txtServiceNo"  HorizontalAlignment="Left" Height="31" Margin="172,24,0,0" VerticalAlignment="Top" Width="155" FontSize="16"/>
         <Label Content="Service:" HorizontalAlignment="Left" Margin="373,24,0,0" VerticalAlignment="Top"/>
         <syncfusion:ComboBoxAdv x:Name="cmbService" HorizontalAlignment="Left" Height="31" Margin="441,24,0,0" VerticalAlignment="Top" Width="200" FontSize="16">
