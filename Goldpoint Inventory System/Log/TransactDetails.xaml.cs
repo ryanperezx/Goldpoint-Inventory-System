@@ -1379,6 +1379,7 @@ namespace Goldpoint_Inventory_System.Log
             txtCustName.Text = null;
             txtIssuedBy.Text = null;
             txtDate.Text = DateTime.Today.ToShortDateString();
+            txtDeadline.Text = DateTime.Today.ToShortDateString();
             txtDatePayment.Text = DateTime.Today.ToShortDateString();
             txtDRNo.Text = null;
             txtInvoiceNo.Text = null;
@@ -1505,7 +1506,7 @@ namespace Goldpoint_Inventory_System.Log
                                             cmd1.Parameters.AddWithValue("@transaction", "Customer: " + txtCustName.Text + ", with D.R No: " + txtDRNo.Text + ", paid Php " + txtAmount.Text + ". Current Outstanding Balance is Php " + txtTotal.Text);
                                             try
                                             {
-                                                cmd.ExecuteNonQuery();
+                                                cmd1.ExecuteNonQuery();
                                             }
                                             catch (SqlException ex)
                                             {
@@ -1567,7 +1568,7 @@ namespace Goldpoint_Inventory_System.Log
                             }
                             else
                             {
-                                using (SqlCommand cmd = new SqlCommand("UPDATE PaymentHist set paidAmount = paidAmount + @paidAmount where receiptNo = @receiptNo and date = @date and service = @service", conn))
+                                using (SqlCommand cmd = new SqlCommand("UPDATE PaymentHist set paidAmount = paidAmount + @paidAmount, status = @status where receiptNo = @receiptNo and date = @date and service = @service", conn))
                                 {
                                     cmd.Parameters.AddWithValue("@paidAmount", txtAmount.Value);
                                     if (!string.IsNullOrEmpty(txtJobOrderNo.Text))
@@ -1588,6 +1589,14 @@ namespace Goldpoint_Inventory_System.Log
                                         }
                                     }
                                     cmd.Parameters.AddWithValue("@date", txtDatePayment.Text);
+                                    if (txtAmount.Value == txtUnpaidBalancePayment.Value)
+                                    {
+                                        cmd.Parameters.AddWithValue("@status", "Paid");
+                                    }
+                                    else
+                                    {
+                                        cmd.Parameters.AddWithValue("@status", "Unpaid");
+                                    }
                                     try
                                     {
                                         MessageBox.Show("Payment history updated");

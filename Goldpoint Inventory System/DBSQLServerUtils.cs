@@ -11,7 +11,7 @@ namespace Goldpoint_Inventory_System
     {
         public static SqlConnection GetDBConnection(string datasource, string database)
         {
-            string connString = @"Data Source=" + datasource + ";Initial Catalog=" + database;
+            string connString = @"Server=" + datasource + ";Initial Catalog=" + database;
             SqlConnection conn = new SqlConnection(connString);
             return conn;
         }

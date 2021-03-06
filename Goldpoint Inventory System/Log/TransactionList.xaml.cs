@@ -263,7 +263,8 @@ namespace Goldpoint_Inventory_System.Log
         {
             SqlConnection conn = DBUtils.GetDBConnection();
             conn.Open();
-            using (SqlCommand cmd = new SqlCommand("SELECT td.date, td.deadline, td.drNo, td.service, td.customerName, td.contactNo, td.issuedBy, td.address, td.status, ph.total from TransactionDetails td INNER JOIN PaymentHist ph on (ph.receiptNo = td.DRNo or (ph.receiptNo = td.jobOrderNo AND ph.service = td.service)) where td.inaccessible = 1 ORDER BY CAST(td.date as date) ASC", conn))
+
+            using (SqlCommand cmd = new SqlCommand("SELECT td.date, td.deadline, td.drNo, td.service, td.customerName, td.contactNo, td.issuedBy, td.address, td.status, ph.total FROM TransactionDetails td JOIN(SELECT receiptNo, service, total from PaymentHist GROUP by receiptNo, service, total) ph on(td.DRNo = ph.receiptNo or(td.jobOrderNo = ph.receiptNo AND ph.service = td.service)) where td.inaccessible = 1 ORDER BY CAST(td.date as date) ASC", conn))
             {
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {

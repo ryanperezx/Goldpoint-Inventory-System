@@ -135,7 +135,7 @@ namespace Goldpoint_Inventory_System.Log
                             while (reader.Read())
                             {
                                 string description = Convert.ToString(reader.GetValue(reader.GetOrdinal("desc")));
-                                double amount = Convert.ToInt32(reader.GetValue(reader.GetOrdinal("amount")));
+                                double amount = Convert.ToDouble(reader.GetValue(reader.GetOrdinal("amount")));
                                 double total = Convert.ToDouble(reader.GetValue(reader.GetOrdinal("total")));
                                 string status = Convert.ToString(reader.GetValue(reader.GetOrdinal("status")));
 
@@ -181,7 +181,7 @@ namespace Goldpoint_Inventory_System.Log
                         {
                             while (reader.Read())
                             {
-                                double total = Convert.ToInt32(reader.GetValue(reader.GetOrdinal("amount")));
+                                double total = Convert.ToDouble(reader.GetValue(reader.GetOrdinal("amount")));
                                 DateTime date = Convert.ToDateTime(reader.GetValue(reader.GetOrdinal("date")));
                                 data.Add(new SalesDataModel()
                                 {
@@ -207,7 +207,7 @@ namespace Goldpoint_Inventory_System.Log
                         {
                             while (reader.Read())
                             {
-                                double total = Convert.ToInt32(reader.GetValue(reader.GetOrdinal("amount")));
+                                double total = Convert.ToDouble(reader.GetValue(reader.GetOrdinal("amount")));
                                 DateTime date = Convert.ToDateTime(reader.GetValue(reader.GetOrdinal("date")));
                                 data.Add(new SalesDataModel()
                                 {
