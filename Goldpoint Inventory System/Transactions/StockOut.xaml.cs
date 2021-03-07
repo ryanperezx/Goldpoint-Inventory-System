@@ -543,7 +543,7 @@ namespace Goldpoint_Inventory_System.Transactions
                                 cmd.Parameters.AddWithValue("@desc", "DR[Stock Out]: " + txtDRNo.Text);
                                 if (rdPaid.IsChecked == true)
                                 {
-                                    cmd.Parameters.AddWithValue("@paidAmt", txtTotal.Value);
+                                    cmd.Parameters.AddWithValue("@paidAmt", txtTotal.Value );
                                     cmd.Parameters.AddWithValue("@status", "Paid");
                                 }
                                 if (rdUnpaid.IsChecked == true)
@@ -556,7 +556,7 @@ namespace Goldpoint_Inventory_System.Transactions
                                     cmd.Parameters.AddWithValue("@paidAmt", txtDownpayment.Value);
                                     cmd.Parameters.AddWithValue("@status", "Unpaid");
                                 }
-                                cmd.Parameters.AddWithValue("@total", txtTotal.Value);
+                                cmd.Parameters.AddWithValue("@total", txtTotal.Value - txtDiscount.Value);
 
                                 try
                                 {
@@ -596,7 +596,7 @@ namespace Goldpoint_Inventory_System.Transactions
                                 cmd.Parameters.AddWithValue("@total", txtTotal.Value - txtDiscount.Value);
                                 if (rdPaid.IsChecked == true)
                                 {
-                                    cmd.Parameters.AddWithValue("@paidAmt", txtTotal.Value - txtDiscount.Value);
+                                    cmd.Parameters.AddWithValue("@paidAmt", txtTotal.Value);
                                     cmd.Parameters.AddWithValue("@status", "Paid");
                                 }
                                 if (rdUnpaid.IsChecked == true)
@@ -710,7 +710,7 @@ namespace Goldpoint_Inventory_System.Transactions
                             using (SqlCommand cmd = new SqlCommand("INSERT into TransactionLogs (date, [transaction], remarks) VALUES (@date, @transaction, @remarks)", conn))
                             {
                                 cmd.Parameters.AddWithValue("@date", txtDate.Text);
-                                cmd.Parameters.AddWithValue("@transaction", "Staff: " + txtCustName.Text + ", with DR No: " + txtDRNo.Text + ", stock out materials amounting to: " + txtTotal.Text);
+                                cmd.Parameters.AddWithValue("@transaction", "Staff: " + txtCustName.Text + ", with DR No: " + txtDRNo.Text + ", stock out materials amounting to: " + Convert.ToString(txtTotal.Value - txtDiscount.Value));
                                 cmd.Parameters.AddWithValue("@remarks", remarks);
                                 try
                                 {
@@ -1208,10 +1208,10 @@ namespace Goldpoint_Inventory_System.Transactions
                         item = "Short",
                         qty = Convert.ToInt32(txtShort.Value),
                         price = (double)shortPrice,
-                        totalPerItem = (double)(Convert.ToInt64(txtShort.Value) * shortPrice)
+                        totalPerItem = (double)(Convert.ToDouble(txtShort.Value) * shortPrice)
                     });
                 }
-                txtTotal.Value += (double)(Convert.ToInt64(txtShort.Value) * shortPrice);
+                txtTotal.Value += (double)(Convert.ToDouble(txtShort.Value) * shortPrice);
                 isEmpty = false;
             }
             if (!string.IsNullOrEmpty(txtLong.Text) && txtLong.Value != 0)
@@ -1224,7 +1224,7 @@ namespace Goldpoint_Inventory_System.Transactions
                         item = "Long",
                         qty = Convert.ToInt32(found.qty + txtLong.Value),
                         price = (double)longPrice,
-                        totalPerItem = (double)(Convert.ToInt64(found.qty + txtLong.Value) * longPrice)
+                        totalPerItem = (double)(Convert.ToDouble(found.qty + txtLong.Value) * longPrice)
                     });
 
                     foreach (var item in photocopy.Where(x => x.item.Equals("Long")).ToList())
@@ -1240,11 +1240,11 @@ namespace Goldpoint_Inventory_System.Transactions
                         item = "Long",
                         qty = Convert.ToInt32(txtLong.Value),
                         price = (double)longPrice,
-                        totalPerItem = (double)(Convert.ToInt64(txtLong.Value) * longPrice)
+                        totalPerItem = (double)(Convert.ToDouble(txtLong.Value) * longPrice)
                     });
                 }
 
-                txtTotal.Value += (double)(Convert.ToInt64(txtLong.Value) * longPrice);
+                txtTotal.Value += (double)(Convert.ToDouble(txtLong.Value) * longPrice);
                 isEmpty = false;
 
             }
@@ -1258,7 +1258,7 @@ namespace Goldpoint_Inventory_System.Transactions
                         item = "Legal",
                         qty = Convert.ToInt32(found.qty + txtLegal.Value),
                         price = (double)legalPrice,
-                        totalPerItem = (double)(Convert.ToInt64(found.qty + txtLegal.Value) * legalPrice)
+                        totalPerItem = (double)(Convert.ToDouble(found.qty + txtLegal.Value) * legalPrice)
                     });
 
                     foreach (var item in photocopy.Where(x => x.item.Equals("Legal")).ToList())
@@ -1274,7 +1274,7 @@ namespace Goldpoint_Inventory_System.Transactions
                         item = "Legal",
                         qty = Convert.ToInt32(txtLegal.Value),
                         price = (double)legalPrice,
-                        totalPerItem = (double)(Convert.ToInt64(txtLegal.Value) * legalPrice)
+                        totalPerItem = (double)(Convert.ToDouble(txtLegal.Value) * legalPrice)
                     });
                 }
 
@@ -1291,7 +1291,7 @@ namespace Goldpoint_Inventory_System.Transactions
                         item = "A4",
                         qty = Convert.ToInt32(found.qty + txtA4.Value),
                         price = (double)a4Price,
-                        totalPerItem = (double)(Convert.ToInt64(found.qty + txtA4.Value) * a4Price)
+                        totalPerItem = (double)(Convert.ToDouble(found.qty + txtA4.Value) * a4Price)
                     });
 
                     foreach (var item in photocopy.Where(x => x.item.Equals("A4")).ToList())
@@ -1307,10 +1307,10 @@ namespace Goldpoint_Inventory_System.Transactions
                         item = "A4",
                         qty = Convert.ToInt32(txtA4.Value),
                         price = (double)a4Price,
-                        totalPerItem = (double)(Convert.ToInt64(txtA4.Value) * a4Price)
+                        totalPerItem = (double)(Convert.ToDouble(txtA4.Value) * a4Price)
                     });
                 }
-                txtTotal.Value += Convert.ToInt64(txtA4.Value) * 5.00;
+                txtTotal.Value += (double)(Convert.ToDouble(txtA4.Value) * a4Price);
                 isEmpty = false;
             }
             if (!string.IsNullOrEmpty(txtA3.Text) && txtA3.Value != 0)
@@ -1323,7 +1323,7 @@ namespace Goldpoint_Inventory_System.Transactions
                         item = "A3",
                         qty = Convert.ToInt32(found.qty + txtA3.Value),
                         price = (double)a3Price,
-                        totalPerItem = (double)(Convert.ToInt64(found.qty + txtA3.Value) * a3Price)
+                        totalPerItem = (double)(Convert.ToDouble(found.qty + txtA3.Value) * a3Price)
                     });
 
                     foreach (var item in photocopy.Where(x => x.item.Equals("A3")).ToList())
@@ -1339,10 +1339,10 @@ namespace Goldpoint_Inventory_System.Transactions
                         item = "A3",
                         qty = Convert.ToInt32(txtA3.Value),
                         price = (double)a3Price,
-                        totalPerItem = (double)(Convert.ToInt64(txtA3.Value) * a3Price)
+                        totalPerItem = (double)(Convert.ToDouble(txtA3.Value) * a3Price)
                     });
                 }
-                txtTotal.Value += (double)(Convert.ToInt64(txtA3.Value) * a3Price);
+                txtTotal.Value += (double)(Convert.ToDouble(txtA3.Value) * a3Price);
                 isEmpty = false;
             }
             if (isEmpty)

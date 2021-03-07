@@ -115,16 +115,18 @@
                         <syncfusion:ComboBoxItemAdv>Pads</syncfusion:ComboBoxItemAdv>
                         <syncfusion:ComboBoxItemAdv>Booklets</syncfusion:ComboBoxItemAdv>
                     </syncfusion:ComboBoxAdv>
-                    <syncfusion:IntegerTextBox x:Name="txtDescQty" HorizontalAlignment="Left" Height="31" Margin="133,89,0,0" MinWidth="100"  TextWrapping="Wrap"  VerticalAlignment="Top" Width="73" FontSize="16"/>
+                    <Label Content="Qty:" HorizontalAlignment="Left" Margin="17,89,0,0" VerticalAlignment="Top"/>
+                    <syncfusion:IntegerTextBox x:Name="txtDescQty" HorizontalAlignment="Left" Height="31" MinValue="0" Margin="133,89,0,0" MinWidth="100"  TextWrapping="Wrap"  VerticalAlignment="Top" Width="73" FontSize="16"/>
                     <Label Content="Material:" HorizontalAlignment="Left" Margin="17,129,0,0" VerticalAlignment="Top"/>
                     <syncfusion:SfTextBoxExt x:Name="txtMaterial" HorizontalAlignment="Left" Height="31" Margin="133,129,0,0" MinWidth="100"  TextWrapping="Wrap"  VerticalAlignment="Top" Width="118" FontSize="16"/>
                     <Label Content="Copy:" HorizontalAlignment="Left" Margin="17,169,0,0" VerticalAlignment="Top"/>
                     <syncfusion:SfTextBoxExt x:Name="txtCopy" HorizontalAlignment="Left" Height="31" Margin="133,169,0,0" MinWidth="100"  TextWrapping="Wrap"  VerticalAlignment="Top" Width="118" FontSize="16"/>
                     <Label Content="Size:" HorizontalAlignment="Left" Margin="17,209,0,0" VerticalAlignment="Top"/>
                     <syncfusion:SfTextBoxExt x:Name="txtSize" HorizontalAlignment="Left" Height="31" Margin="133,209,0,0" MinWidth="100"  TextWrapping="Wrap"  VerticalAlignment="Top" Width="118" FontSize="16"/>
-                    <Label Content="Qty:" HorizontalAlignment="Left" Margin="17,89,0,0" VerticalAlignment="Top"/>
                     <Label Content="Price per item:" HorizontalAlignment="Left" Margin="17,249,0,0" VerticalAlignment="Top"/>
                     <syncfusion:DoubleTextBox x:Name="txtPricePerItem" HorizontalAlignment="Left" Height="31" Margin="133,249,0,0" MinWidth="100" MaximumNumberDecimalDigits="4" TextWrapping="Wrap"  VerticalAlignment="Top" Width="118" FontSize="16"/>
+                    <Label Content="Item Qty:" HorizontalAlignment="Left" Margin="17,289,0,0" VerticalAlignment="Top"/>
+                    <syncfusion:IntegerTextBox x:Name="txtItemQty" HorizontalAlignment="Left" Height="31" MinValue="0" Margin="133,289,0,0" MinWidth="100"  TextWrapping="Wrap"  VerticalAlignment="Top" Width="73" FontSize="16"/>
                     <syncfusion:SfDataGrid x:Name="dgService" HorizontalAlignment="Right"  Height="418" VerticalAlignment="Center" Width="444" ItemsSource="{Binding}" AutoGenerateColumns="False" Margin="0,0,0,0" AutoExpandGroups="True">
                         <syncfusion:SfDataGrid.GroupColumnDescriptions>
                             <syncfusion:GroupColumnDescription ColumnName="Description"/>

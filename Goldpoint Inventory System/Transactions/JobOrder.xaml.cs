@@ -274,6 +274,7 @@ namespace Goldpoint_Inventory_System.Transactions
             txtCopy.Text = null;
             txtSize.Text = null;
             txtPricePerItem.Value = 0;
+            txtItemQty.Value = 0;
         }
         private void emptyTarp()
         {
@@ -940,7 +941,7 @@ namespace Goldpoint_Inventory_System.Transactions
                     copy = txtCopy.Text,
                     size = txtSize.Text,
                     unitPrice = (double)txtPricePerItem.Value,
-                    amount = (double)(txtPricePerItem.Value * txtDescQty.Value)
+                    amount = (double)(txtPricePerItem.Value * txtItemQty.Value)
                 });
 
                 txtItemTotal.Value += (double)(txtPricePerItem.Value * txtDescQty.Value);
@@ -950,6 +951,7 @@ namespace Goldpoint_Inventory_System.Transactions
                 txtCopy.Text = null;
                 txtSize.Text = null;
                 txtPricePerItem.Value = 0;
+                txtItemQty.Value = 0;
             }
         }
         private void BtnRemoveLastService_Click(object sender, RoutedEventArgs e)

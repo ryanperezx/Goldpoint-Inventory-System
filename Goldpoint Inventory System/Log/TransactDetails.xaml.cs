@@ -55,7 +55,7 @@ namespace Goldpoint_Inventory_System.Log
             }
             else
             {
-                 try
+                try
                 {
                     SqlConnection conn = DBUtils.GetDBConnection();
                     conn.Open();
@@ -171,11 +171,11 @@ namespace Goldpoint_Inventory_System.Log
 
                                 }
                             }
-                            using (SqlCommand cmd = new SqlCommand("SELECT * from PaymentHist where receiptNo = @receiptNo and service = @service", conn))
+                            using (SqlCommand cmd = new SqlCommand("SELECT date, paidAmount, total, status from PaymentHist WHERE receiptNo = @receiptNo and service = @service", conn))
                             {
                                 cmd.Parameters.AddWithValue("@service", service);
 
-                                if (!string.IsNullOrEmpty(txtJobOrderNo.Text))
+                                if (!string.IsNullOrEmpty(txtJobOrderNo.Text) && string.Equals(service, "Manual Transaction") == false)
                                 {
                                     cmd.Parameters.AddWithValue("@receiptNo", txtJobOrderNo.Text);
                                 }
@@ -489,7 +489,7 @@ namespace Goldpoint_Inventory_System.Log
                             {
                                 cmd.Parameters.AddWithValue("@service", service);
 
-                                if (!string.IsNullOrEmpty(txtJobOrderNo.Text))
+                                if (!string.IsNullOrEmpty(txtJobOrderNo.Text) && string.Equals(service, "Manual Transaction") == false)
                                 {
                                     cmd.Parameters.AddWithValue("@receiptNo", txtJobOrderNo.Text);
                                 }
@@ -797,10 +797,11 @@ namespace Goldpoint_Inventory_System.Log
                                     }
                                 }
                             }
-                            using (SqlCommand cmd = new SqlCommand("SELECT * from PaymentHist WHERE receiptNo = @receiptNo and service = @service", conn))
+                            using (SqlCommand cmd = new SqlCommand("SELECT date, paidAmount, total, status from PaymentHist WHERE receiptNo = @receiptNo and service = @service", conn))
                             {
                                 cmd.Parameters.AddWithValue("@service", service);
-                                if (!string.IsNullOrEmpty(txtJobOrderNo.Text))
+
+                                if (!string.IsNullOrEmpty(txtJobOrderNo.Text) && string.Equals(service, "Manual Transaction") == false)
                                 {
                                     cmd.Parameters.AddWithValue("@receiptNo", txtJobOrderNo.Text);
                                 }
@@ -1082,7 +1083,7 @@ namespace Goldpoint_Inventory_System.Log
                                             btnClaiming.IsEnabled = true;
                                         }
                                         service = Convert.ToString(reader.GetValue(serviceIndex));
-                                        if(reader.GetValue(drNoIndex) != DBNull.Value)
+                                        if (reader.GetValue(drNoIndex) != DBNull.Value)
                                             drNo = Convert.ToInt32(reader.GetValue(drNoIndex));
                                         exist = true;
                                         exJobOrderTarp.IsEnabled = true;
@@ -1346,7 +1347,7 @@ namespace Goldpoint_Inventory_System.Log
                             break;
                     }
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     MessageBox.Show(ex.ToString());
                 }
@@ -1459,7 +1460,7 @@ namespace Goldpoint_Inventory_System.Log
                             {
                                 using (SqlCommand cmd = new SqlCommand("INSERT into PaymentHist VALUES (@receiptNo, @service, @date, @paidAmount, @total, @status)", conn))
                                 {
-                                    if (!string.IsNullOrEmpty(txtJobOrderNo.Text))
+                                    if (!string.IsNullOrEmpty(txtJobOrderNo.Text) && items.Count == 0) //p.o/j.o is saved on joborder field so we have to make sure that items (manual transact list) is empty
                                     {
                                         cmd.Parameters.AddWithValue("@receiptNo", txtJobOrderNo.Text);
                                         cmd.Parameters.AddWithValue("@service", txtJobOrder.Text);
@@ -1467,11 +1468,11 @@ namespace Goldpoint_Inventory_System.Log
                                     else
                                     {
                                         cmd.Parameters.AddWithValue("@receiptNo", txtDRNo.Text);
-                                        if(stockOut.Count > 0 || photocopy.Count > 0)
+                                        if (stockOut.Count > 0 || photocopy.Count > 0)
                                         {
                                             cmd.Parameters.AddWithValue("@service", "Stock Out");
                                         }
-                                        else if(items.Count > 0)
+                                        else if (items.Count > 0)
                                         {
                                             cmd.Parameters.AddWithValue("@service", "Manual Transaction");
                                         }
@@ -1480,7 +1481,7 @@ namespace Goldpoint_Inventory_System.Log
                                     cmd.Parameters.AddWithValue("@date", txtDatePayment.Text);
                                     cmd.Parameters.AddWithValue("@paidAmount", txtAmount.Value);
                                     cmd.Parameters.AddWithValue("@total", txtTotal.Value);
-                                    if (txtAmount.Value == txtUnpaidBalancePayment.Value)
+                                    if (Double.Equals(txtAmount.Value, txtUnpaidBalancePayment.Value))
                                     {
                                         cmd.Parameters.AddWithValue("@status", "Paid");
                                         fullyPaid = true;
@@ -1589,9 +1590,11 @@ namespace Goldpoint_Inventory_System.Log
                                         }
                                     }
                                     cmd.Parameters.AddWithValue("@date", txtDatePayment.Text);
-                                    if (txtAmount.Value == txtUnpaidBalancePayment.Value)
+                                    if (Double.Equals(txtAmount.Value, txtUnpaidBalancePayment.Value))
                                     {
                                         cmd.Parameters.AddWithValue("@status", "Paid");
+                                        fullyPaid = true;
+
                                     }
                                     else
                                     {
@@ -1695,9 +1698,28 @@ namespace Goldpoint_Inventory_System.Log
                                     }
 
                                 }
-                                using (SqlCommand cmd1 = new SqlCommand("UPDATE TransactionDetails set status = 'Paid' where DRNo = @DRNo", conn))
+                                using (SqlCommand cmd1 = new SqlCommand("UPDATE TransactionDetails set status = 'Paid' where (DRNo = @DRNo or jobOrderNo = @jobOrderNo) and service = @service", conn))
                                 {
                                     cmd1.Parameters.AddWithValue("@DRNo", txtDRNo.Text);
+                                    cmd1.Parameters.AddWithValue("@jobOrderNo", txtJobOrderNo.Text);
+
+                                    if (stockOut.Count > 0 || photocopy.Count > 0)
+                                    {
+                                        cmd1.Parameters.AddWithValue("@service", "Stock Out");
+                                    }
+                                    else if (items.Count > 0)
+                                    {
+                                        cmd1.Parameters.AddWithValue("@service", "Manual Transaction");
+                                    }
+                                    else if (tarp.Count > 0)
+                                    {
+                                        cmd1.Parameters.AddWithValue("@service", "Tarpaulin");
+
+                                    }
+                                    else if (services.Count > 0)
+                                    {
+                                        cmd1.Parameters.AddWithValue("@service", "Printing, Services, etc.");
+                                    }
                                     try
                                     {
                                         cmd1.ExecuteNonQuery();
@@ -1779,7 +1801,7 @@ namespace Goldpoint_Inventory_System.Log
             DocToPDFConverter converter = new DocToPDFConverter();
             PdfDocument pdfDocument;
             PdfViewerControl pdfViewer1 = new PdfViewerControl();
-            for(int print = 1; print <= loop; print++)
+            for (int print = 1; print <= loop; print++)
             {
                 //should print 2 receipts, for customer and company
                 if (txtJobOrder.Text == "Printing, Services, etc.")
