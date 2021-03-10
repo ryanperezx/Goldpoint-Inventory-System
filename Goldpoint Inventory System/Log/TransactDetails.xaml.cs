@@ -1926,7 +1926,7 @@ namespace Goldpoint_Inventory_System.Log
 
                                     textSelection = document2.Find("<description" + counter2 + ">", false, true);
                                     textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = item.material;
+                                    textRange.Text = item.Description;
 
                                     textSelection = document2.Find("<copy" + counter2 + ">", false, true);
                                     textRange = textSelection.GetAsOneRange();
@@ -1963,7 +1963,7 @@ namespace Goldpoint_Inventory_System.Log
 
                                     textSelection = document.Find("<description" + counter + ">", false, true);
                                     textRange = textSelection.GetAsOneRange();
-                                    textRange.Text = item.material;
+                                    textRange.Text = item.Description;
 
                                     textSelection = document.Find("<copy" + counter + ">", false, true);
                                     textRange = textSelection.GetAsOneRange();

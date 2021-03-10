@@ -71,8 +71,6 @@
                     </syncfusion:SfDataGrid>
                     <Label Content="Total Cash on Hand:" HorizontalAlignment="Left"  VerticalAlignment="Top" Margin="9,409,0,0"/>
                     <syncfusion:DoubleTextBox x:Name="txtCashOnHand" IsReadOnly="True" HorizontalAlignment="Left" Height="31" TextWrapping="Wrap" VerticalAlignment="Top" Width="155" Margin="165,409,0,0" FontSize="16"/>
-                    <Label Content="Account Receivable:" HorizontalAlignment="Left"  VerticalAlignment="Top" Margin="429,409,0,0"/>
-                    <syncfusion:DoubleTextBox x:Name="txtAccountReceivable" IsReadOnly="True" HorizontalAlignment="Left" Height="31" TextWrapping="Wrap" VerticalAlignment="Top" Width="155" Margin="585,409,0,0" FontSize="16"/>
                 </Grid>
             </Expander>
             <Expander ExpandDirection="Left" FontSize="16" HorizontalAlignment="Left"  Height="450" VerticalAlignment="Top" IsExpanded="{Binding SelectedExpander, ConverterParameter=3, Converter={StaticResource ExpanderToBooleanConverter}, Mode=TwoWay}">

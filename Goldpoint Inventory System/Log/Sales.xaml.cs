@@ -94,7 +94,6 @@ namespace Goldpoint_Inventory_System.Log
                 soldMaterials.Clear();
                 sales.Clear();
                 txtSoldMaterialTotal.Value = 0;
-                txtAccountReceivable.Value = 0;
                 txtCashOnHand.Value = 0;
                 using (SqlCommand cmd = new SqlCommand("SELECT item, SUM(qty) as qty, SUM(total) as total from SoldMaterials where date = @date GROUP BY item", conn))
                 {
@@ -147,7 +146,6 @@ namespace Goldpoint_Inventory_System.Log
                                     status = status
                                 });
 
-                                txtAccountReceivable.Value += total - amount;
                                 txtCashOnHand.Value += amount;
 
                             }
@@ -228,7 +226,6 @@ namespace Goldpoint_Inventory_System.Log
             txtAmount.Value = 0;
             txtTotal.Value = 0;
             txtSoldMaterialTotal.Value = 0;
-            txtAccountReceivable.Value = 0;
             txtCashOnHand.Value = 0;
             data.Clear();
             soldMaterials.Clear();
