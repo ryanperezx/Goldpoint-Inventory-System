@@ -33,6 +33,7 @@ namespace Goldpoint_Inventory_System
             InitializeComponent();
             dgCritical.ItemsSource = items;
             dgRecentTransact.ItemsSource = customer;
+            dgRecentTransact.RowHeight = 40;
             dgPending.ItemsSource = pendings;
             fillUpItems();
             fillUpRecentTransact();

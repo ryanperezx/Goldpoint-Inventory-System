@@ -574,7 +574,7 @@ namespace Goldpoint_Inventory_System.Transactions
                             using (SqlCommand cmd = new SqlCommand("INSERT into TransactionLogs (date, [transaction], remarks) VALUES (@date, @transaction, @remarks)", conn))
                             {
                                 cmd.Parameters.AddWithValue("@date", txtDate.Text);
-                                cmd.Parameters.AddWithValue("@transaction", "Customer: " + txtCustName.Text + ", with D.R No: " + txtDRNo.Text + ", had a transaction amounting to Php " + txtTotal.Text);
+                                cmd.Parameters.AddWithValue("@transaction", "Customer: " + txtCustName.Text + ", with D.R No: " + txtDRNo.Text + ", had a transaction amounting to Php " + Convert.ToString(txtTotal.Value - txtDiscount.Value));
                                 cmd.Parameters.AddWithValue("@remarks", remarks);
                                 try
                                 {

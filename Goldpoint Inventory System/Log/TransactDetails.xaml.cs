@@ -1439,12 +1439,29 @@ namespace Goldpoint_Inventory_System.Log
                             //if fully paid or not, update all if fully paid, if not, normal add
                             bool fullyPaid = false;
                             int count = 0;
-                            using (SqlCommand cmd = new SqlCommand("SELECT COUNT(1) from TransactionDetails WHERE date = @date and (drNo = @DRNo or (jobOrderNo = @jobOrderNo and service = @service))", conn))
+                            using (SqlCommand cmd = new SqlCommand("SELECT COUNT(1) from PaymentHist WHERE date = @date and receiptNo = @receiptNo and service = @service", conn))
                             {
-                                cmd.Parameters.AddWithValue("@DRNo", txtDRNo.Text);
+                                if (!string.IsNullOrEmpty(txtJobOrderNo.Text) && string.Equals(txtJobOrder.Text, "Manual Transaction") == false)
+                                {
+                                    cmd.Parameters.AddWithValue("@receiptNo", txtJobOrderNo.Text);
+                                    cmd.Parameters.AddWithValue("@service", txtJobOrder.Text);
+
+                                }
+                                else
+                                {
+                                    cmd.Parameters.AddWithValue("@receiptNo", txtDRNo.Text);
+                                    if (services.Count > 0 | photocopy.Count > 0)
+                                    {
+                                        cmd.Parameters.AddWithValue("@service", "Stock Out");
+                                    }
+                                    else if (items.Count > 0)
+                                    {
+                                        cmd.Parameters.AddWithValue("@service", "Manual Transaction");
+                                    }
+                                }
                                 cmd.Parameters.AddWithValue("@date", txtDatePayment.Text);
-                                cmd.Parameters.AddWithValue("@jobOrderNo", txtJobOrderNo.Text);
-                                cmd.Parameters.AddWithValue("@service", txtJobOrder.Text);
+
+
                                 try
                                 {
                                     count = (int)cmd.ExecuteScalar();
@@ -1500,22 +1517,43 @@ namespace Goldpoint_Inventory_System.Log
                                             amount = (double)txtAmount.Value
                                         });
 
-
-                                        using (SqlCommand cmd1 = new SqlCommand("INSERT into TransactionLogs (date, [transaction], remarks) VALUES (@date, @transaction, '')", conn))
+                                        if (!string.IsNullOrEmpty(txtDRNo.Text) & (stockOut.Count > 0 | photocopy.Count > 0 | items.Count > 0))
                                         {
-                                            cmd1.Parameters.AddWithValue("@date", DateTime.Today.ToShortDateString());
-                                            cmd1.Parameters.AddWithValue("@transaction", "Customer: " + txtCustName.Text + ", with D.R No: " + txtDRNo.Text + ", paid Php " + txtAmount.Text + ". Current Outstanding Balance is Php " + txtTotal.Text);
-                                            try
+                                            using (SqlCommand cmd1 = new SqlCommand("INSERT into TransactionLogs (date, [transaction], remarks) VALUES (@date, @transaction, '')", conn))
                                             {
-                                                cmd1.ExecuteNonQuery();
-                                            }
-                                            catch (SqlException ex)
-                                            {
-                                                MessageBox.Show("An error has been encountered! Log has been updated with the error");
-                                                Log = LogManager.GetLogger("*");
-                                                Log.Error(ex);
+                                                cmd1.Parameters.AddWithValue("@date", DateTime.Today.ToShortDateString());
+                                                cmd1.Parameters.AddWithValue("@transaction", "Customer: " + txtCustName.Text + ", with D.R No: " + txtDRNo.Text + ", paid Php " + txtAmount.Text + ". Current Outstanding Balance is Php " + txtTotal.Text);
+                                                try
+                                                {
+                                                    cmd1.ExecuteNonQuery();
+                                                }
+                                                catch (SqlException ex)
+                                                {
+                                                    MessageBox.Show("An error has been encountered! Log has been updated with the error");
+                                                    Log = LogManager.GetLogger("*");
+                                                    Log.Error(ex);
+                                                }
                                             }
                                         }
+                                        else if (!string.IsNullOrEmpty(txtJobOrderNo.Text) & (services.Count > 0 | tarp.Count > 0))
+                                        {
+                                            using (SqlCommand cmd1 = new SqlCommand("INSERT into TransactionLogs (date, [transaction], remarks) VALUES (@date, @transaction, '')", conn))
+                                            {
+                                                cmd1.Parameters.AddWithValue("@date", DateTime.Today.ToShortDateString());
+                                                cmd1.Parameters.AddWithValue("@transaction", "Customer: " + txtCustName.Text + ", with Job Order No[" + txtJobOrder.Text + "]: " + txtJobOrderNo.Text + ", paid Php " + txtAmount.Text + ". Current Outstanding Balance is Php " + txtTotal.Text);
+                                                try
+                                                {
+                                                    cmd1.ExecuteNonQuery();
+                                                }
+                                                catch (SqlException ex)
+                                                {
+                                                    MessageBox.Show("An error has been encountered! Log has been updated with the error");
+                                                    Log = LogManager.GetLogger("*");
+                                                    Log.Error(ex);
+                                                }
+                                            }
+                                        }
+
 
                                         using (SqlCommand cmd1 = new SqlCommand("INSERT into Sales VALUES (@date, @desc, @amount, @total, @status)", conn))
                                         {
@@ -1526,7 +1564,7 @@ namespace Goldpoint_Inventory_System.Log
                                             }
                                             else if (services.Count > 0)
                                             {
-                                                cmd1.Parameters.AddWithValue("@desc", "JO[Services]:" + txtJobOrderNo.Text);
+                                                cmd1.Parameters.AddWithValue("@desc", "JO[Services]: " + txtJobOrderNo.Text);
                                             }
                                             else if (tarp.Count > 0)
                                             {
@@ -1622,7 +1660,7 @@ namespace Goldpoint_Inventory_System.Log
                                     }
                                     else if (services.Count > 0)
                                     {
-                                        cmd1.Parameters.AddWithValue("@desc", "JO[Services]:" + txtJobOrderNo.Text);
+                                        cmd1.Parameters.AddWithValue("@desc", "JO[Services]: " + txtJobOrderNo.Text);
                                     }
                                     else if (tarp.Count > 0)
                                     {
